@@ -1,0 +1,14 @@
+*TempPoint*
+*.pssproj
+
+# ignore the settings folder and files for VSCode
+.vscode/*
+*.psproj
+
+# ignore library
+PSFramework/bin/PSFramework.dll
+PSFramework/bin/PSFramework.xml
+PSFramework/bin/PSFramework.pdb
+library/PSFramework/obj/*
+library/PSFramework/*.user
+library/PSFramework/bin/*
