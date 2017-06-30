@@ -45,7 +45,7 @@
 	RequiredModules = @()
 	
 	# Assemblies that must be loaded prior to importing this module
-	RequiredAssemblies = @()
+	RequiredAssemblies = @("bin\PSFramework.dll")
 	
 	# Script files (.ps1) that are run in the caller's environment prior to
 	# importing this module
@@ -62,7 +62,14 @@
 	NestedModules = @()
 	
 	# Functions to export from this module
-	FunctionsToExport = '' #For performanace, list functions explicity
+	FunctionsToExport = @(
+		'Clear-PSFresultCache',
+		'Get-PSFLicense',
+		'Get-PSFResultCache',
+		'New-PSFLicense',
+		'Remove-PSFLicense',
+		'Set-PSFResultCache'
+	)
 	
 	# Cmdlets to export from this module
 	CmdletsToExport = '' 
