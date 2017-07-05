@@ -91,7 +91,7 @@ namespace PSFramework.Message
         /// <summary>
         /// Retrieves a copy of the Error stack
         /// </summary>
-        /// <returns>All errors thrown by dbatools functions</returns>
+        /// <returns>All errors thrown by functions using the message or flowcontrol system</returns>
         public static PsfExceptionRecord[] GetErrors()
         {
             PsfExceptionRecord[] temp = new PsfExceptionRecord[ErrorRecords.Count];
