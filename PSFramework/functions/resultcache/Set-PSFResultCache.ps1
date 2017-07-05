@@ -60,23 +60,23 @@
 	Begin
 	{
 		$IsPipeline = -not $PSBoundParameters.ContainsKey("InputObject")
-		[PSFramework.Utility.ResultCache]::Function = $CommandName
+		[PSFramework.ResultCache.ResultCache]::Function = $CommandName
 		
 		if ($IsPipeline -and (-not $Skip))
 		{
-			[PSFramework.Utility.ResultCache]::Result = @()
+			[PSFramework.ResultCache.ResultCache]::Result = @()
 		}
 	}
 	Process
 	{
 		if ($IsPipeline)
 		{
-			if (-not $Skip) { [PSFramework.Utility.ResultCache]::Result += $PSItem }
+			if (-not $Skip) { [PSFramework.ResultCache.ResultCache]::Result += $PSItem }
 			if ($PassThru) { $PSItem }
 		}
 		else
 		{
-			if (-not $Skip) { [PSFramework.Utility.ResultCache]::Result = $InputObject }
+			if (-not $Skip) { [PSFramework.ResultCache.ResultCache]::Result = $InputObject }
 			if ($PassThru) { $InputObject }
 		}
 	}

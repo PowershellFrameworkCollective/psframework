@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Configuration>
+	<ViewDefinitions>
+		<!-- PSFramework.Configuration.Config -->
+		<View>
+			<Name>PSFramework.Configuration.Config</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.Configuration.Config</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader>
+						<Label>Value</Label>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>FullName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<ScriptBlock>
+			if ($null -ne $_.Value)
+			{
+              if ($_.Value.ToString().Length -le 20) { $_.Value.ToString() }
+              else { $_.Value.ToString().SubString(0,17) + "..." }
+			}
+								</ScriptBlock>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Description</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+		
+		<!-- PSFramework.License.License -->
+		<View>
+			<Name>PSFramework.License.License</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.License.License</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Product</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ProductVersion</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Manufacturer</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LicenseType</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LicenseName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LicenseVersion</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+		
+		<!-- PSFramework.Message.LogEntry -->
+		<View>
+			<Name>PSFramework.Message.LogEntry</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.Message.LogEntry</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader>
+						<Label>TargetObject</Label>
+					</TableColumnHeader>
+					<TableColumnHeader/>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Timestamp</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>FunctionName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Level</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<ScriptBlock>
+			if ($null -ne $_.TargetObject)
+			{
+              if ($_.TargetObject.ToString().Length -le 20) { $_.TargetObject.ToString() }
+              else { $_.TargetObject.ToString().SubString(0,17) + "..." }
+			}
+								</ScriptBlock>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Message</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+		
+		<!-- PSFramework.Message.PsfExceptionRecord -->
+		<View>
+			<Name>PSFramework.Message.PsfExceptionRecord</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.Message.PsfExceptionRecord</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader>
+						<Label>TargetObject</Label>
+					</TableColumnHeader>
+					<TableColumnHeader/>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Timestamp</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>FunctionName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ExceptionType</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<ScriptBlock>
+			if ($null -ne $_.TargetObject)
+			{
+              if ($_.TargetObject.ToString().Length -le 20) { $_.TargetObject.ToString() }
+              else { $_.TargetObject.ToString().SubString(0,17) + "..." }
+			}
+								</ScriptBlock>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Message</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+	</ViewDefinitions>
+</Configuration>

@@ -19,6 +19,6 @@
 	
 	if ($pscmdlet.ShouldProcess("Result cache", "Clearing the result cache"))
 	{
-		[PSFramework.Utility.ResultCache]::Clear()
+		[PSFramework.ResultCache.ResultCache]::Clear()
 	}
 }

@@ -55,7 +55,7 @@
 	TypesToProcess = @()
 	
 	# Format files (.ps1xml) to be loaded when importing this module
-	FormatsToProcess = @()
+	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
@@ -63,12 +63,24 @@
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
-		'Clear-PSFresultCache',
+		'Clear-PSFResultCache',
+		'Get-PSFConfig',
+		'Get-PSFConfigValue',
+		'Get-PSFMessage',
 		'Get-PSFLicense',
 		'Get-PSFResultCache',
+		'Get-PSFRunspace',
 		'New-PSFLicense',
+		'Register-PSFRunspace',
 		'Remove-PSFLicense',
-		'Set-PSFResultCache'
+		'Set-PSFConfig',
+		'Set-PSFResultCache',
+		'Start-PSFRunspace',
+		'Stop-PSFFunction',
+		'Stop-PSFRunspace',
+		'Test-PSFFunctionInterrupt',
+		'Write-PSFHostColor',
+		'Write-PSFMessage'
 	)
 	
 	# Cmdlets to export from this module
@@ -78,7 +90,10 @@
 	VariablesToExport = ''
 	
 	# Aliases to export from this module
-	AliasesToExport = '' #For performanace, list alias explicity
+	AliasesToExport = @(
+		'Get-LastResult',
+		'glr'
+	)
 	
 	# List of all modules packaged with this module
 	ModuleList = @()

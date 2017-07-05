@@ -104,10 +104,7 @@
 		
 		[Parameter(Mandatory = $true)]
 		[String]
-		$Text,
-		
-		[Switch]
-		$Silent
+		$Text
 	)
 	
 	# Create and fill object
@@ -116,16 +113,17 @@
 	$license.Manufacturer = $Manufacturer
 	$license.ProductVersion = $ProductVersion
 	$license.ProductType = $ProductType
-	$license.Name = $Name
-	$license.Version = $Version
-	$license.Date = $Date
-	$license.Type = $Type
-	$license.Text = $Text
+	$license.LicenseName = $Name
+	$license.LicenseVersion = $Version
+	$license.LicenseDate = $Date
+	$license.LicenseType = $Type
+	$license.LicenseText = $Text
 	
-	# Return the license only if not set to silence. There is no functional need to have the object - it doesn't do anything and the main benefit comes from registering the license.
-	# This is a plain comfort "feature" when used interactively
-	if (-not $Silent)
+	if (-not ([PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -eq $license.Product) -and ($_.ProductVersion -eq $license.ProductVersion) }))
 	{
-		return $license
+		[PSFramework.License.LicenseHost]::Add($license)
 	}
+	
+	return $license
+	
 }

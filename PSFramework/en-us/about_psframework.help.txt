@@ -1,0 +1,70 @@
+TOPIC
+	about_psframework
+	
+SHORT DESCRIPTION
+	Gives an overview over the components that make up the PSFramework
+	
+LONG DESCRIPTION
+	When scripting for our everyday work, we often end up doing two things:
+	- Implement the same functionality again and again (Example: Logging), because it either isn't worth the effort we simply don't have the time to do it right, once.
+	- Think "Wouldn't it be cool to have this feature?", then get back into the reality of deadlines and overwork
+	While there is probably no way an outsider can help you with company-specific challenges, this framework is designed to bring you a rich toolkit to deal with the generic scripting issues.
+	
+	Its two main goals in specific are:
+	- Speed up your development, by providing a solid framework of tools to build upon
+	- Provide a manageability to your code
+	
+	The module consists of several compenent parts:
+	- Configuration : Provide self-documenting settings with input validation and change events
+	- Flow Control : Designed for modules, provide a managed way to handle exceptions and how they are presented to the user
+	- License : Centralize licence registration
+	- Message : PowerFull logging system, gives flexible control over what message goes where
+	- Result Cache : Allows caching the output of a function, allowing access to its contents, even when the user forgot to store the output in a variable
+	- Runspace : A system that manages runspaces in a peculiar fashion: It guarantees that there is a single copy of the runspace you start
+	
+	
+	#-------------------------------------------------------------------------#
+	#                              Configuration                              #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_configuration
+	  
+	Key Benefits:
+	- Avoid hardcoding information
+	- Selfdocumented settings that carry their own validation and reaction to change
+	
+	The configuration system is a system designed to store and retrieve settings. On the surface it has similarities to variables, in that it maps names to values.
+	However, there are a few key differences:
+	- No scopes: The same value is the same value. Always
+	- Shared across runspaces: All runspaces have access to the same data
+	- Documented: Each setting can contain a description of what it does
+	- Input Validation: Each setting can flexibly validate its changes
+	- Update events: Changes in value can trigger scriptblocks in response
+	This makes it particularly apt at centrally storing and revealing information that would otherwise have been hardcoded somewhere.
+	
+	A few Examples that will show the basic usage:
+	  
+	  # Retrieve entire configuration element
+	  Get-PSFConfig 'psframework.message.info.maximum'
+	  
+	  # Update with valid value
+	  Set-PSFConfig 'psframework.message.info.maximum' 5
+	  
+	  # Update with invalid value
+	  Set-PSFConfig 'psframework.message.info.maximum' "foo"
+	  
+	While manipulating existing configuration entries is simple, creating new ones is slightly more involved, for which it is recommended to read the full article on the configuration system first.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                               Flow Control                              #
+	#-------------------------------------------------------------------------#
+	
+	#-------------------------------------------------------------------------#
+	#                                 License                                 #
+	#-------------------------------------------------------------------------#
+	
+	#-------------------------------------------------------------------------#
+	#                            Message / Logging                            #
+	#-------------------------------------------------------------------------#
