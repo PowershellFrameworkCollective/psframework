@@ -61,6 +61,11 @@
 		[ConsoleColor]
 		$DefaultColor = (Get-PSFConfigValue -Name "psframework.message.info.color")
 	)
+	begin
+	{
+		$em = [PSFramework.Message.MessageHost]::InfoColorEmphasis
+		$sub = [PSFramework.Message.MessageHost]::InfoColorSubtle
+	}
 	process
 	{
 		foreach ($line in $String)
@@ -70,6 +75,7 @@
 				if ($row -notlike '*<c=["'']*["'']>*</c>*') { Write-Host -Object $row -ForegroundColor $DefaultColor }
 				else
 				{
+					$row = $row -replace '<c=["'']em["'']>', "<c='$em'>" -replace '<c=["'']sub["'']>', "<c='$sub'>"
 					$match = ($row | Select-String '<c=["''](.*?)["'']>(.*?)</c>' -AllMatches).Matches
 					$index = 0
 					$count = 0

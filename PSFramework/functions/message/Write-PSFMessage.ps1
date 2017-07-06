@@ -161,14 +161,14 @@
     $baseMessage
 "@
 		$newColoredMessage = @"
-[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>][<c='gray'>L:</c> <c='green'>$Level</c>]<c='green'>$targetString</c>[<c='gray'>C:</c> <c='green'>$channels_future</c>][<c='gray'>EE:</c> <c='green'>$EnableException</c>][<c='gray'>O:</c> <c='green'>$(Was-Bound Once)</c>]
+[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>][<c='sub'>L:</c> <c='em'>$Level</c>]<c='em'>$targetString</c>[<c='sub'>C:</c> <c='em'>$channels_future</c>][<c='sub'>EE:</c> <c='em'>$EnableException</c>][<c='sub'>O:</c> <c='em'>$(Was-Bound Once)</c>]
     $coloredMessage
 "@
 	}
 	else
 	{
 		$newMessage = "[$($timestamp.ToString("HH:mm:ss"))][$FunctionName] $baseMessage"
-		$newColoredMessage = "[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>] $coloredMessage"
+		$newColoredMessage = "[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>] $coloredMessage"
 	}
 	if ($ErrorRecord -and ($Message -notlike "*$($ErrorRecord[0].Exception.Message)*"))
 	{
