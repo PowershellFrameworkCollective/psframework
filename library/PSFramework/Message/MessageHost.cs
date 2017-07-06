@@ -44,6 +44,16 @@ namespace PSFramework.Message
         public static ConsoleColor InfoColor = ConsoleColor.Cyan;
 
         /// <summary>
+        /// The color important stuff gets written to the console in
+        /// </summary>
+        public static ConsoleColor InfoColorEmphasis = ConsoleColor.Green;
+
+        /// <summary>
+        /// The color background stuff gets written to the console in
+        /// </summary>
+        public static ConsoleColor InfoColorSubtle = ConsoleColor.Gray;
+
+        /// <summary>
         /// The color stuff gets written to the console in, when developer mode is enabled and the message would not have been written after all
         /// </summary>
         public static ConsoleColor DeveloperColor = ConsoleColor.Gray;
