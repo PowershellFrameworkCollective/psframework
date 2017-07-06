@@ -59,7 +59,7 @@
 		$String,
 		
 		[ConsoleColor]
-		$DefaultColor = (Get-PSFConfigValue -Name "message.infocolor")
+		$DefaultColor = (Get-PSFConfigValue -Name "psframework.message.info.color")
 	)
 	process
 	{
