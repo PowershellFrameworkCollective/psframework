@@ -242,6 +242,30 @@ $scriptBlock['message.developercolor'] = {
 }
 #endregion message.developercolor
 
+#region message.consoleoutput.disable
+$scriptBlock['message.consoleoutput.disable'] = {
+	Param (
+		$Value
+	)
+	
+	$Result = New-Object PSObject -Property @{
+		Success = $True
+		Message = ""
+	}
+	
+	if ($Value.GetType().FullName -ne "System.Boolean")
+	{
+		$Result.Message = "Not a console color: $Value"
+		$Result.Success = $False
+		return $Result
+	}
+	
+	[PSFramework.Message.MessageHost]::DisableVerbosity = $Value
+	
+	return $Result
+}
+#endregion message.consoleoutput.disable
+
 #region developer.mode.enable
 $scriptBlock['developer.mode.enable'] = {
 	Param (
@@ -268,13 +292,14 @@ $scriptBlock['developer.mode.enable'] = {
 #endregion Prepare handlers
 
 #region Apply settings
-Set-PSFConfig -Module PSFramework -Name 'message.info.maximum' -Value 3 -Initialize -Handler $scriptBlock['message.info.maximum'] -Description "The maximum message level to still display to the user directly."
-Set-PSFConfig -Module PSFramework -Name 'message.verbose.maximum' -Value 6 -Initialize -Handler $scriptBlock['message.verbose.maximum'] -Description "The maxium message level where verbose information is still written."
-Set-PSFConfig -Module PSFramework -Name 'message.debug.maximum' -Value 9 -Initialize -Handler $scriptBlock['message.debug.maximum'] -Description "The maximum message level where debug information is still written."
 Set-PSFConfig -Module PSFramework -Name 'message.info.minimum' -Value 1 -Initialize -Handler $scriptBlock['message.info.minimum'] -Description "The minimum required message level for messages that will be shown to the user."
+Set-PSFConfig -Module PSFramework -Name 'message.info.maximum' -Value 3 -Initialize -Handler $scriptBlock['message.info.maximum'] -Description "The maximum message level to still display to the user directly."
 Set-PSFConfig -Module PSFramework -Name 'message.verbose.minimum' -Value 4 -Initialize -Handler $scriptBlock['message.verbose.minimum'] -Description "The minimum required message level where verbose information is written."
+Set-PSFConfig -Module PSFramework -Name 'message.verbose.maximum' -Value 6 -Initialize -Handler $scriptBlock['message.verbose.maximum'] -Description "The maxium message level where verbose information is still written."
 Set-PSFConfig -Module PSFramework -Name 'message.debug.minimum' -Value 1 -Initialize -Handler $scriptBlock['message.debug.minimum'] -Description "The minimum required message level where debug information is written."
+Set-PSFConfig -Module PSFramework -Name 'message.debug.maximum' -Value 9 -Initialize -Handler $scriptBlock['message.debug.maximum'] -Description "The maximum message level where debug information is still written."
 Set-PSFConfig -Module PSFramework -Name 'message.info.color' -Value 'Cyan' -Initialize -Handler $scriptBlock['message.info.color'] -Description "The color to use when writing text to the screen on PowerShell."
 Set-PSFConfig -Module PSFramework -Name 'message.developercolor' -Value 'Gray' -Initialize -Handler $scriptBlock['message.developercolor'] -Description "The color to use when writing text with developer specific additional information to the screen on PowerShell."
+Set-PSFConfig -Module PSFramework -Name 'message.consoleoutput.disable' -Value $false -Initialize -Handler $scriptBlock['message.consoleoutput.disable'] -Description "Global toggle that allows disabling all regular messages to screen. Messages from '-Verbose' and '-Debug' are unaffected"
 Set-PSFConfig -Module PSFramework -Name 'developer.mode.enable' -Value $false -Initialize -Handler $scriptBlock['developer.mode.enable'] -Description "Developermode enables advanced logging and verbosity features. There is little benefit for enabling this as a regular user. but developers can use it to more easily troubleshoot issues."
 #endregion Apply settings
