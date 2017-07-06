@@ -23,6 +23,7 @@ LONG DESCRIPTION
 	- Messaging Configuration
 	- Advanced messaging functionality
 	- The logging system
+	-- The logging system's configuration
 	- Logging: File System
 	-- Functionality
 	-- Configuration
@@ -143,14 +144,17 @@ LONG DESCRIPTION
 	'PSFramework.message.info.minimum' (Default: 1)
 	'PSFramework.message.info.maximum' (Default: 3)
 	The level range at which messages are sent to host/information
+	Set to 0 to disable.
 	
 	'PSFramework.message.verbose.minimum' (Default: 4)
 	'PSFramework.message.verbose.maximum' (Default: 6)
 	The level range at which messages are sent to verbose
+	Set to 0 to disable.
 	
 	'PSFramework.message.debug.minimum' (Default: 1)
 	'PSFramework.message.debug.maximum' (Default: 9)
 	The level range at which messages are sent to debug
+	Set to 0 to disable.
 	
 	'PSFramework.message.info.color' (Default: Cyan)
 	The color regular messages are printed to the host.
@@ -181,12 +185,214 @@ LONG DESCRIPTION
 	#                     Advanced messaging functionality                    #
 	#-------------------------------------------------------------------------#
 	
-	<Content Pending>
+	After having scratched the surface of Write-PSFMessage, there's more to be
+	had. From the more advanced parameters until debugging with	Get-PSFMessage
+	
+	#                               Parameters
+	#--------------------------------------------------------------------------
+	
+	Beyond the two basic parameters '-Level' and '-Message' there are quite a
+	few additional parameters, allowing access to more complex features:
+	
+	-FunctionName
+	This parameter automatically detects the name of the function calling it, so
+	in most cases it is not necessary to specify it. However, if you have an
+	intermediary function and want to pass on the original function name, here
+	you can explicitly choose the name.
+	This name becomes part of the log and thus useful for troubleshooting.
+	
+	-ErrorRecord
+	This allows you to attach one or several exceptions to the message written.
+	When you do, pass the entire errorrecord(s), not merely the exception object
+	Using this parameter has several consequences:
+	- It will add an error entry in the in-memory log
+	- It will add an error entry in the logging queue
+	- It will automatically add the message of the first exception to the
+	  message written (if it isn't there yet)
+	- It will write the exception to the error stream
+	- It will add the error record to the $error variable
+	A very simple example on how to use it:
+	
+	  try { $null.ToString() }
+	  catch { Write-PSFMessage -Level Warning -ErrorRecord $_ -Message "Failed to do the impossible!" }
+	
+	What this will NOT do by itself is print the error to screen. In case of
+	need there is the full error object still in memory and logged to xml
+	
+	-EnableException
+	Setting this parameter to $true will cause the function to write the
+	exception more publicly to the screen (just passing -ErrorRecord will not do
+	so). By itself of not critical value, it conforms itself to the Flow Control
+	components behavior, allowing for uniformity in handling exceptions.
+	It is a boolean type, since it is designed to be passed through by the
+	calling function (The calling function would implement a switch parameter
+	named '-EnableException' and pass that value straight through to
+	Write-PSFMessage and Stop-PSFFunction.
+	
+	-Target
+	Adds the object that was being processed to the message. This has no effect
+	on any messages shown on the screen, however will be part of the in-memory
+	log as well as log file. NEVER ADD SENSITIVE DATA such as clear Passwords.
+	This allows following an object in the logs as it passes through commands,
+	enabling object-based tracing.
+	Also handy to extract the failing input when processing many items, only
+	some of which failed.
+	
+	-Once
+	Write a specific message once only. This allows easily sending warnings such
+	as deprecation warnings without spamming the user in them.
+	This parameter must be passed a string in order to uniquely identify it. It
+	also uses the function name, so it must only be unique per function.
+	Example:
+	  
+	  Write-PSFMessage -Level Warning -Once "1" -Message "The parameter '-Example' has been deprecated and will be removed in future versions. Its functionality has become part of the baseline."
+	
+	
+	#                              Level Concept
+	#--------------------------------------------------------------------------
+	
+	The levels were introduced, in order to be able to more smoothly control
+	verbosity levels. For a simple implementation, levels 2 and 5 more than
+	suffice. However when it comes to user comfort, the user is able to choose
+	the level at which he will be directly informed, at which point a scaling
+	use of levels allows the user the level of detail he is confronted with.
+	
+	Example:
+	A function accepts computers as input and for each does a complex procedure
+	consisting of 3 major steps and lots of sub-steps. At this point the message
+	distribution could be like this:
+	Starting to process computer n: Level 4
+	- Starting Step 1: Level 5
+	-- Substep X: Level 6
+	-- Substep Y: Level 6
+	-- Substep Z: Level 6
+	- Starting Step 2: Level 5
+	-- Substep X: Level 6
+	-- Substep Y: Level 6
+	-- Substep Z: Level 6
+	- Starting Step 2: Level 5
+	-- Substep X: Level 6
+	-- Substep Y: Level 6
+	-- Substep Z: Level 6
+	By default, the user will not see a thing while this function proceeds. If
+	he increases the maximum level for information messages to 4 however:
+	
+	  Set-PSFConfig -Name 'psframework.message.info.maximum' -Value 4
+	
+	He will now be shown the computer that is currently being processed. Still
+	impatient, he then increases it to '5' and will suddenly see each of the
+	main steps being logged to screen.
+	
+	The level will also be printed to the log, allowing another level of
+	filtering. If the message structure as shown is respected, the log itself
+	allows tracing the rough architecture if the function using	Write-PSFMessage
+	
+	
+	#                   Troubleshooting with Get-PSFMessage
+	#--------------------------------------------------------------------------
+	
+	Get-PSFMessage will return the messages written straight from memory, it
+	doesn't touch the logfiles itself. However, what it allows is filtering for
+	information, since the logged entries contain a lot mroe meta-data than just
+	the line of text.
+	By filtering by the TargetObject property, it becomes possible to search for
+	all messages (shown or not shown. They ALL are logged and available)
+	relating to an object that was processe (Assuming the above described
+	'-Target' parameter was used and properly filled).
+	Of course, it is also possible to filter by function that wrote the message.
+	
+	Combining the two, it becomes fairly simple to retrieve all objects passed
+	to the implementing function whose processing failed.
+	
+	Get-PSFMessage also contains a parameter '-Errors', which allows retrieving
+	the logged exceptions (which will also contain information such as function,
+	timestamp and targetobject). This deals with one of the steadily escalating
+	issues that even with try/catch, errors get added to the $error variable,
+	which has led to that variable having lost significant usefulness in
+	troubleshooting non-trivial issues.
+	
+	
+	#                      Bringing color to your screen
+	#--------------------------------------------------------------------------
+	
+	Messages can provide write information for the user to see on the screen.
+	However, information is easier to interpret if the essentials can be read by
+	scanning, rather than detail reading. One of the bost helps with that is
+	color. The human eye is drawn to these words that have a different color.
+	
+	All messages in the PSFramework support a html-style tag syntax in order to
+	do inline color definition. Example:
+	
+	  Write-PSFMessage -Level VeryVerbose -Message "Connecting to <c='em'>$computer</c>"
+	
+	This will print the specified line with color highlighting IF the user has
+	his maximum information level to 4 or higher. The color tags are stripped
+	from the message before being logged, so the logs or not impaired by them.
+	
+	The following colors are supported:
+	- All legal console colors
+	- em:  Emphasis. The color configured under
+	       'PSFramework.message.info.color.emphasis'
+	- sub: Subtle. The color configured under
+		   'PSFramework.message.info.color.subtle'
+	Warning: Generally, it is recommended to restrict yourself to the specially
+	configured colors 'em' and 'sub'. While static colors are supported, console
+	color layouts may vary and what looks good for one user may not look good
+	for the other. By using the configuration system, it becomes possible to
+	give a user a choice in the color scheme.
+	
+	Illegal colors will be stripped without comment.
+	
+	For the purpose of building menues or head messages (which arguably aren't
+	messages, since they do not contain information that needs to be logged),
+	there is another command available:
+	
+	  Write-PSFHostColor
+	
+	Which is basically the function used by Write-PSFMessage for its final
+	colorful output.
 	
 	
 	#-------------------------------------------------------------------------#
 	#                           The logging system                            #
 	#-------------------------------------------------------------------------#
+	
+	The logging system consists of the following components:
+	- The in-memory queue
+	- The logging queue
+	- The logging script
+	
+	| The in-memory queue |
+	#---------------------#
+	All messages are kept in a queue in memory. It is self-limiting in that once
+	its capacity has been exceeded, the oldest entry will be removed.
+	The same hodls true for the exceptions that are logged.
+	All messages and exceptions are tagged by runspace ID, when parallel
+	processing, parallel runspaces log to the same queues. This allows
+	troubleshooting not only the primary runspace but all of them. Keeping the
+	runspace ID allows filtering by runspace.
+	This is the information retrieved by the Get-PSFMessage function.
+	
+	| The logging queue  |
+	#--------------------#
+	All messages and exceptions are also added to a set of queues that are
+	collected by the logging script. These too have a (more generous) maximum
+	capacity to prevent memory flood.
+	These queues should never accumulate much data as the logging script should
+	collect them frequently.
+	
+	| The logging script |
+	#--------------------#
+	The logging script gathers the info from the logging queue and logs them.
+	Currently, only the filesystem logging is implemented, however additional
+	logging providers will soon become available, providing a wider choice of 
+	logging options. Filesystem however will remain the default option.
+	The script is operated by the modules own runspace component and can be
+	controlled using its functions.
+	
+	
+	#                   The logging system's configuration
+	#--------------------------------------------------------------------------
 	
 	<Content Pending>
 	
