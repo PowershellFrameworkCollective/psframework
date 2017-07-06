@@ -52,12 +52,12 @@
 			This value will be processed by handlers, if any are set.
 	
 		.EXAMPLE
-			PS C:\> Set-DbaConfig -Name 'User' -Value "Friedrich" -Description "The user under which the show must go on."
+			PS C:\> Set-PSFConfig -Name 'User' -Value "Friedrich" -Description "The user under which the show must go on."
 	
 			Creates a configuration entry named "User" with the value "Friedrich"
 	
 		.EXAMPLE
-			PS C:\> Set-DbaConfig -Name 'mymodule.User' -Value "Friedrich" -Description "The user under which the show must go on." -Handler $scriptBlock -Initialize
+			PS C:\> Set-PSFConfig -Name 'mymodule.User' -Value "Friedrich" -Description "The user under which the show must go on." -Handler $scriptBlock -Initialize
 	
 			Creates a configuration entry ...
 			- Named "mymodule.user"
@@ -70,13 +70,13 @@
 			Only then will the system validate previous settings (such as what a user might have placed in his user profile)
 	
 		.EXAMPLE
-			PS C:\> Set-DbaConfig 'ConfigLink' 'https://www.example.com/config.xml' 'Company' -Hidden
+			PS C:\> Set-PSFConfig 'ConfigLink' 'https://www.example.com/config.xml' 'Company' -Hidden
 	
 			Creates a configuration entry named "ConfigLink" in the "Company" module with the value 'https://www.example.com/config.xml'.
 			This entry is hidden from casual discovery using Get-Config.
 	
 		.EXAMPLE
-			PS C:\> Set-DbaConfig 'Network.Firewall' '10.0.0.2' -Default
+			PS C:\> Set-PSFConfig 'Network.Firewall' '10.0.0.2' -Default
 	
 			Creates a configuration entry named "Firewall" in the "Network" module with the value '10.0.0.2'
 			This is only set, if the setting does not exist yet. If it does, this command will apply no changes.
