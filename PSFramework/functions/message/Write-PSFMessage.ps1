@@ -157,18 +157,18 @@
 		else { $targetString = "" }
 		
 		$newMessage = @"
-[$($timestamp.ToString("HH:mm:ss"))][$FunctionName][L: $Level]$targetString[C: $channels_future][EE: $EnableException][O: $($true -eq $Once)]
+[$($timestamp.ToString("HH:mm:ss"))][$FunctionName][L: $Level]$targetString[C: $channels_future][EE: $EnableException][O: $(Was-Bound Once)]
     $baseMessage
 "@
 		$newColoredMessage = @"
-[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>][<c='gray'>L:</c> <c='green'>$Level</c>]<c='green'>$targetString</c>[<c='gray'>C:</c> <c='green'>$channels_future</c>][<c='gray'>EE:</c> <c='green'>$EnableException</c>][<c='gray'>O:</c> <c='green'>$($true -eq $Once)</c>]
-    $baseMessage
+[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>][<c='gray'>L:</c> <c='green'>$Level</c>]<c='green'>$targetString</c>[<c='gray'>C:</c> <c='green'>$channels_future</c>][<c='gray'>EE:</c> <c='green'>$EnableException</c>][<c='gray'>O:</c> <c='green'>$(Was-Bound Once)</c>]
+    $coloredMessage
 "@
 	}
 	else
 	{
 		$newMessage = "[$($timestamp.ToString("HH:mm:ss"))][$FunctionName] $baseMessage"
-		$newColoredMessage = "[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>] $baseMessage"
+		$newColoredMessage = "[<c='gray'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='gray'>$FunctionName</c>] $coloredMessage"
 	}
 	if ($ErrorRecord -and ($Message -notlike "*$($ErrorRecord[0].Exception.Message)*"))
 	{
