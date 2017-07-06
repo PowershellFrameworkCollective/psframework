@@ -68,13 +68,13 @@ LONG DESCRIPTION
 	A few Examples that will show the basic usage:
 	  
 	  # Retrieve entire configuration element
-	  Get-PSFConfig 'psframework.message.info.maximum'
+	  Get-PSFConfig -FullName 'psframework.message.info.maximum'
 	  
 	  # Update with valid value
-	  Set-PSFConfig 'psframework.message.info.maximum' 5
+	  Set-PSFConfig -Name 'psframework.message.info.maximum' -Value 5
 	  
 	  # Update with invalid value
-	  Set-PSFConfig 'psframework.message.info.maximum' "foo"
+	  Set-PSFConfig -Name 'psframework.message.info.maximum' -Value 'foo'
 	  
 	While manipulating existing configuration entries is simple, creating new
 	ones is slightly more involved, for which it is recommended to read the full
@@ -194,11 +194,17 @@ LONG DESCRIPTION
 	- Manages named runspaces for background tasks
 	- Prevents multiple copies being executed in parallel
 	
-	This component was built to support the internal logging runspace. It allows
-	registering runspaces that can never be run more than once at a time. This
-	comes in handy for maintenance scripts in situations where the module might
-	be imported multiple times within the same process (e.g.: through regular
-	runspaces).
+	This component runs a script in parallel to the main code execution. This
+	script must be registered by name, the system will prevent multiple copies
+	to be executed in parallel.
+	This allows a module to create a maintenance script that will run in
+	parallel, without:
+	- Having to implement this parallelism.
+	- Having to worry about multiple copies to run in parallel (so issues such
+	  as conflicts when accessing a file are avoided)
+	- Having to worry about doubling the number of runspaces when the module is
+	  used in parallel operations.
+
 	
 KEYWORDS
 	psframework

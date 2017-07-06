@@ -5,7 +5,10 @@ SHORT DESCRIPTION
 	Explains the PSFrameworks runspace component
 	
 LONG DESCRIPTION
-	Component Commands:
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
 	- Get-PSFRunspace
 	- Register-PSFRunspace
 	- Start-PSFRunspace

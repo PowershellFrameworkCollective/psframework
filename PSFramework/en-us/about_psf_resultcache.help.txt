@@ -5,7 +5,10 @@ SHORT DESCRIPTION
 	Explains the PSFrameworks result cache component
 	
 LONG DESCRIPTION
-	Component Commands:
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
 	- Clear-PSFResultCache
 	- Get-PSFResultCache
 	- Set-PSFResultCache

@@ -5,7 +5,10 @@ SHORT DESCRIPTION
 	Explains the PSFrameworks license component
 	
 LONG DESCRIPTION
-	Component Commands:
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
 	- Get-PSFLicense
 	- New-PSFLicense
 	- Remove-PSFLicense

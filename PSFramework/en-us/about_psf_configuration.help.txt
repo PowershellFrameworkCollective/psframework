@@ -5,7 +5,10 @@ SHORT DESCRIPTION
 	Explains the PSFrameworks configuration component
 	
 LONG DESCRIPTION
-	Component Commands:
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
 	- Get-PSFConfig
 	- Get-PSFConfigValue
 	- Set-PSConfig
