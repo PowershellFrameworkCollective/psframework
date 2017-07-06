@@ -217,6 +217,56 @@ $scriptBlock['message.info.color'] = {
 }
 #endregion message.info.color
 
+#region message.info.color.emphasis
+$scriptBlock['message.info.color.emphasis'] = {
+	Param (
+		$Value
+	)
+	
+	$Result = New-Object PSObject -Property @{
+		Success = $True
+		Message = ""
+	}
+	
+	try { [System.ConsoleColor]$number = $Value }
+	catch
+	{
+		$Result.Message = "Not a console color: $Value"
+		$Result.Success = $False
+		return $Result
+	}
+	
+	[PSFramework.Message.MessageHost]::InfoColorEmphasis = $Value
+	
+	return $Result
+}
+#endregion message.info.color.emphasis
+
+#region message.info.color.subtle
+$scriptBlock['message.info.color.subtle'] = {
+	Param (
+		$Value
+	)
+	
+	$Result = New-Object PSObject -Property @{
+		Success = $True
+		Message = ""
+	}
+	
+	try { [System.ConsoleColor]$number = $Value }
+	catch
+	{
+		$Result.Message = "Not a console color: $Value"
+		$Result.Success = $False
+		return $Result
+	}
+	
+	[PSFramework.Message.MessageHost]::InfoColorSubtle = $Value
+	
+	return $Result
+}
+#endregion message.info.color.subtle
+
 #region message.developercolor
 $scriptBlock['message.developercolor'] = {
 	Param (
@@ -299,6 +349,8 @@ Set-PSFConfig -Module PSFramework -Name 'message.verbose.maximum' -Value 6 -Init
 Set-PSFConfig -Module PSFramework -Name 'message.debug.minimum' -Value 1 -Initialize -Handler $scriptBlock['message.debug.minimum'] -Description "The minimum required message level where debug information is written."
 Set-PSFConfig -Module PSFramework -Name 'message.debug.maximum' -Value 9 -Initialize -Handler $scriptBlock['message.debug.maximum'] -Description "The maximum message level where debug information is still written."
 Set-PSFConfig -Module PSFramework -Name 'message.info.color' -Value 'Cyan' -Initialize -Handler $scriptBlock['message.info.color'] -Description "The color to use when writing text to the screen on PowerShell."
+Set-PSFConfig -Module PSFramework -Name 'message.info.color.emphasis' -Value 'green' -Initialize -Handler $scriptBlock['message.info.color.emphasis'] -Description "The color to use when emphasizing written text to the screen on PowerShell."
+Set-PSFConfig -Module PSFramework -Name 'message.info.color.subtle' -Value 'gray' -Initialize -Handler $scriptBlock['message.info.color.subtle'] -Description "The color to use when making writing text to the screen on PowerShell appear subtle."
 Set-PSFConfig -Module PSFramework -Name 'message.developercolor' -Value 'Gray' -Initialize -Handler $scriptBlock['message.developercolor'] -Description "The color to use when writing text with developer specific additional information to the screen on PowerShell."
 Set-PSFConfig -Module PSFramework -Name 'message.consoleoutput.disable' -Value $false -Initialize -Handler $scriptBlock['message.consoleoutput.disable'] -Description "Global toggle that allows disabling all regular messages to screen. Messages from '-Verbose' and '-Debug' are unaffected"
 Set-PSFConfig -Module PSFramework -Name 'developer.mode.enable' -Value $false -Initialize -Handler $scriptBlock['developer.mode.enable'] -Description "Developermode enables advanced logging and verbosity features. There is little benefit for enabling this as a regular user. but developers can use it to more easily troubleshoot issues."
