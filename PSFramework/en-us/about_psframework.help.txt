@@ -1,0 +1,210 @@
+TOPIC
+	about_psframework
+	
+SHORT DESCRIPTION
+	Gives an overview over the components that make up the PSFramework
+	
+LONG DESCRIPTION
+	When scripting for our everyday work, we often end up doing two things:
+	- Implement the same functionality again and again (Example: Logging),
+	  because it either isn't worth the effort we simply don't have the time to
+	  do it right, once.
+	- Think "Wouldn't it be cool to have this feature?", then get back into the
+	  reality of deadlines and overwork
+	While there is probably no way an outsider can help you with company-
+	specific challenges, this framework is designed to bring you a rich toolkit
+	to deal with the generic scripting issues.
+	
+	Its two main goals in specific are:
+	- Speed up your development, by providing a solid framework of tools to
+	  build upon
+	- Provide a manageability to your code
+	
+	The module consists of several compenent parts:
+	
+	- Configuration : Provide self-documenting settings with input validation
+	                  and change events
+	
+	- Flow Control :  Designed for modules, provide a managed way to handle
+	                  exceptions and how they are presented to the user
+	
+	- License :       Centralize license registration
+	
+	- Message :       Powerful logging system, gives flexible control over what
+	                  message goes where
+	
+	- Result Cache :  Allows caching the output of a function, enabling access
+	                  to its contents, even when the user forgot to store the
+					  output in a variable
+	
+	- Runspace :      A system that manages runspaces in a peculiar fashion: It
+	                  guarantees that there is a single copy of the runspace you
+					  start
+	
+	
+	#-------------------------------------------------------------------------#
+	#                              Configuration                              #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_configuration
+	  
+	Key Benefits:
+	- Avoid hardcoding information
+	- Selfdocumented settings that carry their own validation and reaction to
+	  change
+	
+	The configuration system is a system designed to store and retrieve
+	settings. On the surface it has similarities to variables, in that it maps
+	names to values. However, there are a few key differences:
+	- No scopes: The same value is the same value. Always
+	- Shared across runspaces: All runspaces have access to the same data
+	- Documented: Each setting can contain a description of what it does
+	- Input Validation: Each setting can flexibly validate its changes
+	- Update events: Changes in value can trigger scriptblocks in response
+	This makes it particularly apt at centrally storing and revealing
+	information that would otherwise have been hardcoded somewhere.
+	
+	A few Examples that will show the basic usage:
+	  
+	  # Retrieve entire configuration element
+	  Get-PSFConfig -FullName 'psframework.message.info.maximum'
+	  
+	  # Update with valid value
+	  Set-PSFConfig -Name 'psframework.message.info.maximum' -Value 5
+	  
+	  # Update with invalid value
+	  Set-PSFConfig -Name 'psframework.message.info.maximum' -Value 'foo'
+	  
+	While manipulating existing configuration entries is simple, creating new
+	ones is slightly more involved, for which it is recommended to read the full
+	article on the configuration system first.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                               Flow Control                              #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_flowcontrol
+	  
+	Key Benefits:
+	- Integrate error handling into logging
+	- Manage function termination
+	- Hide exceptions from users but make them available to scripters
+	
+	The target audience for this feature are module developers that want to make
+	using their modules more userfriendly. It provides tools to uniformly
+	suppress exceptions but provide opt-in mechanisms for cases where exceptions
+	rather than warnings are needed.
+	
+	The basic issue this component tries to solve, is the fact that beginners
+	will not process and understand exceptions, but removing them completely
+	brings issues with scripts (which no longer can use try/catch).
+	This is the compromise, bringing exceptions via opt-in.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                                 License                                 #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_license
+	  
+	Key Benefits:
+	- Provide central, manageable store for license of used products
+	
+	The license system allows a module to easily register the license terms for
+	itself and component it uses in a central location. This makes it easier to
+	discover what licenses are currently in use, as it no longer is necessary to
+	parse directories for license texts.
+	
+	#-------------------------------------------------------------------------#
+	#                            Message / Logging                            #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_message
+	
+	Key Benefits:
+	- Easy logging / log management
+	- Logging with automatic logrotate
+	- Configurable and manageable logging
+	- Configurable and manageable script verbosity
+	- Enhanced debugging tools
+	
+	When importing this module for first time in a process, it will start a
+	runspace in the background that will perform the logging. This allows all
+	logging to be performed independent of the function/script that wants to log
+	something, removing disk I/O as a bottleneck.
+	Adopting this system is trivially simple:
+	
+	  # Previous code:
+	  Write-Host "Some text"
+	  Write-Verbose "Some verbose text"
+	  
+	  # New code:
+	  Write-PSFMessage -Level Host -Message "Some text"
+	  Write-PSFMessage -Level Verbose -Message "Some verbose text"
+	
+	This will cause the same message to be written to host or verbose
+	respectively. They will also be queued for logging.
+	
+	It is possible to dig much deeper and discover the deep debugging features
+	integrated into this system, but simply replacing your common message
+	handling calls (see above example) is all it takes to get started with
+	benefitting from this component.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                               Result Cache                              #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_resultcache
+	
+	Key Benefits:
+	- Cache the last result in a uniform way
+	- Improve user experience by forgiving forgetting to store results in
+	  variables
+	
+	This provides a standardized way to 'remember' the last output of a command.
+	Often PowerShell users forget to save the output in a variable. In case of
+	lengthy queries, this could introduce a long wait that was not necessary,
+	when the information is still needed after all. If the command was a
+	function that changes things, it may not even be possible to repeat the
+	execution. In cases like that, having the original output still available
+	helps.
+	
+	This must be implemented in the function that is generating the output, by
+	calling the function 'Set-PSFResultCache'.
+	
+	Retrieving the information for the user is as simple as calling 'glr', the
+	alias for 'Get-PSFResultCache'.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                                 Runspace                                #
+	#-------------------------------------------------------------------------#
+	
+	Main Article:
+	  Get-Help about_psf_runspace
+	
+	Key Benefits:
+	- Manages named runspaces for background tasks
+	- Prevents multiple copies being executed in parallel
+	
+	This component runs a script in parallel to the main code execution. This
+	script must be registered by name, the system will prevent multiple copies
+	to be executed in parallel.
+	This allows a module to create a maintenance script that will run in
+	parallel, without:
+	- Having to implement this parallelism.
+	- Having to worry about multiple copies to run in parallel (so issues such
+	  as conflicts when accessing a file are avoided)
+	- Having to worry about doubling the number of runspaces when the module is
+	  used in parallel operations.
+
+	
+KEYWORDS
+	psframework

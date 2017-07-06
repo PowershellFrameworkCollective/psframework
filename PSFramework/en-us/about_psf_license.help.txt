@@ -1,0 +1,19 @@
+TOPIC
+	about_psf_license
+	
+SHORT DESCRIPTION
+	Explains the PSFrameworks license component
+	
+LONG DESCRIPTION
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
+	- Get-PSFLicense
+	- New-PSFLicense
+	- Remove-PSFLicense
+	
+	<Detailed explanation following>
+	
+KEYWORDS
+	psframework license

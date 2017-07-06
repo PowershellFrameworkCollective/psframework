@@ -1,0 +1,214 @@
+﻿TOPIC
+	about_psf_message
+	
+SHORT DESCRIPTION
+	Explains the PSFrameworks message & logging component
+	
+LONG DESCRIPTION
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
+	- Get-PSFMessage
+	- Write-PSFHostColor
+	- Write-PSFMessage
+	
+	
+	#-------------------------------------------------------------------------#
+	#                            Table of Contents                            #
+	#-------------------------------------------------------------------------#
+	
+	- Introduction
+	- The message architecture
+	- Messaging Configuration
+	- Advanced messaging functionality
+	- The logging system
+	- Logging: File System
+	-- Functionality
+	-- Configuration
+	
+	#-------------------------------------------------------------------------#
+	#                               Introduction                              #
+	#-------------------------------------------------------------------------#
+	
+	We often write messages in a module. Sometimes some verbose messages for
+	debugging purposes, sometimes an info for the user and sometimes even a
+	warning that something seriously went wrong.
+	Also often it becomes necessary or desireable to create logfiles. Logging
+	helps a lot with figuring out what went wrong, but often we only enable it
+	after something broke, because those logs aren't much use when everything
+	works as desired and logs nobody reads are of little use, right?
+	Especially when you have to take care of those logs ...
+	
+	The messaging system unifies the entire process into a single command:
+	
+	  Write-PSFMessage
+	
+	By the simple act of using this function, not only do you write the message
+	to the channels chosen, but also add them to the logging system. That system
+	will not only create log files, but also take care to clean up old or too
+	large files.
+	Example usage:
+	
+	  Write-PSFMessage -Level Host -Message "Writing something the user sees"
+	
+	There are three basic levels available:
+	- Host: Visible to the user by default
+	- Verbose: Written via Write-Verbose, not visible to the user by default
+	- Warning: Writes a warning message.
+	
+	It will automatically add a timestamp and the function that was calling it.
+	While details on how to configure the system are covered in subsequent
+	chapters, the logging path can be read with this command:
+	
+	Get-PSFConfigValue "psframework.logging.filesystem.logpath"
+	
+	However all recently written messages can also be found still in memory, by
+	running:
+	
+	  Get-PSFMessage
+	
+	That command can also show any errors that were logged:
+	
+	  Get-PSFMessage -Errors
+	
+	
+	#-------------------------------------------------------------------------#
+	#                         The message architecture                        #
+	#-------------------------------------------------------------------------#
+	
+	The PowerShell system has multiple streams where information can go, in
+	addition to straight to the host. The Verbose one is probably the best
+	known one, but there are more:
+	- Information
+	- Verbose
+	- Debug
+	- Warning
+	- Error
+	The parameter '-Level' controls, how this message will be written. Each
+	level has a numeric representation (a level). On the other hand, what level
+	is to which stream is controlled by the configuration system. Each level and
+	the <default> settings are shown below:
+	
+	Information:
+	  Critical (1), Important / Output / Host (2), Significant (3)
+	  This is what is usually shown to the end user, printed to the screen.
+	  Starting PowerShell v5, Write-Host is also written to the information
+	  stream, hence it is also available on that.
+	
+	Verbose:
+	  VeryVerbose (4), Verbose (5), SomewhatVerbose (6)
+	  Verbose messages are shown when a command is run with the automatic 
+	  '-Verbose' parameter. They generally help in showing the current progress.
+	  
+	Debug:
+	  Critical (1), Important / Output / Host (2), Significant (3),
+	  VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8),
+	  InternalComment (9), Warning (666)
+	  Debugging information is only really useful to automated debugger systems.
+	  For example when running a powershell script from within a compiled
+	  application, as is common to many monitoring solutions.
+	
+	Warning:
+	  Warning (666)
+	  Warnings signal that something went wrong. They are a way to signal a user
+	  that soemthing went wrong without turning them off with too much confusing
+	  information as red exceptions tend to. Warnings cannot seriously be turned
+	  off short of:
+	  - Globally disabling verbose output
+	  - Enabling Exception and specifying an exception.
+	    (More details on that in "Advanced messaging functionality")
+	
+	Error:
+	  Errors are the system's way to tell other code something went wrong. Those
+	  exceptions are great for debugging but tend to discourage users. There is
+	  no Level for exceptions. You write to the error stream by passing the
+	  ErrorRecord(s) you caught to the '-ErrorRecord' parameter.
+	
+	Once the streams to communicate with have been settled, the command will
+	then pass it to the logging system. For more details on the logging system
+	see below in the chapter "The logging system"
+	
+	
+	#-------------------------------------------------------------------------#
+	#                         Messaging Configuration                         #
+	#-------------------------------------------------------------------------#
+	
+	This section assumes that general understanding of the configuration system
+	has already been achieved. Run this to read up on that component:
+	  Get-Help about_psf_configuration
+	  
+	The messaging system supports several settings that control its behavior:
+	
+	'PSFramework.message.info.minimum' (Default: 1)
+	'PSFramework.message.info.maximum' (Default: 3)
+	The level range at which messages are sent to host/information
+	
+	'PSFramework.message.verbose.minimum' (Default: 4)
+	'PSFramework.message.verbose.maximum' (Default: 6)
+	The level range at which messages are sent to verbose
+	
+	'PSFramework.message.debug.minimum' (Default: 1)
+	'PSFramework.message.debug.maximum' (Default: 9)
+	The level range at which messages are sent to debug
+	
+	'PSFramework.message.info.color' (Default: Cyan)
+	The color regular messages are printed to the host.
+	
+	'PSFramework.message.info.color.emphasis' (Default: Green)
+	The color emphasized text in messages is printed to the host.
+	
+	'PSFramework.message.info.color.subtle' (Default: Gray)
+	The color subtle text in messages is printed to the host.
+	
+	'PSFramework.developer.mode.enable' (Default: False)
+	The developer mode is designed to help in debugging commands that implement
+	the PSFramework. All messages are shown and messages contain a lot more meta
+	information than usual. Messages that are shown that would be invisible to
+	regular users are highlighted in a different color.
+	
+	'PSFramework.message.developercolor' (Default: Gray)
+	The color messages are shown in, that would not have been shown, but are
+	being shown in developer mode (which shows all messages, see above).
+	
+	'PSFramework.message.consoleoutput.disable' (Default: False)
+	This is the master switch that will disable all Information Level output,
+	as well as all warnings. Basically, this enables silent mode that will
+	suppress all output to screen except for uncaught exceptions.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                     Advanced messaging functionality                    #
+	#-------------------------------------------------------------------------#
+	
+	<Content Pending>
+	
+	
+	#-------------------------------------------------------------------------#
+	#                           The logging system                            #
+	#-------------------------------------------------------------------------#
+	
+	<Content Pending>
+	
+	
+	#-------------------------------------------------------------------------#
+	#                           Logging: File System                          #
+	#-------------------------------------------------------------------------#
+	
+	<Content Pending>
+	
+	
+	#                              Functionality
+	#--------------------------------------------------------------------------
+	
+	<Content Pending>
+	
+	
+	#                              Configuration
+	#--------------------------------------------------------------------------
+	
+	<Content Pending>
+	
+	
+KEYWORDS
+	psframework message
