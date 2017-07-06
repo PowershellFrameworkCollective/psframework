@@ -7,8 +7,8 @@ SHORT DESCRIPTION
 LONG DESCRIPTION
 	When scripting for our everyday work, we often end up doing two things:
 	- Implement the same functionality again and again (Example: Logging),
-	  because it either isn't worth the effort we simply don't have the time to
-	  do it right, once.
+	  because it either isn't worth the effort or we simply don't have the time
+	  to do it right, once.
 	- Think "Wouldn't it be cool to have this feature?", then get back into the
 	  reality of deadlines and overwork
 	While there is probably no way an outsider can help you with company-
@@ -20,7 +20,7 @@ LONG DESCRIPTION
 	  build upon
 	- Provide a manageability to your code
 	
-	The module consists of several compenent parts:
+	The module consists of several component parts:
 	
 	- Configuration : Provide self-documenting settings with input validation
 	                  and change events
@@ -153,7 +153,7 @@ LONG DESCRIPTION
 	It is possible to dig much deeper and discover the deep debugging features
 	integrated into this system, but simply replacing your common message
 	handling calls (see above example) is all it takes to get started with
-	benefitting from this component.
+	benefiting from this component.
 	
 	
 	#-------------------------------------------------------------------------#
