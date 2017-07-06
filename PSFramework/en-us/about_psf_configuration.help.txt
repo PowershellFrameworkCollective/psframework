@@ -1,0 +1,16 @@
+TOPIC
+	about_psf_configuration
+	
+SHORT DESCRIPTION
+	Explains the PSFrameworks configuration component
+	
+LONG DESCRIPTION
+	Component Commands:
+	- Get-PSFConfig
+	- Get-PSFConfigValue
+	- Set-PSConfig
+	
+	<Detailed explanation following>
+	
+KEYWORDS
+	psframework configuration

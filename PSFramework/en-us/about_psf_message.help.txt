@@ -5,18 +5,12 @@ SHORT DESCRIPTION
 	Explains the PSFrameworks message component
 	
 LONG DESCRIPTION
-	Bla
-	$psframework_silence
-
-	At what complexity what path for the information is chosen is determined by the configuration settings:
-	psframework.message.infomaximum
-	psframework.message.verbosemaximum
-	psframework.message.debugmaximum
-	psframework.message.infominimum
-	psframework.message.verboseminimum
-	psframework.message.debugminimum
-	Which can be set to any level from 1 through 9
-	Depending on the configuration it is very possible to have multiple paths chosen simultaneously
+	Component Commands:
+	- Get-PSFMessage
+	- Write-PSFHostColor
+	- Write-PSFMessage
+	
+	<Detailed explanation following>
 	
 KEYWORDS
 	psframework message

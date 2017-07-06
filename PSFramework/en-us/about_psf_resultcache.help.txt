@@ -1,0 +1,16 @@
+TOPIC
+	about_psf_resultcache
+	
+SHORT DESCRIPTION
+	Explains the PSFrameworks result cache component
+	
+LONG DESCRIPTION
+	Component Commands:
+	- Clear-PSFResultCache
+	- Get-PSFResultCache
+	- Set-PSFResultCache
+	
+	<Detailed explanation following>
+	
+KEYWORDS
+	psframework resultcache

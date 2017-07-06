@@ -1,0 +1,15 @@
+TOPIC
+	about_psf_flowcontrol
+	
+SHORT DESCRIPTION
+	Explains the PSFrameworks flow control component
+	
+LONG DESCRIPTION
+	Component Commands:
+	- Stop-PSFFunction
+	- Test-PSFFunctionInterrupt
+	
+	<Detailed explanation following>
+	
+KEYWORDS
+	psframework flowcontrol
