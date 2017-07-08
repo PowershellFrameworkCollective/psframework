@@ -113,7 +113,7 @@ LONG DESCRIPTION
 	Warning:
 	  Warning (666)
 	  Warnings signal that something went wrong. They are a way to signal a user
-	  that soemthing went wrong without turning them off with too much confusing
+	  that something went wrong without turning them off with too much confusing
 	  information as red exceptions tend to. Warnings cannot seriously be turned
 	  off short of:
 	  - Globally disabling verbose output
