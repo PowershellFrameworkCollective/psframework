@@ -242,10 +242,10 @@
 			}
 			if ((-not $DisableHandler) -and ($cfg.Handler) -and (Was-Bound -ParameterName "Value"))
 			{
-				$testResult = $cfg.Handler.Invoke($Value)
-				if (-not $TestResult.Success)
+				try { $cfg.Handler.Invoke($Value) }
+				catch
 				{
-					Stop-PSFFunction -Message "Could not update configuration $FullName | Failed handling: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $FullName
+					Stop-PSFFunction -Message "Could not update configuration $FullName | Failed handling $_" -EnableException $EnableException -Category InvalidResult -Target $FullName
 					return
 				}
 			}
