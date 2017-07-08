@@ -22,9 +22,18 @@
 		.PARAMETER Module
 			This allows grouping configuration elements into groups based on the module/component they server.
 			If this parameter is not set, the configuration element is stored under its name only, which increases the likelyhood of name conflicts in large environments.
-    
-        .PARAMETER Description
-            Using this, the configuration setting is given a description, making it easier for a user to comprehend, what a specific setting is for.
+		
+		.PARAMETER Description
+			Using this, the configuration setting is given a description, making it easier for a user to comprehend, what a specific setting is for.
+		
+		.PARAMETER Validation
+			The name of the validation script used for input validation.
+			These can be used to validate make sure that input is of the proper data type.
+			New validation scripts can be registered using Register-PSFConfigValidation
+		
+		.PARAMETER Handler
+			A scriptblock that is executed when a value is being set.
+			Is only executed if the validation was successful (assuming there was a validation, of course)
 		
 		.PARAMETER Hidden
 			Setting this parameter hides the configuration from casual discovery. Configurations with this set will only be returned by Get-Config, if the parameter "-Force" is used.
@@ -33,51 +42,55 @@
 		.PARAMETER Default
 			Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed.
 			Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.
-    
-        .PARAMETER EnableException
-            Replaces user friendly yellow warnings with bloody red exceptions of doom!
-            Use this if you want the function to throw terminating errors you want to catch.
-    
-        .PARAMETER DisableHandler
-            This parameter disables the configuration handlers.
-            Configuration handlers are designed to automatically validate and process input set to a config value, in addition to writing the value.
-            In many cases, this is used to improve performance, by forking the value location also to a static C#-field, which is then used, rather than searching a Hashtable.
-            Sometimes it may only be used to introduce input validation.
-            Normally these shouldn't be circumvented, but just in case, it can be disabled.
-	
+		
 		.PARAMETER Initialize
 			Use this when setting configurations as part of module import.
 			When initializing a configuration, it will only do a thing if the configuration hasn't already been initialized (So if you load the module multiple times or in multiple runspaces, it won't make a difference)
 			Also, if there already was a non-initialized setting set for a given configuration, it will then try to set the old value again.
 			This value will be processed by handlers, if any are set.
+		
+		.PARAMETER DisableValidation
+			This parameters disables the input validation - if any - when processing a setting.
+			Normally this shouldn't be circumvented, but just in case, it can be disabled.
 	
+		.PARAMETER DisableHandler
+			This parameter disables the configuration handlers.
+			Configuration handlers are designed to automatically process input set to a config value, in addition to writing the value.
+			In many cases, this is used to improve performance, by forking the value location also to a static C#-field, which is then used, rather than searching a Hashtable.
+			Normally these shouldn't be circumvented, but just in case, it can be disabled.
+		
+		.PARAMETER EnableException
+			Replaces user friendly yellow warnings with bloody red exceptions of doom!
+			Use this if you want the function to throw terminating errors you want to catch.
+		
 		.EXAMPLE
 			PS C:\> Set-PSFConfig -Name 'User' -Value "Friedrich" -Description "The user under which the show must go on."
-	
+			
 			Creates a configuration entry named "User" with the value "Friedrich"
-	
+		
 		.EXAMPLE
-			PS C:\> Set-PSFConfig -Name 'mymodule.User' -Value "Friedrich" -Description "The user under which the show must go on." -Handler $scriptBlock -Initialize
-	
+			PS C:\> Set-PSFConfig -Name 'mymodule.User' -Value "Friedrich" -Description "The user under which the show must go on." -Handler $scriptBlock -Initialize -Validation String
+			
 			Creates a configuration entry ...
 			- Named "mymodule.user"
 			- With the value "Friedrich"
 			- It adds a description as noted
 			- It registers the scriptblock stored in $scriptBlock as handler
-			- It initializes the script. This block only executes the first time a it is run like this. SUbsequent calls will be ignored.
+			- It initializes the script. This block only executes the first time a it is run like this. Subsequent calls will be ignored.
+			- It registers the basic string input type validator
 			This is the default example for modules using the configuration system.
 			Note: While the -Handler parameter is optional, it is important to add it at the initial initialize call, if you are planning to add it.
 			Only then will the system validate previous settings (such as what a user might have placed in his user profile)
-	
+		
 		.EXAMPLE
 			PS C:\> Set-PSFConfig 'ConfigLink' 'https://www.example.com/config.xml' 'Company' -Hidden
-	
+			
 			Creates a configuration entry named "ConfigLink" in the "Company" module with the value 'https://www.example.com/config.xml'.
 			This entry is hidden from casual discovery using Get-Config.
-	
+		
 		.EXAMPLE
 			PS C:\> Set-PSFConfig 'Network.Firewall' '10.0.0.2' -Default
-	
+			
 			Creates a configuration entry named "Firewall" in the "Network" module with the value '10.0.0.2'
 			This is only set, if the setting does not exist yet. If it does, this command will apply no changes.
 	#>
@@ -101,6 +114,9 @@
 		[string]
 		$Description,
 		
+		[string]
+		$Validation,
+		
 		[System.Management.Automation.ScriptBlock]
 		$Handler,
 		
@@ -112,6 +128,9 @@
 		
 		[switch]
 		$Initialize,
+		
+		[switch]
+		$DisableValidation,
 		
 		[switch]
 		$DisableHandler,
@@ -156,6 +175,15 @@
 		Stop-PSFFunction -Message "Could not update configuration due to policy settings: $FullName" -EnableException $EnableException -Category PermissionDenied
 		return
 	}
+	
+	if (Was-Bound -ParameterName "Validation")
+	{
+		if (-not ([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -contains $Validation.ToLower()))
+		{
+			Stop-PSFFunction -Message "Invalid validation name: $Validation. Supported validations: $([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -join ", ")" -Category InvalidArgument -Target $Name
+			return
+		}
+	}
 	#endregion Prepare runtime and kill execution as needed
 	
 	#region Initializing a configuration
@@ -172,6 +200,7 @@
 		$cfg.Description = $Description
 		$cfg.Value = $Value
 		$cfg.Handler = $Handler
+		if ($Validation) { $cfg.Validation = [PSFramework.Configuration.ConfigurationHost]::Validation[$Validation.ToLower()] }
 		$cfg.Hidden = $Hidden
 		$cfg.Initialized = $true
 		[PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName] = $cfg
@@ -179,7 +208,7 @@
 		if ($itExists) { Set-PSFConfig -Name $FullName -Value $oldValue }
 	}
 	#endregion Initializing a configuration
-
+	
 	#region Regular configuration update
 	else
 	{
@@ -190,6 +219,7 @@
 			$cfg.Module = $Module
 			$cfg.Description = $Description
 			$cfg.Handler = $Handler
+			if ($Validation) { $cfg.Validation = [PSFramework.Configuration.ConfigurationHost]::Validation[$Validation.ToLower()] }
 			$cfg.Hidden = $Hidden
 			[PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName] = $cfg
 			
@@ -200,20 +230,31 @@
 		else
 		{
 			[PSFramework.Configuration.Config]$cfg = [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName]
-			if ((-not $DisableHandler) -and ($cfg.Handler) -and ($PSBoundParameters.ContainsKey("Value")))
+			if ((-not $DisableValidation) -and ($cfg.Validation) -and (Was-Bound -ParameterName "Value"))
 			{
-				$testResult = $cfg.Handler.Invoke($Value)
+				$testResult = $cfg.Validation.Invoke($Value)
 				if (-not $TestResult.Success)
 				{
 					Stop-PSFFunction -Message "Could not update configuration $FullName | Failed validation: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $FullName
 					return
 				}
+				$Value = $testResult.Value
+			}
+			if ((-not $DisableHandler) -and ($cfg.Handler) -and (Was-Bound -ParameterName "Value"))
+			{
+				$testResult = $cfg.Handler.Invoke($Value)
+				if (-not $TestResult.Success)
+				{
+					Stop-PSFFunction -Message "Could not update configuration $FullName | Failed handling: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $FullName
+					return
+				}
 			}
 			
-			if ($PSBoundParameters.ContainsKey("Hidden")) { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Hidden = $Hidden }
-			if ($PSBoundParameters.ContainsKey("Value")) { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value = $Value }
-			if ($PSBoundParameters.ContainsKey("Description")) { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Description = $Description }
-			if ($PSBoundParameters.ContainsKey("Handler")) { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Handler = $Handler }
+			if (Was-Bound -ParameterName "Hidden") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Hidden = $Hidden }
+			if (Was-Bound -ParameterName "Value") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value = $Value }
+			if (Was-Bound -ParameterName "Description") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Description = $Description }
+			if (Was-Bound -ParameterName "Handler") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Handler = $Handler }
+			if (Was-Bound -ParameterName "Validation") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Validation = [PSFramework.Configuration.ConfigurationHost]::Validation[$Validation.ToLower()] }
 		}
 	}
 	#endregion Regular configuration update

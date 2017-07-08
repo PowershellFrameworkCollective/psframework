@@ -5,7 +5,7 @@
 	ModuleToProcess = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.0.0.1'
+	ModuleVersion = '0.9.1.1'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -71,6 +71,7 @@
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
 		'New-PSFLicense',
+		'Register-PSFConfigValidation',
 		'Register-PSFRunspace',
 		'Remove-PSFLicense',
 		'Set-PSFConfig',

@@ -57,6 +57,11 @@ namespace PSFramework.Configuration
         public ScriptBlock Handler;
 
         /// <summary>
+        /// Validates the user input
+        /// </summary>
+        public ScriptBlock Validation;
+
+        /// <summary>
         /// Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
         /// </summary>
         public bool Hidden = false;
