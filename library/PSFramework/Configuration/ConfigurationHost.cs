@@ -12,5 +12,10 @@ namespace PSFramework.Configuration
         /// Hashtable containing all the configuration entries
         /// </summary>
         public static Dictionary<string, Config> Configurations = new Dictionary<string, Config>();
+
+        /// <summary>
+        /// Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.
+        /// </summary>
+        public static bool ImportFromRegistryDone;
     }
 }

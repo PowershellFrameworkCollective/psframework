@@ -74,6 +74,14 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Whether this setting was set by policy and forbids deletion.
         /// </summary>
-        public bool PolicyEnforced = false;
+        public bool PolicyEnforced
+        {
+            get { return _PolicyEnforced; }
+            set
+            {
+                if (_PolicyEnforced == false) { _PolicyEnforced = value; }
+            }
+        }
+        private bool _PolicyEnforced = false;
     }
 }

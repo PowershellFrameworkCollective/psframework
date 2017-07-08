@@ -14,6 +14,10 @@ else
 	}
 }
 
+# Import configuration settings from registry
+if ($doDotSource) { . "$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1" }
+else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText("$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1"))), $null, $null) }
+
 # Start the logging system
 if ($doDotSource) { . "$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1" }
 else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText("$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1"))), $null, $null) }
