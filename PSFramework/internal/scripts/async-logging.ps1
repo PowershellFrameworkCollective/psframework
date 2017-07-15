@@ -147,6 +147,10 @@
 	}
 	catch
 	{
+		
+	}
+	finally
+	{
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$ScriptName.ToLower()].State = "Stopped"
 	}
 }
