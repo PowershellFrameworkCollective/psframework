@@ -23,6 +23,11 @@ namespace PSFramework.Logging
         public bool Enabled;
 
         /// <summary>
+        /// The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
+        /// </summary>
+        public bool Initialized;
+
+        /// <summary>
         /// Event that is executed once per logging script execution, before logging occurs
         /// </summary>
         public ScriptBlock BeginEvent;
