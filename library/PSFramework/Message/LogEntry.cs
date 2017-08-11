@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PSFramework.Message
 {
@@ -27,6 +28,16 @@ namespace PSFramework.Message
         /// What function wrote the message
         /// </summary>
         public string FunctionName;
+
+        /// <summary>
+        /// The name of the module of the function that wrote the message
+        /// </summary>
+        public string ModuleName;
+
+        /// <summary>
+        /// The tags applied to the message
+        /// </summary>
+        public List<string> Tags = new List<string>();
 
         /// <summary>
         /// What level was the message?
@@ -63,16 +74,20 @@ namespace PSFramework.Message
         /// <param name="Type">The type(s) of message written</param>
         /// <param name="Timestamp">When was the message logged</param>
         /// <param name="FunctionName">What function wrote the message</param>
+        /// <param name="ModuleName">Name of the module the function writing this message came from</param>
+        /// <param name="Tags">Tags that were applied to the message</param>
         /// <param name="Level">What level was the message written at.</param>
         /// <param name="Runspace">The ID of the runspace that wrote the message.</param>
         /// <param name="ComputerName">The computer the message was generated on.</param>
         /// <param name="TargetObject">The object this message was all about.</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject)
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject)
         {
             this.Message = Message;
             this.Type = Type;
             this.Timestamp = Timestamp;
             this.FunctionName = FunctionName;
+            this.ModuleName = ModuleName;
+            this.Tags = Tags;
             this.Level = Level;
             this.Runspace = Runspace;
             this.ComputerName = ComputerName;

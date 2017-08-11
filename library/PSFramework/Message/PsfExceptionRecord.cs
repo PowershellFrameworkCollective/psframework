@@ -30,6 +30,16 @@ namespace PSFramework.Message
         public string FunctionName;
 
         /// <summary>
+        /// The module of the function where fail happened
+        /// </summary>
+        public string ModuleName;
+
+        /// <summary>
+        /// The tags that were applied to the failure
+        /// </summary>
+        public List<string> Tags = new List<string>();
+
+        /// <summary>
         /// The message the poor user was shown.
         /// </summary>
         public string Message;
@@ -110,13 +120,17 @@ namespace PSFramework.Message
         /// <param name="ComputerName">The computer the error was recorded</param>
         /// <param name="Timestamp">When did it happen?</param>
         /// <param name="FunctionName">Where did it happen?</param>
+        /// <param name="ModuleName">The name of the module where fail happened</param>
+        /// <param name="Tags">The tags that were assigned to the failure</param>
         /// <param name="Message">What did the witness have to say?</param>
-        public PsfExceptionRecord(Guid Runspace, string ComputerName, DateTime Timestamp, string FunctionName, string Message)
+        public PsfExceptionRecord(Guid Runspace, string ComputerName, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, string Message)
         {
             this.Runspace = Runspace;
             this.ComputerName = ComputerName;
             this.Timestamp = Timestamp;
             this.FunctionName = FunctionName;
+            this.ModuleName = ModuleName;
+            this.Tags = Tags;
             this.Message = Message;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Management.Automation;
 
 namespace PSFramework.Message
@@ -115,13 +116,15 @@ namespace PSFramework.Message
         /// </summary>
         /// <param name="Record">The actual error record as powershell wrote it</param>
         /// <param name="FunctionName">The name of the function writing the error</param>
+        /// <param name="ModuleName">The name of the module the function writing the error came from</param>
+        /// <param name="Tags">The tags that were assigned to the error event</param>
         /// <param name="Timestamp">When was the error written</param>
         /// <param name="Message">What message was passed to the user</param>
         /// <param name="Runspace">The runspace the message was written from</param>
         /// <param name="ComputerName">The computer the error was written on</param>
-        public static void WriteErrorEntry(ErrorRecord[] Record, string FunctionName, DateTime Timestamp, string Message, Guid Runspace, string ComputerName)
+        public static void WriteErrorEntry(ErrorRecord[] Record, string FunctionName, string ModuleName, List<string> Tags, DateTime Timestamp, string Message, Guid Runspace, string ComputerName)
         {
-            PsfExceptionRecord tempRecord = new PsfExceptionRecord(Runspace, ComputerName, Timestamp, FunctionName, Message);
+            PsfExceptionRecord tempRecord = new PsfExceptionRecord(Runspace, ComputerName, Timestamp, FunctionName, ModuleName, Tags, Message);
             foreach (ErrorRecord rec in Record)
             {
                 tempRecord.Exceptions.Add(new PsfException(rec, FunctionName, Timestamp, Message, Runspace, ComputerName));
@@ -144,13 +147,15 @@ namespace PSFramework.Message
         /// <param name="Type">The type of the message logged</param>
         /// <param name="Timestamp">When was the message generated</param>
         /// <param name="FunctionName">What function wrote the message</param>
+        /// <param name="ModuleName">What module did the function writing this message come from?</param>
+        /// <param name="Tags">The tags that were applied to the message</param>
         /// <param name="Level">At what level was the function written</param>
         /// <param name="Runspace">The runspace the message is coming from</param>
         /// <param name="ComputerName">The computer the message was generated on</param>
         /// <param name="TargetObject">The object associated with a given message.</param>
-        public static void WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject = null)
+        public static void WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject = null)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, Level, Runspace, ComputerName, TargetObject);
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 
