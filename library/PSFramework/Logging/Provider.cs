@@ -176,7 +176,7 @@ namespace PSFramework.Logging
         /// <summary>
         /// Scriptblock that adds additional parameters as needed to the Set-PSFLoggingProvider function
         /// </summary>
-        public ScriptBlock Configurationparameters;
+        public ScriptBlock ConfigurationParameters;
 
         /// <summary>
         /// The configuration steps taken by the Set-PSFLoggingProvider function
