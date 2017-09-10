@@ -70,16 +70,20 @@
 		'Get-PSFLicense',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
+		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
 		'Register-PSFConfigValidation',
+		'Register-PSFLoggingProvider',
 		'Register-PSFRunspace',
 		'Remove-PSFLicense',
 		'Set-PSFConfig',
+		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
 		'Start-PSFRunspace',
 		'Stop-PSFFunction',
 		'Stop-PSFRunspace',
 		'Test-PSFFunctionInterrupt',
+		'Test-PSFParameterBinding',
 		'Write-PSFHostColor',
 		'Write-PSFMessage'
 	)
@@ -93,7 +97,8 @@
 	# Aliases to export from this module
 	AliasesToExport = @(
 		'Get-LastResult',
-		'glr'
+		'glr',
+		'Was-Bound'
 	)
 	
 	# List of all modules packaged with this module

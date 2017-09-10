@@ -176,7 +176,7 @@
 		return
 	}
 	
-	if (Was-Bound -ParameterName "Validation")
+	if (Test-PSFParameterBinding -ParameterName "Validation")
 	{
 		if (-not ([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -contains $Validation.ToLower()))
 		{
@@ -230,7 +230,7 @@
 		else
 		{
 			[PSFramework.Configuration.Config]$cfg = [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName]
-			if ((-not $DisableValidation) -and ($cfg.Validation) -and (Was-Bound -ParameterName "Value"))
+			if ((-not $DisableValidation) -and ($cfg.Validation) -and (Test-PSFParameterBinding -ParameterName "Value"))
 			{
 				$testResult = $cfg.Validation.Invoke($Value)
 				if (-not $TestResult.Success)
@@ -240,7 +240,7 @@
 				}
 				$Value = $testResult.Value
 			}
-			if ((-not $DisableHandler) -and ($cfg.Handler) -and (Was-Bound -ParameterName "Value"))
+			if ((-not $DisableHandler) -and ($cfg.Handler) -and (Test-PSFParameterBinding -ParameterName "Value"))
 			{
 				try { $cfg.Handler.Invoke($Value) }
 				catch
@@ -250,11 +250,11 @@
 				}
 			}
 			
-			if (Was-Bound -ParameterName "Hidden") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Hidden = $Hidden }
-			if (Was-Bound -ParameterName "Value") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value = $Value }
-			if (Was-Bound -ParameterName "Description") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Description = $Description }
-			if (Was-Bound -ParameterName "Handler") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Handler = $Handler }
-			if (Was-Bound -ParameterName "Validation") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Validation = [PSFramework.Configuration.ConfigurationHost]::Validation[$Validation.ToLower()] }
+			if (Test-PSFParameterBinding -ParameterName "Hidden") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Hidden = $Hidden }
+			if (Test-PSFParameterBinding -ParameterName "Value") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value = $Value }
+			if (Test-PSFParameterBinding -ParameterName "Description") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Description = $Description }
+			if (Test-PSFParameterBinding -ParameterName "Handler") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Handler = $Handler }
+			if (Test-PSFParameterBinding -ParameterName "Validation") { [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Validation = [PSFramework.Configuration.ConfigurationHost]::Validation[$Validation.ToLower()] }
 		}
 	}
 	#endregion Regular configuration update

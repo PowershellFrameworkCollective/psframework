@@ -34,9 +34,17 @@
 			Possible levels:
 			Critical (1), Important / Output / Host (2), Significant (3), VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8), InternalComment (9), Warning (666)
 			Either one of the strings or its respective number will do as input.
+	
+		.PARAMETER Tag
+			Tags to add to the message written.
+			This allows filtering and grouping by category of message, targeting specific messages.
 		
 		.PARAMETER FunctionName
 			The name of the calling function.
+			Will be automatically set, but can be overridden when necessary.
+	
+		.PARAMETER ModuleName
+			The name of the module, the calling function is part of.
 			Will be automatically set, but can be overridden when necessary.
 		
 		.PARAMETER ErrorRecord
@@ -103,8 +111,14 @@
 		[string]
 		$Message,
 		
+		[string[]]
+		$Tag,
+		
 		[string]
 		$FunctionName = ((Get-PSCallStack)[0].Command),
+		
+		[string]
+		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
 		
 		[System.Management.Automation.ErrorRecord[]]
 		$ErrorRecord,
@@ -133,6 +147,7 @@
 	$silent = $false
 	if ($psframework_silence) { $silent = $true }
 	if ([PSFramework.Message.MessageHost]::DisableVerbosity) { $silent = $true }
+	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	
 	$coloredMessage = $Message
 	$baseMessage = $Message
@@ -149,7 +164,7 @@
 		if (($max_verbose -ge $Level) -and ($min_verbose -le $Level)) { $channels_future += "Verbose" }
 		if (($max_debug -ge $Level) -and ($min_debug -le $Level)) { $channels_future += "Debug" }
 		
-		if ((Was-Bound "Target") -and ($null -ne $Target))
+		if ((Test-PSFParameterBinding "Target") -and ($null -ne $Target))
 		{
 			if ($Target.ToString() -ne $Target.GetType().FullName) { $targetString = " [T: $($Target.ToString())] " }
 			else { $targetString = " [T: <$($Target.GetType().FullName.Split(".")[-1])>] " }
@@ -157,11 +172,11 @@
 		else { $targetString = "" }
 		
 		$newMessage = @"
-[$($timestamp.ToString("HH:mm:ss"))][$FunctionName][L: $Level]$targetString[C: $channels_future][EE: $EnableException][O: $(Was-Bound Once)]
+[$($timestamp.ToString("HH:mm:ss"))][$FunctionName][L: $Level]$targetString[C: $channels_future][EE: $EnableException][O: $(Test-PSFParameterBinding Once)]
     $baseMessage
 "@
 		$newColoredMessage = @"
-[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>][<c='sub'>L:</c> <c='em'>$Level</c>]<c='em'>$targetString</c>[<c='sub'>C:</c> <c='em'>$channels_future</c>][<c='sub'>EE:</c> <c='em'>$EnableException</c>][<c='sub'>O:</c> <c='em'>$(Was-Bound Once)</c>]
+[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>][<c='sub'>L:</c> <c='em'>$Level</c>]<c='em'>$targetString</c>[<c='sub'>C:</c> <c='em'>$channels_future</c>][<c='sub'>EE:</c> <c='em'>$EnableException</c>][<c='sub'>O:</c> <c='em'>$(Test-PSFParameterBinding Once)</c>]
     $coloredMessage
 "@
 	}
@@ -233,7 +248,7 @@
 	{
 		if ((-not $Silent) -and ($max_info -ge $Level) -and ($min_info -le $Level))
 		{
-			if (Was-Bound "Once")
+			if (Test-PSFParameterBinding "Once")
 			{
 				$OnceName = "MessageOnce.$FunctionName.$Once"
 				
@@ -271,10 +286,10 @@
 	$channel_Result = $channels -join ", "
 	if ($channel_Result)
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, "<ModuleName>", $Tags, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
 	}
 	else
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, "<ModuleName>", $Tags, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
 	}
 }

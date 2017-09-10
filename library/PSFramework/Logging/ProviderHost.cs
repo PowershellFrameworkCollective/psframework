@@ -28,5 +28,18 @@ namespace PSFramework.Logging
                     list.Add(prov);
             return list;
         }
+
+        /// <summary>
+        /// Returns all enabled &amp; initialized logging provider
+        /// </summary>
+        /// <returns></returns>
+        public static List<Provider> GetInitialized()
+        {
+            List<Provider> list = new List<Provider>();
+            foreach (Provider prov in Providers.Values)
+                if (prov.Enabled && prov.Initialized)
+                    list.Add(prov);
+            return list;
+        }
     }
 }

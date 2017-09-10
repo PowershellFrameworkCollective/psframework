@@ -1,12 +1,13 @@
 ﻿# Action that is performed on registration of the provider using Register-PSFLoggingProvider
-$registration_Event = {
+$registrationEvent = {
 	
 }
 
+#region Logging Execution
 # Action that is performed when starting the logging script (or the very first time if enabled after launching the logging script)
 $begin_event = {
 	#region Helper Functions
-	function Clean-ErrorXml
+	function Clean-FileSystemErrorXml
 	{
 		[CmdletBinding()]
 		Param (
@@ -28,7 +29,7 @@ $begin_event = {
 		}
 	}
 	
-	function Clean-MessageLog
+	function Clean-FileSystemMessageLog
 	{
 		[CmdletBinding()]
 		Param (
@@ -50,7 +51,7 @@ $begin_event = {
 		}
 	}
 	
-	function Clean-GlobalLog
+	function Clean-FileSystemGlobalLog
 	{
 		[CmdletBinding()]
 		Param (
@@ -131,22 +132,24 @@ $error_Event = {
 		$filesystem_num_Error++
 	}
 	
-	Clean-ErrorXml -Path $filesystem_root
+	Clean-FileSystemErrorXml -Path $filesystem_root
 }
 
 # Action that is performed at the end of each logging cycle
 $end_event = {
-	Clean-MessageLog -Path $filesystem_root
-	Clean-GlobalLog -Path $filesystem_root
+	Clean-FileSystemMessageLog -Path $filesystem_root
+	Clean-FileSystemGlobalLog -Path $filesystem_root
 }
 
 # Action that is performed when stopping the logging script
 $final_event = {
 	
 }
+#endregion Logging Execution
 
+#region Function Extension / Integration
 # Script that generates the necessary dynamic parameter for Set-PSFLoggingProvider
-$dynamic_Param_Configuration = {
+$configurationParameters = {
 	$configroot = "psframework.logging.filesystem"
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
@@ -167,7 +170,7 @@ $dynamic_Param_Configuration = {
 }
 
 # Script that is executes when configuring the provider using Set-PSFLoggingProvider
-$configuration_Event = {
+$configurationScript = {
 	$configroot = "psframework.logging.filesystem"
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
@@ -181,6 +184,22 @@ $configuration_Event = {
 	}
 }
 
+# Script that returns a boolean value. "True" if all prerequisites are installed, "False" if installation is required
+$isInstalledScript = {
+	return $true
+}
+
+# Script that provides dynamic parameter for Install-PSFLoggingProvider
+$installationParameters = {
+	# None needed
+}
+
+# Script that performs the actual installation, based on the parameters (if any) specified in the $installationParameters script
+$installationScript = {
+	# Nothing to be done - if you need to install your filesystem, you probably have other issues you need to deal with first ;)
+}
+#endregion Function Extension / Integration
+
 # Configuration settings to initialize
 $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.MaxMessagefileBytes' -Value 5MB -Initialize -Validation "long" -Handler { [PSFramework.Message.LogHost]::MaxMessagefileBytes = $args[0] } -Description "The maximum size of a given logfile. When reaching this limit, the file will be abandoned and a new log created. Set to 0 to not limit the size. This setting is on a per-Process basis. Runspaces share, jobs or other consoles counted separately."
@@ -192,3 +211,5 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.ErrorLogFileEnabled' -Value $true -Initialize -Validation "bool" -Handler { [PSFramework.Message.LogHost]::ErrorLogFileEnabled = $args[0] } -Description "Governs, whether log files for errors are written. This setting is on a per-Process basis. Runspaces share, jobs or other consoles counted separately."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.LogPath' -Value "$($env:APPDATA)\WindowsPowerShell\PSFramework\Logs" -Initialize -Validation "string" -Handler { [PSFramework.Message.LogHost]::LoggingPath = $args[0] } -Description "The path where the PSFramework writes all its logs and debugging information."
 }
+
+Register-PSFLoggingProvider -Name "filesystem" -Enabled $true -RegistrationEvent $registrationEvent -BeginEvent $begin_event -StartEvent $start_event -MessageEvent $message_Event -ErrorEvent $error_Event -EndEvent $end_event -FinalEvent $final_event -ConfigurationParameters $configurationParameters -ConfigurationScript $configurationScript -IsInstalledScript $isInstalledScript -InstallationScript $installationScript -InstallationParameters $installationParameters -ConfigurationSettings $configuration_Settings

@@ -1,13 +1,16 @@
 ﻿# Initialize the configurations
-if ($doDotSource) { foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurationvalidation\*.ps1")) { . $file.FullName } }
-else { foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurationvalidation\*.ps1")) { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText($file.FullName))), $null, $null) } }
-if ($doDotSource) { foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurations\*.ps1")) { . $file.FullName } }
-else { foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurations\*.ps1")) { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText($file.FullName))), $null, $null) } }
+foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurationvalidation\*.ps1"))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
+foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configurations\*.ps1"))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
 
 # Import configuration settings from registry
-if ($doDotSource) { . "$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1" }
-else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText("$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1"))), $null, $null) }
+. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1"
 
 # Start the logging system
-if ($doDotSource) { . "$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1" }
-else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText("$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1"))), $null, $null) }
+. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1"
+

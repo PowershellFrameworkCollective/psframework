@@ -1,7 +1,7 @@
 ﻿$scriptBlock = {
 	try
 	{
-		$script:ScriptName = 'PSFramework.Logging'
+		$script:___ScriptName = 'PSFramework.Logging'
 		
 		#region Helper Functions
 		function Clean-ErrorXml
@@ -80,7 +80,7 @@
 		while ($true)
 		{
 			# This portion is critical to gracefully closing the script
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$ScriptName.ToLower()].State -notlike "Running")
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -notlike "Running")
 			{
 				break
 			}
@@ -151,7 +151,7 @@
 	}
 	finally
 	{
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$ScriptName.ToLower()].State = "Stopped"
+		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State = "Stopped"
 	}
 }
 
