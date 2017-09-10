@@ -206,7 +206,7 @@
 	}
 	if ($ErrorRecord)
 	{
-		[PSFramework.Message.LogHost]::WriteErrorEntry($ErrorRecord, $FunctionName, $timestamp, $baseMessage, $Host.InstanceId, $env:COMPUTERNAME)
+		[PSFramework.Message.LogHost]::WriteErrorEntry($ErrorRecord, $FunctionName, $ModuleName, $Tag, $timestamp, $baseMessage, $Host.InstanceId, $env:COMPUTERNAME)
 	}
 	#endregion Handle Errors
 	

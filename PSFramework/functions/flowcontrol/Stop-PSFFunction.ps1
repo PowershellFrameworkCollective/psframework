@@ -34,12 +34,20 @@
     
             Note:
             Pass the full error record, not just the exception.
+	
+		.PARAMETER Tag
+			Tags to add to the message written.
+			This allows filtering and grouping by category of message, targeting specific messages.
         
         .PARAMETER FunctionName
             The name of the function to crash.
             This parameter is very optional, since it automatically selects the name of the calling function.
             The function name is used as part of the errorid.
             That in turn allows easily figuring out, which exception belonged to which function when checking out the $error variable.
+	
+		.PARAMETER ModuleName
+			The name of the module, the function to be crashed is part of.
+			This parameter is very optional, since it automatically selects the name of the calling function.
         
         .PARAMETER Target
             The object that was processed when the error was thrown.
@@ -95,8 +103,14 @@
 		[System.Management.Automation.ErrorRecord[]]
 		$ErrorRecord,
 		
+		[string[]]
+		$Tag,
+		
 		[string]
 		$FunctionName = ((Get-PSCallStack)[0].Command),
+		
+		[string]
+		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
 		
 		[object]
 		$Target,
@@ -111,6 +125,7 @@
 		$ContinueLabel
 	)
 	
+	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	$records = @()
 	
 	if ($ErrorRecord)
@@ -129,7 +144,7 @@
 	}
 	
 	# Manage Debugging
-	Write-PSFMessage -Level Warning -Message $Message -FunctionName $FunctionName -Target $Target -ErrorRecord $records
+	Write-PSFMessage -Level Warning -Message $Message -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName
 	
 	#region Silent Mode
 	if ($EnableException)
