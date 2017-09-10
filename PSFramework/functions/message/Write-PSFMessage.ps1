@@ -286,10 +286,10 @@
 	$channel_Result = $channels -join ", "
 	if ($channel_Result)
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, "<ModuleName>", $Tags, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $ModuleName, $Tag, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
 	}
 	else
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, "<ModuleName>", $Tags, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $ModuleName, $Tag, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
 	}
 }

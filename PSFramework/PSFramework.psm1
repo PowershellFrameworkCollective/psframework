@@ -8,7 +8,6 @@ function Import-ModuleFile
 		$Path
 	)
 	
-	Write-Host $Path
 	if ($doDotSource) { . $Path }
 	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText($Path))), $null, $null) }
 }
