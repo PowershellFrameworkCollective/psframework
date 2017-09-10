@@ -17,7 +17,7 @@
 		return $Result
 	}
 	
-	if ($number -lt 9)
+	if ($number -lt 0)
 	{
 		$Result.Message = "Negative value: $Value"
 		$Result.Success = $False

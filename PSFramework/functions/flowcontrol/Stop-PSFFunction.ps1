@@ -112,6 +112,12 @@
 		[string]
 		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
 		
+		[System.Exception]
+		$Exception,
+		
+		[switch]
+		$OverrideExceptionMessage,
+		
 		[object]
 		$Target,
 		
@@ -126,25 +132,54 @@
 	)
 	
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
+	
+	#region Handle Input Objects
+	if ($Target)
+	{
+		$targetType = $Target.GetType().FullName
+		
+		switch ($targetType)
+		{
+			"Sqlcollaborative.Dbatools.Parameter.DbaInstanceParameter" { $targetToAdd = $Target.InstanceName }
+			"Microsoft.SqlServer.Management.Smo.Server" { $targetToAdd = ([Sqlcollaborative.Dbatools.Parameter.DbaInstanceParameter]$Target).InstanceName }
+			default { $targetToAdd = $Target }
+		}
+		if ($targetToAdd.GetType().FullName -like "Microsoft.SqlServer.Management.Smo.*") { $targetToAdd = $targetToAdd.ToString() }
+	}
+	#endregion Handle Input Objects
+	
+	#region Message Handling
 	$records = @()
 	
-	if ($ErrorRecord)
+	if ($ErrorRecord -or $Exception)
 	{
-		foreach ($record in $ErrorRecord)
+		if ($ErrorRecord)
 		{
-			$exception = New-Object System.Exception($record.Exception.Message, $record.Exception)
-			if ($record.CategoryInfo.Category) { $Category = $record.CategoryInfo.Category }
-			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $Target)
+			foreach ($record in $ErrorRecord)
+			{
+				if (-not $Exception) { $newException = New-Object System.Exception($record.Exception.Message, $record.Exception) }
+				else { $newException = $Exception }
+				if ($record.CategoryInfo.Category) { $Category = $record.CategoryInfo.Category }
+				$records += New-Object System.Management.Automation.ErrorRecord($newException, "psframework_$FunctionName", $Category, $targetToAdd)
+			}
 		}
+		else
+		{
+			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $targetToAdd)
+		}
+		
+		# Manage Debugging
+		Write-PSFMessage -Level Warning -Message $Message -Silent $Silent -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
 	}
 	else
 	{
 		$exception = New-Object System.Exception($Message)
-		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $Target)
+		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $targetToAdd)
+		
+		# Manage Debugging
+		Write-PSFMessage -Level Warning -Message $Message -Silent $Silent -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
 	}
-	
-	# Manage Debugging
-	Write-PSFMessage -Level Warning -Message $Message -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName
+	#endregion Message Handling
 	
 	#region Silent Mode
 	if ($EnableException)

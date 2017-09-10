@@ -11,6 +11,11 @@ foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\configur
 # Import configuration settings from registry
 . Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1"
 
+foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\loggingProviders\"))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
+
 # Start the logging system
-. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\async-logging.ps1"
+. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\async-logging2.ps1"
 

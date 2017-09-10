@@ -63,8 +63,8 @@
 			For example, when calling this from a function targeting a remote computer, the computername could be specified here, allowing all messages to easily be correlated to the object processed.
 		
 		.PARAMETER EnableException
-			Replaces user friendly yellow warnings with bloody red exceptions of doom!
-			Use this if you want the function to throw terminating errors you want to catch.
+			This parameters disables user-friendly warnings and enables the throwing of exceptions.
+			This is less user friendly, but allows catching exceptions in calling scripts.
 		
 		.EXAMPLE
 			PS C:\> Write-PSFMessage -Level Verbose -Message "Connecting to $computer"
@@ -126,6 +126,9 @@
 		[string]
 		$Once,
 		
+		[switch]
+		$OverrideExceptionMessage,
+		
 		[object]
 		$Target,
 		
@@ -185,7 +188,7 @@
 		$newMessage = "[$($timestamp.ToString("HH:mm:ss"))][$FunctionName] $baseMessage"
 		$newColoredMessage = "[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>] $coloredMessage"
 	}
-	if ($ErrorRecord -and ($Message -notlike "*$($ErrorRecord[0].Exception.Message)*"))
+	if ($ErrorRecord -and ($Message -notmatch ([regex]::Escape("$($ErrorRecord[0].Exception.Message)"))) -and (-not $OverrideExceptionMessage))
 	{
 		$baseMessage += " | $($ErrorRecord[0].Exception.Message)"
 		$newMessage += " | $($ErrorRecord[0].Exception.Message)"
