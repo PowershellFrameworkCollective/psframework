@@ -100,6 +100,14 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
+        /// Signals the registered runspace has stopped execution
+        /// </summary>
+        public void SignalStopped()
+        {
+            _State = PsfRunspaceState.Stopped;
+        }
+
+        /// <summary>
         /// Creates a new runspace container with the basic information needed
         /// </summary>
         /// <param name="Name">The name of the Runspace</param>

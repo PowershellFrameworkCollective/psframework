@@ -16,7 +16,7 @@
 			{
 				if (-not $___provider.Initialized)
 				{
-					. $___provider.BeginEvent
+					$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.BeginEvent)), $null, $null)
 					$___provider.Initialized = $true
 				}
 			}
@@ -25,7 +25,7 @@
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				. $___provider.StartEvent
+				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null)
 			}
 			#endregion Start Event
 			
@@ -40,7 +40,7 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							$___provider.MessageEvent.Invoke($Entry)
+							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry)
 						}
 					}
 				}
@@ -59,7 +59,7 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							$___provider.MessageEvent.Invoke($Record)
+							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record)
 						}
 					}
 				}
@@ -69,7 +69,7 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				. $___provider.EndEvent
+				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null)
 			}
 			#endregion End Event
 			
@@ -85,11 +85,11 @@
 		#region Final Event
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
-			. $___provider.FinalEvent
+			$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.FinalEvent)), $null, $null)
 		}
 		#endregion Final Event
 		
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State = "Stopped"
+		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()
 	}
 }
 
