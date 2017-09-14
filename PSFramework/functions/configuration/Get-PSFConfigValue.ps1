@@ -8,7 +8,7 @@
 			Returns the configuration value stored under the specified name.
 			It requires the full name (<Module>.<Name>) and is usually only called by functions.
 		
-		.PARAMETER Name
+		.PARAMETER FullName
 			The full name (<Module>.<Name>) of the configured value to return.
 	
 		.PARAMETER Fallback
@@ -21,21 +21,22 @@
 			By specifying this parameter, the function will throw an error if no value was found at all.
 		
 		.EXAMPLE
-			PS C:\> Get-PSFConfigValue -Name 'System.MailServer'
+			PS C:\> Get-PSFConfigValue -FullName 'System.MailServer'
 	
 			Returns the configured value that was assigned to the key 'System.MailServer'
 	
 		.EXAMPLE
-			PS C:\> Get-PSFConfigValue -Name 'Default.CoffeeMilk' -Fallback 0
+			PS C:\> Get-PSFConfigValue -FullName 'Default.CoffeeMilk' -Fallback 0
 	
 			Returns the configured value for 'Default.CoffeeMilk'. If no such value is configured, it returns '0' instead.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectComparisonWithNull", "")]
 	[CmdletBinding()]
 	Param (
+		[Alias('Name')]
 		[Parameter(Mandatory = $true)]
 		[string]
-		$Name,
+		$FullName,
 		
 		[object]
 		$Fallback,
@@ -44,15 +45,15 @@
 		$NotNull
 	)
 	
-	$Name = $Name.ToLower()
+	$FullName = $FullName.ToLower()
 	
 	$temp = $null
-	$temp = [PSFramework.Configuration.ConfigurationHost]::Configurations[$Name].Value
+	$temp = [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value
 	if ($temp -eq $null) { $temp = $Fallback }
 	
 	if ($NotNull -and ($temp -eq $null))
 	{
-		Stop-PSFFunction -Message "No Configuration Value available for $Name" -EnableException $true -Category InvalidData -Target $Name
+		Stop-PSFFunction -Message "No Configuration Value available for $FullName" -EnableException $true -Category InvalidData -Target $FullName
 	}
 	else
 	{

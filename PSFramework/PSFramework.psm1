@@ -22,12 +22,10 @@ if ((Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramew
 . Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\preimport.ps1"
 
 # Import all internal functions
-<#
 foreach ($function in (Get-ChildItem "$PSFrameworkModuleRoot\internal\functions\*\*.ps1"))
 {
 	. Import-ModuleFile -Path $function.FullName
 }
-#>
 
 # Import all public functions
 foreach ($function in (Get-ChildItem "$PSFrameworkModuleRoot\functions\*\*.ps1"))
