@@ -47,13 +47,13 @@
 	
 		Retrieves all configuration items of the module MyModule, then registers them in registry to enforce them for all users on the current system.
 #>
-	[CmdletBinding(DefaultParameterSetName = "FullName")]
+	[CmdletBinding(DefaultParameterSetName = "Default")]
 	Param (
-		[Parameter(Mandatory = $true, ParameterSetName = "Config", Position = 0, ValueFromPipeline = $true)]
+		[Parameter(ParameterSetName = "Default", Position = 0, ValueFromPipeline = $true)]
 		[PSFramework.Configuration.Config[]]
 		$Config,
 		
-		[Parameter(Mandatory = $true, ParameterSetName = "FullName", Position = 0, ValueFromPipeline = $true)]
+		[Parameter(ParameterSetName = "Default", Position = 0, ValueFromPipeline = $true)]
 		[string[]]
 		$FullName,
 		
@@ -159,15 +159,13 @@
 	{
 		switch ($parSet)
 		{
-			"Config"
+			"Default"
 			{
 				foreach ($item in $Config)
 				{
 					Write-Config -Config $item -Scope $Scope -EnableException $EnableException
 				}
-			}
-			"FullName"
-			{
+				
 				foreach ($item in $FullName)
 				{
 					if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
