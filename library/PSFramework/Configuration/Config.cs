@@ -40,8 +40,9 @@ namespace PSFramework.Configuration
         {
             get
             {
-                try { return Value.GetType().FullName; }
-                catch { return null; }
+                if (Value == null)
+                    return null;
+                return Value.GetType().FullName;
             }
             set { }
         }
@@ -88,5 +89,46 @@ namespace PSFramework.Configuration
             }
         }
         private bool _PolicyEnforced = false;
+
+        /// <summary>
+        /// The finalized value to put into the registry value when using policy to set this setting.
+        /// </summary>
+        public string RegistryData
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case "System.Boolean":
+                        if ((bool)Value)
+                            return "bool:true";
+                        return "bool:false";
+                    case "System.Int16":
+                        return String.Format("int:{0}", Value);
+                    case "System.Int32":
+                        return String.Format("int:{0}", Value);
+                    case "System.Int64":
+                        return String.Format("long:{0}", Value);
+                    case "System.UInt16":
+                        return String.Format("int:{0}", Value);
+                    case "System.UInt32":
+                        return String.Format("long:{0}", Value);
+                    case "System.UInt64":
+                        return String.Format("long:{0}", Value);
+                    case "System.Double":
+                        return String.Format("double:{0}", Value);
+                    case "System.String":
+                        return String.Format("string:{0}", Value);
+                    case "System.TimeSpan":
+                        return String.Format("timespan:{0}", ((TimeSpan)Value).Ticks);
+                    case "System.DateTime":
+                        return String.Format("datetime:{0}", ((DateTime)Value).Ticks);
+                    case "System.ConsoleColor":
+                        return String.Format("consolecolor:{0}", Value);
+                    default:
+                        return "<type not supported>";
+                }
+            }
+        }
     }
 }

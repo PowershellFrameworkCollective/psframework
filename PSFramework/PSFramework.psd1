@@ -72,6 +72,7 @@
 		'Get-PSFRunspace',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
+		'Register-PSFConfig',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
 		'Register-PSFRunspace',

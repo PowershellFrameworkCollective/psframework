@@ -11,6 +11,8 @@ LONG DESCRIPTION
 
 	- Get-PSFConfig
 	- Get-PSFConfigValue
+	- Register-PSFConfig
+	- Register-PSFConfigValidation
 	- Set-PSConfig
 	
 	<Detailed explanation following>
