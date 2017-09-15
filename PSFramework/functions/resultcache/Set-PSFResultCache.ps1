@@ -11,7 +11,7 @@
 	.PARAMETER InputObject
 		The value to store in the result cache.
 	
-	.PARAMETER Skip
+	.PARAMETER DisableCache
 		Allows you to control, whether the function actually writes to the cache. Useful when used in combination with -PassThru.
 		Does not suppress output via -PassThru. However in combination, these two parameters make caching within a pipeline practical.
 	
@@ -25,12 +25,12 @@
 		Is automatically detected and usually doesn't need to be changed.
 	
 	.EXAMPLE
-		PS C:\> Set-PSFResultCache -InputObject $Results -Skip $NoRes
+		PS C:\> Set-PSFResultCache -InputObject $Results -DisableCache $NoRes
 		
 		Stores the contents of $Results in the result cache, but does nothing if $NoRes is $true (the default Switch-name for disabling the result cache)
 	
 	.EXAMPLE
-		PS C:\> Get-ChildItem $path | Get-Acl | Set-PSFResultCache -Skip $NoRes -PassThru
+		PS C:\> Get-ChildItem $path | Get-Acl | Set-PSFResultCache -DisableCache $NoRes -PassThru
 		
 		Gets all items in $Path, then retrieves each of their Acl, finally it stores those in the result cache (if it isn't disabled via $NoRes) and finally passes each Acl through for the user to see.
 		This will return all objects, even if $NoRes is set to $True.
@@ -48,7 +48,7 @@
 		$InputObject,
 		
 		[boolean]
-		$Skip = $false,
+		$DisableCache = $false,
 		
 		[Switch]
 		$PassThru,
@@ -60,23 +60,23 @@
 	Begin
 	{
 		$IsPipeline = -not $PSBoundParameters.ContainsKey("InputObject")
-		[PSFramework.Utility.ResultCache]::Function = $CommandName
+		[PSFramework.ResultCache.ResultCache]::Function = $CommandName
 		
-		if ($IsPipeline -and (-not $Skip))
+		if ($IsPipeline -and (-not $DisableCache))
 		{
-			[PSFramework.Utility.ResultCache]::Result = @()
+			[PSFramework.ResultCache.ResultCache]::Result = @()
 		}
 	}
 	Process
 	{
 		if ($IsPipeline)
 		{
-			if (-not $Skip) { [PSFramework.Utility.ResultCache]::Result += $PSItem }
+			if (-not $DisableCache) { [PSFramework.ResultCache.ResultCache]::Result += $PSItem }
 			if ($PassThru) { $PSItem }
 		}
 		else
 		{
-			if (-not $Skip) { [PSFramework.Utility.ResultCache]::Result = $InputObject }
+			if (-not $DisableCache) { [PSFramework.ResultCache.ResultCache]::Result = $InputObject }
 			if ($PassThru) { $InputObject }
 		}
 	}

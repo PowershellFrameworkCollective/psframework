@@ -47,13 +47,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Configuration\ConfigScope.cs" />
     <Compile Include="Configuration\ConfigurationHost.cs" />
     <Compile Include="License\License.cs" />
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />
     <Compile Include="License\ProductType.cs" />
+    <Compile Include="Logging\Provider.cs" />
+    <Compile Include="Logging\ProviderHost.cs" />
+    <Compile Include="Message\LogEntry.cs" />
+    <Compile Include="Message\LogEntryType.cs" />
+    <Compile Include="Message\LogHost.cs" />
+    <Compile Include="Message\MessageHost.cs" />
+    <Compile Include="Message\MessageLevel.cs" />
+    <Compile Include="Message\PsfErrorRecord.cs" />
+    <Compile Include="Message\PsfException.cs" />
+    <Compile Include="Message\PsfExceptionRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
+    <Compile Include="Runspace\RunspaceContainer.cs" />
+    <Compile Include="Runspace\RunspaceHost.cs" />
+    <Compile Include="Runspace\RunspaceState.cs" />
+    <Compile Include="TabExpansion\ScriptContainer.cs" />
+    <Compile Include="TabExpansion\TabExpansionHost.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

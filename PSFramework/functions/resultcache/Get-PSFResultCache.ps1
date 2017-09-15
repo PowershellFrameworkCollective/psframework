@@ -21,7 +21,7 @@
 		Returns the latest cached result.
 	
 	.EXAMPLE
-		PS C:\> Get-PSFResultCache -Type
+		PS C:\> Get-PSFResultCache -Type 'All'
 	
 		Returns a meta-information object containing the last result, when it was written and which function did the writing.
 #>
@@ -38,16 +38,16 @@
 		'All'
 		{
 			New-Object PSObject -Property @{
-				Result    = ([PSFramework.Utility.ResultCache]::Result)
-				Function  = ([PSFramework.Utility.ResultCache]::Function)
-				Timestamp = ([PSFramework.Utility.ResultCache]::Timestamp)
+				Result    = ([PSFramework.ResultCache.ResultCache]::Result)
+				Function  = ([PSFramework.ResultCache.ResultCache]::Function)
+				Timestamp = ([PSFramework.ResultCache.ResultCache]::Timestamp)
 			}
 		}
 		'Value'
 		{
-			[PSFramework.Utility.ResultCache]::Result
+			[PSFramework.ResultCache.ResultCache]::Result
 		}
 	}
 }
-New-Alias -Name Get-LastResult -Value Get-PSFResultCache -Option AllScope -Description "A more intuitive name for users to call Get-PSFResultCache"
-New-Alias -Name glr -Value Get-PSFResultCache -Option AllScope -Description "A faster name for users to call Get-PSFResultCache"
+if (-not (Test-Path "alias:Get-LastResult")) { New-Alias -Name Get-LastResult -Value Get-PSFResultCache -Description "A more intuitive name for users to call Get-PSFResultCache" }
+if (-not (Test-Path "alias:glr")) { New-Alias -Name glr -Value Get-PSFResultCache -Description "A faster name for users to call Get-PSFResultCache" }

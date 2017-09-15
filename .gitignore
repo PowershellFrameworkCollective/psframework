@@ -4,6 +4,8 @@
 # ignore the settings folder and files for VSCode
 .vscode/*
 *.psproj
+*.psproj.psbuild
+*.psprojs
 
 # ignore library
 PSFramework/bin/PSFramework.dll
@@ -12,3 +14,4 @@ PSFramework/bin/PSFramework.pdb
 library/PSFramework/obj/*
 library/PSFramework/*.user
 library/PSFramework/bin/*
+*.suo

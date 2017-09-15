@@ -20,7 +20,10 @@
 	Param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]
 		[PSFramework.License.License[]]
-		$License
+		$License,
+		
+		[switch]
+		$EnableException
 	)
 	
 	Begin
@@ -32,7 +35,10 @@
 		foreach ($l in $License)
 		{
 			try { [PSFramework.License.LicenseHost]::Remove($l) }
-			catch { throw }
+			catch
+			{
+				Stop-PSFFunction -Message "Failed to remove license" -ErrorRecord $_ -EnableException $EnableException -Target $l -Continue
+			}
 		}
 	}
 	End

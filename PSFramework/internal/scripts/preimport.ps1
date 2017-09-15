@@ -1,0 +1,1 @@
+﻿if (-not ([PSFramework.Message.LogHost]::LoggingPath)) { [PSFramework.Message.LogHost]::LoggingPath = "$($env:APPDATA)\WindowsPowerShell\PSFramework\Logs" }

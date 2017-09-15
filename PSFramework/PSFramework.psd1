@@ -5,7 +5,7 @@
 	ModuleToProcess = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.0.0.1'
+	ModuleVersion = '0.9.2.5'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -55,7 +55,7 @@
 	TypesToProcess = @()
 	
 	# Format files (.ps1xml) to be loaded when importing this module
-	FormatsToProcess = @()
+	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
@@ -63,12 +63,30 @@
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
-		'Clear-PSFresultCache',
+		'Clear-PSFResultCache',
+		'Get-PSFConfig',
+		'Get-PSFConfigValue',
+		'Get-PSFMessage',
 		'Get-PSFLicense',
 		'Get-PSFResultCache',
+		'Get-PSFRunspace',
+		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
+		'Register-PSFConfig',
+		'Register-PSFConfigValidation',
+		'Register-PSFLoggingProvider',
+		'Register-PSFRunspace',
 		'Remove-PSFLicense',
-		'Set-PSFResultCache'
+		'Set-PSFConfig',
+		'Set-PSFLoggingProvider',
+		'Set-PSFResultCache',
+		'Start-PSFRunspace',
+		'Stop-PSFFunction',
+		'Stop-PSFRunspace',
+		'Test-PSFFunctionInterrupt',
+		'Test-PSFParameterBinding',
+		'Write-PSFHostColor',
+		'Write-PSFMessage'
 	)
 	
 	# Cmdlets to export from this module
@@ -78,7 +96,11 @@
 	VariablesToExport = ''
 	
 	# Aliases to export from this module
-	AliasesToExport = '' #For performanace, list alias explicity
+	AliasesToExport = @(
+		'Get-LastResult',
+		'glr',
+		'Was-Bound'
+	)
 	
 	# List of all modules packaged with this module
 	ModuleList = @()
