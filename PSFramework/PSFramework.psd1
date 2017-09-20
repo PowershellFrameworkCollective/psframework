@@ -76,6 +76,8 @@
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
 		'Register-PSFRunspace',
+		'Register-PSFTeppArgumentCompleter',
+		'Register-PSFTeppScriptblock',
 		'Remove-PSFLicense',
 		'Set-PSFConfig',
 		'Set-PSFLoggingProvider',
