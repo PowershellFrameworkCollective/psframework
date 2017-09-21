@@ -30,7 +30,7 @@ LONG DESCRIPTION
 	
 	In PowerShell, when you press the "TAB" key after a parameter, it will
 	provide you with options, what you might want to specify as value for the
-	parameter. By default it will select this information from the current path.
+	parameter. By default, it will select this information from the current path.
 	
 	This is not always the most appropriate option. In fact, there is a way for
 	the developer specifying the available options. This guide explains how the
@@ -49,8 +49,9 @@ LONG DESCRIPTION
 	TEPP:
 	The name TEPP is an acronym that comes from the original module that
 	invented this feature: Tab Expansion Plus Plus. It was integrated into
-	PowerShell with Version 5. If you want custom Tab Expansion described in
-	this guide, you will need to install this module.
+	PowerShell with Version 5. If you want the custom Tab Expansion described in
+	this guide and are running PowerShell versions 3 or 4, you will need to
+	install this module.
 	
 	
 	#-------------------------------------------------------------------------#
@@ -76,21 +77,23 @@ LONG DESCRIPTION
 	}
 	
 	Basically, when the user hits "TAB" or "CTRL" + "SPACE", this script is run.
-	It is also run automatically in the ise after finishing a parameter name and
+	It is also run automatically in the ISE after finishing a parameter name and
 	pressing space.
 	
 	# The parameters are: #
 	#---------------------#
 	
 	CommandName:
-	  The name of the command the parameter belongs to. It's possible to assign
-	  the same completion script to multiple parameters, so it may be of
-	  interest what command called it.
+	  The name of the command the specific parameter being provided tab
+	  completion for belongs to. It's possible to assign the same completion
+	  script to multiple parameters in multiple commands. In some cases it may
+	  be desirable to react to which command is being completed for.
 	
 	ParameterName:
 	  The name of the parameter the tab completion is provided for. Same as for
 	  the command itself, the same tab completion can be assigned for multiple
-	  parameters. You may need/want to know.
+	  parameters. In complex completion scenarios it may be necessary to know
+	  which parameter it is.
 	
 	WordToComplete:
 	  This is a critical info: It's what the user typed before triggering tab
@@ -99,12 +102,12 @@ LONG DESCRIPTION
 	CommandAst:
 	  Complicated stuff, but basically this contains information on the entire.
 	  line. We will not go further into the details of this parameter. If you
-	  already understand ast, then it is unlikely that this guide contains any
-	  news for you.
+	  already understand ast (Abstract Syntax Trees), then it is unlikely that
+	  this guide contains any news for you.
 	
 	FakeBoundParameters:
 	  Similar to when you use the $PSBoundparameters variable inside a function,
-	  this parameter gives you access to the values already bound parameters.
+	  this parameter gives you access to the values already bound to parameters.
 	  Note: This cannot give you access to input provided by pipeline!
 	
 	# Transforming the information #
@@ -112,7 +115,8 @@ LONG DESCRIPTION
 	
 	PowerShell doesn't want text as output of the scriptblock. It wants a
 	special kind of object. The PSFramework simplifies this functionality with
-	the New-PSFTeppCompletionResult command. Example usage:
+	the New-PSFTeppCompletionResult command.
+	Example usage:
 	
 	  New-PSFTeppCompletionResult -CompletionText 'name' -ToolTip 'name'
 	
@@ -121,8 +125,8 @@ LONG DESCRIPTION
 	scriptblocks.
 	
 	Note:
-	This command was hidden to reduce the total amount of commands available to
-	the end user, by hiding something that should never need manual execution.
+	This command was hidden, because the end user should never need to actually
+	run this manually.
 	It can be made visible by running the following line:
 	
 	  { (Get-Item function:New-PSFTeppCompletionResult).Visibility = "Public" }.Invoke()
@@ -165,7 +169,7 @@ LONG DESCRIPTION
 	  default scripts path if there is no custom path configured.
 	- Then search that folder for any files whose names match the current input
 	  and sort them by name.
-	- Finally we generate a completion object for each result found.
+	- Finally, we generate a completion object for each result found.
 	
 	
 	#-------------------------------------------------------------------------#

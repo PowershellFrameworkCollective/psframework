@@ -1,4 +1,5 @@
 ﻿$script:PSFrameworkModuleRoot = $PSScriptRoot
+$script:PSFrameworkModuleVersion = ""
 
 function Import-ModuleFile
 {
