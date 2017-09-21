@@ -1,4 +1,4 @@
-﻿New-PSFLicense -Product 'PSFramework' -Manufacturer 'Friedrich Weinmann' -ProductVersion '0.9.2.5' -ProductType Module -Name MIT -Version "1.0.0.0" -Date (Get-Date -Year 2017 -Month 04 -Day 27 -Hour 0 -Minute 0 -Second 0) -Text @"
+﻿New-PSFLicense -Product 'PSFramework' -Manufacturer 'Friedrich Weinmann' -ProductVersion $PSFrameworkModuleVersion -ProductType Module -Name MIT -Version "1.0.0.0" -Date (Get-Date -Year 2017 -Month 04 -Day 27 -Hour 0 -Minute 0 -Second 0) -Text @"
 Copyright (c) 2017 Friedrich Weinmann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
