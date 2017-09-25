@@ -26,3 +26,6 @@ foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\tepp\\sc
 	. Import-ModuleFile -Path $file.FullName
 }
 . Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\tepp\tepp-assignment.ps1"
+
+# Finally register the license
+. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\license.ps1"

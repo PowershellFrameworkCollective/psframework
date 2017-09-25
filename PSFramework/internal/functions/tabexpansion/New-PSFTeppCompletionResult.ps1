@@ -24,7 +24,7 @@
             Whether to put the result in quotes or not.
         
         .EXAMPLE
-            New-DbaTeppCompletionResult -CompletionText 'master' -ToolTip 'master'
+            New-PSFTeppCompletionResult -CompletionText 'master' -ToolTip 'master'
     
             Returns a CompletionResult with the text and tooltip 'master'
     #>

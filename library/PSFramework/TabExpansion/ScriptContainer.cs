@@ -27,5 +27,10 @@ namespace PSFramework.TabExpansion
         /// The time it took to run the last time
         /// </summary>
         public TimeSpan LastDuration;
+
+        /// <summary>
+        /// Scriptblock for users using simple-TEPP acceleration
+        /// </summary>
+        public ScriptBlock InnerScriptBlock;
     }
 }

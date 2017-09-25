@@ -1,0 +1,255 @@
+﻿TOPIC
+	about_psf_tabexpansion
+	
+SHORT DESCRIPTION
+	Explains the PSFramework's Tab Expansion component
+	
+LONG DESCRIPTION
+	#-------------------------------------------------------------------------#
+	#                           Component Commands                            #
+	#-------------------------------------------------------------------------#
+
+	- New-PSFTeppCompletionResult
+	- Register-PSFTeppArgumentCompleter
+	- Register-PSFTeppScriptblock
+	
+	
+	#-------------------------------------------------------------------------#
+	#                            Table of Contents                            #
+	#-------------------------------------------------------------------------#
+
+	- Introduction
+	- Building the ScriptBlock
+	- Assigning TEPP
+	- Full Example
+	
+	
+	#-------------------------------------------------------------------------#
+	#                               Introduction                              #
+	#-------------------------------------------------------------------------#
+	
+	In PowerShell, when you press the "TAB" key after a parameter, it will
+	provide you with options, what you might want to specify as value for the
+	parameter. By default, it will select this information from the current path.
+	
+	This is not always the most appropriate option. In fact, there is a way for
+	the developer specifying the available options. This guide explains how the
+	PSFramework can help a developer provide custom tab expansion options to the
+	users.
+	
+	The system consists of three separate operations:
+	1) Gathering the information to display
+	2) Turning the information into something the system understands
+	3) Telling the system on what parameter of what function to present it.
+	
+	1) and 2) are done by the developer through a ScriptBlock as shown in the
+	next chapter. This will be ran when the user asks for completion options.
+	3) is usually done on module import (or profile execution).
+	
+	TEPP:
+	The name TEPP is an acronym that comes from the original module that
+	invented this feature: Tab Expansion Plus Plus. It was integrated into
+	PowerShell with Version 5. If you want the custom Tab Expansion described in
+	this guide and are running PowerShell versions 3 or 4, you will need to
+	install this module.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                         Building the ScriptBlock                        #
+	#-------------------------------------------------------------------------#
+	
+	The basic scriptblock that is used to cover 1) and 2) looks like this:
+	
+	$ScriptBlock = {
+		param (
+			$commandName,
+			
+			$parameterName,
+			
+			$wordToComplete,
+			
+			$commandAst,
+			
+			$fakeBoundParameter
+		)
+		
+		# Insert stuff here
+	}
+	
+	Basically, when the user hits "TAB" or "CTRL" + "SPACE", this script is run.
+	It is also run automatically in the ISE after finishing a parameter name and
+	pressing space.
+	
+	# The parameters are: #
+	#---------------------#
+	
+	CommandName:
+	  The name of the command the specific parameter being provided tab
+	  completion for belongs to. It's possible to assign the same completion
+	  script to multiple parameters in multiple commands. In some cases it may
+	  be desirable to react to which command is being completed for.
+	
+	ParameterName:
+	  The name of the parameter the tab completion is provided for. Same as for
+	  the command itself, the same tab completion can be assigned for multiple
+	  parameters. In complex completion scenarios it may be necessary to know
+	  which parameter it is.
+	
+	WordToComplete:
+	  This is a critical info: It's what the user typed before triggering tab
+	  completion. You should only provide options that begin with these letters.
+	
+	CommandAst:
+	  Complicated stuff, but basically this contains information on the entire.
+	  line. We will not go further into the details of this parameter. If you
+	  already understand ast (Abstract Syntax Trees), then it is unlikely that
+	  this guide contains any news for you.
+	
+	FakeBoundParameters:
+	  Similar to when you use the $PSBoundparameters variable inside a function,
+	  this parameter gives you access to the values already bound to parameters.
+	  Note: This cannot give you access to input provided by pipeline!
+	
+	# Transforming the information #
+	#------------------------------#
+	
+	PowerShell doesn't want text as output of the scriptblock. It wants a
+	special kind of object. The PSFramework simplifies this functionality with
+	the New-PSFTeppCompletionResult command.
+	Example usage:
+	
+	  New-PSFTeppCompletionResult -CompletionText 'name' -ToolTip 'name'
+	
+	This command is not exported by the module and invisible to the user for
+	direct, manual execution on the commandline, but it is available to all
+	scriptblocks.
+	
+	Note:
+	This command was hidden, because the end user should never need to actually
+	run this manually.
+	It can be made visible by running the following line:
+	
+	  { (Get-Item function:New-PSFTeppCompletionResult).Visibility = "Public" }.Invoke()
+	
+	
+	# A basic script sample #
+	#-----------------------#
+	
+	Let's assume we want to provide tab completion for the scripts in our
+	scripts repository, but by the file name. not the full name, even if the
+	user currently is in a different path.
+	
+	$ScriptBlock = {
+		param (
+			$commandName,
+			
+			$parameterName,
+			
+			$wordToComplete,
+			
+			$commandAst,
+			
+			$fakeBoundParameter
+		)
+		
+		# Get Path to folder
+		$folder = Get-PSFConfigValue -FullName mymodule.path.scripts -Fallback "$env:USERPROFILE\Documents\WindowsPowerShell\Scripts"
+		
+		# Get all files that match
+		$files = Get-ChildItem $folder | Where-Object Name -like "$wordToComplete*" | Sort-Object Name
+		
+		foreach ($file in $files)
+		{
+			New-PSFTeppCompletionResult -CompletionText $file.FullName -ToolTip $file.FullName
+		}
+	}
+	
+	In this scriptblock we do:
+	- First retrieve the scripts-folder from the configuration system. Use the
+	  default scripts path if there is no custom path configured.
+	- Then search that folder for any files whose names match the current input
+	  and sort them by name.
+	- Finally, we generate a completion object for each result found.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                              Assigning TEPP                             #
+	#-------------------------------------------------------------------------#
+	
+	Finally, in order to make the scriptblock available to the command and
+	parameter we want, two more steps are necessary when using the PSFramework
+	tools:
+	
+	1) Register the scriptblock under a name
+	2) Assign the named scriptblock to command and/or parameter.
+	
+	Continuing the example from the previous chapter, this could look like this:
+	
+	  Register-PSFTeppScriptblock -ScriptBlock $scriptBlock -Name mymodule-scripts
+	  Register-PSFTeppArgumentCompleter -Command Invoke-Script -Parameter Path -Name mymodule-scripts
+	
+	This would ...
+	- Assign the scriptblock under the name "mymodule-scripts"
+	- Assign that scriptblock to the "Path" parameter of the "Invoke-Script"
+	  command.
+	
+	It could also be assigned to other commands or parameters at will, using
+	copies of the second line as often as desired.
+	
+	Notes:
+	- Registering the scriptblock and assigning it need not happen in the same
+	  file.
+	- The scriptblock must be assigned first, before it can be assigned to
+	  commands or parameters.
+	The net effect is that you can better distribute code placement. For example
+	the final assignment of scriptblock to command could be done in the same
+	file as the function declaration, while the scriptblock could be used on
+	many commands and stored in an individual file.
+	This makes it easier to manage in a version control system or multi-person
+	project.
+	
+	
+	#-------------------------------------------------------------------------#
+	#                               Full Example                              #
+	#-------------------------------------------------------------------------#
+	
+	Here's again the full implementation example. See the above chapters for
+	explanation:
+	
+	# File 1 #
+	#--------#
+	
+	$ScriptBlock = {
+		param (
+			$commandName,
+			
+			$parameterName,
+			
+			$wordToComplete,
+			
+			$commandAst,
+			
+			$fakeBoundParameter
+		)
+		
+		# Get Path to folder
+		$folder = Get-PSFConfigValue -FullName mymodule.path.scripts -Fallback "$env:USERPROFILE\Documents\WindowsPowerShell\Scripts"
+		
+		# Get all files that match
+		$files = Get-ChildItem $folder | Where-Object Name -like "$wordToComplete*" | Sort-Object Name
+		
+		foreach ($file in $files)
+		{
+			New-PSFTeppCompletionResult -CompletionText $file.FullName -ToolTip $file.FullName
+		}
+	}
+	Register-PSFTeppScriptblock -ScriptBlock $scriptBlock -Name mymodule-scripts
+	
+	
+	# File 2 (Anywhen after running file 1) #
+	#---------------------------------------#
+	
+	Register-PSFTeppArgumentCompleter -Command Invoke-Script -Parameter Path -Name mymodule-scripts
+	
+KEYWORDS
+	psframework tepp tab expansion

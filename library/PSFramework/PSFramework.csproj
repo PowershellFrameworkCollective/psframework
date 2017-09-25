@@ -70,6 +70,7 @@
     <Compile Include="Runspace\RunspaceState.cs" />
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
+    <Compile Include="TabExpansion\TeppScriptMode.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
