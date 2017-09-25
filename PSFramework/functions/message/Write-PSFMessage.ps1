@@ -22,7 +22,7 @@
 			The message to write/log. The function name and timestamp will automatically be prepended.
 		
 		.PARAMETER Level
-			This parameter represents the verbosity of the message. The lower the number, the more important it for a human user to read the message.
+			This parameter represents the verbosity of the message. The lower the number, the more important it is for a human user to read the message.
 			By default, the levels are distributed like this:
 			- 1-3 Direct verbose output to the user (using Write-Host)
 			- 4-6 Output only visible when requesting extra verbosity (using Write-Verbose)
@@ -101,13 +101,12 @@
 			Will also log the message.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
-	[CmdletBinding(DefaultParameterSetName = 'Level')]
+	[CmdletBinding()]
 	Param (
-		[Parameter(Mandatory = $true)]
 		[PSFramework.Message.MessageLevel]
-		$Level,
+		$Level = [PSFramework.Message.MessageLevel]::Verbose,
 		
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, Position = 0)]
 		[string]
 		$Message,
 		
