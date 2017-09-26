@@ -169,7 +169,7 @@
 		}
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -Silent $Silent -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
 	}
 	else
 	{
@@ -177,7 +177,7 @@
 		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $targetToAdd)
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -Silent $Silent -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
 	}
 	#endregion Message Handling
 	
