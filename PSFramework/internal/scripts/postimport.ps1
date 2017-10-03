@@ -27,5 +27,8 @@ foreach ($file in (Get-ChildItem -Path "$PSFrameworkModuleRoot\internal\tepp\\sc
 }
 . Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\tepp\tepp-assignment.ps1"
 
+# Register the task engine
+. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\taskEngine.ps1"
+
 # Finally register the license
 . Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\license.ps1"
