@@ -94,6 +94,7 @@
 		'Test-PSFFunctionInterrupt',
 		'Test-PSFParameterBinding',
 		'Test-PSFTaskEngineCache',
+		'Test-PSFTaskEngineTask',
 		'Write-PSFHostColor',
 		'Write-PSFMessage'
 	)
