@@ -72,6 +72,7 @@
 		'Get-PSFLicense',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
+		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
@@ -86,11 +87,13 @@
 		'Set-PSFConfig',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
+		'Set-PSFTaskEngineCache',
 		'Start-PSFRunspace',
 		'Stop-PSFFunction',
 		'Stop-PSFRunspace',
 		'Test-PSFFunctionInterrupt',
 		'Test-PSFParameterBinding',
+		'Test-PSFTaskEngineCache',
 		'Write-PSFHostColor',
 		'Write-PSFMessage'
 	)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace PSFramework.TaskEngine
         /// The register of available tasks.
         /// </summary>
         public static Dictionary<string, PsfTask> Tasks = new Dictionary<string, PsfTask>();
+
+        /// <summary>
+        /// Cache where modules can store cached data provided by tasks
+        /// </summary>
+        public static Dictionary<string, Hashtable> Cache = new Dictionary<string, Hashtable>();
 
         /// <summary>
         /// Whether there are any due tasks
