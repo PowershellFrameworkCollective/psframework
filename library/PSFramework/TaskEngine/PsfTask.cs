@@ -18,6 +18,11 @@ namespace PSFramework.TaskEngine
         public string Name;
 
         /// <summary>
+        /// A description of what the task is/should be doing
+        /// </summary>
+        public string Description;
+
+        /// <summary>
         /// Whether the task should be done once only
         /// </summary>
         public bool Once;

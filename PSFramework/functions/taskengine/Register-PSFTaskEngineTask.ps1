@@ -20,6 +20,10 @@
 		.PARAMETER Name
 			The name of the task.
 			Must be unique, otherwise it will update the existing task.
+	
+		.PARAMETER Description
+			Description of the task.
+			Helps documenting the task and what it is supposed to be doing.
 		
 		.PARAMETER ScriptBlock
 			The task/scriptblock that should be performed as a background task.
@@ -66,6 +70,9 @@
 		[string]
 		$Name,
 		
+		[string]
+		$Description,
+		
 		[Parameter(Mandatory = $true)]
 		[System.Management.Automation.ScriptBlock]
 		$ScriptBlock,
@@ -95,6 +102,7 @@
 	if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name.ToLower()))
 	{
 		$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name.ToLower()]
+		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description}
 		if ($task.ScriptBlock -ne $ScriptBlock) { $task.ScriptBlock = $ScriptBlock }
 		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $Once }
 		if (Test-PSFParameterBinding -ParameterName Interval)
@@ -118,6 +126,7 @@
 	{
 		$task = New-Object PSFramework.TaskEngine.PsfTask
 		$task.Name = $Name.ToLower()
+		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description }
 		$task.ScriptBlock = $ScriptBlock
 		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $true }
 		if (Test-PSFParameterBinding -ParameterName Interval)
