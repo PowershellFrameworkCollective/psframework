@@ -87,6 +87,11 @@
 		{
 			$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.FinalEvent)), $null, $null)
 		}
+		
+		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
+		{
+			$___provider.Initialized = $false
+		}
 		#endregion Final Event
 		
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()

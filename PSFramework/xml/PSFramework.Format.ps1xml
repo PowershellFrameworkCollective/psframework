@@ -179,5 +179,48 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
+		
+		<!-- PSFramework.TaskEngine.PsfTask -->
+		<View>
+			<Name>PSFramework.TaskEngine.PsfTask</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.TaskEngine.PsfTask</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Priority</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Name</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Pending</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LastExecution</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Interval</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Description</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
 	</ViewDefinitions>
 </Configuration>

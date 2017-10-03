@@ -59,8 +59,9 @@ namespace PSFramework.Runspace
             {
                 Runspace = PowerShell.Create();
                 Runspace.AddScript(Script.ToString());
-                Runspace.BeginInvoke();
                 _State = PsfRunspaceState.Running;
+                try { Runspace.BeginInvoke(); }
+                catch { _State = PsfRunspaceState.Stopped; }
             }
         }
 
@@ -74,10 +75,13 @@ namespace PSFramework.Runspace
             int i = 0;
 
             // Wait up to the limit for the running script to notice and kill itself
-            while ((Runspace.Runspace.RunspaceAvailability != RunspaceAvailability.Available) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
+            if ((Runspace != null) && (Runspace.Runspace != null))
             {
-                i++;
-                Thread.Sleep(100);
+                while ((Runspace.Runspace.RunspaceAvailability != RunspaceAvailability.Available) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
+                {
+                    i++;
+                    Thread.Sleep(100);
+                }
             }
 
             Kill();
@@ -105,6 +109,7 @@ namespace PSFramework.Runspace
         public void SignalStopped()
         {
             _State = PsfRunspaceState.Stopped;
+            Runspace = null;
         }
 
         /// <summary>

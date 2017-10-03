@@ -5,7 +5,7 @@
 	ModuleToProcess = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.3.8'
+	ModuleVersion = '0.9.4.9'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -64,29 +64,37 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'Disable-PSFTaskEngineTask',
+		'Enable-PSFTaskEngineTask',
 		'Get-PSFConfig',
 		'Get-PSFConfigValue',
 		'Get-PSFMessage',
 		'Get-PSFLicense',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
+		'Get-PSFTaskEngineCache',
+		'Get-PSFTaskEngineTask',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
 		'Register-PSFConfig',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
 		'Register-PSFRunspace',
+		'Register-PSFTaskEngineTask',
 		'Register-PSFTeppArgumentCompleter',
 		'Register-PSFTeppScriptblock',
 		'Remove-PSFLicense',
 		'Set-PSFConfig',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
+		'Set-PSFTaskEngineCache',
 		'Start-PSFRunspace',
 		'Stop-PSFFunction',
 		'Stop-PSFRunspace',
 		'Test-PSFFunctionInterrupt',
 		'Test-PSFParameterBinding',
+		'Test-PSFTaskEngineCache',
+		'Test-PSFTaskEngineTask',
 		'Write-PSFHostColor',
 		'Write-PSFMessage'
 	)
