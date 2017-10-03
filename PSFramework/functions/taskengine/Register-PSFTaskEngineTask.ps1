@@ -51,14 +51,14 @@
 			This is less user friendly, but allows catching exceptions in calling scripts.
 		
 		.EXAMPLE
-			PS C:\> Register-PSFTaskEngineTask -Name 'mymodule.buildcache' -ScriptBlock $ScriptBlock -Once
+			PS C:\> Register-PSFTaskEngineTask -Name 'mymodule.buildcache' -ScriptBlock $ScriptBlock -Once -Description 'Builds the object cache used by the mymodule module'
 	
 			Registers the task contained in $ScriptBlock under the name 'mymodule.buildcache' to execute once at the system's earliest convenience in a medium (default) priority.
 	
 		.EXAMPLE
-			PS C:\> Register-PSFTaskEngineTask -Name 'mymodule.maintenance' -ScriptBlock $ScriptBlock -Interval "00:05:00" -Delay "00:01:00" -Priority Critical
+			PS C:\> Register-PSFTaskEngineTask -Name 'mymodule.maintenance' -ScriptBlock $ScriptBlock -Interval "00:05:00" -Delay "00:01:00" -Priority Critical -Description 'Performs critical system maintenance in order for the mymodule module to function'
 	
-			Registers the task contained in $ScriptBlock nder the name 'mymodule.maintenance'
+			Registers the task contained in $ScriptBlock under the name 'mymodule.maintenance'
 			- Sets it to execute every 5 minutes
 			- Sets it to wait for 1 minute after registration before starting the first execution
 			- Sets it to priority "Critical", ensuring it takes precedence over most other tasks.
