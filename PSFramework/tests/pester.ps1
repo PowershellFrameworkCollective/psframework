@@ -1,1 +1,1 @@
-﻿
+﻿Write-Host "Test Foo"
