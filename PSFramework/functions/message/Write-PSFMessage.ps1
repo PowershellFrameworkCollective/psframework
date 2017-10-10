@@ -122,6 +122,9 @@
 		[System.Management.Automation.ErrorRecord[]]
 		$ErrorRecord,
 		
+		[System.Exception]
+		$Exception,
+		
 		[string]
 		$Once,
 		
@@ -135,6 +138,33 @@
 		$EnableException
 	)
 	
+	<#
+	# Workflow guide #
+	#----------------#
+	
+	Since this command has gotten a bit complex, here's a short guide to its workflow (with considerations attached)
+	
+	1. Process Statics
+	   For performance reasons, some static information is retrieved/determined at the start.
+	2. Apply Transforms
+	   Users/Modules can specify global transforms, that can - depending on the target or exception type - transform
+	   those objects. For example, it could unwrap a wrapped exception or convert a live-state object into a static value object.
+	3. Exception Integration
+	   If the user specified an exception to override anything within the error record (or compßletely without an error record),
+	   this integrates those into a standard error record. This has to be fairly at the top, in order for subsequent steps to have
+	   the finalized version and not care about this complexity.
+	4. Handle Message content
+	   With all preliminaries dealt with, the finalized message versions are processed. Here it will create two message versions:
+	   - A colorful, for host output
+	   - A base version, stripped of all color tags, for logging
+	   If developer mode is enabled, it will instead create more detailed messages
+	5. Handle Errors
+	   With all properties determined, it will now create the logging entry for errors (if any were specified).
+	6. Message Modes
+	   Based on levels specified, it will now write to the message to the determined channels and create entries in the message log.
+	#>
+	
+	#region Preliminary statics
 	$timestamp = Get-Date
 	$developerMode = [PSFramework.Message.MessageHost]::DeveloperMode
 	
@@ -150,7 +180,58 @@
 	if ($psframework_silence) { $silent = $true }
 	if ([PSFramework.Message.MessageHost]::DisableVerbosity) { $silent = $true }
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
+	$fromStopFunction = (Get-PSCallStack)[1].Command -eq "Stop-PSFFunction"
+	#endregion Preliminary statics
 	
+	#region Apply Transforms
+	#region Target Transform
+	if ((-not $fromStopFunction) -and ($Target -ne $null))
+	{
+		$Target = Convert-PsfMessageTarget -Target $Target -FunctionName $FunctionName -ModuleName $ModuleName
+	}
+	#endregion Target Transform
+	
+	#region Exception Transforms
+	if (-not $fromStopFunction)
+	{
+		if ($Exception)
+		{
+			$Exception = Convert-PsfMessageException -Exception $Exception -FunctionName $FunctionName -ModuleName $ModuleName
+		}
+		elseif ($ErrorRecord)
+		{
+			foreach ($record in $ErrorRecord)
+			{
+				$record.Exception = Convert-PsfMessageException -Exception $record.Exception -FunctionName $FunctionName -ModuleName $ModuleName
+			}
+		}
+	}
+	#endregion Exception Transforms
+	#endregion Apply Transforms
+	
+	#region Exception Integration
+	# While conclusive error handling must happen after message handling,
+	# in order to integrate the exception message into the actual message,
+	# it becomes necessary to first integrate the exception and error record parameters into a uniform view
+	
+	# Note: Stop-PSFFunction never specifies this parameter, thus it is not necessary to check,
+	# whether this function was called from Stop-PSFFunction.
+	if ($Exception)
+	{
+		if ($ErrorRecord)
+		{
+			$ErrorRecord[0].Exception = $Exception
+		}
+		else
+		{
+			$ErrorRecord = @()
+			$ErrorRecord += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", "NotSpecified", $Target)
+		}
+	}
+	
+	#endregion Exception Integration
+	
+	#region Handle Message Content
 	$coloredMessage = $Message
 	$baseMessage = $Message
 	foreach ($match in ($baseMessage | Select-String '<c=["''](.*?)["'']>(.*?)</c>' -AllMatches).Matches)
@@ -187,15 +268,18 @@
 		$newMessage = "[$($timestamp.ToString("HH:mm:ss"))][$FunctionName] $baseMessage"
 		$newColoredMessage = "[<c='sub'>$($timestamp.ToString("HH:mm:ss"))</c>][<c='sub'>$FunctionName</c>] $coloredMessage"
 	}
-	if ($ErrorRecord -and ($Message -notmatch ([regex]::Escape("$($ErrorRecord[0].Exception.Message)"))) -and (-not $OverrideExceptionMessage))
+	
+	
+	if ($ErrorRecord -and (-not $OverrideExceptionMessage) -and ($Message -notmatch ([regex]::Escape("$($ErrorRecord[0].Exception.Message)"))))
 	{
 		$baseMessage += " | $($ErrorRecord[0].Exception.Message)"
 		$newMessage += " | $($ErrorRecord[0].Exception.Message)"
 		$newColoredMessage += " | $($ErrorRecord[0].Exception.Message)"
 	}
+	#endregion Handle Message Content
 
 	#region Handle Errors
-	if ($ErrorRecord -and ((Get-PSCallStack)[1].Command -ne "Stop-PSFFunction"))
+	if ($ErrorRecord -and (-not $fromStopFunction))
 	{
 		foreach ($record in $ErrorRecord)
 		{
@@ -208,7 +292,7 @@
 	}
 	if ($ErrorRecord)
 	{
-		[PSFramework.Message.LogHost]::WriteErrorEntry($ErrorRecord, $FunctionName, $ModuleName, $Tag, $timestamp, $baseMessage, $Host.InstanceId, $env:COMPUTERNAME)
+		[PSFramework.Message.LogHost]::WriteErrorEntry($ErrorRecord, $FunctionName, $ModuleName, $Tag, $timestamp, $baseMessage, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME)
 	}
 	#endregion Handle Errors
 	
@@ -288,10 +372,10 @@
 	$channel_Result = $channels -join ", "
 	if ($channel_Result)
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $ModuleName, $Tag, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
 	}
 	else
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $ModuleName, $Tag, $Level, $Host.InstanceId, $env:COMPUTERNAME, $Target)
+		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
 	}
 }

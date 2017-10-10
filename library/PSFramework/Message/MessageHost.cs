@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Management.Automation;
 
 namespace PSFramework.Message
 {
@@ -63,5 +66,64 @@ namespace PSFramework.Message
         /// </summary>
         public static bool DeveloperMode = false;
         #endregion Defines
+
+        #region Transformations
+        /// <summary>
+        /// The size of the transform error queue. When adding more than this, the oldest entry will be discarded
+        /// </summary>
+        public static int TransformErrorQueueSize = 512;
+
+        /// <summary>
+        /// Provides the option to transform exceptions based on the original exception type
+        /// </summary>
+        public static Dictionary<string, ScriptBlock> ExceptionTransforms = new Dictionary<string, ScriptBlock>();
+
+        /// <summary>
+        /// Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
+        /// </summary>
+        public static Dictionary<string, ScriptBlock> TargetTransforms = new Dictionary<string, ScriptBlock>();
+
+        /// <summary>
+        /// The list of transformation errors that occured.
+        /// </summary>
+        private static ConcurrentQueue<TransformError> TransformErrors = new ConcurrentQueue<TransformError>();
+
+        /// <summary>
+        /// Returns the current queue of failed transformations
+        /// </summary>
+        /// <returns>The list of transformations that failed</returns>
+        public static TransformError[] GetTransformErrors()
+        {
+            return TransformErrors.ToArray();
+        }
+
+        /// <summary>
+        /// Writes a new transform error
+        /// </summary>
+        /// <param name="Record">The record of what went wrong</param>
+        /// <param name="FunctionName">The name of the function writing the transformed message</param>
+        /// <param name="ModuleName">The module the function writing the transformed message is part of</param>
+        /// <param name="Object">The object that should have been transformed</param>
+        /// <param name="Type">The type of transform that was attempted</param>
+        /// <param name="Runspace">The runspace it all happened on</param>
+        public static void WriteTransformError(ErrorRecord Record, string FunctionName, string ModuleName, object Object, TransformType Type, Guid Runspace)
+        {
+            TransformError tempError;
+
+            TransformErrors.Enqueue(new TransformError(Record, FunctionName, ModuleName, Object, Type, Runspace));
+            while (TransformErrors.Count > TransformErrorQueueSize)
+                TransformErrors.TryDequeue(out tempError);
+        }
+
+        /// <summary>
+        /// List of custom transforms for exceptions
+        /// </summary>
+        public static TransformList ExceptionTransformList = new TransformList();
+
+        /// <summary>
+        /// List of custom transforms for targets
+        /// </summary>
+        public static TransformList TargetTransformlist = new TransformList();
+        #endregion Transformations
     }
 }

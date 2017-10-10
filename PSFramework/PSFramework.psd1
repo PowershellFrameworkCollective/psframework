@@ -79,6 +79,7 @@
 		'Register-PSFConfig',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
+		'Register-PSFMessageTransform',
 		'Register-PSFRunspace',
 		'Register-PSFTaskEngineTask',
 		'Register-PSFTeppArgumentCompleter',
