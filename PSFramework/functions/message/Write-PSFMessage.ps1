@@ -372,10 +372,19 @@
 	$channel_Result = $channels -join ", "
 	if ($channel_Result)
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
+		$entry = [PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, $channel_Result, $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
 	}
 	else
 	{
-		[PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
+		$entry = [PSFramework.Message.LogHost]::WriteLogEntry($baseMessage, "None", $timestamp, $FunctionName, $ModuleName, $Tag, $Level, ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId), $env:COMPUTERNAME, $Target)
+	}
+	
+	foreach ($subscription in [PSFramework.Message.MessageHost]::Events.Values)
+	{
+		if ($subscription.Applies($entry))
+		{
+			$scriptBlock = [scriptblock]::Create($subscription.ScriptBlock.ToString())
+			$ExecutionContext.InvokeCommand.InvokeScript($false, $scriptBlock, $null, $entry)
+		}
 	}
 }

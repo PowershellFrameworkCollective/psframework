@@ -125,5 +125,12 @@ namespace PSFramework.Message
         /// </summary>
         public static TransformList TargetTransformlist = new TransformList();
         #endregion Transformations
+
+        #region Events
+        /// <summary>
+        /// List of events that subscribe to messages being written
+        /// </summary>
+        public static Dictionary<string, MessageEventSubscription> Events = new Dictionary<string, MessageEventSubscription>();
+        #endregion Events
     }
 }
