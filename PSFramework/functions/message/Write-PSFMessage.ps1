@@ -207,6 +207,14 @@
 		}
 	}
 	#endregion Exception Transforms
+	
+	#region Message Level Transform
+	# Never transform warning messages
+	if ($Level -ne [PSFramework.Message.MessageLevel]::Warning)
+	{
+		$Level = Convert-PsfMessageLevel -OriginalLevel $Level -FromStopFunction $fromStopFunction -Tags $Tag -FunctionName $FunctionName -ModuleName $ModuleName
+	}
+	#endregion Message level Transform
 	#endregion Apply Transforms
 	
 	#region Exception Integration

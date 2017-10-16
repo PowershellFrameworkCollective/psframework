@@ -65,6 +65,11 @@ namespace PSFramework.Message
         /// Enables the developer mode. In this all messages are written to the console, in order to make it easier to troubleshoot issues.
         /// </summary>
         public static bool DeveloperMode = false;
+
+        /// <summary>
+        /// Message levels can decrease by nested level. This causes messages to have an increasingly reduced level as the size of the callstack increases. 
+        /// </summary>
+        public static int NestedLevelDecrement = 0;
         #endregion Defines
 
         #region Transformations
@@ -124,6 +129,11 @@ namespace PSFramework.Message
         /// List of custom transforms for targets
         /// </summary>
         public static TransformList TargetTransformlist = new TransformList();
+
+        /// <summary>
+        /// List of all modifiers that apply to message levels
+        /// </summary>
+        public static Dictionary<string, MessageLevelModifier> MessageLevelModifiers = new Dictionary<string, MessageLevelModifier>();
         #endregion Transformations
 
         #region Events

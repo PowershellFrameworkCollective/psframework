@@ -58,8 +58,10 @@
     <Compile Include="Message\LogEntry.cs" />
     <Compile Include="Message\LogEntryType.cs" />
     <Compile Include="Message\LogHost.cs" />
+    <Compile Include="Message\MessageEventSubscription.cs" />
     <Compile Include="Message\MessageHost.cs" />
     <Compile Include="Message\MessageLevel.cs" />
+    <Compile Include="Message\MessageLevelModifier.cs" />
     <Compile Include="Message\PsfErrorRecord.cs" />
     <Compile Include="Message\PsfException.cs" />
     <Compile Include="Message\PsfExceptionRecord.cs" />
