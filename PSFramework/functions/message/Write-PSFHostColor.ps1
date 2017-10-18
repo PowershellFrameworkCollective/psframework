@@ -23,7 +23,7 @@
 		The color to write stuff to host in when no (or bad) color-code was specified.
 	
 	.EXAMPLE
-		Write-HostColor -String 'This is going to be <c="red">bloody red</c> text! And this is <c="green">green stuff</c> for extra color'
+		Write-PSFHostColor -String 'This is going to be <c="red">bloody red</c> text! And this is <c="green">green stuff</c> for extra color'
 	
 		Will print the specified line in multiple colors
 	
@@ -47,7 +47,7 @@
 		Best regards,
 		<c="red">Luzifer</c>
 		"@
-		Write-HostColor -String $stringLong
+		Write-PSFHostColor -String $stringLong
 	
 		Will print a long multiline text in its entirety while still respecting the colorcodes
 #>

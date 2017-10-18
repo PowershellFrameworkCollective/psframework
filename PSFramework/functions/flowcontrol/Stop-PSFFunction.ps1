@@ -168,12 +168,12 @@
 				if (-not $Exception) { $newException = New-Object System.Exception($record.Exception.Message, $record.Exception) }
 				else { $newException = $Exception }
 				if ($record.CategoryInfo.Category) { $Category = $record.CategoryInfo.Category }
-				$records += New-Object System.Management.Automation.ErrorRecord($newException, "psframework_$FunctionName", $Category, $Target)
+				$records += New-Object System.Management.Automation.ErrorRecord($newException, "$($ModuleName)_$FunctionName", $Category, $Target)
 			}
 		}
 		else
 		{
-			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $Target)
+			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		}
 		
 		# Manage Debugging
@@ -182,7 +182,7 @@
 	else
 	{
 		$exception = New-Object System.Exception($Message)
-		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $Target)
+		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
 		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
@@ -194,7 +194,7 @@
 	{
 		if ($SilentlyContinue)
 		{
-			foreach ($record in $records) { Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "psframework_$FunctionName" -ErrorAction Continue }
+			foreach ($record in $records) { Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "$($ModuleName)_$FunctionName" -ErrorAction Continue }
 			if ($ContinueLabel) { continue $ContinueLabel }
 			else { Continue }
 		}
@@ -213,7 +213,7 @@
 		# This ensures that the error is stored in the $error variable AND has its Stacktrace (simply adding the record would lack the stacktrace)
 		foreach ($record in $records)
 		{
-			$null = Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "psframework_$FunctionName" -ErrorAction Continue 2>&1
+			$null = Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "$($ModuleName)_$FunctionName" -ErrorAction Continue 2>&1
 		}
 		
 		if ($Continue)

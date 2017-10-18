@@ -233,7 +233,7 @@
 		else
 		{
 			$ErrorRecord = @()
-			$ErrorRecord += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", "NotSpecified", $Target)
+			$ErrorRecord += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", "NotSpecified", $Target)
 		}
 	}
 	
