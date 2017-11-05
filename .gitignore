@@ -10,9 +10,6 @@
 *.psprojs
 
 # ignore library
-PSFramework/bin/PSFramework.dll
-PSFramework/bin/PSFramework.xml
-PSFramework/bin/PSFramework.pdb
 library/PSFramework/obj/*
 library/PSFramework/*.user
 library/PSFramework/bin/*
