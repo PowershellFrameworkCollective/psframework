@@ -56,7 +56,7 @@ if (-not $test)
 	Remove-Item .\PSFramework.dll -Force
 	git add .
 	git commit -m "VSTS Library Compile"
-	git push https://github.com/PowershellFrameworkCollective/psframework.git head:$branch
+	git push "https://github.com/PowershellFrameworkCollective/psframework.git" head:$branch
 }
 else
 {
