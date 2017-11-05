@@ -1,4 +1,5 @@
-﻿Write-Host "Current Path : $((Get-Location).Path)" 
+﻿<#
+Write-Host "Current Path : $((Get-Location).Path)" 
 
 Write-Host @"
 # Listing local variables #
@@ -32,7 +33,7 @@ Write-Host @"
 $args | Format-List | Out-Host
 
 Write-Host "########################################################################################################" -ForegroundColor DarkGreen
-
+#>
 Write-Host "Downloading from 'https://github.com/PowershellFrameworkCollective/psframework/raw/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll'"
 $wc = New-Object System.Net.WebClient
 $wc.DownloadFile("https://github.com/PowershellFrameworkCollective/psframework/raw/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll","$((Get-Location).Path)\PSFramework.dll")
@@ -65,7 +66,7 @@ if (-not $test)
 	Write-Host "Library should be updated"
 	Remove-Item .\PSFramework.dll -Force
 	git add .
-	git commit -m "VSTS Library Compile"
+	git commit -m "VSTS Library Compile ***NO_CI***"
 	$errorMessage = git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 2>&1 
 	if ($LASTEXITCODE -gt 0) { throw $errorMessage }
 }
