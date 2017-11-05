@@ -22,6 +22,15 @@ Write-Host @"
 
 Get-ChildItem "env:" | Out-Host
 
+Write-Host @"
+
+# Listing arguments #
+#-------------------#
+
+"@
+
+$args | Format-List | Out-Host
+
 Write-Host "########################################################################################################" -ForegroundColor DarkGreen
 
 Write-Host "Downloading from 'https://github.com/PowershellFrameworkCollective/psframework/raw/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll'"
