@@ -57,6 +57,7 @@ else
 		}
 	}
 }
+if ($env:BUILD_SOURCEVERSIONMESSAGE -eq "VSTS Library Compile") { $test = $true }
 
 if (-not $test)
 {
@@ -65,7 +66,8 @@ if (-not $test)
 	Remove-Item .\PSFramework.dll -Force
 	git add .
 	git commit -m "VSTS Library Compile"
-	git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 
+	$errorMessage = git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 2>&1
+	if ($LASTEXITCODE -gt 0) { throw $errorMessage }
 }
 else
 {
