@@ -34,6 +34,8 @@ $hashOld = Get-FileHash PSFramework.dll
 Write-Host "Previous file has $((Get-Item PSFramework\bin\PSFramework.dll).Length) bytes"
 $hashNew = Get-FileHash "PSFramework\bin\PSFramework.dll"
 
+$hashOld, $hashNew | Format-Table | Out-Host
+
 if ($hashOld.Hash -ne $hashNew.Hash)
 {
 	Write-Host "Library should be updated"
