@@ -1,4 +1,6 @@
-﻿Write-Host @"
+﻿Write-Host "Current Path : $((Get-Location).Path)"
+
+Write-Host @"
 # Listing local variables #
 #-------------------------#
 
