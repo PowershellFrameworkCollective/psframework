@@ -52,6 +52,7 @@ else
 if (-not $test)
 {
 	Write-Host "Library should be updated"
+	git -?
 }
 else
 {
