@@ -65,7 +65,7 @@ if (-not $test)
 	Remove-Item .\PSFramework.dll -Force
 	git add .
 	git commit -m "VSTS Library Compile"
-	git http.extraheader="AUTHORIZATION: bearer $env:SYSTEM_ACCESSTOKEN" push -u VSTS "https://github.com/PowershellFrameworkCollective/psframework.git" head:$branch 
+	git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 
 }
 else
 {
