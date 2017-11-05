@@ -21,3 +21,19 @@ Write-Host @"
 "@
 
 Get-ChildItem "env:" | Out-Host
+
+Write-Host "########################################################################################################" -ForegroundColor DarkGreen
+
+Invoke-WebRequest -OutFile PSFramework.dll -Uri "https://github.com/PowershellFrameworkCollective/psframework/blob/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll"
+
+$hashOld = Get-FileHash PSFramework.dll
+$hashNew = Get-FileHash "PSFramework\bin\PSFramework.dll"
+
+if ($hashOld.Hash -ne $hashNew.Hash)
+{
+	Write-Host "Library should be updated"
+}
+else
+{
+	Write-Host "Library is up to date"
+}
