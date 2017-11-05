@@ -66,7 +66,7 @@ if (-not $test)
 	Remove-Item .\PSFramework.dll -Force
 	git add .
 	git commit -m "VSTS Library Compile"
-	$errorMessage = git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 2>&1
+	$errorMessage = git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 2>&1 
 	if ($LASTEXITCODE -gt 0) { throw $errorMessage }
 }
 else
