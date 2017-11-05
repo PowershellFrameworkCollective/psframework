@@ -30,13 +30,26 @@ $wc.DownloadFile("https://github.com/PowershellFrameworkCollective/psframework/r
 #Invoke-WebRequest -OutFile PSFramework.dll -Uri "https://github.com/PowershellFrameworkCollective/psframework/blob/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll"
 
 Write-Host "Downloaded file has $((Get-Item PSFramework.dll).Length) bytes"
-$hashOld = Get-FileHash PSFramework.dll
 Write-Host "Previous file has $((Get-Item PSFramework\bin\PSFramework.dll).Length) bytes"
-$hashNew = Get-FileHash "PSFramework\bin\PSFramework.dll"
+$contentOnline = Get-Content PSFramework.dll -Encoding Byte
+$contentBuild = Get-Content "PSFramework\bin\PSFramework.dll" -Encoding Byte
 
-$hashOld, $hashNew | Format-Table | Out-Host
+# Since VSTS Filehashes appear to be non-functional for this test, we'll have to do an old-fashioned content comparison
+$test = $true
+if ($contentOnline.Length -ne $contentBuild.Length) { $test = $false }
+else
+{
+	foreach ($n in (1 .. $contentBuild.Length))
+	{
+		if ($contentOnline[$n - 1] -ne $contentBuild[$n - 1])
+		{
+			$test = $false
+			break
+		}
+	}
+}
 
-if ($hashOld.Hash -ne $hashNew.Hash)
+if (-not $test)
 {
 	Write-Host "Library should be updated"
 }
