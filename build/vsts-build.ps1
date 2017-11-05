@@ -51,10 +51,12 @@ else
 
 if (-not $test)
 {
+	$branch = $env:BUILD_SOURCEBRANCHNAME
 	Write-Host "Library should be updated"
 	Remove-Item .\PSFramework.dll -Force
+	git add .
 	git commit -m "VSTS Library Compile"
-	git push https://github.com/PowershellFrameworkCollective/psframework.git head:$env:BUILD_SOURCEBRANCHNAME 
+	git push https://github.com/PowershellFrameworkCollective/psframework.git head:$branch
 }
 else
 {
