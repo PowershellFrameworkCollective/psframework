@@ -1,6 +1,8 @@
 *TempPoint*
 *.pssproj
 
+*.suo
+
 # ignore the settings folder and files for VSCode
 .vscode/*
 *.psproj
@@ -14,4 +16,5 @@ PSFramework/bin/PSFramework.pdb
 library/PSFramework/obj/*
 library/PSFramework/*.user
 library/PSFramework/bin/*
+library/.vs/PSFramework/v15/.suo
 library/.vs/PSFramework/v15/.suo
