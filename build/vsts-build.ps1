@@ -34,37 +34,16 @@ $args | Format-List | Out-Host
 
 Write-Host "########################################################################################################" -ForegroundColor DarkGreen
 #>
-Write-Host "Downloading from 'https://github.com/PowershellFrameworkCollective/psframework/raw/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll'"
-$wc = New-Object System.Net.WebClient
-$wc.DownloadFile("https://github.com/PowershellFrameworkCollective/psframework/raw/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll","$((Get-Location).Path)\PSFramework.dll")
-#Invoke-WebRequest -OutFile PSFramework.dll -Uri "https://github.com/PowershellFrameworkCollective/psframework/blob/$($env:BUILD_SOURCEBRANCHNAME)/PSFramework/bin/PSFramework.dll"
 
-Write-Host "Downloaded file has $((Get-Item PSFramework.dll).Length) bytes"
-Write-Host "Previous file has $((Get-Item PSFramework\bin\PSFramework.dll).Length) bytes"
-$contentOnline = Get-Content PSFramework.dll -Encoding Byte
-$contentBuild = Get-Content "PSFramework\bin\PSFramework.dll" -Encoding Byte
+$previousVersion = Import-Clixml ".\vsts-version.xml"
+$currentVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Get-Item "PSFramework\bin\PSFramework.dll").FullName).FileVersion
+Remove-Item ".\vsts-version.xml"
 
-# Since VSTS Filehashes appear to be non-functional for this test, we'll have to do an old-fashioned content comparison
-$test = $true
-if ($contentOnline.Length -ne $contentBuild.Length) { $test = $false }
-else
-{
-	foreach ($n in (1 .. $contentBuild.Length))
-	{
-		if ($contentOnline[$n - 1] -ne $contentBuild[$n - 1])
-		{
-			$test = $false
-			break
-		}
-	}
-}
-if ($env:BUILD_SOURCEVERSIONMESSAGE -eq "VSTS Library Compile") { $test = $true }
-
-if (-not $test)
+if ($previousVersion -ne $currentVersion)
 {
 	$branch = $env:BUILD_SOURCEBRANCHNAME
-	Write-Host "Library should be updated"
-	Remove-Item .\PSFramework.dll -Force
+	Write-Host "Previous: $previousVersion | Current: $currentVersion | Library should be updated"
+	
 	git add .
 	git commit -m "VSTS Library Compile ***NO_CI***"
 	$errorMessage = git push "https://$env:SYSTEM_ACCESSTOKEN@github.com/PowershellFrameworkCollective/psframework.git" head:$branch 2>&1 
@@ -72,5 +51,5 @@ if (-not $test)
 }
 else
 {
-	Write-Host "Library is up to date"
+	Write-Host "Version: $currentVersion | Library is up to date"
 }
