@@ -68,9 +68,9 @@
 		Use this if you want the function to throw terminating errors you want to catch.
 	
 	.EXAMPLE
-		PS C:\> Set-PSFConfig -Name 'User' -Value "Friedrich" -Description "The user under which the show must go on."
+		PS C:\> Set-PSFConfig -FullName 'MyModule.User' -Value "Friedrich" -Description "The user under which the show must go on."
 		
-		Creates a configuration entry named "User" with the value "Friedrich"
+		Creates a configuration entry under the module "MyModule" named "User" with the value "Friedrich"
 	
 	.EXAMPLE
 		PS C:\> Set-PSFConfig -Name 'mymodule.User' -Value "Friedrich" -Description "The user under which the show must go on." -Handler $scriptBlock -Initialize -Validation String
@@ -87,10 +87,10 @@
 		Only then will the system validate previous settings (such as what a user might have placed in his user profile)
 	
 	.EXAMPLE
-		PS C:\> Set-PSFConfig 'ConfigLink' 'https://www.example.com/config.xml' 'Company' -Hidden
+		PS C:\> Set-PSFConfig 'Company' 'ConfigLink' 'https://www.example.com/config.xml' -Hidden
 		
 		Creates a configuration entry named "ConfigLink" in the "Company" module with the value 'https://www.example.com/config.xml'.
-		This entry is hidden from casual discovery using Get-Config.
+		This entry is hidden from casual discovery using Get-PSFConfig.
 	
 	.EXAMPLE
 		PS C:\> Set-PSFConfig 'Network.Firewall' '10.0.0.2' -Default
