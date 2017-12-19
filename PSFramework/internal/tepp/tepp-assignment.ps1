@@ -7,6 +7,7 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Name -Name c
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter FullName -Name config-fullname
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Module -Name config-module
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Name -Name config-name
+Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Validation -Name config-validation
 
 Register-PSFTeppArgumentCompleter -Command Register-PSFConfig -Parameter FullName -Name config-fullname
 Register-PSFTeppArgumentCompleter -Command Register-PSFConfig -Parameter Module -Name config-module
