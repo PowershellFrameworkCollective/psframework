@@ -37,6 +37,14 @@
 			Run the following line to see the list of guids:
 	
 			Get-Runspace | ft Id, Name, InstanceId -Autosize
+	
+		.PARAMETER Level
+			Limit the message selection by level.
+			Message levels have a numeric value, making it easier to select a range:
+			
+			  -Level (1..6)
+	
+			Will select the first 6 levels (Critical - SomewhatVerbose).
 		
 		.PARAMETER Errors
 			Instead of log entries, the error entries will be retrieved
@@ -79,6 +87,9 @@
 		[guid]
 		$Runspace,
 		
+		[PSFramework.Message.MessageLevel[]]
+		$Level,
+		
 		[switch]
 		$Errors
 	)
@@ -115,6 +126,11 @@
 			$end = $history[-1].EndExecutionTime
 			
 			$messages = $messages | Where-Object { ($_.Timestamp -gt $start) -and ($_.Timestamp -lt $end) -and ($_.Runspace -eq ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId))}
+		}
+		
+		if (Test-PSFParameterBinding -ParameterName Level)
+		{
+			$messages = $messages | Where-Object Level -In $Level
 		}
 		
 		return $messages
