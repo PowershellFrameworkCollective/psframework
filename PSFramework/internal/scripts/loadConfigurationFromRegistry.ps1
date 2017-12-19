@@ -31,7 +31,14 @@
 			"string" { return $content }
 			"timespan" { return (New-Object System.TimeSpan($content)) }
 			"datetime" { return (New-Object System.DateTime($content)) }
-			"consolecolor" { return ([System.ConsoleColor]$content)}
+			"consolecolor" { return ([System.ConsoleColor]$content) }
+			"array"
+			{
+				foreach ($item in ($content -split "þþþ"))
+				{
+					Convert-RegType -Value $item
+				}
+			}
 			
 			default { throw "Unknown type identifier" }
 		}

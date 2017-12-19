@@ -1,5 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
 <Configuration>
+	<Controls>
+        <Control>
+            <Name>Configuration-GroupingFormat</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <Frame>
+                                <LeftIndent>4</LeftIndent>
+                                <CustomItem>
+                                    <Text>Module: </Text>
+                                    <ExpressionBinding>
+                                    	<PropertyName>Module</PropertyName>
+                                    </ExpressionBinding>
+                                    <NewLine/>
+                                </CustomItem> 
+                            </Frame>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+    </Controls>
+	
 	<ViewDefinitions>
 		<!-- PSFramework.Configuration.Config -->
 		<View>
@@ -7,6 +31,10 @@
 			<ViewSelectedBy>
 				<TypeName>PSFramework.Configuration.Config</TypeName>
 			</ViewSelectedBy>
+			<GroupBy>
+                <PropertyName>Module</PropertyName> 
+                <CustomControlName>Configuration-GroupingFormat</CustomControlName>  
+            </GroupBy>
 			<TableControl>
 				<AutoSize/>
 				<TableHeaders>

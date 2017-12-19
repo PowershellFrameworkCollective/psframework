@@ -1,5 +1,5 @@
-﻿$script:PSFrameworkModuleRoot = $PSScriptRoot
-$script:PSFrameworkModuleVersion = "0.9.3.7"
+﻿$script:PSModuleRoot = $PSScriptRoot
+$script:PSFrameworkModuleVersion = "0.9.5.10"
 
 function Import-ModuleFile
 {
@@ -20,20 +20,20 @@ if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramew
 if ((Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\System" -Name "DoDotSource" -ErrorAction Ignore).DoDotSource) { $script:doDotSource = $true }
 
 # Execute Preimport actions
-. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\preimport.ps1"
+. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\preimport.ps1"
 
 # Import all internal functions
-foreach ($function in (Get-ChildItem "$PSFrameworkModuleRoot\internal\functions\*\*.ps1"))
+foreach ($function in (Get-ChildItem "$PSModuleRoot\internal\functions\*\*.ps1"))
 {
 	. Import-ModuleFile -Path $function.FullName
 }
 
 # Import all public functions
-foreach ($function in (Get-ChildItem "$PSFrameworkModuleRoot\functions\*\*.ps1"))
+foreach ($function in (Get-ChildItem "$PSModuleRoot\functions\*\*.ps1"))
 {
 	. Import-ModuleFile -Path $function.FullName
 }
 
 
 # Execute Postimport actions
-. Import-ModuleFile -Path "$PSFrameworkModuleRoot\internal\scripts\postimport.ps1"
+. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\postimport.ps1"

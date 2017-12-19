@@ -133,20 +133,35 @@
 	
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	
-	#region Handle Input Objects
-	if ($Target)
+	#region Apply Transforms
+	#region Target Transform
+	if ($Target -ne $null)
 	{
-		$targetType = $Target.GetType().FullName
-		
-		switch ($targetType)
-		{
-			"Sqlcollaborative.Dbatools.Parameter.DbaInstanceParameter" { $targetToAdd = $Target.InstanceName }
-			"Microsoft.SqlServer.Management.Smo.Server" { $targetToAdd = ([Sqlcollaborative.Dbatools.Parameter.DbaInstanceParameter]$Target).InstanceName }
-			default { $targetToAdd = $Target }
-		}
-		if ($targetToAdd.GetType().FullName -like "Microsoft.SqlServer.Management.Smo.*") { $targetToAdd = $targetToAdd.ToString() }
+		$Target = Convert-PsfMessageTarget -Target $Target -FunctionName $FunctionName -ModuleName $ModuleName
 	}
-	#endregion Handle Input Objects
+	#endregion Target Transform
+	
+	#region Exception Transforms
+	if ($Exception)
+	{
+		$Exception = Convert-PsfMessageException -Exception $Exception -FunctionName $FunctionName -ModuleName $ModuleName
+	}
+	elseif ($ErrorRecord)
+	{
+		$int = 0
+		while ($int -lt $ErrorRecord.Length)
+		{
+			$tempException = Convert-PsfMessageException -Exception $ErrorRecord[$int].Exception -FunctionName $FunctionName -ModuleName $ModuleName
+			if ($tempException -ne $ErrorRecord[$int].Exception)
+			{
+				$ErrorRecord[$int] = New-Object System.Management.Automation.ErrorRecord($tempException, $ErrorRecord[$int].FullyQualifiedErrorId, $ErrorRecord[$int].CategoryInfo.Category, $ErrorRecord[$int].TargetObject)
+			}
+			
+			$int++
+		}
+	}
+	#endregion Exception Transforms
+	#endregion Apply Transforms
 	
 	#region Message Handling
 	$records = @()
@@ -160,24 +175,24 @@
 				if (-not $Exception) { $newException = New-Object System.Exception($record.Exception.Message, $record.Exception) }
 				else { $newException = $Exception }
 				if ($record.CategoryInfo.Category) { $Category = $record.CategoryInfo.Category }
-				$records += New-Object System.Management.Automation.ErrorRecord($newException, "psframework_$FunctionName", $Category, $targetToAdd)
+				$records += New-Object System.Management.Automation.ErrorRecord($newException, "$($ModuleName)_$FunctionName", $Category, $Target)
 			}
 		}
 		else
 		{
-			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $targetToAdd)
+			$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		}
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
 	}
 	else
 	{
 		$exception = New-Object System.Exception($Message)
-		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "psframework_$FunctionName", $Category, $targetToAdd)
+		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $targetToAdd -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
 	}
 	#endregion Message Handling
 	
@@ -186,7 +201,7 @@
 	{
 		if ($SilentlyContinue)
 		{
-			foreach ($record in $records) { Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "psframework_$FunctionName" -ErrorAction Continue }
+			foreach ($record in $records) { Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "$($ModuleName)_$FunctionName" -ErrorAction Continue }
 			if ($ContinueLabel) { continue $ContinueLabel }
 			else { Continue }
 		}
@@ -205,7 +220,7 @@
 		# This ensures that the error is stored in the $error variable AND has its Stacktrace (simply adding the record would lack the stacktrace)
 		foreach ($record in $records)
 		{
-			$null = Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "psframework_$FunctionName" -ErrorAction Continue 2>&1
+			$null = Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "$($ModuleName)_$FunctionName" -ErrorAction Continue 2>&1
 		}
 		
 		if ($Continue)

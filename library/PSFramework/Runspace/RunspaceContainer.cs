@@ -58,6 +58,7 @@ namespace PSFramework.Runspace
             if (Runspace == null)
             {
                 Runspace = PowerShell.Create();
+                Runspace.Runspace.Name = Name;
                 Runspace.AddScript(Script.ToString());
                 _State = PsfRunspaceState.Running;
                 try { Runspace.BeginInvoke(); }
