@@ -148,9 +148,16 @@
 	}
 	elseif ($ErrorRecord)
 	{
-		foreach ($record in $ErrorRecord)
+		$int = 0
+		while ($int -lt $ErrorRecord.Length)
 		{
-			$record.Exception = Convert-PsfMessageException -Exception $record.Exception -FunctionName $FunctionName -ModuleName $ModuleName
+			$tempException = Convert-PsfMessageException -Exception $ErrorRecord[$int].Exception -FunctionName $FunctionName -ModuleName $ModuleName
+			if ($tempException -ne $ErrorRecord[$int].Exception)
+			{
+				$ErrorRecord[$int] = New-Object System.Management.Automation.ErrorRecord($tempException, $ErrorRecord[$int].FullyQualifiedErrorId, $ErrorRecord[$int].CategoryInfo.Category, $ErrorRecord[$int].TargetObject)
+			}
+			
+			$int++
 		}
 	}
 	#endregion Exception Transforms
