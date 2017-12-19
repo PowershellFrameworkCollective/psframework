@@ -58,11 +58,17 @@
     <Compile Include="Message\LogEntry.cs" />
     <Compile Include="Message\LogEntryType.cs" />
     <Compile Include="Message\LogHost.cs" />
+    <Compile Include="Message\MessageEventSubscription.cs" />
     <Compile Include="Message\MessageHost.cs" />
     <Compile Include="Message\MessageLevel.cs" />
+    <Compile Include="Message\MessageLevelModifier.cs" />
     <Compile Include="Message\PsfErrorRecord.cs" />
     <Compile Include="Message\PsfException.cs" />
     <Compile Include="Message\PsfExceptionRecord.cs" />
+    <Compile Include="Message\TransformCondition.cs" />
+    <Compile Include="Message\TransformError.cs" />
+    <Compile Include="Message\TransformList.cs" />
+    <Compile Include="Message\TransformType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />

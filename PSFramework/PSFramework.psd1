@@ -2,10 +2,10 @@
 @{
 	
 	# Script module or binary module file associated with this manifest
-	ModuleToProcess = 'PSFramework.psm1'
+	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.4.9'
+	ModuleVersion = '0.9.5.10'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -70,20 +70,25 @@
 		'Get-PSFConfigValue',
 		'Get-PSFMessage',
 		'Get-PSFLicense',
+		'Get-PSFMessageLevelModifier',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
+		'New-PSFMessageLevelModifier',
 		'Register-PSFConfig',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
+		'Register-PSFMessageEvent',
+		'Register-PSFMessageTransform',
 		'Register-PSFRunspace',
 		'Register-PSFTaskEngineTask',
 		'Register-PSFTeppArgumentCompleter',
 		'Register-PSFTeppScriptblock',
 		'Remove-PSFLicense',
+		'Remove-PSFMessageLevelModifier',
 		'Set-PSFConfig',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',

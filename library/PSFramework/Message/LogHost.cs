@@ -153,7 +153,8 @@ namespace PSFramework.Message
         /// <param name="Runspace">The runspace the message is coming from</param>
         /// <param name="ComputerName">The computer the message was generated on</param>
         /// <param name="TargetObject">The object associated with a given message.</param>
-        public static void WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject = null)
+        /// <returns>The entry that is being written</returns>
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject = null)
         {
             LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
@@ -164,6 +165,8 @@ namespace PSFramework.Message
             {
                 LogEntries.TryDequeue(out tmp);
             }
+
+            return temp;
         }
         #endregion Access Queues
     }

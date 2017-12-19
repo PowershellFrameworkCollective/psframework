@@ -1,0 +1,1 @@
+﻿Register-PSFTeppScriptblock -Name 'config-validation' -ScriptBlock { [PSFramework.Configuration.ConfigurationHost]::Validation.Keys }

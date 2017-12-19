@@ -1,0 +1,1695 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PSFramework</name>
+    </assembly>
+    <members>
+        <member name="T:PSFramework.Configuration.Config">
+            <summary>
+            Configuration Manager as well as individual configuration object.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Name">
+            <summary>
+            The Name of the setting
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.FullName">
+            <summary>
+            The full name of the configuration entry, comprised of both Module and Name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Module">
+            <summary>
+            The module of the setting. Helps being able to group configurations.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Description">
+            <summary>
+            A description of the specific setting
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Type">
+            <summary>
+            The data type of the value stored in the configuration element.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Value">
+            <summary>
+            The value stored in the configuration element
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Handler">
+            <summary>
+            The handler script that is run whenever the configuration value is set.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Validation">
+            <summary>
+            Validates the user input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Hidden">
+            <summary>
+            Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Initialized">
+            <summary>
+            Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.PolicySet">
+            <summary>
+            Whether this setting was set by policy
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.PolicyEnforced">
+            <summary>
+            Whether this setting was set by policy and forbids deletion.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.RegistryData">
+            <summary>
+            The finalized value to put into the registry value when using policy to set this setting.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigScope">
+            <summary>
+            The location where a setting was applied
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.UserDefault">
+            <summary>
+            The configuration is set as default value for the user
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.UserMandatory">
+            <summary>
+            The configuration is enforced for the user
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.SystemDefault">
+            <summary>
+            The configuration is set as default value for all users on the system
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.SystemMandatory">
+            <summary>
+            The configuration is enforced for all users on the system.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationHost">
+            <summary>
+            Host class providing static configuration settings that are constant across all runspaces within the process.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Configurations">
+            <summary>
+            Hashtable containing all the configuration entries
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Validation">
+            <summary>
+            Hashtable containing all the registered validations
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
+            <summary>
+            Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.
+            </summary>
+        </member>
+        <member name="T:PSFramework.License.License">
+            <summary>
+            Contains license information for a single product
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.Product">
+            <summary>
+            The name of the product the license is for.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.Manufacturer">
+            <summary>
+            Who made the license product?
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.ProductVersion">
+            <summary>
+            The version of the product covered by the license.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.ProductType">
+            <summary>
+            The type of product the licensed product is.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.LicenseName">
+            <summary>
+            The name of the license. Useful for the usual public licenses.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.LicenseVersion">
+            <summary>
+            The version of the license. Useful for the usual public licenses.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.LicenseDate">
+            <summary>
+            When was the product licensed with the specified license.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.LicenseType">
+            <summary>
+            The type of the license. This allows filtering licenses by their limitations.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.LicenseText">
+            <summary>
+            The full license text for the pleasure of the reader.
+            </summary>
+        </member>
+        <member name="T:PSFramework.License.LicenseHost">
+            <summary>
+            Host class covering all static needs of the licensing system.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.LicenseHost.Licenses">
+            <summary>
+            The list containing all registered licenses.
+            </summary>
+        </member>
+        <member name="M:PSFramework.License.LicenseHost.Add(PSFramework.License.License)">
+            <summary>
+            Adds a new licenses to the list of registerd licenses.
+            </summary>
+            <param name="License">The license to add</param>
+        </member>
+        <member name="M:PSFramework.License.LicenseHost.Clear">
+            <summary>
+            Removes all registered Licenses
+            </summary>
+        </member>
+        <member name="M:PSFramework.License.LicenseHost.Get">
+            <summary>
+            Returns all registered licenses
+            </summary>
+            <returns>All registerd licenses</returns>
+        </member>
+        <member name="M:PSFramework.License.LicenseHost.Remove(PSFramework.License.License)">
+            <summary>
+            Removes a spceific licenses from the list of registerd licenses
+            </summary>
+            <param name="License">License to remove</param>
+        </member>
+        <member name="T:PSFramework.License.LicenseType">
+            <summary>
+            What kind of License is this? By default, a license is a free license allowing modification but requiring attribution.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.LicenseType.Free">
+            <summary>
+            No special type is present
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.LicenseType.Commercial">
+            <summary>
+            The license is for a commercial product. This means you have to acquire use permission, such as software licenses, user CALs et al.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.LicenseType.NoAttribution">
+            <summary>
+            Reusing this product requires no attribution. Just use it and call it your own.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.LicenseType.NoModify">
+            <summary>
+            This product may be used, but must not be modified in any way.
+            </summary>
+        </member>
+        <member name="T:PSFramework.License.ProductType">
+            <summary>
+            What kind of product is being licensed
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.ProductType.Module">
+            <summary>
+            The product is a PowerShell module
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.ProductType.Script">
+            <summary>
+            The Product is a Script of any kind
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.ProductType.Library">
+            <summary>
+            The Product is a library, bringing functionality to the Shell
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.ProductType.Application">
+            <summary>
+            The Product is a standalone application, that happens to utilize PowerShell
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.ProductType.Other">
+            <summary>
+            The Product is anything other than the default types
+            </summary>
+        </member>
+        <member name="T:PSFramework.Logging.Provider">
+            <summary>
+            Class containing all information/content needed for a logging provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.Name">
+            <summary>
+            Each logging provider has a name. Make sure it's unique
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.Enabled">
+            <summary>
+            Whether the logging provider is enabled. Only when this is set to true will the logging script execute its events.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.Initialized">
+            <summary>
+            The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.IncludeModules">
+            <summary>
+            List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.ExcludeModules">
+            <summary>
+            List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.IncludeTags">
+            <summary>
+            List of tags to include. Only messages with these tags will be considered by this provider.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.ExcludeTags">
+            <summary>
+            List of tags to exclude. Messages with these tags will be ignored by this provider.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.LogEntry)">
+            <summary>
+            Tests whether a log entry applies to the provider
+            </summary>
+            <param name="Entry">The Entry to validate</param>
+            <returns>Whether it applies</returns>
+        </member>
+        <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.PsfExceptionRecord)">
+            <summary>
+            Tests whether an error record applies to the provider
+            </summary>
+            <param name="Record">The error record to test</param>
+            <returns>Whether it applies to the provider</returns>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.BeginEvent">
+            <summary>
+            Event that is executed once per logging script execution, before logging occurs
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.StartEvent">
+            <summary>
+            Event that is executed each logging cycle, right before processing items.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.MessageEvent">
+            <summary>
+            Event that is executed for each message written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.ErrorEvent">
+            <summary>
+            Event that is executed for each error written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.EndEvent">
+            <summary>
+            Event that is executed once per logging cycle, after processing all message and error items.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.FinalEvent">
+            <summary>
+            Final Event that is executed when stopping the logging script.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.IsInstalledScript">
+            <summary>
+            Script that recognizes, whether the provider has been isntalled correctly. Some providers require installation, in order to function properly.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.InstallationScript">
+            <summary>
+            Script that installs the provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.InstallationParameters">
+            <summary>
+            Script that generates dynamic parameters for installing the provider.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.ConfigurationParameters">
+            <summary>
+            Scriptblock that adds additional parameters as needed to the Set-PSFLoggingProvider function
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.ConfigurationScript">
+            <summary>
+            The configuration steps taken by the Set-PSFLoggingProvider function
+            </summary>
+        </member>
+        <member name="T:PSFramework.Logging.ProviderHost">
+            <summary>
+            Provides infrastructure services for the logging provider system
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderHost.Providers">
+            <summary>
+            Dictionary with all registered logging providers
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.GetEnabled">
+            <summary>
+            Returns all enabled logging providers
+            </summary>
+            <returns>All enabled logging providers</returns>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitialized">
+            <summary>
+            Returns all enabled &amp; initialized logging provider
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Message.LogEntry">
+            <summary>
+            An individual entry for the message log
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Message">
+            <summary>
+            The message logged
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Type">
+            <summary>
+            What kind of entry was this?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Timestamp">
+            <summary>
+            When was the message logged?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.FunctionName">
+            <summary>
+            What function wrote the message
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.ModuleName">
+            <summary>
+            The name of the module of the function that wrote the message
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Tags">
+            <summary>
+            The tags applied to the message
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Level">
+            <summary>
+            What level was the message?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Runspace">
+            <summary>
+            What runspace was the message written from?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.ComputerName">
+            <summary>
+            The computer the message was generated on
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.TargetObject">
+            <summary>
+            The object that was the focus of this message.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.LogEntry.#ctor">
+            <summary>
+            Creates an empty log entry
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object)">
+            <summary>
+            Creates a filled out log entry
+            </summary>
+            <param name="Message">The message that was logged</param>
+            <param name="Type">The type(s) of message written</param>
+            <param name="Timestamp">When was the message logged</param>
+            <param name="FunctionName">What function wrote the message</param>
+            <param name="ModuleName">Name of the module the function writing this message came from</param>
+            <param name="Tags">Tags that were applied to the message</param>
+            <param name="Level">What level was the message written at.</param>
+            <param name="Runspace">The ID of the runspace that wrote the message.</param>
+            <param name="ComputerName">The computer the message was generated on.</param>
+            <param name="TargetObject">The object this message was all about.</param>
+        </member>
+        <member name="T:PSFramework.Message.LogEntryType">
+            <summary>
+            The kind of information the logged entry was.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntryType.None">
+            <summary>
+            This entry wasn't written to any stream
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntryType.Information">
+            <summary>
+            A message that was written to the current host equivalent, if available also to the information stream
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntryType.Verbose">
+            <summary>
+            A message that was written to the verbose stream
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntryType.Debug">
+            <summary>
+            A message that was written to the Debug stream
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntryType.Warning">
+            <summary>
+            A message written to the warning stream
+            </summary>
+        </member>
+        <member name="T:PSFramework.Message.LogHost">
+            <summary>
+            Provides static information storage for logging related settings, as well as housing the logging queues.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxErrorCount">
+            <summary>
+            The maximum numbers of error records maintained in-memory.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxMessageCount">
+            <summary>
+            The maximum number of messages that can be maintained in the in-memory message queue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxMessagefileBytes">
+            <summary>
+            The maximum size of a given logfile. When reaching this limit, the file will be abandoned and a new log created. Set to 0 to not limit the size.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxMessagefileCount">
+            <summary>
+            The maximum number of logfiles maintained at a time. Exceeding this number will cause the oldest to be culled. Set to 0 to disable the limit.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxErrorFileBytes">
+            <summary>
+            The maximum size all error files combined may have. When this number is exceeded, the oldest entry is culled.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxTotalFolderSize">
+            <summary>
+            This is the upper limit of length all items in the log folder may have combined across all processes.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.LoggingPath">
+            <summary>
+            Path to where the logfiles live.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MaxLogFileAge">
+            <summary>
+            Any logfile older than this will automatically be cleansed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MessageLogFileEnabled">
+            <summary>
+            Governs, whether a log file for the system messages is written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.MessageLogEnabled">
+            <summary>
+            Governs, whether a log of recent messages is kept in memory
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.ErrorLogFileEnabled">
+            <summary>
+            Governs, whether log files for errors are written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.ErrorLogEnabled">
+            <summary>
+            Governs, whether a log of recent errors is kept in memory
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.OutQueueError">
+            <summary>
+            The outbound queue for errors. These will be processed and written to xml
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.OutQueueLog">
+            <summary>
+            The outbound queue for logs. These will be processed and written to logfile
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.LogHost.GetErrors">
+            <summary>
+            Retrieves a copy of the Error stack
+            </summary>
+            <returns>All errors thrown by functions using the message or flowcontrol system</returns>
+        </member>
+        <member name="M:PSFramework.Message.LogHost.GetLog">
+            <summary>
+            Retrieves a copy of the message log
+            </summary>
+            <returns>All messages logged this session.</returns>
+        </member>
+        <member name="M:PSFramework.Message.LogHost.WriteErrorEntry(System.Management.Automation.ErrorRecord[],System.String,System.String,System.Collections.Generic.List{System.String},System.DateTime,System.String,System.Guid,System.String)">
+            <summary>
+            Write an error record to the log
+            </summary>
+            <param name="Record">The actual error record as powershell wrote it</param>
+            <param name="FunctionName">The name of the function writing the error</param>
+            <param name="ModuleName">The name of the module the function writing the error came from</param>
+            <param name="Tags">The tags that were assigned to the error event</param>
+            <param name="Timestamp">When was the error written</param>
+            <param name="Message">What message was passed to the user</param>
+            <param name="Runspace">The runspace the message was written from</param>
+            <param name="ComputerName">The computer the error was written on</param>
+        </member>
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object)">
+            <summary>
+            Write a new entry to the log
+            </summary>
+            <param name="Message">The message to log</param>
+            <param name="Type">The type of the message logged</param>
+            <param name="Timestamp">When was the message generated</param>
+            <param name="FunctionName">What function wrote the message</param>
+            <param name="ModuleName">What module did the function writing this message come from?</param>
+            <param name="Tags">The tags that were applied to the message</param>
+            <param name="Level">At what level was the function written</param>
+            <param name="Runspace">The runspace the message is coming from</param>
+            <param name="ComputerName">The computer the message was generated on</param>
+            <param name="TargetObject">The object associated with a given message.</param>
+            <returns>The entry that is being written</returns>
+        </member>
+        <member name="T:PSFramework.Message.MessageEventSubscription">
+            <summary>
+            Condition and logic to be executed on message events
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription.Name">
+            <summary>
+            Name of the event subscription, must be unique.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription.ScriptBlock">
+            <summary>
+            Scriptblock to execute if the condition is met
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._MessageFilter">
+            <summary>
+            The internally stored filter value for Message
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.MessageFilter">
+            <summary>
+            The value the Message is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.MessageFilterSet">
+            <summary>
+            Whether filtering by Message was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._ModuleNameFilter">
+            <summary>
+            The internally stored filter value for ModuleName
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.ModuleNameFilter">
+            <summary>
+            The value the ModuleName is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.ModuleNameFilterSet">
+            <summary>
+            Whether filtering by ModuleName was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._FunctionNameFilter">
+            <summary>
+            The internally stored filter value for FunctionName
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.FunctionNameFilter">
+            <summary>
+            The value the FunctionName is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.FunctionNameFilterSet">
+            <summary>
+            Whether filtering by FunctionName was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._TargetFilter">
+            <summary>
+            The internally stored filter value for Target
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.TargetFilter">
+            <summary>
+            The value the Target is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.TargetFilterSet">
+            <summary>
+            Whether filtering by Target was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._LevelFilter">
+            <summary>
+            The internally stored filter value for Level
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.LevelFilter">
+            <summary>
+            The value the Level is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.LevelFilterSet">
+            <summary>
+            Whether filtering by Level was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._TagFilter">
+            <summary>
+            The internally stored filter value for Tag
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.TagFilter">
+            <summary>
+            The value the Tag is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.TagFilterSet">
+            <summary>
+            Whether filtering by Tag was enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageEventSubscription._RunspaceFilter">
+            <summary>
+            The internally stored filter value for Runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.RunspaceFilter">
+            <summary>
+            The value the Runspace is filtered by
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.MessageEventSubscription.RunspaceFilterSet">
+            <summary>
+            Whether filtering by Runspace was enabled
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.MessageEventSubscription.Applies(PSFramework.Message.LogEntry)">
+            <summary>
+            Checks, whether a given entry matches the filter defined in this subscription
+            </summary>
+            <param name="Entry">The entry to validate</param>
+            <returns>Whether the subscription should react to this entry</returns>
+        </member>
+        <member name="T:PSFramework.Message.MessageHost">
+            <summary>
+            Provides static resources to the messaging subsystem
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MaximumInformation">
+            <summary>
+            The maximum message level to still display to the user directly.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MaximumVerbose">
+            <summary>
+            The maxium message level where verbose information is still written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MaximumDebug">
+            <summary>
+            The maximum message level where debug information is still written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MinimumInformation">
+            <summary>
+            The minimum required message level for messages that will be shown to the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MinimumVerbose">
+            <summary>
+            The minimum required message level where verbose information is written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MinimumDebug">
+            <summary>
+            The minimum required message level where debug information is written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.InfoColor">
+            <summary>
+            The color stuff gets written to the console in
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.InfoColorEmphasis">
+            <summary>
+            The color important stuff gets written to the console in
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.InfoColorSubtle">
+            <summary>
+            The color background stuff gets written to the console in
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.DeveloperColor">
+            <summary>
+            The color stuff gets written to the console in, when developer mode is enabled and the message would not have been written after all
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.DeveloperMode">
+            <summary>
+            Enables the developer mode. In this all messages are written to the console, in order to make it easier to troubleshoot issues.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.NestedLevelDecrement">
+            <summary>
+            Message levels can decrease by nested level. This causes messages to have an increasingly reduced level as the size of the callstack increases. 
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">
+            <summary>
+            The size of the transform error queue. When adding more than this, the oldest entry will be discarded
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.ExceptionTransforms">
+            <summary>
+            Provides the option to transform exceptions based on the original exception type
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TargetTransforms">
+            <summary>
+            Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TransformErrors">
+            <summary>
+            The list of transformation errors that occured.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.MessageHost.GetTransformErrors">
+            <summary>
+            Returns the current queue of failed transformations
+            </summary>
+            <returns>The list of transformations that failed</returns>
+        </member>
+        <member name="M:PSFramework.Message.MessageHost.WriteTransformError(System.Management.Automation.ErrorRecord,System.String,System.String,System.Object,PSFramework.Message.TransformType,System.Guid)">
+            <summary>
+            Writes a new transform error
+            </summary>
+            <param name="Record">The record of what went wrong</param>
+            <param name="FunctionName">The name of the function writing the transformed message</param>
+            <param name="ModuleName">The module the function writing the transformed message is part of</param>
+            <param name="Object">The object that should have been transformed</param>
+            <param name="Type">The type of transform that was attempted</param>
+            <param name="Runspace">The runspace it all happened on</param>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.ExceptionTransformList">
+            <summary>
+            List of custom transforms for exceptions
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TargetTransformlist">
+            <summary>
+            List of custom transforms for targets
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.MessageLevelModifiers">
+            <summary>
+            List of all modifiers that apply to message levels
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.Events">
+            <summary>
+            List of events that subscribe to messages being written
+            </summary>
+        </member>
+        <member name="T:PSFramework.Message.MessageLevel">
+            <summary>
+            The various levels of verbosity available.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Critical">
+            <summary>
+            Very important message, should be shown to the user as a high priority
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Important">
+            <summary>
+            Important message, the user should read this
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Output">
+            <summary>
+            Important message, the user should read this
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Host">
+            <summary>
+            Important message, the user should read this
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Significant">
+            <summary>
+            Message relevant to the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.VeryVerbose">
+            <summary>
+            Not important to the regular user, still of some interest to the curious
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Verbose">
+            <summary>
+            Background process information, in case the user wants some detailed information on what is currently happening.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.SomewhatVerbose">
+            <summary>
+            A footnote in current processing, rarely of interest to the user
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.System">
+            <summary>
+            A message of some interest from an internal system persepctive, but largely irrelevant to the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Debug">
+            <summary>
+            Something only of interest to a debugger
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.InternalComment">
+            <summary>
+            This message barely made the cut from being culled. Of purely development internal interest, and even there is 'interest' a strong word for it.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Warning">
+            <summary>
+            This message is a warning, sure sign something went badly wrong
+            </summary>
+        </member>
+        <member name="T:PSFramework.Message.MessageLevelModifier">
+            <summary>
+            A modification to a given message's level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.Name">
+            <summary>
+            Name of the modifier. Prevents duplication in a multi-runspace scenario.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.Modifier">
+            <summary>
+            The amount to modify the level by
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.IncludeFunctionName">
+            <summary>
+            Apply modifier only to messages from this function.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.ExcludeFunctionName">
+            <summary>
+            Apply modifier not when the message is written by this function.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.IncludeModuleName">
+            <summary>
+            Apply modifier only to messages from this module
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.ExcludeModuleName">
+            <summary>
+            Do not apply modifier to messages from this module
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.IncludeTags">
+            <summary>
+            Only apply this modifier to a message that includes at least one of these tags
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevelModifier.ExcludeTags">
+            <summary>
+            Do not apply this modifier to a message that includes any of the following tags
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.MessageLevelModifier.AppliesTo(System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Tests, whether a message a message should be modified by this modiier
+            </summary>
+            <param name="FunctionName">The name of the function writing the message</param>
+            <param name="ModuleName">The name of the module, the function writing this message comes from</param>
+            <param name="Tags">The tags of the message written</param>
+            <returns>Whether the message applies</returns>
+        </member>
+        <member name="T:PSFramework.Message.PsfException">
+            <summary>
+            Wrapper class that can emulate any exception for purpose of serialization without blowing up the storage space consumed
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.GetException">
+            <summary>
+            Returns the original exception object that we interpreted. This is on purpose not a property, as we want to avoid messing with serialization size.
+            </summary>
+            <returns>The original exception that got thrown</returns>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.Message">
+            <summary>
+            The actual Exception Message
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.Source">
+            <summary>
+            The original source of the Exception
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.StackTrace">
+            <summary>
+            Where on the callstack did the exception occur?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.TargetSite">
+            <summary>
+            What was the target site on the code that caused it. This property has been altered to avoid export issues, if a string representation is not sufficient, access the original exception using GetException()
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.HResult">
+            <summary>
+            The HResult of the exception. Useful in debugging native code errors.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.HelpLink">
+            <summary>
+            Link to a proper help article.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.Data">
+            <summary>
+            Additional data that has been appended
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.InnerException">
+            <summary>
+            The inner exception in a chain of exceptions.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.ExceptionTypeName">
+            <summary>
+            The full namespace name of the exception that has been wrapped.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.ExceptionData">
+            <summary>
+            Contains additional properties other exceptions might contain.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.CategoryInfo">
+            <summary>
+            The category of the error
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.ErrorDetails">
+            <summary>
+            The details on the error
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.FullyQualifiedErrorId">
+            <summary>
+            The specific error identity, used to identify the target
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.InvocationInfo">
+            <summary>
+            The details of how this was called.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.ScriptStackTrace">
+            <summary>
+            The script's stacktrace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.TargetObject">
+            <summary>
+            The object being processed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.FunctionName">
+            <summary>
+            The name of the function throwing the error
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.Timestamp">
+            <summary>
+            When was the error thrown
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.Runspace">
+            <summary>
+            The runspace the error occured on.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfException.ComputerName">
+            <summary>
+            The computer the error occured on.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.#ctor">
+            <summary>
+            Creates an empty exception object. Mostly for serialization support
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.#ctor(System.Exception)">
+            <summary>
+            Creates an exception based on an original exception object
+            </summary>
+            <param name="Except">The exception to wrap around</param>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.#ctor(System.Management.Automation.ErrorRecord)">
+            <summary>
+            Creates a rich information exception object based on a full error record as recorded by PowerShell
+            </summary>
+            <param name="Record">The error record to copy from</param>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.#ctor(System.Exception,System.String,System.DateTime,System.String,System.Guid,System.String)">
+            <summary>
+            Creates a new exception object with rich meta information from the PowerShell runtime.
+            </summary>
+            <param name="Except">The exception thrown</param>
+            <param name="FunctionName">The name of the function in which the error occured</param>
+            <param name="Timestamp">When did the error occur</param>
+            <param name="Message">The message to add to the exception</param>
+            <param name="Runspace">The ID of the runspace from which the exception was thrown. Useful in multi-runspace scenarios.</param>
+            <param name="ComputerName">The computer the error occured on.</param>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.#ctor(System.Management.Automation.ErrorRecord,System.String,System.DateTime,System.String,System.Guid,System.String)">
+            <summary>
+            Creates a new exception object with rich meta information from the PowerShell runtime.
+            </summary>
+            <param name="Record">The error record written</param>
+            <param name="FunctionName">The name of the function in which the error occured</param>
+            <param name="Timestamp">When did the error occur</param>
+            <param name="Message">The message to add to the exception</param>
+            <param name="Runspace">The ID of the runspace from which the exception was thrown. Useful in multi-runspace scenarios.</param>
+            <param name="ComputerName">The computer the error occured on.</param>
+        </member>
+        <member name="M:PSFramework.Message.PsfException.ToString">
+            <summary>
+            Returns a string representation of the exception.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Message.PsfExceptionRecord">
+            <summary>
+            Carrier class, designed to hold an arbitrary number of exceptions. Used for exporting to XML in nice per-incident packages.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.Runspace">
+            <summary>
+            Runspace where shit happened.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.ComputerName">
+            <summary>
+            The computer name the exception was written on
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.Timestamp">
+            <summary>
+            When did things go bad?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.FunctionName">
+            <summary>
+            Name of the function, where fail happened.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.ModuleName">
+            <summary>
+            The module of the function where fail happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.Tags">
+            <summary>
+            The tags that were applied to the failure
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.Message">
+            <summary>
+            The message the poor user was shown.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.PsfExceptionRecord.ExceptionType">
+            <summary>
+            Displays the name of the exception, the make scanning exceptions easier.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.PsfExceptionRecord.TargetObject">
+            <summary>
+            The target object of the first exception in the list, if any
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.Exceptions">
+            <summary>
+            List of Exceptions that are part of the incident (usually - but not always - only one).
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfExceptionRecord.#ctor">
+            <summary>
+            Creates an empty container. Ideal for the homeworker who loves doing it all himself.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfExceptionRecord.#ctor(PSFramework.Message.PsfException)">
+            <summary>
+            Creates a container filled with the first exception.
+            </summary>
+            <param name="Exception"></param>
+        </member>
+        <member name="M:PSFramework.Message.PsfExceptionRecord.#ctor(System.Guid,System.String,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Creates a container filled with the meta information but untouched by exceptions
+            </summary>
+            <param name="Runspace">The runspace where it all happened</param>
+            <param name="ComputerName">The computer the error was recorded</param>
+            <param name="Timestamp">When did it happen?</param>
+            <param name="FunctionName">Where did it happen?</param>
+            <param name="ModuleName">The name of the module where fail happened</param>
+            <param name="Tags">The tags that were assigned to the failure</param>
+            <param name="Message">What did the witness have to say?</param>
+        </member>
+        <member name="T:PSFramework.Message.TransformCondition">
+            <summary>
+            A condition, under which the object shall be transaformed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformCondition.TypeName">
+            <summary>
+            Name of the type. All similar types (as determined by the '-like' operator) will be transformed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformCondition.ModuleName">
+            <summary>
+            The name of the module to consider, using the -Like operator
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformCondition.FunctionName">
+            <summary>
+            The name of the function name to consider, using the -Like operator
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformCondition.ScriptBlock">
+            <summary>
+            The scriptblock that performs the transformation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformCondition.Type">
+            <summary>
+            What kind of transformation is being performed?
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.TransformCondition.#ctor(System.String,System.String,System.String,System.Management.Automation.ScriptBlock,PSFramework.Message.TransformType)">
+            <summary>
+            Initializes a transform condition
+            </summary>
+            <param name="TypeName">Only objects of similar name will be transformed</param>
+            <param name="ModuleName">Only objects coming from similar modules will be considered</param>
+            <param name="FunctionName">Only objects coming from similar functions will be considered</param>
+            <param name="ScriptBlock">The scriptblock used for the transformation</param>
+            <param name="Type">What kind of transformation this is</param>
+        </member>
+        <member name="T:PSFramework.Message.TransformError">
+            <summary>
+            An error occured during a message transformation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.Record">
+            <summary>
+            The error record of what went wrong
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.FunctionName">
+            <summary>
+            The name of the function writing the message that failed to transform
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.ModuleName">
+            <summary>
+            The name of the module the command writing the message came from
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.Timestamp">
+            <summary>
+            When did it all happen?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.Object">
+            <summary>
+            The object that was supposed to be transformed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.Type">
+            <summary>
+            The kind of transform that failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformError.Runspace">
+            <summary>
+            The runspace it all happened on
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.TransformError.#ctor(System.Management.Automation.ErrorRecord,System.String,System.String,System.Object,PSFramework.Message.TransformType,System.Guid)">
+            <summary>
+            Creates a new transform error
+            </summary>
+            <param name="Record">The record of what went wrong</param>
+            <param name="FunctionName">The name of the function writing the transformed message</param>
+            <param name="ModuleName">The module the function writing the transformed message is part of</param>
+            <param name="Object">The object that should have been transformed</param>
+            <param name="Type">The type of transform that was attempted</param>
+            <param name="Runspace">The runspace it all happened on</param>
+        </member>
+        <member name="T:PSFramework.Message.TransformList">
+            <summary>
+            List engine, managing the lists for a message transformation type
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.GetAll">
+            <summary>
+            Returns all entries in the list.
+            </summary>
+            <returns>The list of transforms contained within</returns>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.IsListed(PSFramework.Message.TransformCondition)">
+            <summary>
+            Returns whether the actual object is part of the list
+            </summary>
+            <param name="Condition">The object to test for list membership</param>
+            <returns>Whether the object is listed</returns>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.IsContained(PSFramework.Message.TransformCondition)">
+            <summary>
+            Returns whether a condition with equal conditions already exists
+            </summary>
+            <param name="Condition">The condition to test</param>
+            <returns>Whether the referenced condition is already listed</returns>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.Add(PSFramework.Message.TransformCondition)">
+            <summary>
+            Adds a condition to the list, if there is no equivalent condition present.
+            </summary>
+            <param name="Condition">The condition to add</param>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.Remove(PSFramework.Message.TransformCondition)">
+            <summary>
+            Removes a condition from the lsit of conditional transforms
+            </summary>
+            <param name="Condition">The condition to remove</param>
+        </member>
+        <member name="M:PSFramework.Message.TransformList.Get(System.String,System.String,System.String)">
+            <summary>
+            Returns the first transform whose filter is similar enough to work out.
+            </summary>
+            <param name="TypeName">The name of the type to check for a transform</param>
+            <param name="ModuleName">The module of the command that wrote the message with the transformable object</param>
+            <param name="Functionname">The command that wrote the message with the transformable object</param>
+            <returns>Either a transform or null, if no fitting transform was found</returns>
+        </member>
+        <member name="T:PSFramework.Message.TransformType">
+            <summary>
+            The messaging system provides these kinds of transformations for input.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformType.Target">
+            <summary>
+            A target transform can transform the target object specified. Used for live-state objects that should not be serialized on a second thread.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.TransformType.Exception">
+            <summary>
+            An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
+            </summary>
+        </member>
+        <member name="T:PSFramework.ResultCache.ResultCache">
+            <summary>
+            The class containing all things related to the result cache functionality.
+            </summary>
+        </member>
+        <member name="P:PSFramework.ResultCache.ResultCache.Result">
+            <summary>
+            The actually cached result
+            </summary>
+        </member>
+        <member name="F:PSFramework.ResultCache.ResultCache.Function">
+            <summary>
+            The function that wrote the cache.
+            </summary>
+        </member>
+        <member name="P:PSFramework.ResultCache.ResultCache.Timestamp">
+            <summary>
+            Returns, when the cache was last set
+            </summary>
+        </member>
+        <member name="M:PSFramework.ResultCache.ResultCache.Clear">
+            <summary>
+            Clears all cache properties to null
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceContainer">
+            <summary>
+            Class that contains the logic necessary to manage a unique runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceContainer.Name">
+            <summary>
+            The name of the runspace.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.RunspaceGuid">
+            <summary>
+            The Guid of the running Runspace
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.SetScript(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Sets the script to execute in the runspace. Will NOT take immediate effect. Only after restarting the runspace will it be used.
+            </summary>
+            <param name="Script">The scriptblock to execute</param>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.State">
+            <summary>
+            The state the runspace currently is in.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.Start">
+            <summary>
+            Starts the Runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.Stop">
+            <summary>
+            Gracefully stops the Runspace
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.Kill">
+            <summary>
+            Very ungracefully kills the runspace. Use only in the most dire emergency.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.SignalStopped">
+            <summary>
+            Signals the registered runspace has stopped execution
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Creates a new runspace container with the basic information needed
+            </summary>
+            <param name="Name">The name of the Runspace</param>
+            <param name="Script">The code using the runspace logic</param>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceHost">
+            <summary>
+            Provides hosting for all registered runspaces
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost.StopTimeoutSeconds">
+            <summary>
+            The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost.Runspaces">
+            <summary>
+            The dictionary containing the definitive list of unique Runspace
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.PsfRunspaceState">
+            <summary>
+            Contains the state a managed, unique runspace can be in.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.PsfRunspaceState.Running">
+            <summary>
+            The runspace is up and running
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.PsfRunspaceState.Stopping">
+            <summary>
+            The runspace has received the stop order, but has not yet obeyed it
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.PsfRunspaceState.Stopped">
+            <summary>
+            The runspace has followed its order to stop and is currently disabled
+            </summary>
+        </member>
+        <member name="T:PSFramework.TabExpansion.ScriptContainer">
+            <summary>
+            Regular container to store scripts in, that are used in TEPP
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.Name">
+            <summary>
+            The name of the scriptblock
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.ScriptBlock">
+            <summary>
+            The scriptblock doing the logic
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastExecution">
+            <summary>
+            The last time the scriptblock was called. Must be updated by the scriptblock itself
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastDuration">
+            <summary>
+            The time it took to run the last time
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.InnerScriptBlock">
+            <summary>
+            Scriptblock for users using simple-TEPP acceleration
+            </summary>
+        </member>
+        <member name="T:PSFramework.TabExpansion.TabExpansionHost">
+            <summary>
+            Class that handles the static fields supporting the ÜSFramework TabExpansion implementation
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.Scripts">
+            <summary>
+            Field containing the scripts that were registered.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.Cache">
+            <summary>
+            The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
+            </summary>
+        </member>
+        <member name="T:PSFramework.TabExpansion.TeppScriptMode">
+            <summary>
+            Whether the user wants to use simple tepp, full tepp or auto-detect
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TeppScriptMode.Simple">
+            <summary>
+            Simple mode. The scriptblock provided by the user is expected to provide a list of strings. All the rest is processed by the system
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TeppScriptMode.Full">
+            <summary>
+            In full mode, the user is expected to provide the full TEPP scriptblock.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TeppScriptMode.Auto">
+            <summary>
+            In Auto-Detect mode, the system detects, whether the user intended to provide a simple mode or full mode script. This is determined by whether the scriptblock contains a parameter block or not.
+            </summary>
+        </member>
+        <member name="T:PSFramework.TaskEngine.Priority">
+            <summary>
+            How high the priority of the task. Higher priority tasks take precedence over low priority tasks.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.Priority.Trivial">
+            <summary>
+            This task is completely trivial and can be done whenever there is some spare time for it
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.Priority.Low">
+            <summary>
+            The task is not very significant, but should be dealt with at some point
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.Priority.Medium">
+            <summary>
+            Average priority task
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.Priority.High">
+            <summary>
+            An important task that will take precedence over most other tasks
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.Priority.Critical">
+            <summary>
+            A task so critical, that it should be considered to move it to synchronous execution instead.
+            </summary>
+        </member>
+        <member name="T:PSFramework.TaskEngine.PsfTask">
+            <summary>
+            An individual task assigned to the maintenance engine
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Name">
+            <summary>
+            The name of the task to execute. No duplciates are possible.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Description">
+            <summary>
+            A description of what the task is/should be doing
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Once">
+            <summary>
+            Whether the task should be done once only
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Enabled">
+            <summary>
+            Whether the task is enabled. Only enabled tasks will be executed
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Interval">
+            <summary>
+            The interval at which the task should be performed
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Delay">
+            <summary>
+            If the task need not be performed right away, it can be delayed, in order to prioritize more important initialization tasks
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Registered">
+            <summary>
+            When was the task first registered. Duplicate registration calls will not increment this value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.LastExecution">
+            <summary>
+            When was the task last executed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.Priority">
+            <summary>
+            How important is this task?
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.ScriptBlock">
+            <summary>
+            The task code to execute
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.PsfTask.IsDue">
+            <summary>
+            Whether the task is due and should be executed
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.PsfTask.Pending">
+            <summary>
+            Returns, whether there are any actions still pending. The Task Engine runspace will terminate if there are no pending tasks left.
+            </summary>
+        </member>
+        <member name="T:PSFramework.TaskEngine.TaskHost">
+            <summary>
+            Host class providing access to resources needed to schedule and execute tasks in the background
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskHost.Tasks">
+            <summary>
+            The register of available tasks.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskHost.Cache">
+            <summary>
+            Cache where modules can store cached data provided by tasks
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.TaskHost.HasDueTasks">
+            <summary>
+            Whether there are any due tasks
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.TaskHost.HasPendingTasks">
+            <summary>
+            Whether there are any tasks that still have an action pending
+            </summary>
+        </member>
+        <member name="M:PSFramework.TaskEngine.TaskHost.GetNextTask(System.String[])">
+            <summary>
+            Returns the next task to perform. Returns null when there are no more tasks to perform
+            </summary>
+            <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
+            <returns>The next task to perform.</returns>
+        </member>
+        <member name="T:PSFramework.Utility.UtilityHost">
+            <summary>
+            Contains static resources of various kinds. Primarily for internal consumption.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.PrimaryRunspace">
+            <summary>
+            The ID for the primary (or front end) Runspace. Used for stuff that should only happen on the user-runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.IsLike(System.String,System.String,System.Boolean)">
+            <summary>
+            Implement's VB's Like operator logic.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.CharListToSet(System.String)">
+            <summary>
+            Converts a string of characters to a HashSet of characters. If the string
+            contains character ranges, such as A-Z, all characters in the range are
+            also added to the returned set of characters.
+            </summary>
+            <param name="charList">Character list string</param>
+        </member>
+    </members>
+</doc>
