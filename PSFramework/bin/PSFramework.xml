@@ -277,6 +277,11 @@
             The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.Provider.InstallationOptional">
+            <summary>
+            Whether the provider must be installed, in order for it to be used.
+            </summary>
+        </member>
         <member name="F:PSFramework.Logging.Provider.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
@@ -1361,6 +1366,16 @@
         <member name="F:PSFramework.Message.TransformType.Exception">
             <summary>
             An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
+            </summary>
+        </member>
+        <member name="T:PSFramework.PSFCore.PSFCoreHost">
+            <summary>
+            Class containing static settings and values used to globally handle things
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.PSFCoreHost.Unattended">
+            <summary>
+            Whether the current console is in unattended mode
             </summary>
         </member>
         <member name="T:PSFramework.ResultCache.ResultCache">

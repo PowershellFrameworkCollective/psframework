@@ -90,6 +90,10 @@
 			This is executed before actually registering the scriptblock.
 			It allows you to include any logic you wish, but it is specifically designed for configuration settings using Set-PSFConfig with the '-Initialize' parameter.
 	
+		.PARAMETER EnableException
+			This parameters disables user-friendly warnings and enables the throwing of exceptions.
+			This is less user friendly, but allows catching exceptions in calling scripts.
+	
 		.EXAMPLE
 			Register-PSFLoggingProvider -Name "filesystem" -Enabled $true -RegistrationEvent $registrationEvent -BeginEvent $begin_event -StartEvent $start_event -MessageEvent $message_Event -ErrorEvent $error_Event -EndEvent $end_event -FinalEvent $final_event -ConfigurationParameters $configurationParameters -ConfigurationScript $configurationScript -IsInstalledScript $isInstalledScript -InstallationScript $installationScript -InstallationParameters $installationParameters -ConfigurationSettings $configuration_Settings
 	
@@ -142,7 +146,10 @@
 		$InstallationParameters = { },
 		
 		[System.Management.Automation.ScriptBlock]
-		$ConfigurationSettings
+		$ConfigurationSettings,
+		
+		[switch]
+		$EnableException
 	)
 	
 	if ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower()))
@@ -151,6 +158,10 @@
 	}
 	
 	if ($ConfigurationSettings) { . $ConfigurationSettings }
+	if (Test-PSFParameterBinding -ParameterName Enabled)
+	{
+		Set-PSFConfig -FullName "LoggingProvider.$Name.Enabled" -Value $Enabled.ToBool()
+	}
 	
 	$provider = New-Object PSFramework.Logging.Provider
 	$provider.Name = $Name
@@ -166,13 +177,50 @@
 	$provider.InstallationScript = $InstallationScript
 	$provider.InstallationParameters = $InstallationParameters
 	
+	$provider.IncludeModules = Get-PSFConfigValue -FullName "LoggingProvider.$Name.IncludeModules" -Fallback @()
+	$provider.ExcludeModules = Get-PSFConfigValue -FullName "LoggingProvider.$Name.ExcludeModules" -Fallback @()
+	$provider.IncludeTags = Get-PSFConfigValue -FullName "LoggingProvider.$Name.IncludeTags" -Fallback @()
+	$provider.ExcludeTags = Get-PSFConfigValue -FullName "LoggingProvider.$Name.ExcludeTags" -Fallback @()
+	
+	$provider.InstallationOptional = Get-PSFConfigValue -FullName "LoggingProvider.$Name.InstallOptional" -Fallback $false
+	
 	[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()] = $provider
 	
-	if ($RegistrationEvent) { . $RegistrationEvent }
-	
-	if ($Enabled)
+	try { if ($RegistrationEvent) { . $RegistrationEvent } }
+	catch
 	{
-		if ($provider.IsInstalledScript.Invoke()) { $provider.Enabled = $true }
-		else { Write-PSFMessage -Level Warning -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFProvider' to properly install the prerequisites." }
+		[PSFramework.Logging.ProviderHost]::Providers.Remove($Name.ToLower())
+		Stop-PSFFunction -Message "Failed to register logging provider '$Name' - Registration event failed." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
+		return
+	}
+	
+	$shouldEnable = Get-PSFConfigValue -FullName "LoggingProvider.$Name.Enabled" -Fallback $false
+	$isInstalled = [System.Management.Automation.ScriptBlock]::Create($provider.IsInstalledScript).Invoke()
+	
+	if (-not $isInstalled -and (Get-PSFConfigValue -FullName "LoggingProvider.$Name.AutoInstall" -Fallback $false))
+	{
+		try { Install-PSFLoggingProvider -Name $Name -EnableException }
+		catch
+		{
+			if ($provider.InstallationOptional)
+			{
+				Write-PSFMessage -Level Warning -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -Tag 'logging', 'provider', 'fail', 'install' -EnableException $EnableException
+			}
+			else
+			{
+				Stop-PSFFunction -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+				return
+			}
+		}
+	}
+	
+	if ($shouldEnable)
+	{
+		if ($isInstalled) { $provider.Enabled = $true }
+		else
+		{
+			Stop-PSFFunction -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFProvider' to properly install the prerequisites." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+			return
+		}
 	}
 }

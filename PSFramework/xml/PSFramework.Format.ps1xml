@@ -114,6 +114,57 @@
 			</TableControl>
 		</View>
 		
+		<!-- PSFramework.Logging.Provider -->
+		<View>
+			<Name>PSFramework.Logging.Provider</Name>
+			<ViewSelectedBy>
+				<TypeName>PSFramework.Logging.Provider</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<AutoSize/>
+				<TableHeaders>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+					<TableColumnHeader/>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Name</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Enabled</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>IncludeModules</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ExcludeModules</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>IncludeTags</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ExcludeTags</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Initialized</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>InstallationOptional</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+		
 		<!-- PSFramework.Message.LogEntry -->
 		<View>
 			<Name>PSFramework.Message.LogEntry</Name>
