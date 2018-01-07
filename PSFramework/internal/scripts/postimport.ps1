@@ -21,7 +21,7 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\loggingProviders\
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\async-logging2.ps1"
 
 # Launch the Tab Expansion system
-foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\tepp\\scripts"))
+foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\tepp\scripts\"))
 {
 	. Import-ModuleFile -Path $file.FullName
 }
