@@ -1683,6 +1683,53 @@
             <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
             <returns>The next task to perform.</returns>
         </member>
+        <member name="T:PSFramework.Utility.DynamicContentObject">
+            <summary>
+            Class that contains a value that can be updated from another runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObject.Values">
+            <summary>
+            The full dictionary of dynamic objects
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.Set(System.String,System.Object)">
+            <summary>
+            Sets the value of a dynamic content object, creating a new one if needed
+            </summary>
+            <param name="Name">The name of the object</param>
+            <param name="Value">The value to set</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.Get(System.String)">
+            <summary>
+            Returns the Dynamic Content Object under the specified name
+            </summary>
+            <param name="Name">The name of the object to return</param>
+            <returns>The Dynamic Content Object selected</returns>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObject.Value">
+            <summary>
+            The value stored in this object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObject.Name">
+            <summary>
+            The name of the object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ToString">
+            <summary>
+            General string representation of the value
+            </summary>
+            <returns>The string representation of the value</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a named value object that can be updated in the background
+            </summary>
+            <param name="Name">The name of the item</param>
+            <param name="Value">The value of the item</param>
+        </member>
         <member name="T:PSFramework.Utility.UtilityHost">
             <summary>
             Contains static resources of various kinds. Primarily for internal consumption.
