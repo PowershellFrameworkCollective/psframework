@@ -36,4 +36,4 @@
 	}
 }
 
-Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'psframework.taskengine'
+Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'psframework.taskengine' -NoMessage

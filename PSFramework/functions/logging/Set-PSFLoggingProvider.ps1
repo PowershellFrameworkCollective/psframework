@@ -76,7 +76,7 @@
 	{
 		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
 		{
-			[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].ConfigurationParameters.Invoke()
+			[scriptblock]::Create(([PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].ConfigurationParameters)).Invoke()
 		}
 	}
 	
@@ -90,7 +90,7 @@
 		
 		[PSFramework.Logging.Provider]$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()]
 		
-		if (-not $provider.IsInstalledScript.Invoke() -and $Enabled)
+		if ((-not $provider.Enabled) -and (-not ([scriptblock]::Create($provider.IsInstalledScript).Invoke())) -and $Enabled)
 		{
 			Stop-PSFFunction -Message "Provider $Name not installed! Run 'Install-PSFLoggingProvider' first" -EnableException $EnableException -Category InvalidOperation -Target $Name
 			return

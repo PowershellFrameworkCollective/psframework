@@ -36,7 +36,7 @@ LONG DESCRIPTION
 	We often write messages in a module. Sometimes some verbose messages for
 	debugging purposes, sometimes an info for the user and sometimes even a
 	warning that something seriously went wrong.
-	Also often it becomes necessary or desireable to create logfiles. Logging
+	Also often it becomes necessary or desirable to create logfiles. Logging
 	helps a lot with figuring out what went wrong, but often we only enable it
 	after something broke, because those logs aren't much use when everything
 	works as desired and logs nobody reads are of little use, right?
@@ -63,7 +63,7 @@ LONG DESCRIPTION
 	While details on how to configure the system are covered in subsequent
 	chapters, the logging path can be read with this command:
 	
-	Get-PSFConfigValue "psframework.logging.filesystem.logpath"
+	  Get-PSFConfigValue -FullName "psframework.logging.filesystem.logpath"
 	
 	However all recently written messages can also be found still in memory, by
 	running:

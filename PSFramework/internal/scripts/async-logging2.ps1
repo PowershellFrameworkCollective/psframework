@@ -73,7 +73,7 @@
 			}
 			#endregion End Event
 			
-			Start-Sleep -Seconds 5
+			Start-Sleep -Seconds 1
 		}
 	}
 	catch
@@ -82,6 +82,62 @@
 	}
 	finally
 	{
+		#region Flush log on exit
+		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -like "Running") -and ([PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
+		{
+			#region Start Event
+			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
+			{
+				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null)
+			}
+			#endregion Start Event
+			
+			#region Message Event
+			while ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0)
+			{
+				$Entry = $null
+				[PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
+				if ($Entry)
+				{
+					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
+					{
+						if ($___provider.MessageApplies($Entry))
+						{
+							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry)
+						}
+					}
+				}
+			}
+			#endregion Message Event
+			
+			#region Error Event
+			while ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0)
+			{
+				$Record = $null
+				[PSFramework.Message.LogHost]::OutQueueError.TryDequeue([ref]$Record)
+				
+				if ($Record)
+				{
+					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
+					{
+						if ($___provider.MessageApplies($Record))
+						{
+							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record)
+						}
+					}
+				}
+			}
+			#endregion Error Event
+			
+			#region End Event
+			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
+			{
+				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null)
+			}
+			#endregion End Event
+		}
+		#endregion Flush log on exit
+		
 		#region Final Event
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
@@ -98,5 +154,5 @@
 	}
 }
 
-Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging'
-Start-PSFRunspace -Name 'PSFramework.Logging'
+Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging' -NoMessage
+Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage

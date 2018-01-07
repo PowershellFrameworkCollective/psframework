@@ -27,6 +27,11 @@ namespace PSFramework.Logging
         /// The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
         /// </summary>
         public bool Initialized;
+
+        /// <summary>
+        /// Whether the provider must be installed, in order for it to be used.
+        /// </summary>
+        public bool InstallationOptional;
         #endregion Core metadata
 
         #region Message filtering
