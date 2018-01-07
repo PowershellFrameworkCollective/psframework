@@ -277,6 +277,11 @@
             The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.Provider.InstallationOptional">
+            <summary>
+            Whether the provider must be installed, in order for it to be used.
+            </summary>
+        </member>
         <member name="F:PSFramework.Logging.Provider.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
