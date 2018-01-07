@@ -1368,6 +1368,16 @@
             An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
             </summary>
         </member>
+        <member name="T:PSFramework.PSFCore.PSFCoreHost">
+            <summary>
+            Class containing static settings and values used to globally handle things
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.PSFCoreHost.Unattended">
+            <summary>
+            Whether the current console is in unattended mode
+            </summary>
+        </member>
         <member name="T:PSFramework.ResultCache.ResultCache">
             <summary>
             The class containing all things related to the result cache functionality.
