@@ -81,6 +81,7 @@
     <Compile Include="TaskEngine\Priority.cs" />
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
+    <Compile Include="Utility\DynamicContentObject.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
