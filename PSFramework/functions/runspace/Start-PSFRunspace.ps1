@@ -14,6 +14,10 @@
 	.PARAMETER Runspace
 		The runspace to launch. Returned by Get-PSFRunspace
 	
+	.PARAMETER NoMessage
+		Setting this will prevent messages be written to the message / logging system.
+		This is designed to make the PSFramework not flood the log on each import.
+	
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
@@ -34,6 +38,9 @@
 		$Runspace,
 		
 		[switch]
+		$NoMessage,
+		
+		[switch]
 		$EnableException
 	)
 	
@@ -48,7 +55,7 @@
 			{
 				try
 				{
-					Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "start"
+					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "start" }
 					[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Start()
 				}
 				catch
@@ -66,7 +73,7 @@
 		{
 			try
 			{
-				Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace","start"
+				if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "start" }
 				$item.Start()
 			}
 			catch

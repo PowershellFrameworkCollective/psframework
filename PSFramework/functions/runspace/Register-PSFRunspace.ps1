@@ -19,10 +19,14 @@
 		  Only after stopping and starting the runspace will it operate under the new scriptblock.
 	
 	.PARAMETER ScriptBlock
-		The scriptblock to run in a dedicated runspace
+		The scriptblock to run in a dedicated runspace.
 	
 	.PARAMETER Name
 		The name to register the scriptblock under.
+	
+	.PARAMETER NoMessage
+		Setting this will prevent messages be written to the message / logging system.
+		This is designed to make the PSFramework not flood the log on each import.
 	
 	.EXAMPLE
 		PS C:\> Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'mymodule.maintenance'
@@ -46,17 +50,20 @@
 		
 		[Parameter(Mandatory = $true)]
 		[String]
-		$Name
+		$Name,
+		
+		[switch]
+		$NoMessage
 	)
 	
 	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($Name.ToLower()))
 	{
-		Write-PSFMessage -Level Verbose -Message "Updating runspace: <c='Green'>$($Name.ToLower())</c>" -Target $Name.ToLower()
+		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Updating runspace: <c='em'>$($Name.ToLower())</c>" -Target $Name.ToLower() -Tag 'runspace','register' }
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name.ToLower()].SetScript($ScriptBlock)
 	}
 	else
 	{
-		Write-PSFMessage -Level Verbose -Message "Registering runspace: <c='Green'>$($Name.ToLower())</c>" -Target $Name.ToLower()
+		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Registering runspace: <c='em'>$($Name.ToLower())</c>" -Target $Name.ToLower() -Tag 'runspace', 'register' }
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name.ToLower()] = New-Object PSFramework.Runspace.RunspaceContainer($Name.ToLower(), $ScriptBlock)
 	}
 }

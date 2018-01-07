@@ -98,5 +98,5 @@
 	}
 }
 
-Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging'
-Start-PSFRunspace -Name 'PSFramework.Logging'
+Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging' -NoMessage
+Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage
