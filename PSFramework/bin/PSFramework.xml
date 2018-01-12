@@ -1434,6 +1434,12 @@
             Starts the Runspace.
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.SetName(System.Management.Automation.Runspaces.Runspace)">
+            <summary>
+            Sets the name on a runspace. This WILL FAIL for PowerShell v3!
+            </summary>
+            <param name="Runspace">The runspace to be named</param>
+        </member>
         <member name="M:PSFramework.Runspace.RunspaceContainer.Stop">
             <summary>
             Gracefully stops the Runspace
