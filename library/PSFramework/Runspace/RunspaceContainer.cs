@@ -58,12 +58,22 @@ namespace PSFramework.Runspace
             if (Runspace == null)
             {
                 Runspace = PowerShell.Create();
-                Runspace.Runspace.Name = Name;
+                try { SetName(Runspace.Runspace); }
+                catch { }
                 Runspace.AddScript(Script.ToString());
                 _State = PsfRunspaceState.Running;
                 try { Runspace.BeginInvoke(); }
                 catch { _State = PsfRunspaceState.Stopped; }
             }
+        }
+
+        /// <summary>
+        /// Sets the name on a runspace. This WILL FAIL for PowerShell v3!
+        /// </summary>
+        /// <param name="Runspace">The runspace to be named</param>
+        private void SetName(System.Management.Automation.Runspaces.Runspace Runspace)
+        {
+            Runspace.Name = Name;
         }
 
         /// <summary>
