@@ -143,6 +143,7 @@
 		
 		function Ensure-RegistryPath
 		{
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
 			[CmdletBinding()]
 			Param (
 				[string]
