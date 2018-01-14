@@ -9,7 +9,7 @@ Param (
 
 if ($SkipTest) { return }
 
-Install-Module PSScriptAnalyzer -Force
+Install-Module PSScriptAnalyzer -Force -SkipPublisherCheck
 
 $list = New-Object System.Collections.ArrayList
 

@@ -1,6 +1,6 @@
 ﻿Write-Host "Starting Tests" -ForegroundColor Green
 Write-Host "Installing Pester" -ForegroundColor Cyan
-Install-Module Pester -Force
+Install-Module Pester -Force -SkipPublisherCheck
 
 Write-Host "Importing Module" -ForegroundColor Cyan
 
