@@ -30,6 +30,7 @@
 	
 			Removes the message level modifier named "mymodule.foo"
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]

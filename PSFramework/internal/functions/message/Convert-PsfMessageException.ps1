@@ -37,7 +37,7 @@
 		$ModuleName
 	)
 	
-	if ($Exception -eq $null) { return }
+	if ($null -eq $Exception) { return }
 	
 	$typeName = $Exception.GetType().FullName.ToLower()
 	

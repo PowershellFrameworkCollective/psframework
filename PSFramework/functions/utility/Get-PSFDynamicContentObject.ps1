@@ -25,6 +25,7 @@
 	
 		Returns the Dynamic Content Object named "test"
 #>
+	[OutputType([PSFramework.Utility.DynamicContentObject])]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

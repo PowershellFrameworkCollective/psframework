@@ -60,6 +60,7 @@
 			
 			This is useful when prioritizing your own module during development.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

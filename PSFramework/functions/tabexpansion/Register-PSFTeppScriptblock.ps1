@@ -61,7 +61,7 @@
 	if ($Mode -like "Auto")
 	{
 		$ast = [System.Management.Automation.Language.Parser]::ParseInput($ScriptBlock, [ref]$null, [ref]$null)
-		$simple = $ast.ParamBlock -eq $null
+		$simple = $null -eq $ast.ParamBlock
 	}
 	elseif ($Mode -like "Simple") { $simple = $true }
 	else { $simple = $false }

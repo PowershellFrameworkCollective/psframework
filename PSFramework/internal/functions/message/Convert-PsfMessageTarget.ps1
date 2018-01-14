@@ -37,7 +37,7 @@
 		$ModuleName
 	)
 	
-	if ($Target -eq $null) { return }
+	if ($null -eq $Target) { return }
 	
 	$typeName = $Target.GetType().FullName.ToLower()
 	

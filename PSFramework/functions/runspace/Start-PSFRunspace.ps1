@@ -22,12 +22,18 @@
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
 	
+	.PARAMETER Confirm
+		If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+
+	.PARAMETER WhatIf
+		If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+	
 	.EXAMPLE
 		PS C:\> Start-PSFRunspace -Name 'mymodule.maintenance'
 		
 		Starts the runspace registered under the name 'mymodule.maintenance'
 #>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess = $true)]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
@@ -53,14 +59,17 @@
 			
 			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item.ToLower()))
 			{
-				try
+				if ($PSCmdlet.ShouldProcess($item, "Starting Runspace"))
 				{
-					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "start" }
-					[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Start()
-				}
-				catch
-				{
-					Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.ToLower())</c>" -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item.ToLower() -Continue
+					try
+					{
+						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "start" }
+						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Start()
+					}
+					catch
+					{
+						Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.ToLower())</c>" -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item.ToLower() -Continue
+					}
 				}
 			}
 			else
@@ -71,14 +80,17 @@
 		
 		foreach ($item in $Runspace)
 		{
-			try
+			if ($PSCmdlet.ShouldProcess($item.Name, "Starting Runspace"))
 			{
-				if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "start" }
-				$item.Start()
-			}
-			catch
-			{
-				Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+				try
+				{
+					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "start" }
+					$item.Start()
+				}
+				catch
+				{
+					Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+				}
 			}
 		}
 	}

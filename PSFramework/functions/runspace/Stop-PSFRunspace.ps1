@@ -25,6 +25,12 @@
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
 	
+	.PARAMETER Confirm
+		If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+	
+	.PARAMETER WhatIf
+		If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+	
 	.EXAMPLE
 		PS C:\> Stop-PSFRunspace -Name 'mymodule.maintenance'
 		
@@ -33,7 +39,7 @@
 	.NOTES
 		Additional information about the function.
 #>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess = $true)]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
@@ -56,14 +62,17 @@
 			
 			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item.ToLower()))
 			{
-				try
+				if ($PSCmdlet.ShouldProcess($item, "Stopping Runspace"))
 				{
-					Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "stop"
-					[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Stop()
-				}
-				catch
-				{
-					Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue
+					try
+					{
+						Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "stop"
+						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Stop()
+					}
+					catch
+					{
+						Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue
+					}
 				}
 			}
 			else
@@ -74,14 +83,17 @@
 		
 		foreach ($item in $Runspace)
 		{
-			try
+			if ($PSCmdlet.ShouldProcess($item.Name, "Stopping Runspace"))
 			{
-				Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "stop"
-				$item.Stop()
-			}
-			catch
-			{
-				Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue
+				try
+				{
+					Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "stop"
+					$item.Stop()
+				}
+				catch
+				{
+					Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue
+				}
 			}
 		}
 	}

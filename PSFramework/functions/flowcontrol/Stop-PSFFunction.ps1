@@ -66,6 +66,14 @@
         .PARAMETER ContinueLabel
             When specifying a label in combination with "-Continue" or "-SilentlyContinue", this function will call continue with this specified label.
             Helpful when trying to continue on an upper level named loop.
+	
+		.PARAMETER Exception
+			Allows specifying an inner exception as input object. This will be passed on to the logging and used for messages.
+            When specifying both ErrorRecord AND Exception, Exception wins, but ErrorRecord is still used for record metadata.
+	
+		.PARAMETER OverrideExceptionMessage
+			Disables automatic appending of exception messages.
+            Use in cases where you already have a speaking message interpretation and do not need the original message.
         
         .EXAMPLE
             Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -135,7 +143,7 @@
 	
 	#region Apply Transforms
 	#region Target Transform
-	if ($Target -ne $null)
+	if ($null -ne $Target)
 	{
 		$Target = Convert-PsfMessageTarget -Target $Target -FunctionName $FunctionName -ModuleName $ModuleName
 	}
