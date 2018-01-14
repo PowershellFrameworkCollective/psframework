@@ -1,6 +1,9 @@
 ﻿Write-Host "Starting Tests" -ForegroundColor Green
 Write-Host "Importing Module" -ForegroundColor Cyan
 
+if (-not (Get-Module pester -ListAvailable)) { Install-Module Pester }
+else { Update-Module pester }
+
 Remove-Module PSFramework -ErrorAction Ignore
 Import-Module "$PSScriptRoot\..\PSFramework.psd1"
 Import-Module "$PSScriptRoot\..\PSFramework.psm1" -Force

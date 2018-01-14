@@ -26,6 +26,7 @@
 			Stores the content of $results in the cache 'mymodule / maintenancetask'
 			These values can now be retrieved using Get-PSFTaskEngineCache.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

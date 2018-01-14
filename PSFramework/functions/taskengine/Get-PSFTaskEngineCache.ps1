@@ -23,6 +23,7 @@
 	
 			Retrieves the information stored under 'mymodule.maintenancetask'
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

@@ -143,7 +143,7 @@
 	
 	#region Apply Transforms
 	#region Target Transform
-	if ($Target -ne $null)
+	if ($null -ne $Target)
 	{
 		$Target = Convert-PsfMessageTarget -Target $Target -FunctionName $FunctionName -ModuleName $ModuleName
 	}

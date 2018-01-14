@@ -193,7 +193,7 @@
 	
 	#region Apply Transforms
 	#region Target Transform
-	if ((-not $fromStopFunction) -and ($Target -ne $null))
+	if ((-not $fromStopFunction) -and ($null -ne $Target))
 	{
 		$Target = Convert-PsfMessageTarget -Target $Target -FunctionName $FunctionName -ModuleName $ModuleName
 	}

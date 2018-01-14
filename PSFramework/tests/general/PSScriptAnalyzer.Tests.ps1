@@ -9,6 +9,9 @@ Param (
 
 if ($SkipTest) { return }
 
+if (-not (Get-Module PSScriptAnalyzer -ListAvailable)) { Install-Module PSScriptAnalyzer }
+else { Update-Module PSScriptAnalyzer }
+
 $list = New-Object System.Collections.ArrayList
 
 Describe 'Invoking PSScriptAnalyzer against commandbase' {

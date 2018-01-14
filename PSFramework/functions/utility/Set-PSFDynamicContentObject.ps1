@@ -25,6 +25,7 @@
 	
 		Sets the Dynamic Content Object named "test" to the value $Value.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	Param (
 		[string[]]
