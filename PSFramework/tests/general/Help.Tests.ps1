@@ -8,7 +8,7 @@
     .DESCRIPTION
 		This test evaluates the help for all commands in a module.
 
-	.PARAMETER SkipHelpTest
+	.PARAMETER SkipTest
 		Disables this test.
 	
 	.PARAMETER CommandPath
@@ -33,7 +33,7 @@
 [CmdletBinding()]
 Param (
 	[switch]
-	$SkipHelpTest,
+	$SkipTest,
 	
 	[string[]]
 	$CommandPath = @("$PSScriptRoot\..\..\functions", "$PSScriptRoot\..\..\internal\functions"),
@@ -44,7 +44,7 @@ Param (
 	[string]
 	$ExceptionsFile = "$PSScriptRoot\Help.Exceptions.ps1"
 )
-if ($SkipHelpTest) { return }
+if ($SkipTest) { return }
 . $ExceptionsFile
 
 $includedNames = (Get-ChildItem $CommandPath -Recurse -File | Where-Object Name -like "*.ps1").BaseName
