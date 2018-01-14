@@ -20,6 +20,8 @@
 		
 		.EXAMPLE
 			PS C:\> Get-PSFTaskEngineCache -Module 'mymodule' -Name 'maintenancetask'
+	
+			Retrieves the information stored under 'mymodule.maintenancetask'
 	#>
 	[CmdletBinding()]
 	Param (

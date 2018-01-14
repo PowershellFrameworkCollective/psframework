@@ -27,6 +27,11 @@
 		.PARAMETER EnableException
 			This parameters disables user-friendly warnings and enables the throwing of exceptions.
 			This is less user friendly, but allows catching exceptions in calling scripts.
+	
+		.EXAMPLE
+			PS C:\> Install-PSFLoggingProvider -Name Eventlog
+	
+			Installs a logging provider named 'eventlog'
 	#>
 	[CmdletBinding()]
 	Param (

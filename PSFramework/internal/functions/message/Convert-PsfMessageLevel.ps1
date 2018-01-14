@@ -25,6 +25,11 @@
 		
 		.PARAMETER ModuleName
 			The module the function writing the message comes from.
+	
+		.EXAMPLE
+			Convert-PsfMessageLevel -OriginalLevel $Level -FromStopFunction $fromStopFunction -Tags $Tag -FunctionName $FunctionName -ModuleName $ModuleName
+	
+			This will convert the original level of $Level based on the transformation rules for levels.
 	#>
 	[CmdletBinding()]
 	Param (

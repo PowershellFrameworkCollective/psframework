@@ -65,6 +65,14 @@
 		.PARAMETER EnableException
 			This parameters disables user-friendly warnings and enables the throwing of exceptions.
 			This is less user friendly, but allows catching exceptions in calling scripts.
+	
+		.PARAMETER Exception
+			Allows specifying an inner exception as input object. This will be passed on to the logging and used for messages.
+            When specifying both ErrorRecord AND Exception, Exception wins, but ErrorRecord is still used for record metadata.
+	
+		.PARAMETER OverrideExceptionMessage
+			Disables automatic appending of exception messages.
+            Use in cases where you already have a speaking message interpretation and do not need the original message.
 		
 		.EXAMPLE
 			PS C:\> Write-PSFMessage -Level Verbose -Message "Connecting to $computer"
