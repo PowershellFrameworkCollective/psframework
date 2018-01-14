@@ -9,8 +9,7 @@ Param (
 
 if ($SkipTest) { return }
 
-if (-not (Get-Module PSScriptAnalyzer -ListAvailable)) { Install-Module PSScriptAnalyzer }
-else { Update-Module PSScriptAnalyzer }
+Install-Module PSScriptAnalyzer -Force
 
 $list = New-Object System.Collections.ArrayList
 
