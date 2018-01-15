@@ -29,5 +29,5 @@
 		$Name = "*"
 	)
 	
-	[PSFramework.Message.MessageHost]::MessageLevelModifiers.Values | Where-Object Name -Like $Name
+	([PSFramework.Message.MessageHost]::MessageLevelModifiers.Values) | Where-Object Name -Like $Name
 }
