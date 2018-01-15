@@ -4,4 +4,4 @@
 )
 
 if ($WhatIf) { Publish-Module "$(System.DefaultWorkingDirectory)\PSFramework" -NuGetApiKey $ApiKey -Force -WhatIf }
-else { Publish-Module "$(System.DefaultWorkingDirectory)\PSFramework" -NuGetApiKey $ApiKey -Force }
+else { Publish-Module "$($env:SYSTEM_DEFAULTWORKINGDIRECTORY)\PSFramework" -NuGetApiKey $ApiKey -Force }
