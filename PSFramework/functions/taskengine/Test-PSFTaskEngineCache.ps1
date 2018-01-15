@@ -22,6 +22,7 @@
 			Returns, whether the cache has been set for the module 'mymodule' and the task 'maintenancetask'
 			Does not require the cache to actually contain a value, but must exist.
 	#>
+	[OutputType([System.Boolean])]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

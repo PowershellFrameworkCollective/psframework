@@ -16,6 +16,7 @@
 	
 			Returns, whether the task named 'mymodule.maintenance' has already been executed at least once.
 	#>
+	[OutputType([System.Boolean])]
 	[CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]

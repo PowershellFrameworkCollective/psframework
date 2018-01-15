@@ -36,8 +36,11 @@
 	.PARAMETER Text
 		The full text of your license.
 	
-	.PARAMETER Silent
-		Suppresses verbose feedback and error interpretation.
+	.PARAMETER Confirm
+				If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+		
+	.PARAMETER WhatIf
+		If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 	
 	.EXAMPLE
 		PS C:\> New-PSFLicense -Product 'Awesome Test Product' -Manufacturer 'Awesome Inc.' -ProductVersion '1.0.1.0' -ProductType Application -Name FreeBSD -Version "3.0.0.0" -Date (Get-Date -Year 2016 -Month 11 -Day 28 -Hour 0 -Minute 0 -Second 0) -Text @"
@@ -72,7 +75,7 @@
 		This registers the Awesome Test Prodct as licensed under the common FreeBSD license.
 #>
 	
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
 	[OutputType([PSFramework.License.License])]
 	param
 	(
@@ -118,12 +121,13 @@
 	$license.LicenseDate = $Date
 	$license.LicenseType = $Type
 	$license.LicenseText = $Text
-	
-	if (-not ([PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -eq $license.Product) -and ($_.ProductVersion -eq $license.ProductVersion) }))
+	if ($PSCmdlet.ShouldProcess("$($license.Product) $($license.ProductVersion) ($($license.LicenseName))", "Create License"))
 	{
-		[PSFramework.License.LicenseHost]::Add($license)
+		if (-not ([PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -eq $license.Product) -and ($_.ProductVersion -eq $license.ProductVersion) }))
+		{
+			[PSFramework.License.LicenseHost]::Add($license)
+		}
+		
+		return $license
 	}
-	
-	return $license
-	
 }
