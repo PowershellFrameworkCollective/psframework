@@ -117,7 +117,6 @@ namespace PSFramework.Runspace
         public void SignalStopped()
         {
             _State = PsfRunspaceState.Stopped;
-            Runspace = null;
         }
 
         /// <summary>
