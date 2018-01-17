@@ -28,7 +28,7 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\tepp\scripts\"))
 . Import-ModuleFile -Path "$PSModuleRoot\internal\tepp\tepp-assignment.ps1"
 
 # Load parameter class extensions
-foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\parameters\"))
+foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\parameters\" -Filter "*.ps1"))
 {
 	. Import-ModuleFile -Path $file.FullName
 }
