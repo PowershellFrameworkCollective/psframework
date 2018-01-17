@@ -86,15 +86,12 @@ namespace PSFramework.Runspace
             int i = 0;
 
             // Wait up to the limit for the running script to notice and kill itself
-            if ((Runspace != null) && (Runspace.Runspace != null))
+            while ((Runspace != null) && (Runspace.Runspace != null) && (Runspace.Runspace.RunspaceAvailability != RunspaceAvailability.Available) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
             {
-                while ((Runspace.Runspace.RunspaceAvailability != RunspaceAvailability.Available) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
-                {
-                    i++;
-                    Thread.Sleep(100);
-                }
+                i++;
+                Thread.Sleep(100);
             }
-
+            
             Kill();
         }
 
@@ -120,7 +117,6 @@ namespace PSFramework.Runspace
         public void SignalStopped()
         {
             _State = PsfRunspaceState.Stopped;
-            Runspace = null;
         }
 
         /// <summary>

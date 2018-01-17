@@ -282,22 +282,22 @@
             Whether the provider must be installed, in order for it to be used.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.IncludeModules">
+        <member name="P:PSFramework.Logging.Provider.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.ExcludeModules">
+        <member name="P:PSFramework.Logging.Provider.ExcludeModules">
             <summary>
             List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.IncludeTags">
+        <member name="P:PSFramework.Logging.Provider.IncludeTags">
             <summary>
             List of tags to include. Only messages with these tags will be considered by this provider.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.ExcludeTags">
+        <member name="P:PSFramework.Logging.Provider.ExcludeTags">
             <summary>
             List of tags to exclude. Messages with these tags will be ignored by this provider.
             </summary>

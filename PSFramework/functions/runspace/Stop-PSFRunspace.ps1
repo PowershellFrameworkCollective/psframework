@@ -71,7 +71,7 @@
 					}
 					catch
 					{
-						Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue
+						Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue -ErrorRecord $_
 					}
 				}
 			}
@@ -92,7 +92,7 @@
 				}
 				catch
 				{
-					Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue
+					Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue -ErrorRecord $_
 				}
 			}
 		}

@@ -35,25 +35,69 @@ namespace PSFramework.Logging
         #endregion Core metadata
 
         #region Message filtering
+        private List<string> _IncludeModules = new List<string>();
         /// <summary>
         /// List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
         /// </summary>
-        public List<string> IncludeModules = new List<string>();
+        public List<string> IncludeModules
+        {
+            get { return _IncludeModules; }
+            set
+            {
+                if (value == null)
+                    _IncludeModules.Clear();
+                else
+                    _IncludeModules = value;
+            }
+        }
 
+        private List<string> _ExcludeModules = new List<string>();
         /// <summary>
         /// List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
         /// </summary>
-        public List<string> ExcludeModules = new List<string>();
+        public List<string> ExcludeModules
+        {
+            get { return _ExcludeModules; }
+            set
+            {
+                if (value == null)
+                    _ExcludeModules.Clear();
+                else
+                    _ExcludeModules = value;
+            }
+        }
 
+        private List<string> _IncludeTags = new List<string>();
         /// <summary>
         /// List of tags to include. Only messages with these tags will be considered by this provider.
         /// </summary>
-        public List<string> IncludeTags = new List<string>();
+        public List<string> IncludeTags
+        {
+            get { return _IncludeTags; }
+            set
+            {
+                if (value == null)
+                    _IncludeTags.Clear();
+                else
+                    _IncludeTags = value;
+            }
+        }
 
+        private List<string> _ExcludeTags = new List<string>();
         /// <summary>
         /// List of tags to exclude. Messages with these tags will be ignored by this provider.
         /// </summary>
-        public List<string> ExcludeTags = new List<string>();
+        public List<string> ExcludeTags
+        {
+            get { return _ExcludeTags; }
+            set
+            {
+                if (value == null)
+                    _ExcludeTags.Clear();
+                else
+                    _ExcludeTags = value;
+            }
+        }
 
         /// <summary>
         /// Tests whether a log entry applies to the provider

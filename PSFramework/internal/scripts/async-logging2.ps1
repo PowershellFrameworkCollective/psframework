@@ -59,7 +59,7 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record)
+							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.ErrorEvent)), $null, $Record)
 						}
 					}
 				}
