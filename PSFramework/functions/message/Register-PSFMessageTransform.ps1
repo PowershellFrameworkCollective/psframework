@@ -71,7 +71,7 @@
 			PS C:\> Register-PSFMessageTransform -TargetTypeFilter 'mymodule.category.*' -ScriptBlock $ScriptBlock
 	
 			Adds a transform for all target objects that are of a type whose full name starts with 'mymodule.category.'
-			All 
+			All target objects matching that typename will be run through the specified scriptblock, which in return generates the new target object.
 	#>
 	[CmdletBinding(PositionalBinding = $false)]
 	Param (

@@ -34,7 +34,7 @@
 			Returns whether none of the parameters above were specified.
 	
 		.EXAMPLE
-			Test-PSFParameterBinding -And 'Login', 'Spid', 'ExcludeSpid', 'Host', 'Program', 'Database' 
+			Test-PSFParameterBinding -And 'Login', 'Spid', 'ExcludeSpid', 'Host', 'Program', 'Database'
 	
 			Returns whether any of the specified parameters was not bound
     #>

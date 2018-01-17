@@ -28,7 +28,7 @@
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
 			Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name "psalcohol-liquids"
 	
-			In step one we set a list of questionable liquids as the list of available 
+			In step one we set a list of questionable liquids as the list of available
         
         .EXAMPLE
             Register-PSFTeppScriptblock -ScriptBlock $scriptBlock -Name MyFirstTeppScriptBlock
