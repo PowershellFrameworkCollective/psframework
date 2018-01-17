@@ -69,6 +69,11 @@
     <Compile Include="Message\TransformError.cs" />
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
+    <Compile Include="Parameter\ComputerParameter.cs" />
+    <Compile Include="Parameter\ParameterClassAttribute.cs" />
+    <Compile Include="Parameter\ParameterContractAttribute.cs" />
+    <Compile Include="Parameter\ParameterContractBehavior.cs" />
+    <Compile Include="Parameter\ParameterContractType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
@@ -82,6 +87,7 @@
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />
+    <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
