@@ -100,7 +100,7 @@ LONG DESCRIPTION
 	
 	Verbose:
 	  VeryVerbose (4), Verbose (5), SomewhatVerbose (6)
-	  Verbose messages are shown when a command is run with the automatic 
+	  Verbose messages are shown when a command is run with the automatic
 	  '-Verbose' parameter. They generally help in showing the current progress.
 	  
 	Debug:
@@ -386,7 +386,7 @@ LONG DESCRIPTION
 	#--------------------#
 	The logging script gathers the info from the logging queue and logs them.
 	Currently, only the filesystem logging is implemented, however additional
-	logging providers will soon become available, providing a wider choice of 
+	logging providers will soon become available, providing a wider choice of
 	logging options. Filesystem however will remain the default option.
 	The script is operated by the modules own runspace component and can be
 	controlled using its functions.

@@ -282,22 +282,22 @@
             Whether the provider must be installed, in order for it to be used.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.IncludeModules">
+        <member name="P:PSFramework.Logging.Provider.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.ExcludeModules">
+        <member name="P:PSFramework.Logging.Provider.ExcludeModules">
             <summary>
             List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.IncludeTags">
+        <member name="P:PSFramework.Logging.Provider.IncludeTags">
             <summary>
             List of tags to include. Only messages with these tags will be considered by this provider.
             </summary>
         </member>
-        <member name="F:PSFramework.Logging.Provider.ExcludeTags">
+        <member name="P:PSFramework.Logging.Provider.ExcludeTags">
             <summary>
             List of tags to exclude. Messages with these tags will be ignored by this provider.
             </summary>
@@ -1368,6 +1368,174 @@
             An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
             </summary>
         </member>
+        <member name="T:PSFramework.Parameter.ComputerParameter">
+            <summary>
+            Parameter class that converts various input into a unified input representation
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.ComputerParameter.ComputerName">
+            <summary>
+            The resolved computername
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameter.InputObject">
+            <summary>
+            The original input object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.ComputerParameter.IsLocalhost">
+            <summary>
+            Whether the computername is actually localhost or one of its equivalents
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.op_Implicit(PSFramework.Parameter.ComputerParameter)~System.String">
+            <summary>
+            Implicitly converts the parameter class to string
+            </summary>
+            <param name="Parameter">The parameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.ToString">
+            <summary>
+            Overrides the default ToString() method
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameter._PropertyMapping">
+            <summary>
+            Contains the list of property mappings.
+            Types can be registered to it, allowing the parameter class to blindly interpret unknown types
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.SetTypePropertyMapping(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
+            </summary>
+            <param name="Name">The name of the type. Use the FullName of the type</param>
+            <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid computername was found</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.String)">
+            <summary>
+            Generates a Computer Parameter object from string
+            </summary>
+            <param name="ComputerName">The name to use as input</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Net.IPAddress)">
+            <summary>
+            Creates a Computer Parameter from an IPAddress
+            </summary>
+            <param name="Address"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Net.NetworkInformation.PingReply)">
+            <summary>
+            Creates a Computer Parameter from the reply to a ping
+            </summary>
+            <param name="Ping">The result of a ping</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Net.IPHostEntry)">
+            <summary>
+            Creates a Computer Parameter from the result of a dns resolution
+            </summary>
+            <param name="Entry">The result of a dns resolution</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Creates a Computer Parameter from an established SQL Connection
+            </summary>
+            <param name="Connection">The connection to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Object)">
+            <summary>
+            Generates a Computer Parameter object from anything
+            </summary>
+            <param name="InputObject"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterClassAttribute">
+            <summary>
+            Attribute marking a class
+            </summary>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterContractAttribute">
+            <summary>
+            The attribute used to define the elements of a ParameterClass contract
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.ParameterContractAttribute.Type">
+            <summary>
+            Returns the type of the element this attribute is supposed to be attached to.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.ParameterContractAttribute.Behavior">
+            <summary>
+            Returns the behavior to expect from the contracted element. This sets the expectations on how this element is likely to act.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.ParameterContractAttribute.#ctor(PSFramework.Parameter.ParameterContractType,PSFramework.Parameter.ParameterContractBehavior)">
+            <summary>
+            Ceates a perfectly common parameter contract attribute. For use with all parameter classes' public elements.
+            </summary>
+            <param name="Type"></param>
+            <param name="Behavior"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterContractBehavior">
+            <summary>
+            Defines how this element will behave
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.NotContracted">
+            <summary>
+            This elements is not actually part of the contract. Generally you wouldn't want to add the attribute at all in that case. However, in some places it helps avoiding confusion.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Mandatory">
+            <summary>
+            This element may never be null and must be considered in all assignments. Even if the element is de facto not nullable, all constructors must assign it.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Optional">
+            <summary>
+            This element may contain data, but is not required to. In case of a method, it may simply do nothing
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Failable">
+            <summary>
+            This method may throw an error when executing and should always be handled with try/catch. Use this on methods that use external calls.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Arbiter">
+            <summary>
+            The content of the thus marked field determines the dependent's state. Generally, only if the arbiter is true, will the dependent elements be mandatory. This behavior may only be assigned to boolean fields.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Conditional">
+            <summary>
+            This behavior can be assigned together with the 'Mandatory' behavior. It means the field is only mandatory if an arbiter field is present and set to true.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractBehavior.Conversion">
+            <summary>
+            Converts content. Generally applied only to operators, but some methods may also convert information.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterContractType">
+            <summary>
+            Defines what kind of element is granted the contract
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractType.Field">
+            <summary>
+            The contracted element is a field containing a value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractType.Method">
+            <summary>
+            The contracted element is a method, performing an action
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterContractType.Operator">
+            <summary>
+            The contracted element is an operator, facilitating type conversion. Generally into a dedicated object type this parameterclass abstracts.
+            </summary>
+        </member>
         <member name="T:PSFramework.PSFCore.PSFCoreHost">
             <summary>
             Class containing static settings and values used to globally handle things
@@ -1736,6 +1904,56 @@
             <param name="Name">The name of the item</param>
             <param name="Value">The value of the item</param>
         </member>
+        <member name="T:PSFramework.Utility.RegexHelper">
+            <summary>
+            Static class that holds useful regex patterns, ready for use
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.HostName">
+            <summary>
+            Pattern that checks for a valid hostname
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.HostNameEx">
+            <summary>
+            Pattern that checks for valid hostnames within a larger text
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.IPv4">
+            <summary>
+            Pattern that checks for a valid IPv4 address
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.IPv4Ex">
+            <summary>
+            Pattern that checks for valid IPv4 addresses within a larger text
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.IPv6">
+            <summary>
+            Will match a valid IPv6 address
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.IPv6Ex">
+            <summary>
+            Will match any IPv6 address within a larger text
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.ComputerTarget">
+            <summary>
+            Will match any string that in its entirety represents a valid target for dns- or ip-based targeting. Combination of HostName, IPv4 and IPv6
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.Guid">
+            <summary>
+            Will match a valid Guid
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.RegexHelper.GuidEx">
+            <summary>
+            Will match any number of valid Guids in a larger text
+            </summary>
+        </member>
         <member name="T:PSFramework.Utility.UtilityHost">
             <summary>
             Contains static resources of various kinds. Primarily for internal consumption.
@@ -1744,6 +1962,19 @@
         <member name="F:PSFramework.Utility.UtilityHost.PrimaryRunspace">
             <summary>
             The ID for the primary (or front end) Runspace. Used for stuff that should only happen on the user-runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.IsLocalhost(System.String)">
+            <summary>
+            Tests whether a given string is the local host.
+            Does NOT use DNS resolution, DNS aliases will NOT be recognized!
+            </summary>
+            <param name="Name">The name to test for being local host</param>
+            <returns>Whether the name is localhost</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.IsValidComputerTarget(System.String)">
+            <summary>
+            Tests whether a given string is a valid target for targeting as a computer. Will first convert from idn name.
             </summary>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.IsLike(System.String,System.String,System.Boolean)">

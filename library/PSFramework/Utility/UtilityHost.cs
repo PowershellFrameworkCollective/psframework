@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 namespace PSFramework.Utility
 {
@@ -12,6 +15,66 @@ namespace PSFramework.Utility
         /// The ID for the primary (or front end) Runspace. Used for stuff that should only happen on the user-runspace.
         /// </summary>
         public static Guid PrimaryRunspace;
+
+        /// <summary>
+        /// Tests whether a given string is the local host.
+        /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!
+        /// </summary>
+        /// <param name="Name">The name to test for being local host</param>
+        /// <returns>Whether the name is localhost</returns>
+        public static bool IsLocalhost(string Name)
+        {
+            #region Handle IP Addresses
+            try
+            {
+                IPAddress tempAddress;
+                IPAddress.TryParse(Name, out tempAddress);
+                if (IPAddress.IsLoopback(tempAddress))
+                    return true;
+
+                foreach (NetworkInterface netInterface in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    IPInterfaceProperties ipProps = netInterface.GetIPProperties();
+                    foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                    {
+                        if (tempAddress.ToString() == addr.Address.ToString())
+                            return true;
+                    }
+                }
+            }
+            catch { }
+            #endregion Handle IP Addresses
+
+            #region Handle Names
+            try
+            {
+                if (Name == ".")
+                    return true;
+                if (Name.ToLower() == "localhost")
+                    return true;
+                if (Name.ToLower() == Environment.MachineName.ToLower())
+                    return true;
+                if (Name.ToLower() == (Environment.MachineName + "." + Environment.GetEnvironmentVariable("USERDNSDOMAIN")).ToLower())
+                    return true;
+            }
+            catch { }
+            #endregion Handle Names
+            return false;
+        }
+
+        /// <summary>
+        /// Tests whether a given string is a valid target for targeting as a computer. Will first convert from idn name.
+        /// </summary>
+        public static bool IsValidComputerTarget(string ComputerName)
+        {
+            try
+            {
+                System.Globalization.IdnMapping mapping = new System.Globalization.IdnMapping();
+                string temp = mapping.GetAscii(ComputerName);
+                return Regex.IsMatch(temp, RegexHelper.ComputerTarget);
+            }
+            catch { return false; }
+        }
 
         /// <summary>
         /// Implement's VB's Like operator logic.
