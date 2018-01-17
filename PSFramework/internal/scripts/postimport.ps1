@@ -27,6 +27,15 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\tepp\scripts\"))
 }
 . Import-ModuleFile -Path "$PSModuleRoot\internal\tepp\tepp-assignment.ps1"
 
+# Load parameter class extensions
+foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\parameters\" -Filter "*.ps1"))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
+
+# Import the aliases for PSFramework types
+. Import-ModuleFile -Path "$PSModuleRoot\bin\type-aliases.ps1"
+
 # Register the task engine
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\taskEngine.ps1"
 
