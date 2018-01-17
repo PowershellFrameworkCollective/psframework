@@ -1,6 +1,10 @@
-﻿Write-Host "Starting Tests" -ForegroundColor Green
+﻿param (
+	$Show = "None"
+)
+
+Write-Host "Starting Tests" -ForegroundColor Green
 Write-Host "Installing Pester" -ForegroundColor Cyan
-Install-Module Pester -Force -SkipPublisherCheck
+if ($env:BUILD_BUILDURI -like "vstfs*") { Install-Module Pester -Force -SkipPublisherCheck }
 
 Write-Host "Importing Module" -ForegroundColor Cyan
 
@@ -11,16 +15,27 @@ Import-Module "$PSScriptRoot\..\PSFramework.psm1" -Force
 $totalFailed = 0
 $totalRun = 0
 
+$testresults = @()
+
 Write-PSFMessage -Level Important -Message "Modules imported, proceeding with general tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot\general" -Filter "*.Tests.ps1"))
 {
 	Write-PSFMessage -Level Significant -Message "  Executing <c='em'>$($file.Name)</c>"
-	$results = Invoke-Pester -Script $file.FullName -Show None -PassThru
+	$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru
 	foreach ($result in $results)
 	{
 		$totalRun += $result.TotalCount
 		$totalFailed += $result.FailedCount
-		$result.TestResult | Where-Object { -not $_.Passed }
+		$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+			$name = $_.Name
+			$testresults += [pscustomobject]@{
+				Describe  = $_.Describe
+				Context   = $_.Context
+				Name	  = "It $name"
+				Result    = $_.Result
+				Message   = $_.FailureMessage
+			}
+		}
 	}
 }
 
@@ -33,12 +48,23 @@ foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File -Filte
 	{
 		$totalRun += $result.TotalCount
 		$totalFailed += $result.FailedCount
-		$result.TestResult | Where-Object { -not $_.Passed }
+		$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+			$name = $_.Name
+			$testresults += [pscustomobject]@{
+				Describe   = $_.Describe
+				Context    = $_.Context
+				Name	   = "It $name"
+				Result	   = $_.Result
+				Message    = $_.FailureMessage
+			}
+		}
 	}
 }
 
-if ($totalFailed -eq 0) { Write-PSFMessage -Level Critical -Message "All $totalRun tests executed without a single failure!" }
-else { Write-PSFMessage -Level Critical -Message "<c='red'>$totalFailed tests</c> out of <c='sub'>$totalRun</c> tests failed!" }
+$testresults | Sort-Object Describe, Context, Name, Result, Message | Format-List
+
+if ($totalFailed -eq 0) { Write-PSFMessage -Level Critical -Message "All <c='em'>$totalRun</c> tests executed without a single failure!" }
+else { Write-PSFMessage -Level Critical -Message "<c='em'>$totalFailed tests</c> out of <c='sub'>$totalRun</c> tests failed!" }
 
 if ($totalFailed -gt 0)
 {

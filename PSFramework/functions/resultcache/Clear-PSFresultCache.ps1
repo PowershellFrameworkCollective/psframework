@@ -17,7 +17,7 @@
 			PS C:\> Clear-PSFResultCache
 	
 			Clears the result cache, freeing up any used memory.
-	#>	
+	#>
 	[CmdletBinding(ConfirmImpact = 'Low', SupportsShouldProcess = $true)]
 	param (
 		

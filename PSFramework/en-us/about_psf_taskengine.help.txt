@@ -1,4 +1,4 @@
-TOPIC
+﻿TOPIC
 	about_psf_taskengine
 	
 SHORT DESCRIPTION
@@ -89,7 +89,7 @@ LONG DESCRIPTION
 	includuing the very module that registered the task!
 	However no module is imported by default! Keep in mind, that not
 	necessarily all users will place your module in one of the default paths,
-	relying on implicit import may not work in that case! Both the main 
+	relying on implicit import may not work in that case! Both the main
 	runspace and the task share the same configuration system however, so it
 	is possible to share the modulepath by registering the modulebase in the
 	configuration system.
