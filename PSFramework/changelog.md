@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## 0.9.8.16 : XXXX-XX-XX
+## 0.9.8.17 : 2018-01-19
+ - Fix: Fixed bad configuration setting 'PSFramework.Serialization.WorkingDirectory'
+
+## 0.9.8.16 : 2018-01-19
  - New: Added command Register-PSFParameterClassMapping
  - New: Added command Get-PSFTypeSerializationData
  - New: Added command Register-PSFTypeSerializationData
