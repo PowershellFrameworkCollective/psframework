@@ -85,6 +85,7 @@
 		'Register-PSFLoggingProvider',
 		'Register-PSFMessageEvent',
 		'Register-PSFMessageTransform',
+		'Register-PSFParameterClassMapping',
 		'Register-PSFRunspace',
 		'Register-PSFTaskEngineTask',
 		'Register-PSFTeppArgumentCompleter',

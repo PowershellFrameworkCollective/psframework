@@ -14,5 +14,5 @@
 
 foreach ($key in $mappings.Keys)
 {
-	[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($key, $mappings[$key])
+	Register-PSFParameterClassMapping -ParameterClass 'Computer' -TypeName $key -Properties $mappings[$key]
 }
