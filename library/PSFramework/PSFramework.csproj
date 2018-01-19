@@ -80,6 +80,7 @@
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
+    <Compile Include="Serialization\SerializationTypeConverter.cs" />
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
     <Compile Include="TabExpansion\TeppScriptMode.cs" />

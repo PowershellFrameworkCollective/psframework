@@ -1689,6 +1689,80 @@
             The runspace has followed its order to stop and is currently disabled
             </summary>
         </member>
+        <member name="T:PSFramework.Serialization.SerializationTypeConverter">
+            <summary>
+            Typeconverter that does the heavy lifting of maintaining type integrity across process borders.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.CanConvertFrom(System.Object,System.Type)">
+            <summary>
+            Whether the source can be converted to its destination
+            </summary>
+            <param name="sourceValue">The value to convert</param>
+            <param name="destinationType">The type to convert to</param>
+            <returns>Whether this action is possible</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.ConvertFrom(System.Object,System.Type,System.IFormatProvider,System.Boolean)">
+            <summary>
+            Converts an object
+            </summary>
+            <param name="sourceValue">The data to convert</param>
+            <param name="destinationType">The type to convert to</param>
+            <param name="formatProvider">This will be ignored, but must be present</param>
+            <param name="ignoreCase">This will be ignored, but must be present</param>
+            <returns>The converted object</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.CanConvertTo(System.Object,System.Type)">
+            <summary>
+            Whether the input object can be converted to the Destination type
+            </summary>
+            <param name="sourceValue">Input value</param>
+            <param name="destinationType">The type to convert to</param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.ConvertTo(System.Object,System.Type,System.IFormatProvider,System.Boolean)">
+            <summary>
+            Converts an object
+            </summary>
+            <param name="sourceValue">The data to convert</param>
+            <param name="destinationType">The type to convert to</param>
+            <param name="formatProvider">This will be ignored, but must be present</param>
+            <param name="ignoreCase">This will be ignored, but must be present</param>
+            <returns>The converted object</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.RegisterAssemblyResolver">
+            <summary>
+            Registers an assembly resolving event
+            </summary>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.CanSerialize(System.Object)">
+            <summary>
+            Whether an object can be serialized
+            </summary>
+            <param name="obj">The object to test</param>
+            <returns>Whether the object can be serialized</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.CanSerialize(System.Type)">
+            <summary>
+            Whether a type can be serialized
+            </summary>
+            <param name="type">The type to test</param>
+            <returns>Whether the specified type can be serialized</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.TypeIsSerializable(System.Type)">
+            <summary>
+            The validation check on whether a type is serializable
+            </summary>
+            <param name="type">The type to test</param>
+            <returns>Returns whether that type can be serialized</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.GetSerializationData(System.Management.Automation.PSObject)">
+            <summary>
+            Used to obtain the information to write
+            </summary>
+            <param name="psObject">The object to dissect</param>
+            <returns>A memory stream.</returns>
+        </member>
         <member name="T:PSFramework.TabExpansion.ScriptContainer">
             <summary>
             Regular container to store scripts in, that are used in TEPP
