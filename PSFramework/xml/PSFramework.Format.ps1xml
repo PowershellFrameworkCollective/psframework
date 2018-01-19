@@ -177,6 +177,7 @@
 					<TableColumnHeader/>
 					<TableColumnHeader/>
 					<TableColumnHeader/>
+					<TableColumnHeader/>
 					<TableColumnHeader>
 						<Label>TargetObject</Label>
 					</TableColumnHeader>
@@ -190,6 +191,9 @@
 							</TableColumnItem>
 							<TableColumnItem>
 								<PropertyName>FunctionName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Line</PropertyName>
 							</TableColumnItem>
 							<TableColumnItem>
 								<PropertyName>Level</PropertyName>

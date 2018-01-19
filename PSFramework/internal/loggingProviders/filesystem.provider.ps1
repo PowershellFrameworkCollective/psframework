@@ -116,7 +116,7 @@ $message_Event = {
 	
 	if ($Message)
 	{
-		Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-Object ComputerName, Timestamp, Level, Message, Type, FunctionName, ModuleName, @{ n = "Tags"; e = { $_.Tags -join "," } }, TargetObject, Runspace) -NoTypeInformation)[1]
+		Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-Object ComputerName, Timestamp, Level, Message, Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, TargetObject, Runspace) -NoTypeInformation)[1]
 	}
 }
 

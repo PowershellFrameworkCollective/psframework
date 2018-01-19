@@ -152,11 +152,13 @@ namespace PSFramework.Message
         /// <param name="Level">At what level was the function written</param>
         /// <param name="Runspace">The runspace the message is coming from</param>
         /// <param name="ComputerName">The computer the message was generated on</param>
+        /// <param name="File">The file from which the message was written</param>
+        /// <param name="Line">The line on which the message was written</param>
         /// <param name="TargetObject">The object associated with a given message.</param>
         /// <returns>The entry that is being written</returns>
-        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject = null)
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, object TargetObject = null)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject);
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 

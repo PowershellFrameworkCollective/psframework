@@ -48,6 +48,14 @@
 		.PARAMETER ModuleName
 			The name of the module, the function to be crashed is part of.
 			This parameter is very optional, since it automatically selects the name of the calling function.
+	
+		.PARAMETER File
+			The file in which Stop-PSFFunction was called.
+			Will be automatically set, but can be overridden when necessary.
+		
+		.PARAMETER Line
+			The line on which Stop-PSFFunction was called.
+			Will be automatically set, but can be overridden when necessary.
         
         .PARAMETER Target
             The object that was processed when the error was thrown.
@@ -119,6 +127,12 @@
 		
 		[string]
 		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
+		
+		[string]
+		$File = ((Get-PSCallStack)[0].Position.File),
+		
+		[int]
+		$Line = ((Get-PSCallStack)[0].Position.StartLineNumber),
 		
 		[System.Exception]
 		$Exception,
@@ -192,7 +206,7 @@
 		}
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage -File $File -Line $Line
 	}
 	else
 	{
@@ -200,7 +214,7 @@
 		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true
+		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true -File $File -Line $Line
 	}
 	#endregion Message Handling
 	
