@@ -60,6 +60,16 @@ namespace PSFramework.Message
         public object TargetObject;
 
         /// <summary>
+        /// The file from which the message was written.
+        /// </summary>
+        public string File;
+
+        /// <summary>
+        /// The line on which the message was written
+        /// </summary>
+        public int Line;
+
+        /// <summary>
         /// Creates an empty log entry
         /// </summary>
         public LogEntry()
@@ -80,7 +90,9 @@ namespace PSFramework.Message
         /// <param name="Runspace">The ID of the runspace that wrote the message.</param>
         /// <param name="ComputerName">The computer the message was generated on.</param>
         /// <param name="TargetObject">The object this message was all about.</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject)
+        /// <param name="File">The file of the code that wrote the message</param>
+        /// <param name="Line">The line on which the message was written</param>
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line)
         {
             this.Message = Message;
             this.Type = Type;
@@ -92,6 +104,8 @@ namespace PSFramework.Message
             this.Runspace = Runspace;
             this.ComputerName = ComputerName;
             this.TargetObject = TargetObject;
+            this.File = File;
+            this.Line = Line;
         }
     }
 }

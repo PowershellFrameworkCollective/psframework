@@ -448,12 +448,22 @@
             The object that was the focus of this message.
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogEntry.File">
+            <summary>
+            The file from which the message was written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Line">
+            <summary>
+            The line on which the message was written
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.LogEntry.#ctor">
             <summary>
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32)">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -467,6 +477,8 @@
             <param name="Runspace">The ID of the runspace that wrote the message.</param>
             <param name="ComputerName">The computer the message was generated on.</param>
             <param name="TargetObject">The object this message was all about.</param>
+            <param name="File">The file of the code that wrote the message</param>
+            <param name="Line">The line on which the message was written</param>
         </member>
         <member name="T:PSFramework.Message.LogEntryType">
             <summary>
@@ -598,7 +610,7 @@
             <param name="Runspace">The runspace the message was written from</param>
             <param name="ComputerName">The computer the error was written on</param>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -611,6 +623,8 @@
             <param name="Level">At what level was the function written</param>
             <param name="Runspace">The runspace the message is coming from</param>
             <param name="ComputerName">The computer the message was generated on</param>
+            <param name="File">The file from which the message was written</param>
+            <param name="Line">The line on which the message was written</param>
             <param name="TargetObject">The object associated with a given message.</param>
             <returns>The entry that is being written</returns>
         </member>
@@ -1452,6 +1466,16 @@
         <member name="T:PSFramework.Parameter.ParameterClassAttribute">
             <summary>
             Attribute marking a class
+            </summary>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterClasses">
+            <summary>
+            List of available parameter classes
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.Computer">
+            <summary>
+            The computer parameter class allows easily targeting a computer
             </summary>
         </member>
         <member name="T:PSFramework.Parameter.ParameterContractAttribute">
