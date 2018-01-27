@@ -1402,6 +1402,11 @@
             Whether the computername is actually localhost or one of its equivalents
             </summary>
         </member>
+        <member name="F:PSFramework.Parameter.ComputerParameter.Type">
+            <summary>
+            What kind of object was passed. This makes it easier to detect and reuse specific kinds of live object in circumstances where that is desirable.
+            </summary>
+        </member>
         <member name="M:PSFramework.Parameter.ComputerParameter.op_Implicit(PSFramework.Parameter.ComputerParameter)~System.String">
             <summary>
             Implicitly converts the parameter class to string
@@ -1439,6 +1444,18 @@
             </summary>
             <param name="Address"></param>
         </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Management.Automation.Runspaces.PSSession)">
+            <summary>
+            Creates a Computer Parameter from a PSSession
+            </summary>
+            <param name="Session">The session to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(Microsoft.Management.Infrastructure.CimSession)">
+            <summary>
+            Creates a Computer Parameter from a CimSession
+            </summary>
+            <param name="Session">The session to create the parameter from</param>
+        </member>
         <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.Net.NetworkInformation.PingReply)">
             <summary>
             Creates a Computer Parameter from the reply to a ping
@@ -1462,6 +1479,31 @@
             Generates a Computer Parameter object from anything
             </summary>
             <param name="InputObject"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.ComputerParameterInputType">
+            <summary>
+            The kind of object that was bound to the parameter class
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameterInputType.Default">
+            <summary>
+            The input object is just any non-special kind of input.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameterInputType.PSSession">
+            <summary>
+            The input object is a PowerShell Session object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameterInputType.SMOServer">
+            <summary>
+            The input object is a live SMO Server object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameterInputType.CimSession">
+            <summary>
+            The input object is a live cim session object
+            </summary>
         </member>
         <member name="T:PSFramework.Parameter.ParameterClassAttribute">
             <summary>

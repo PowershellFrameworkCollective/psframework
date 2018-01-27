@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Management.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
@@ -45,6 +47,12 @@ namespace PSFramework.Parameter
         {
             get { return Utility.UtilityHost.IsLocalhost(ComputerName); }
         }
+
+        /// <summary>
+        /// What kind of object was passed. This makes it easier to detect and reuse specific kinds of live object in circumstances where that is desirable.
+        /// </summary>
+        [ParameterContract(ParameterContractType.Field, ParameterContractBehavior.Mandatory)]
+        public ComputerParameterInputType Type = ComputerParameterInputType.Default;
         #endregion Fields of contract
 
         #region Statics & Stuff
@@ -171,6 +179,28 @@ namespace PSFramework.Parameter
         }
 
         /// <summary>
+        /// Creates a Computer Parameter from a PSSession
+        /// </summary>
+        /// <param name="Session">The session to use</param>
+        public ComputerParameter(PSSession Session)
+        {
+            InputObject = Session;
+            ComputerName = Session.ComputerName;
+            Type = ComputerParameterInputType.PSSession;
+        }
+
+        /// <summary>
+        /// Creates a Computer Parameter from a CimSession
+        /// </summary>
+        /// <param name="Session">The session to create the parameter from</param>
+        public ComputerParameter(CimSession Session)
+        {
+            InputObject = Session;
+            ComputerName = Session.ComputerName;
+            Type = ComputerParameterInputType.CimSession;
+        }
+
+        /// <summary>
         /// Creates a Computer Parameter from the reply to a ping
         /// </summary>
         /// <param name="Ping">The result of a ping</param>
@@ -223,6 +253,9 @@ namespace PSFramework.Parameter
                     key = name.ToLower();
                     break;
                 }
+
+                if (name.ToLower() == "microsoft.sqlserver.management.smo.server")
+                    Type = ComputerParameterInputType.SMOServer;
             }
 
             if (key == "")
