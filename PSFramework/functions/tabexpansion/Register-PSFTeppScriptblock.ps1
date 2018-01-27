@@ -9,6 +9,11 @@
 	
 			This system supports two separate types of input: Full or Simple.
 	
+			Simple:
+			The scriptblock simply must return string values.
+			PSFramework will then do the rest of the processing when the user asks for tab completion.
+			This is the simple-most way to implement tab completion, for a full example, look at the first example in this help.
+	
 			Full:
 			A full scriptblock implements all that is needed to provide Tab Expansion.
 			For more details and guidance, see the following concept help:
@@ -19,6 +24,7 @@
         
         .PARAMETER Name
             The name under which the scriptblock should be registered.
+			It is recommended to prefix the name with the module (e.g.: mymodule.<name>), as names are shared across all implementing modules.
 	
 		.PARAMETER Mode
 			Whether the script provided is a full or simple scriptblock.
@@ -28,7 +34,7 @@
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
 			Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name "psalcohol-liquids"
 	
-			In step one we set a list of questionable liquids as the list of available
+			In step one we set a list of questionable liquids as the list of available beverages for parameter 'Type' on the command 'Get-Alcohol'
         
         .EXAMPLE
             Register-PSFTeppScriptblock -ScriptBlock $scriptBlock -Name MyFirstTeppScriptBlock
@@ -44,9 +50,11 @@
     #>
 	[CmdletBinding()]
 	Param (
+		[Parameter(Mandatory = $true)]
 		[System.Management.Automation.ScriptBlock]
 		$ScriptBlock,
 		
+		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
 		
