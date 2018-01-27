@@ -37,7 +37,7 @@
 		$Name
 	)
 	
-	if (($PSVersionTable["PSVersion"].Major -lt 5) -and (-not (Get-Item function:Register-ArgumentCompleter)))
+	if (($PSVersionTable["PSVersion"].Major -lt 5) -and (-not (Get-Item function:Register-ArgumentCompleter -ErrorAction Ignore)))
 	{
 		return
 	}
