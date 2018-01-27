@@ -16,43 +16,36 @@
         
         .PARAMETER Name
             Name of the Tepp Completioner to use.
-            Defaults to the parameter name.
-            Best practice requires a Completioner to be named the same as the completed parameter, in which case this parameter needs not be specified.
-            However sometimes that may not be universally possible, which is when this parameter comes in.
+			Use the same name as was assigned in Register-PSFTeppScriptblock (which needs to be called first).
         
         .EXAMPLE
-            Register-PSFTeppArgumentCompleter -Command Get-DbaBackupHistory -Parameter Database
+            Register-PSFTeppArgumentCompleter -Command Get-Test -Parameter Example -Name MyModule.Example
     
-            Registers the "Database" parameter of the Get-DbaBackupHistory to receive Database-Tepp
+            Registers the parameter 'Example' of the command 'Get-Test' to receive the tab completion registered to 'MyModule.Example'
     #>
 	[CmdletBinding()]
 	Param (
-		[string]
+		[Parameter(Mandatory = $true)]
+		[string[]]
 		$Command,
 		
+		[Parameter(Mandatory = $true)]
 		[string[]]
 		$Parameter,
 		
+		[Parameter(Mandatory = $true)]
 		[string]
 		$Name
 	)
 	
-	if (($PSVersionTable["PSVersion"].Major -lt 5) -and (-not (Get-Item function:Register-ArgumentCompleter)))
+	if (($PSVersionTable["PSVersion"].Major -lt 5) -and (-not (Get-Item function:Register-ArgumentCompleter -ErrorAction Ignore)))
 	{
 		return
 	}
 	
-	foreach ($p in $Parameter)
+	foreach ($Param in $Parameter)
 	{
-		
-		$lowername = $PSBoundParameters.Name
-		
-		if ($null -eq $lowername)
-		{
-			$lowername = $p
-		}
-		
-		$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$lowername.ToLower()].ScriptBlock
-		Register-ArgumentCompleter -CommandName $Command -ParameterName $p -ScriptBlock $scriptBlock
+		$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name.ToLower()].ScriptBlock
+		Register-ArgumentCompleter -CommandName $Command -ParameterName $Param -ScriptBlock $scriptBlock
 	}
 }

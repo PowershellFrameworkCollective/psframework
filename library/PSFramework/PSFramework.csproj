@@ -31,6 +31,11 @@
     <DocumentationFile>..\..\PSFramework\bin\PSFramework.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Management.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.Management.Infrastructure\v4.0_1.0.0.0__31bf3856ad364e35\Microsoft.Management.Infrastructure.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -69,6 +74,7 @@
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
+    <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\ParameterClassAttribute.cs" />
     <Compile Include="Parameter\ParameterClasses.cs" />
     <Compile Include="Parameter\ParameterContractAttribute.cs" />
