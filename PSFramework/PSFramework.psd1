@@ -136,19 +136,19 @@
 		PSData = @{
 			
 			# Tags applied to this module. These help with module discovery in online galleries.
-			# Tags = @()
+			Tags = @('scripting', 'infrastructure', 'logging', 'configuration')
 			
 			# A URL to the license for this module.
-			# LicenseUri = ''
+			LicenseUri = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/LICENSE.md'
 			
 			# A URL to the main website for this project.
-			# ProjectUri = ''
+			ProjectUri = 'http://psframework.org'
 			
 			# A URL to an icon representing this module.
 			# IconUri = ''
 			
 			# ReleaseNotes of this module
-			# ReleaseNotes = ''
+			ReleaseNotes = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/PSFramework/changelog.md'
 			
 		} # End of PSData hashtable
 		
