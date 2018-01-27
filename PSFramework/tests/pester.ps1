@@ -1,5 +1,14 @@
 ﻿param (
-	$Show = "None"
+	[ValidateSet('None', 'Default', 'Passed', 'Failed', 'Pending', 'Skipped', 'Inconclusive', 'Describe', 'Context', 'Summary', 'Header', 'Fails', 'All')]
+	[string]
+	$Show = "None",
+	
+	[ValidateSet('Everything', 'Functions', 'General')]
+	[string]
+	$Run = "Everything",
+	
+	[string]
+	$Filter = "*.Tests.ps1"
 )
 
 Write-Host "Starting Tests" -ForegroundColor Green
@@ -17,45 +26,51 @@ $totalRun = 0
 
 $testresults = @()
 
-Write-PSFMessage -Level Important -Message "Modules imported, proceeding with general tests"
-foreach ($file in (Get-ChildItem "$PSScriptRoot\general" -Filter "*.Tests.ps1"))
+if ($Run -match "Everything|General")
 {
-	Write-PSFMessage -Level Significant -Message "  Executing <c='em'>$($file.Name)</c>"
-	$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru
-	foreach ($result in $results)
+	Write-PSFMessage -Level Important -Message "Modules imported, proceeding with general tests"
+	foreach ($file in (Get-ChildItem "$PSScriptRoot\general" -Filter $Filter))
 	{
-		$totalRun += $result.TotalCount
-		$totalFailed += $result.FailedCount
-		$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
-			$name = $_.Name
-			$testresults += [pscustomobject]@{
-				Describe  = $_.Describe
-				Context   = $_.Context
-				Name	  = "It $name"
-				Result    = $_.Result
-				Message   = $_.FailureMessage
+		Write-PSFMessage -Level Significant -Message "  Executing <c='em'>$($file.Name)</c>"
+		$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru
+		foreach ($result in $results)
+		{
+			$totalRun += $result.TotalCount
+			$totalFailed += $result.FailedCount
+			$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+				$name = $_.Name
+				$testresults += [pscustomobject]@{
+					Describe   = $_.Describe
+					Context    = $_.Context
+					Name	   = "It $name"
+					Result	   = $_.Result
+					Message    = $_.FailureMessage
+				}
 			}
 		}
 	}
 }
 
-Write-PSFMessage -Level Important -Message "Proceeding with individual tests"
-foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File -Filter "*Tests..ps1"))
+if ($Run -match "Everything|Functions")
 {
-	Write-PSFMessage -Level Significant -Message "  Executing $($file.Name)"
-	$results = Invoke-Pester -Script $file.FullName -Show None -PassThru
-	foreach ($result in $results)
+	Write-PSFMessage -Level Important -Message "Proceeding with individual tests"
+	foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File -Filter $Filter))
 	{
-		$totalRun += $result.TotalCount
-		$totalFailed += $result.FailedCount
-		$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
-			$name = $_.Name
-			$testresults += [pscustomobject]@{
-				Describe   = $_.Describe
-				Context    = $_.Context
-				Name	   = "It $name"
-				Result	   = $_.Result
-				Message    = $_.FailureMessage
+		Write-PSFMessage -Level Significant -Message "  Executing $($file.Name)"
+		$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru
+		foreach ($result in $results)
+		{
+			$totalRun += $result.TotalCount
+			$totalFailed += $result.FailedCount
+			$result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+				$name = $_.Name
+				$testresults += [pscustomobject]@{
+					Describe    = $_.Describe
+					Context	    = $_.Context
+					Name	    = "It $name"
+					Result	    = $_.Result
+					Message	    = $_.FailureMessage
+				}
 			}
 		}
 	}

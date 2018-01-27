@@ -379,13 +379,14 @@
 				{
 					Write-PSFHostColor -String $newColoredMessage -DefaultColor $info_color -ErrorAction Ignore
 					Set-PSFConfig -Name $OnceName -Value $True -Hidden -ErrorAction Ignore
+					$channels += "Information"
 				}
 			}
 			else
 			{
 				Write-PSFHostColor -String $newColoredMessage -DefaultColor $info_color -ErrorAction Ignore
+				$channels += "Information"
 			}
-			$channels += "Information"
 		}
 		elseif ($developerMode)
 		{

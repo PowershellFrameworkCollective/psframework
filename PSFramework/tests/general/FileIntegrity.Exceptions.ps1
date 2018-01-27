@@ -5,7 +5,8 @@ $global:BannedCommands = @(
 	'Write-Warning',
 	'Write-Error',
 	'Write-Output',
-	'Write-Information'
+	'Write-Information',
+	'Write-Debug'
 )
 
 # Contains list of exceptions for banned cmdlets
@@ -16,4 +17,5 @@ $global:MayContainCommand = @{
 	"Write-Error"  = @('Write-PSFMessage.ps1','Stop-PSFFunction.ps1')
 	"Write-Output" = @()
 	"Write-Information" = @()
+	"Write-Debug" = @()
 }
