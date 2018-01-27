@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.9.9.19 : 2018-01-27
+ - Upd: Enhanced ComputerParameter parameter class: Supports PSSession and CimSession objects, new property `Type` is available to detect live session objects in order to facilitate reuse. (#46)
+ - Fix: Tab Expansion commands parameterization and help have been updated to reflect real use requirements (#14)
+ - Fix: Register-PSFTeppArgumentCompleter used to throw exception on PS3/4, interrupting module import in strict mode (#45)
+
 ## 0.9.8.17 : 2018-01-19
  - Fix: Fixed bad configuration setting 'PSFramework.Serialization.WorkingDirectory'
 
