@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.9.20 : 2018-02-18
+ - Fix: Failed to restore empty array configurations from registry
+ - Fix: Restored single-value arrays from registry as non-array
+
 ## 0.9.9.19 : 2018-01-27
  - Upd: Enhanced ComputerParameter parameter class: Supports PSSession and CimSession objects, new property `Type` is available to detect live session objects in order to facilitate reuse. (#46)
  - Fix: Tab Expansion commands parameterization and help have been updated to reflect real use requirements (#14)
