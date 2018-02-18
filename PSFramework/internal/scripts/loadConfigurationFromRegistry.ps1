@@ -34,10 +34,13 @@
 			"consolecolor" { return ([System.ConsoleColor]$content) }
 			"array"
 			{
+				if ($content -eq "") { return, @() }
+				$tempArray = @()
 				foreach ($item in ($content -split "þþþ"))
 				{
-					Convert-RegType -Value $item
+					$tempArray += Convert-RegType -Value $item
 				}
+				return ,$tempArray
 			}
 			
 			default { throw "Unknown type identifier" }
