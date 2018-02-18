@@ -34,10 +34,13 @@
 			"consolecolor" { return ([System.ConsoleColor]$content) }
 			"array"
 			{
+				if ($content -eq "") { return, @() }
+				$tempArray = @()
 				foreach ($item in ($content -split "þþþ"))
 				{
-					Convert-RegType -Value $item
+					$tempArray += Convert-RegType -Value $item
 				}
+				return ,$tempArray
 			}
 			
 			default { throw "Unknown type identifier" }
@@ -58,7 +61,7 @@
 		}
 		catch
 		{
-			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_
+			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_ -ModuleName PSFramework -FunctionName 'loadConfigurationFromRegistry.ps1'
 		}
 	}
 	foreach ($item in ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" -ErrorAction Ignore).PSObject.Properties | Where-Object Name -NotIn $common))
@@ -73,7 +76,7 @@
 		}
 		catch
 		{
-			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_
+			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_ -ModuleName PSFramework -FunctionName 'loadConfigurationFromRegistry.ps1'
 		}
 	}
 	foreach ($item in ((Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -ErrorAction Ignore).PSObject.Properties | Where-Object Name -NotIn $common))
@@ -88,7 +91,7 @@
 		}
 		catch
 		{
-			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_
+			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_ -ModuleName PSFramework -FunctionName 'loadConfigurationFromRegistry.ps1'
 		}
 	}
 	foreach ($item in ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -ErrorAction Ignore).PSObject.Properties | Where-Object Name -NotIn $common))
@@ -103,7 +106,7 @@
 		}
 		catch
 		{
-			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_
+			Write-PSFMessage -Level Warning -Message "Failed to interpret configuration entry from registry: $($item.Name)" -ErrorRecord $_ -ModuleName PSFramework -FunctionName 'loadConfigurationFromRegistry.ps1'
 		}
 	}
 	#endregion Import from registry
