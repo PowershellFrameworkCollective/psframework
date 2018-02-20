@@ -1,7 +1,12 @@
 # CHANGELOG
 
-## 0.9.10.23 : XXXX-XX-XX
- - New: Add command Unregister-PSFConfig
+## 0.9.10.23 : 2018-02-21
+ - New: Add command Unregister-PSFConfig (#59)
+ - New: Add command New-PSFSupportPackage (#60)
+ - Upd: Write-PSFHostColor - new parameters `-NoNewLine` (In line with the same Write-Host parameter) and `-Level` (Allow suppressing messages depending on info message configuration) (#61)
+ - Upd: Get-PSFTypeSerializationData - new parameter `-Fragment` allows skipping outer XML shell to add to existing type extension XML. Also cleaned up output. (#53)
+ - Upd: Some internal housekeeping that should have no effect outside the module
+ - Fix: Set-PSFConfig - Validation of array input would remove all but the first value (#54)
 
 ## 0.9.9.20 : 2018-02-18
  - Fix: Failed to restore empty array configurations from registry
