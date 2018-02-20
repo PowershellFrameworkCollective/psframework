@@ -81,6 +81,7 @@
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
 		'New-PSFMessageLevelModifier',
+		'New-PSFSupportPackage',
 		'Register-PSFConfig',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
