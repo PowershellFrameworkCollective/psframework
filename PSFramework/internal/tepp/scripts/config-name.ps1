@@ -25,5 +25,5 @@ $ScriptBlock = {
 	[PSFramework.TabExpansion.TabExpansionHost]::Scripts["config-name"].LastDuration = (Get-Date) - $start
 }
 
-Register-PSFTeppScriptblock -ScriptBlock $ScriptBlock -Name "config-name"
+Register-PSFTeppScriptblock -ScriptBlock $ScriptBlock -Name "PSFramework-config-name"
 #endregion Tepp Data return: Config Name
