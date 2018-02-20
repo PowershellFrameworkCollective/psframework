@@ -106,6 +106,7 @@
 		'Test-PSFParameterBinding',
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
+		'Unregister-PSFConfig',
 		'Write-PSFHostColor',
 		'Write-PSFMessage'
 	)

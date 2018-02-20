@@ -14,3 +14,6 @@ Register-PSFTeppArgumentCompleter -Command Register-PSFConfig -Parameter Module 
 Register-PSFTeppArgumentCompleter -Command Register-PSFConfig -Parameter Name -Name config-name
 
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfigValue -Parameter FullName -Name config-fullname
+
+Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter FullName -Name 'PSFramework-Unregister-PSFConfig-FullName'
+Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter Module -Name 'PSFramework-Unregister-PSFConfig-Module'

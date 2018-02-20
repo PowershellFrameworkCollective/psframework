@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.9.10.23 : XXXX-XX-XX
+ - New: Add command Unregister-PSFConfig
+
 ## 0.9.9.20 : 2018-02-18
  - Fix: Failed to restore empty array configurations from registry
  - Fix: Restored single-value arrays from registry as non-array
