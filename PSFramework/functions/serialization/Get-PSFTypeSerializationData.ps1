@@ -28,6 +28,10 @@
 		Whether all types listed should be generated as a single definition ('Grouped'; default) or as one definition per type.
 		Since multiple files have worse performance, it is generally recommended to group them all in a single file.
 	
+	.PARAMETER Fragment
+		By setting this, the type XML is emitted without the outer XML shell, containing only the <Type> node(s).
+		Use this if you want to add the output to existing type extension xml.
+	
 	.PARAMETER Serializer
 		The serializer to use for the conversion.
 		By default, the PSFramework serializer is used, which should work well enough, but requires the PSFramework to be present.
@@ -50,6 +54,9 @@
 		[ValidateSet('Grouped','SingleItem')]
 		[string]
 		$Mode = "Grouped",
+		
+		[switch]
+		$Fragment,
 		
 		[string]
 		$Serializer = "PSFramework.Serialization.SerializationTypeConverter",
@@ -96,6 +103,8 @@
 			)
 			
 			@"
+
+  <!-- $Type -->
   <Type>
     <Name>Deserialized.$Type</Name>
     <Members>
@@ -149,7 +158,11 @@
 		#endregion XML builder functions
 		
 		$types = @()
-		if ($Mode -eq 'Grouped') { $xml = Get-XmlHeader }
+		if ($Mode -eq 'Grouped')
+		{
+			if (-not $Fragment) { $xml = Get-XmlHeader }
+			else { $xml = "" }
+		}
 	}
 	process
 	{
@@ -167,10 +180,17 @@
 				'Grouped' { $xml += Get-XmlBody -Method $Method -Serializer $Serializer -Type $type.FullName }
 				'SingleItem'
 				{
-					$xml = Get-XmlHeader
-					$xml += Get-XmlBody -Method $Method -Serializer $Serializer -Type $type.FullName
-					$xml += Get-XmlFooter
-					$xml
+					if (-not $Fragment)
+					{
+						$xml = Get-XmlHeader
+						$xml += Get-XmlBody -Method $Method -Serializer $Serializer -Type $type.FullName
+						$xml += Get-XmlFooter
+						$xml
+					}
+					else
+					{
+						Get-XmlBody -Method $Method -Serializer $Serializer -Type $type.FullName
+					}
 				}
 			}
 			
@@ -181,7 +201,7 @@
 	{
 		if ($Mode -eq 'Grouped')
 		{
-			$xml += Get-XmlFooter
+			if (-not $Fragment) { $xml += Get-XmlFooter }
 			$xml
 		}
 	}
