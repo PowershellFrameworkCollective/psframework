@@ -31,7 +31,7 @@
 	.EXAMPLE
 		PS C:\> Get-PSFConfig | Unregister-PSFConfig
 	
-		Completely removes all registered configurations currently loaded in memeory.
+		Completely removes all registered configurations currently loaded in memory.
 		In most cases, this will mean removing all registered configurations.
 	
 	.EXAMPLE
@@ -92,7 +92,7 @@
 			$itemName = $item.FullName
 			if ($properties.PSObject.Properties.Name | Where-Object { $_ -eq $itemName })
 			{
-				Remove-ItemProperty -Path $path -Name $itemName 
+				Remove-ItemProperty -Path $path -Name $itemName
 			}
 		}
 		
