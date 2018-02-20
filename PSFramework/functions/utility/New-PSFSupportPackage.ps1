@@ -38,6 +38,8 @@
 		
 		Creates a large support pack in order to help us troubleshoot stuff.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding()]
 	param (
 		[string]
