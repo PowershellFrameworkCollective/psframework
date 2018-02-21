@@ -261,7 +261,14 @@
 			[PSFramework.Configuration.Config]$cfg = [PSFramework.Configuration.ConfigurationHost]::Configurations[$internalFullName]
 			if ((-not $DisableValidation) -and ($cfg.Validation) -and (Test-PSFParameterBinding -ParameterName "Value"))
 			{
-				$testResult = $cfg.Validation.Invoke($Value)
+				$validationScript = [System.Management.Automation.ScriptBlock]::Create($cfg.Validation)
+				$tempValue = $value
+				if (($null -ne $tempValue) -and ($tempValue.GetType().ImplementedInterfaces.Name -contains "ICollection"))
+				{
+					$tempValue = @($tempValue, $null)
+				}
+				
+				$testResult = $validationScript.Invoke($tempValue)
 				if (-not $TestResult.Success)
 				{
 					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed validation: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $internalFullName
@@ -271,7 +278,15 @@
 			}
 			if ((-not $DisableHandler) -and ($cfg.Handler) -and (Test-PSFParameterBinding -ParameterName "Value"))
 			{
-				try { $cfg.Handler.Invoke($Value) }
+				$handlerScript = [System.Management.Automation.ScriptBlock]::Create($cfg.Handler)
+				
+				$tempValue = $value
+				if (($null -ne $tempValue) -and ($tempValue.GetType().ImplementedInterfaces.Name -contains "ICollection"))
+				{
+					$tempValue = @($tempValue, $null)
+				}
+				
+				try { $handlerScript.Invoke($tempValue) }
 				catch
 				{
 					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed handling $_" -EnableException $EnableException -Category InvalidResult -Target $internalFullName
