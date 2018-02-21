@@ -170,6 +170,13 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 			Write-PSFMessage -Level Important -Message "Adding content of `$Error"
 			$hash["PSErrors"] = $Error | ForEach-Object { New-Object PSFramework.Message.PsfException($_) }
 		}
+		if (Test-Path function:Get-DbatoolsLog)
+		{
+			Write-PSFMessage -Level Important -Message "Collecting dbatools logged messages (Get-DbatoolsLog)"
+			$hash["DbatoolsMessages"] = Get-DbatoolsLog
+			Write-PSFMessage -Level Important -Message "Collecting dbatools logged errors (Get-DbatoolsLog -Errors)"
+			$hash["DbatoolsErrors"] = Get-DbatoolsLog -Errors
+		}
 		
 		$data = [pscustomobject]$hash
 		
