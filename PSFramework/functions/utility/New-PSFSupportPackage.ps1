@@ -168,7 +168,7 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 		if (-not $ExcludeError)
 		{
 			Write-PSFMessage -Level Important -Message "Adding content of `$Error"
-			$hash["PSErrors"] = $Error
+			$hash["PSErrors"] = $Error | ForEach-Object { New-Object PSFramework.Message.PsfException($_) }
 		}
 		
 		$data = [pscustomobject]$hash
