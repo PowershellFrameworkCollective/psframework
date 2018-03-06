@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## X.X.X.X : XXXX-XX-XX
+ - Fix: Fixed tab completion for configuration commands
+
 ## 0.9.10.23 : 2018-02-21
  - New: Add command Unregister-PSFConfig (#59)
  - New: Add command New-PSFSupportPackage (#60)

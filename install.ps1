@@ -2356,6 +2356,8 @@ function Write-LocalMessage
 
 try
 {
+	[System.Net.ServicePointManager]::SecurityProtocol = "Tls12"
+
 	Write-LocalMessage -Message "Downloading repository from '$($BaseUrl)/archive/$($Branch).zip'"
 	Invoke-WebRequest -Uri "$($BaseUrl)/archive/$($Branch).zip" -UseBasicParsing -OutFile "$($env:TEMP)\$($ModuleName).zip" -ErrorAction Stop
 	
