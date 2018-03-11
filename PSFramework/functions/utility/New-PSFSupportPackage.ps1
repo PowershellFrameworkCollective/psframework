@@ -183,14 +183,14 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 		try { $data | Export-Clixml -Path $filePathXml -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -Message "Failed to export dump to file!" -ErrorRecord $_ -Target $filePathXml
+			Stop-PSFFunction -Message "Failed to export dump to file!" -ErrorRecord $_ -Target $filePathXml -Depth 1
 			return
 		}
 		
 		try { Compress-Archive -Path $filePathXml -DestinationPath $filePathZip -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -Message "Failed to pack dump-file into a zip archive. Please do so manually before submitting the results as the unpacked xml file will be rather large." -ErrorRecord $_ -Target $filePathZip
+			Stop-PSFFunction -Message "Failed to pack dump-file into a zip archive. Please do so manually before submitting the results as the unpacked xml file will be rather large." -ErrorRecord $_ -Target $filePathZip -Depth 1
 			return
 		}
 		

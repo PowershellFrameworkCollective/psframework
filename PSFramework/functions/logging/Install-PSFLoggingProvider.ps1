@@ -61,7 +61,7 @@
 		
 		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
 		{
-			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install'
+			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install' -Depth 1
 			return
 		}
 		
@@ -72,7 +72,7 @@
 			try { [System.Management.Automation.ScriptBlock]::Create($provider.InstallationScript).Invoke() }
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to install provider '$Name'" -EnableException $EnableException -Target $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'install'
+				Stop-PSFFunction -Message "Failed to install provider '$Name'" -EnableException $EnableException -Target $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'install' -Depth 1
 				return
 			}
 		}

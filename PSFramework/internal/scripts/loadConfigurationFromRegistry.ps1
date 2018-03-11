@@ -1,4 +1,10 @@
-﻿if (-not [PSFramework.Configuration.ConfigurationHost]::ImportFromRegistryDone)
+﻿# Registry not supported on not-windows
+if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+{
+	return
+}
+
+if (-not [PSFramework.Configuration.ConfigurationHost]::ImportFromRegistryDone)
 {
 	$common = 'PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider'
 
