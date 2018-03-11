@@ -153,7 +153,7 @@
 	{
 		if (-not $FullName.Trim(".").Contains("."))
 		{
-			Stop-PSFFunction -Message "Invalid Name: $FullName ! At least one '.' is required, to separate module from name" -EnableException $EnableException -Category InvalidArgument
+			Stop-PSFFunction -Message "Invalid Name: $FullName ! At least one '.' is required, to separate module from name" -EnableException $EnableException -Category InvalidArgument -Depth 1
 			return
 		}
 		
@@ -174,7 +174,7 @@
 		}
 		elseif ((Test-PSFParameterBinding -ParameterName "Module" -Not) -and ($Name -notmatch ".+\..+"))
 		{
-			Stop-PSFFunction -Message "Invalid Name: $Name ! At least one '.' is required when not explicitly specifying a module name, to separate module from name" -EnableException $EnableException -Category InvalidArgument
+			Stop-PSFFunction -Message "Invalid Name: $Name ! At least one '.' is required when not explicitly specifying a module name, to separate module from name" -EnableException $EnableException -Category InvalidArgument -Depth 1
 			return
 		}
 		
@@ -201,7 +201,7 @@
 	if ($itIsInitialized -and $Initialize) { return }
 	if ($itIsEnforced -and (-not $Initialize))
 	{
-		Stop-PSFFunction -Message "Could not update configuration due to policy settings: $internalFullName" -EnableException $EnableException -Category PermissionDenied
+		Stop-PSFFunction -Message "Could not update configuration due to policy settings: $internalFullName" -EnableException $EnableException -Category PermissionDenied -Depth 1
 		return
 	}
 	
@@ -209,7 +209,7 @@
 	{
 		if (-not ([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -contains $Validation.ToLower()))
 		{
-			Stop-PSFFunction -Message "Invalid validation name: $Validation. Supported validations: $([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -join ", ")" -Category InvalidArgument -Target $Name
+			Stop-PSFFunction -Message "Invalid validation name: $Validation. Supported validations: $([PSFramework.Configuration.ConfigurationHost]::Validation.Keys -join ", ")" -Category InvalidArgument -Target $Name -Depth 1
 			return
 		}
 	}
@@ -271,7 +271,7 @@
 				$testResult = $validationScript.Invoke($tempValue)
 				if (-not $TestResult.Success)
 				{
-					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed validation: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $internalFullName
+					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed validation: $($testResult.Message)" -EnableException $EnableException -Category InvalidResult -Target $internalFullName -Depth 1
 					return
 				}
 				$Value = $testResult.Value
@@ -289,7 +289,7 @@
 				try { $handlerScript.Invoke($tempValue) }
 				catch
 				{
-					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed handling $_" -EnableException $EnableException -Category InvalidResult -Target $internalFullName
+					Stop-PSFFunction -Message "Could not update configuration $internalFullName | Failed handling $_" -EnableException $EnableException -Category InvalidResult -Target $internalFullName -Depth 1
 					return
 				}
 			}

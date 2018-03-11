@@ -74,6 +74,12 @@
 	
 	begin
 	{
+		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+		{
+			Stop-PSFFunction -Message "Cannot register configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented -Depth 1
+			return
+		}
+		
 		$parSet = $PSCmdlet.ParameterSetName
 		
 		function Write-Config
@@ -95,7 +101,7 @@
 			
 			if (-not $Config -or ($Config.RegistryData -eq "<type not supported>"))
 			{
-				Stop-PSFFunction -Message "Invalid Input, cannot export $($Config.FullName), type not supported" -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
+				Stop-PSFFunction -Message "Invalid Input, cannot export $($Config.FullName), type not supported" -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework" -Depth 0
 				return
 			}
 			
@@ -136,7 +142,7 @@
 			}
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to export $($Config.FullName), to scope $Scope" -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework"
+				Stop-PSFFunction -Message "Failed to export $($Config.FullName), to scope $Scope" -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework" -Depth 0
 				return
 			}
 		}
@@ -158,6 +164,7 @@
 	}
 	process
 	{
+		if (Test-PSFFunctionInterrupt) { return }
 		switch ($parSet)
 		{
 			"Default"

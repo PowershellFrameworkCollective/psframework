@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## X.X.X.X : XXXX-XX-XX
+## 0.9.11.25 : 2018-03-11
+ - Upd: Ensured PS6 non-Windows capability, making registry calls conditional. Configuration cannot be persisted on non-windows for now
+ - Fix: Fixed critical scope error in Stop-PSFFunction, causing invalid termination in flowcontrol using commands.
  - Fix: Fixed tab completion for configuration commands
 
 ## 0.9.10.23 : 2018-02-21

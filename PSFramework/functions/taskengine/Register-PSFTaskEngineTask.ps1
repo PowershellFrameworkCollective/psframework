@@ -133,7 +133,7 @@
 		{
 			if ($Interval.Ticks -le 0)
 			{
-				Stop-PSFFunction -Message "Failed to register task: $Name - Interval cannot be 0 or less" -Category InvalidArgument -EnableException $EnableException
+				Stop-PSFFunction -Message "Failed to register task: $Name - Interval cannot be 0 or less" -Category InvalidArgument -EnableException $EnableException -Depth 1
 				return
 			}
 			else { $task.Interval = $Interval }
