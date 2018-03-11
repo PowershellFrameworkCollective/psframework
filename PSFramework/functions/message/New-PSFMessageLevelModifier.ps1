@@ -95,7 +95,7 @@
 	
 	if (Test-PSFParameterBinding -ParameterName IncludeFunctionName, ExcludeFunctionName, IncludeModuleName, ExcludeModuleName, IncludeTags, ExcludeTags -Not)
 	{
-		Stop-PSFFunction -Message "Must specify at least one condition in order to apply message level modifier!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'argument', 'message', 'level'
+		Stop-PSFFunction -Message "Must specify at least one condition in order to apply message level modifier!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'argument', 'message', 'level' -Depth 1
 		return
 	}
 	

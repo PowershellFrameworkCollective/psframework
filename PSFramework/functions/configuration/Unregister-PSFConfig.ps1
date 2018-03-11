@@ -69,6 +69,12 @@
 	
 	begin
 	{
+		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+		{
+			Stop-PSFFunction -Message "Cannot unregister configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented -Depth 1
+			return
+		}
+		
 		switch ("$Scope")
 		{
 			"UserDefault" { $path = "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" }
@@ -84,6 +90,7 @@
 	}
 	process
 	{
+		if (Test-PSFFunctionInterrupt) { return }
 		# Silently skip since no action necessary
 		if (-not $properties) { return }
 		

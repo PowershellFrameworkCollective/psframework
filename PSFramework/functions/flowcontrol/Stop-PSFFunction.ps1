@@ -82,6 +82,9 @@
 		.PARAMETER OverrideExceptionMessage
 			Disables automatic appending of exception messages.
             Use in cases where you already have a speaking message interpretation and do not need the original message.
+	
+		.PARAMETER Depth
+			Internal use only.
         
         .EXAMPLE
             Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -150,7 +153,10 @@
 		$SilentlyContinue,
 		
 		[string]
-		$ContinueLabel
+		$ContinueLabel,
+		
+		[int]
+		$Depth = 2
 	)
 	
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
@@ -229,7 +235,7 @@
 		}
 		
 		# Extra insurance that it'll stop
-		Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope 1 -Value $true
+		Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope $Depth -Value $true
 		
 		
 		throw $records[0]
@@ -253,7 +259,7 @@
 		else
 		{
 			# Make sure the function knows it should be stopping
-			Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope 1 -Value $true
+			Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope $Depth -Value $true
 			return
 		}
 	}
