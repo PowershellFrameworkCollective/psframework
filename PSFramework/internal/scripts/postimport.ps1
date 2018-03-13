@@ -39,5 +39,8 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\parameters\" -Fil
 # Register the task engine
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\taskEngine.ps1"
 
+# Register the unimport reaction
+. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\removalEvent.ps1"
+
 # Finally register the license
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\license.ps1"
