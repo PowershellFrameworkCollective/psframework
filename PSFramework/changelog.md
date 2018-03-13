@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## X.X.XX.XX : XXXX-XX-XX
+ - Upd: Removing the module or closing the process will now stop all registered runspaces. This is designed to avoid hanging resources.
+
 ## 0.9.11.25 : 2018-03-11
  - Upd: Ensured PS6 non-Windows capability, making registry calls conditional. Configuration cannot be persisted on non-windows for now
  - Fix: Fixed critical scope error in Stop-PSFFunction, causing invalid termination in flowcontrol using commands.
