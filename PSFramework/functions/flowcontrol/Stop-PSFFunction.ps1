@@ -82,9 +82,6 @@
 		.PARAMETER OverrideExceptionMessage
 			Disables automatic appending of exception messages.
             Use in cases where you already have a speaking message interpretation and do not need the original message.
-	
-		.PARAMETER Depth
-			Internal use only.
         
         .EXAMPLE
             Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -126,16 +123,16 @@
 		$Tag,
 		
 		[string]
-		$FunctionName = ((Get-PSCallStack)[0].Command),
+		$FunctionName,
 		
 		[string]
-		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
+		$ModuleName,
 		
 		[string]
-		$File = ((Get-PSCallStack)[0].Position.File),
+		$File,
 		
 		[int]
-		$Line = ((Get-PSCallStack)[0].Position.StartLineNumber),
+		$Line,
 		
 		[System.Exception]
 		$Exception,
@@ -153,13 +150,17 @@
 		$SilentlyContinue,
 		
 		[string]
-		$ContinueLabel,
-		
-		[int]
-		$Depth = 2
+		$ContinueLabel
 	)
 	
+	#region Initialize information on the calling command
+	$callStack = (Get-PSCallStack)[1]
+	if (-not $FunctionName) { $FunctionName = $callStack.Command }
+	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName}
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
+	if (-not $File) { $File = $callStack.Position.File }
+	if (-not $Line) { $Line = $callStack.Position.StartLineNumber }
+	#endregion Initialize information on the calling command
 	
 	#region Apply Transforms
 	#region Target Transform
@@ -235,8 +236,7 @@
 		}
 		
 		# Extra insurance that it'll stop
-		Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope $Depth -Value $true
-		
+		$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 		
 		throw $records[0]
 	}
@@ -259,7 +259,7 @@
 		else
 		{
 			# Make sure the function knows it should be stopping
-			Set-Variable -Name "__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%" -Scope $Depth -Value $true
+			$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 			return
 		}
 	}

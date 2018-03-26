@@ -94,6 +94,7 @@
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />
+    <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
   </ItemGroup>

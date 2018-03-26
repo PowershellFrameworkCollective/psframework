@@ -29,5 +29,5 @@
 		
 	)
 	
-	${__psframework_interrupt_function_6e4%ö%qÖ%D72TgÜ9I90zÄ0N9äE6&§l§cnÖ12ßüäp4Z&5l37Gcs§Ö245iÄßlSfk6VdNTR6&00j43Ä§Ä7öÄüW0M5uüßE0bea8vÜ1Ä%}
+	$psframework_killqueue -contains (Get-PSCallStack)[1].InvocationInfo.GetHashCode()
 }

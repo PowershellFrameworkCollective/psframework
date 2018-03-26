@@ -2044,6 +2044,40 @@
             <param name="Name">The name of the item</param>
             <param name="Value">The value of the item</param>
         </member>
+        <member name="T:PSFramework.Utility.LimitedConcurrentQueue`1">
+            <summary>
+            A wrapper around a queue with a limited size. Excess items will be discarded
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.LimitedConcurrentQueue`1.Size">
+            <summary>
+            The maximum length of the limited queue
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.Enqueue(`0)">
+            <summary>
+            Enqueues an object to the collection
+            </summary>
+            <param name="Item">The object to enqueue</param>
+        </member>
+        <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.TryAdd(`0)">
+            <summary>
+            Adds an item to the collection
+            </summary>
+            <param name="Item">The item to add</param>
+            <returns>Whether adding the item succeeded</returns>
+        </member>
+        <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.#ctor">
+            <summary>
+            Creates a new, empty collection limited to a defaukt nax size of 10
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new, empty collection limited to the specified size
+            </summary>
+            <param name="Size">The maximum size</param>
+        </member>
         <member name="T:PSFramework.Utility.RegexHelper">
             <summary>
             Static class that holds useful regex patterns, ready for use
