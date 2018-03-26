@@ -100,6 +100,7 @@
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
 		'Set-PSFTaskEngineCache',
+		'Set-PSFTypeAlias',
 		'Start-PSFRunspace',
 		'Stop-PSFFunction',
 		'Stop-PSFRunspace',
@@ -109,7 +110,8 @@
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
 		'Write-PSFHostColor',
-		'Write-PSFMessage'
+		'Write-PSFMessage',
+		'Write-PSFMessageProxy'
 	)
 	
 	# Cmdlets to export from this module

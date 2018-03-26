@@ -97,7 +97,7 @@
 		{
 			foreach ($row in $line.Split("`n").Split([environment]::NewLine))
 			{
-				if ($row -notlike '*<c=["'']*["'']>*</c>*') { Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine }
+				if ($row -notlike '*<c=["'']*["'']>*</c>*') { Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine }
 				else
 				{
 					$row = $row -replace '<c=["'']em["'']>', "<c='$em'>" -replace '<c=["'']sub["'']>', "<c='$sub'>"
@@ -109,16 +109,16 @@
 					{
 						if ($count -lt $Match.Count)
 						{
-							Write-Host -Object $row.SubString($index, ($match[$count].Index - $Index)) -ForegroundColor $DefaultColor -NoNewline
-							try { Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $match[$count].Groups[1].Value -NoNewline -ErrorAction Stop }
-							catch { Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $DefaultColor -NoNewline -ErrorAction Stop }
+							Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index, ($match[$count].Index - $Index)) -ForegroundColor $DefaultColor -NoNewline
+							try { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $match[$count].Groups[1].Value -NoNewline -ErrorAction Stop }
+							catch { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $DefaultColor -NoNewline -ErrorAction Stop }
 							
 							$index = $match[$count].Index + $match[$count].Length
 							$count++
 						}
 						else
 						{
-							Write-Host -Object $row.SubString($index) -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
+							Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index) -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
 							$count++
 						}
 					}

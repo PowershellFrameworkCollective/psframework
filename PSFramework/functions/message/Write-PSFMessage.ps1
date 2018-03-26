@@ -130,16 +130,16 @@
 		$Tag,
 		
 		[string]
-		$FunctionName = ((Get-PSCallStack)[0].Command),
+		$FunctionName,
 		
 		[string]
-		$ModuleName = ((Get-PSCallStack)[0].InvocationInfo.MyCommand.ModuleName),
+		$ModuleName,
 		
 		[string]
-		$File = ((Get-PSCallStack)[0].Position.File),
+		$File,
 		
 		[int]
-		$Line = ((Get-PSCallStack)[0].Position.StartLineNumber),
+		$Line,
 		
 		[System.Management.Automation.ErrorRecord[]]
 		$ErrorRecord,
@@ -187,6 +187,14 @@
 	#>
 	
 	#region Preliminary statics
+	$callStack = (Get-PSCallStack)[1]
+	if (-not $FunctionName) { $FunctionName = $callStack.Command }
+	if (-not $FunctionName) { $FunctionName = "<Unknown>"}
+	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName }
+	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
+	if (-not $File) { $File = $callStack.Position.File }
+	if (-not $Line) { $Line = $callStack.Position.StartLineNumber }
+	
 	$timestamp = Get-Date
 	$developerMode = [PSFramework.Message.MessageHost]::DeveloperMode
 	
@@ -201,8 +209,7 @@
 	$silent = $false
 	if ($psframework_silence) { $silent = $true }
 	if ([PSFramework.Message.MessageHost]::DisableVerbosity) { $silent = $true }
-	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
-	$fromStopFunction = (Get-PSCallStack)[1].Command -eq "Stop-PSFFunction"
+	$fromStopFunction = $callStack.Command -eq "Stop-PSFFunction"
 	#endregion Preliminary statics
 	
 	#region Apply Transforms
@@ -346,7 +353,7 @@
 				
 				if (-not (Get-PSFConfigValue -Name $OnceName))
 				{
-					Write-Warning $newMessage
+					Microsoft.PowerShell.Utility\Write-Warning $newMessage
 					Set-PSFConfig -Name $OnceName -Value $True -Hidden -ErrorAction Ignore
 				}
 			}
@@ -358,10 +365,10 @@
 		}
 		elseif ($developerMode)
 		{
-			Write-Host $newMessage -ForegroundColor $dev_color
+			Microsoft.PowerShell.Utility\Write-Host $newMessage -ForegroundColor $dev_color
 		}
 		
-		Write-Debug $newMessage
+		Microsoft.PowerShell.Utility\Write-Debug $newMessage
 		$channels += "Debug"
 	}
 	#endregion Warning Mode
@@ -394,13 +401,13 @@
 		
 		if (($max_verbose -ge $Level) -and ($min_verbose -le $Level))
 		{
-			Write-Verbose $newMessage
+			Microsoft.PowerShell.Utility\Write-Verbose $newMessage
 			$channels += "Verbose"
 		}
 		
 		if (($max_debug -ge $Level) -and ($min_debug -le $Level))
 		{
-			Write-Debug $newMessage
+			Microsoft.PowerShell.Utility\Write-Debug $newMessage
 			$channels += "Debug"
 		}
 	}
