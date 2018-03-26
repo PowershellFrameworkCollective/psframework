@@ -44,3 +44,15 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\parameters\" -Fil
 
 # Finally register the license
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\license.ps1"
+
+#region Declare runtime variable for the flow control component
+$paramNewVariable = @{
+	Name   = "psframework_killqueue"
+	Value  = (New-Object PSFramework.Utility.LimitedConcurrentQueue[int](25))
+	Option = 'ReadOnly'
+	Scope  = 'Script'
+	Description = 'Variable that is used to maintain the list of commands to kill. This is used by Test-PSFFunctionInterrupt. Note: The value tested is the hashcade from the callstack item.'
+}
+
+New-Variable @paramNewVariable
+#endregion Declare runtime variable for the flow control component
