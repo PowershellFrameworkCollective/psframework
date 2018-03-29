@@ -89,7 +89,81 @@ namespace PSFramework.Commands
         /// The message to write in color
         /// </summary>
         private string _messageColor;
+
+        /// <summary>
+        /// Non-colored version of developermode
+        /// </summary>
+        private string _messageDeveloper;
+
+        /// <summary>
+        /// Colored version of developermode
+        /// </summary>
+        private string _messageDeveloperColor;
         #endregion Private fields
+
+        #region Private properties
+        /// <summary>
+        /// The input message with the error content included if desired
+        /// </summary>
+        private string _errorQualifiedMessage
+        {
+            get
+            {
+                if (ErrorRecord == null)
+                    return Message;
+
+                if (ErrorRecord.Length == 0)
+                    return Message;
+
+                if (OverrideExceptionMessage.ToBool())
+                    return Message;
+
+                if (Regex.IsMatch(Message, Regex.Escape(ErrorRecord[0].Exception.Message)))
+                    return Message;
+
+                return String.Format("{0} | {1}", Message, ErrorRecord[0].Exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// The final message to use for internal logging
+        /// </summary>
+        private string _MessageSystem
+        {
+            get
+            {
+                return GetMessageSimple();
+            }
+        }
+
+        /// <summary>
+        /// The final message to use for writing to streams, such as verbose or warning
+        /// </summary>
+        private string _MessageStreams
+        {
+            get
+            {
+                if (MessageHost.DeveloperMode)
+                    return GetMessageDeveloper();
+                else
+                    return GetMessage();
+            }
+        }
+
+        /// <summary>
+        /// The final message to use for host messages (write using Write-PSFHostColor)
+        /// </summary>
+        private string _MessageHost
+        {
+            get
+            {
+                if (MessageHost.DeveloperMode)
+                    return GetMessageDeveloperColor();
+                else
+                    return GetMessageColor();
+            }
+        }
+        #endregion Private properties
 
         #region Cmdlet Implementation
         /// <summary>
@@ -149,8 +223,6 @@ namespace PSFramework.Commands
             if (MessageHost.DisableVerbosity)
                 _silent = true;
             #endregion Resolving Meta Information
-
-            WriteObject(String.Format("{0} - {1} : {2} - {3}", ModuleName, FunctionName, Line, File));
         }
 
         /// <summary>
@@ -206,15 +278,60 @@ namespace PSFramework.Commands
             }
             #endregion Exception Integration
 
-            #region Handle Message Content
-            string coloredMessage = Message;
-            string baseMessage = Message;
+            #region Error handling
+            if (ErrorRecord != null)
+            {
+                if (!_fromStopFunction)
+                    if (EnableException)
+                        foreach (ErrorRecord record in ErrorRecord)
+                            WriteError(record);
 
-            foreach (Match match in Regex.Matches(baseMessage, "<c=[\"'](.*?)[\"']>(.*?)</c>"))
-                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), "$2");
+                LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, new List<string>(Tag), _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
+            }
+            #endregion Error handling
 
+            List<string> channels = new List<string>();
 
-            #endregion Handle Message Content
+            #region Warning handling
+            if (Level == MessageLevel.Warning)
+            {
+                if (!_silent)
+                {
+                    if (!String.IsNullOrEmpty(Once))
+                    {
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
+                        {
+                            WriteWarning(_MessageStreams);
+                            channels.Add("Warning");
+
+                            Configuration.Config cfg = new Configuration.Config();
+                            cfg.Module = "messageonce";
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Hidden = true;
+                            cfg.Description = "Locking setting that disables further display of the specified message";
+
+                            Configuration.ConfigurationHost.Configurations[onceName] = cfg;
+                        }
+                    }
+                    else
+                    {
+                        WriteWarning(_MessageStreams);
+                        channels.Add("Warning");
+                    }
+                }
+                WriteDebug(_MessageStreams);
+                channels.Add("Debug");
+            }
+            #endregion Warning handling
+
+            #region Message handling
+
+            #endregion Message handling
+
+            #region Logging
+
+            #endregion Logging
         }
 
         /// <summary>
@@ -330,24 +447,31 @@ namespace PSFramework.Commands
         }
 
         /// <summary>
-        /// Builds the message item if needed and returns it
+        /// Builds the message item for display of Verbose, Warning and Debug streams
         /// </summary>
         /// <returns>The message to return</returns>
-        public string GetMessage()
+        private string GetMessage()
         {
             if (!String.IsNullOrEmpty(_message))
                 return _message;
+            _message = String.Format("[{0}][{1}] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, GetMessageSimple());
             return _message;
         }
 
         /// <summary>
-        /// Builds the message item if needed and returns it
+        /// Builds the base message for internal system use.
         /// </summary>
         /// <returns>The message to return</returns>
-        public string GetMessageSimple()
+        private string GetMessageSimple()
         {
             if (!String.IsNullOrEmpty(_messageSimple))
                 return _messageSimple;
+
+            string baseMessage = _errorQualifiedMessage;
+            foreach (Match match in Regex.Matches(baseMessage, "<c=[\"'](.*?)[\"']>(.*?)</c>"))
+                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), "$2");
+            _messageSimple = baseMessage;
+
             return _messageSimple;
         }
 
@@ -355,11 +479,87 @@ namespace PSFramework.Commands
         /// Builds the message item if needed and returns it
         /// </summary>
         /// <returns>The message to return</returns>
-        public string GetMessageColor()
+        private string GetMessageColor()
         {
             if (!String.IsNullOrEmpty(_messageColor))
                 return _messageColor;
+
+            _messageColor = String.Format("[<c='sub'>{0}</c>][<c='sub'>{1}</c>] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, _errorQualifiedMessage);
             return _messageColor;
+        }
+
+        /// <summary>
+        /// Non-host output in developermode
+        /// </summary>
+        /// <returns>The string to write on messages that don't go straight to Write-PSFHostColor</returns>
+        private string GetMessageDeveloper()
+        {
+            if (!String.IsNullOrEmpty(_messageDeveloper))
+                return _messageDeveloper;
+
+            string targetString = "";
+            if (Target != null)
+            {
+                if (Target.ToString() != Target.GetType().FullName)
+                    targetString = String.Format(" [T: {0}] ", Target.ToString());
+                else
+                    targetString = String.Format(" [T: <{0}>] ", Target.GetType().Name);
+            }
+
+            List<string> channelList = new List<string>();
+            if (!_silent)
+            {
+                if (Level == MessageLevel.Warning)
+                    channelList.Add("Warning");
+                if ((MessageHost.MaximumInformation >= (int)Level) && (MessageHost.MinimumInformation <= (int)Level))
+                    channelList.Add("Information");
+            }
+            if ((MessageHost.MaximumVerbose >= (int)Level) && (MessageHost.MinimumVerbose <= (int)Level))
+                channelList.Add("Verbose");
+            if ((MessageHost.MaximumDebug >= (int)Level) && (MessageHost.MinimumDebug <= (int)Level))
+                channelList.Add("Debug");
+
+            _messageDeveloper = String.Format(@"[{0}][{1}][L: {2}]{3}[C: {4}][EE: {5}][O: {6}]
+    {7}",_timestamp.ToString("HH:mm:ss"), FunctionName, Level, targetString, String.Join(",", channelList), EnableException, (!String.IsNullOrEmpty(Once)), GetMessageSimple());
+            
+            return _messageDeveloper;
+        }
+
+        /// <summary>
+        /// Host output in developermode
+        /// </summary>
+        /// <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
+        private string GetMessageDeveloperColor()
+        {
+            if (!String.IsNullOrEmpty(_messageDeveloperColor))
+                return _messageDeveloperColor;
+
+            string targetString = "";
+            if (Target != null)
+            {
+                if (Target.ToString() != Target.GetType().FullName)
+                    targetString = String.Format(" [<c='sub'>T:</c> <c='em'>{0}</c>] ", Target.ToString());
+                else
+                    targetString = String.Format(" [<c='sub'>T:</c> <c='em'><{0}></c>] ", Target.GetType().Name);
+            }
+
+            List<string> channelList = new List<string>();
+            if (!_silent)
+            {
+                if (Level == MessageLevel.Warning)
+                    channelList.Add("Warning");
+                if ((MessageHost.MaximumInformation >= (int)Level) && (MessageHost.MinimumInformation <= (int)Level))
+                    channelList.Add("Information");
+            }
+            if ((MessageHost.MaximumVerbose >= (int)Level) && (MessageHost.MinimumVerbose <= (int)Level))
+                channelList.Add("Verbose");
+            if ((MessageHost.MaximumDebug >= (int)Level) && (MessageHost.MinimumDebug <= (int)Level))
+                channelList.Add("Debug");
+
+            _messageDeveloperColor = String.Format(@"[<c='sub'>{0}</c>][<c='sub'>{1}</c>][<c='sub'>L:</c> <c='em'>{2}</c>]{3}[<c='sub'>C: <c='em'>{4}</c>][<c='sub'>EE: <c='em'>{5}</c>][<c='sub'>O: <c='em'>{6}</c>]
+    {7}", _timestamp.ToString("HH:mm:ss"), FunctionName, Level, targetString, String.Join(",", channelList), EnableException, (!String.IsNullOrEmpty(Once)), _errorQualifiedMessage);
+
+            return _messageDeveloperColor;
         }
         #endregion Helper methods
     }
