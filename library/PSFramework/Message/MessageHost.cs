@@ -70,6 +70,11 @@ namespace PSFramework.Message
         /// Message levels can decrease by nested level. This causes messages to have an increasingly reduced level as the size of the callstack increases. 
         /// </summary>
         public static int NestedLevelDecrement = 0;
+
+        /// <summary>
+        /// Globally override all verbosity
+        /// </summary>
+        public static bool DisableVerbosity = false;
         #endregion Defines
 
         #region Transformations
