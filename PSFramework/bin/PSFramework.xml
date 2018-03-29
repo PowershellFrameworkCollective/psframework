@@ -4,6 +4,41 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.WritePSFMessageCommand">
+            <summary>
+            Cmdlet performing message handling and logging
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._timestamp">
+            <summary>
+            The start time of the cmdlet
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._silent">
+            <summary>
+            Whether this cmdlet is run in silent mode
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._fromStopFunction">
+            <summary>
+            Whether this cmdlet was called by Stop-PSFFunction
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.BeginProcessing">
+            <summary>
+            Processes the begin phase of the cmdlet
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.ProcessRecord">
+            <summary>
+            Processes the process phase of the cmdlet
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.EndProcessing">
+            <summary>
+            Processes the end phase of the cmdlet
+            </summary>
+        </member>
         <member name="T:PSFramework.Configuration.Config">
             <summary>
             Configuration Manager as well as individual configuration object.
@@ -34,9 +69,14 @@
             The data type of the value stored in the configuration element.
             </summary>
         </member>
-        <member name="F:PSFramework.Configuration.Config.Value">
+        <member name="P:PSFramework.Configuration.Config.Value">
             <summary>
             The value stored in the configuration element
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Unchanged">
+            <summary>
+            Whether the value of the configuration setting has been changed since its initialization.
             </summary>
         </member>
         <member name="F:PSFramework.Configuration.Config.Handler">
@@ -818,6 +858,11 @@
         <member name="F:PSFramework.Message.MessageHost.NestedLevelDecrement">
             <summary>
             Message levels can decrease by nested level. This causes messages to have an increasingly reduced level as the size of the callstack increases. 
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.DisableVerbosity">
+            <summary>
+            Globally override all verbosity
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">
