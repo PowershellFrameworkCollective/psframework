@@ -40,3 +40,8 @@ foreach ($function in (Get-ChildItem "$PSModuleRoot\functions\*\*.ps1"))
 
 # Execute Postimport actions
 . Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\postimport.ps1"
+
+if ($PSCommandPath -like "*psframework.psm1*")
+{
+	Import-Module "$PSModuleRoot\bin\PSFramework.dll"
+}

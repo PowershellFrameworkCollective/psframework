@@ -33,6 +33,7 @@
 		Creates an alias for the type 'System.IO.File' named 'file'
 		Creates an alias for the type 'System.IO.Path' named 'path'
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Name')]
 	Param (
 		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Name')]
