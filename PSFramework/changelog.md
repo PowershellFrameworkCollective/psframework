@@ -1,11 +1,12 @@
 # CHANGELOG
 
-## X.X.XX.XX : XXXX-XX-XX
+## 0.9.13.34 : 2018-03-30
  - New: Add command Write-PSFMessageProxy (#81)
  - New: Add command Set-PSFTypeAlias (#71)
+ - Upd: Rewrite of `Write-PSFMessage` as cmdlet to significantly improve performance
  - Upd: Removing the module or closing the process will now stop all registered runspaces. This is designed to avoid hanging resources.
  - Upd: Configuration: Added `Unchanged` property, in order to allow detection of settings that weren't changed by the user. (#79)
- - Upd: Slight performance improvements on `Write-PSFMessage` and `Stop-PSFFunction`
+ - Upd: Slight performance improvements on `Stop-PSFFunction`
  - Fix: Fixed critical concept error in Stop-PSFFunction, causing invalid termination in flowcontrol using commands. (#80)
 
 ## 0.9.11.25 : 2018-03-11

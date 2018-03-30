@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.11.25'
+	ModuleVersion = '0.9.13.34'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -59,7 +59,7 @@
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
-	NestedModules = @()
+	NestedModules = @("bin\PSFramework.dll")
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
@@ -110,12 +110,11 @@
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
 		'Write-PSFHostColor',
-		'Write-PSFMessage',
 		'Write-PSFMessageProxy'
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = '' 
+	CmdletsToExport = 'Write-PSFMessage' 
 	
 	# Variables to export from this module
 	VariablesToExport = ''
