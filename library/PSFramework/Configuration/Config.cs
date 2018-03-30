@@ -51,7 +51,27 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The value stored in the configuration element
         /// </summary>
-        public Object Value;
+        public Object Value
+        {
+            get { return _Value; }
+            set
+            {
+                _Value = value;
+                if (Initialized)
+                    _Unchanged = false;
+            }
+        }
+        private Object _Value;
+
+        /// <summary>
+        /// Whether the value of the configuration setting has been changed since its initialization.
+        /// </summary>
+        public bool Unchanged
+        {
+            get { return _Unchanged; }
+            set { }
+        }
+        private bool _Unchanged = true;
 
         /// <summary>
         /// The handler script that is run whenever the configuration value is set.

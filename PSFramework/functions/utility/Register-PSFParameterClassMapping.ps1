@@ -65,7 +65,7 @@
 			}
 			default
 			{
-				Stop-PSFFunction -Message "Support for the $ParameterClass parameter class has not yet been added!" -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented -Depth 1
+				Stop-PSFFunction -Message "Support for the $ParameterClass parameter class has not yet been added!" -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented
 				return
 			}
 		}

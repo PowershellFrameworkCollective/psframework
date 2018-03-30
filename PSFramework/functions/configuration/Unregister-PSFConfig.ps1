@@ -71,7 +71,7 @@
 	{
 		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
 		{
-			Stop-PSFFunction -Message "Cannot unregister configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented -Depth 1
+			Stop-PSFFunction -Message "Cannot unregister configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented
 			return
 		}
 		
