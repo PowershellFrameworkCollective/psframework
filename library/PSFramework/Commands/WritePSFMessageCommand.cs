@@ -14,42 +14,106 @@ namespace PSFramework.Commands
     public class WritePSFMessageCommand : PSCmdlet
     {
         #region Parameters
+        /// <summary>
+        /// This parameter represents the verbosity of the message. The lower the number, the more important it is for a human user to read the message.
+        /// By default, the levels are distributed like this:
+        /// - 1-3 Direct verbose output to the user (using Write-Host)
+        /// - 4-6 Output only visible when requesting extra verbosity (using Write-Verbose)
+        /// - 1-9 Debugging information, written using Write-Debug
+        /// 
+        /// In addition, it is possible to select the level "Warning" which moves the message out of the configurable range:
+        /// The user will always be shown this message, unless he silences the entire verbosity.
+        /// 
+        /// Possible levels:
+        /// Critical (1), Important / Output / Host (2), Significant (3), VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8), InternalComment (9), Warning (666)
+        /// Either one of the strings or its respective number will do as input.
+        /// </summary>
         [Parameter()]
         public MessageLevel Level = MessageLevel.Verbose;
 
+        /// <summary>
+        /// The message to write/log. The function name and timestamp will automatically be prepended.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         public string Message;
 
+        /// <summary>
+        /// Tags to add to the message written.
+		/// This allows filtering and grouping by category of message, targeting specific messages.
+        /// </summary>
         [Parameter()]
         public string[] Tag;
 
+        /// <summary>
+        /// The name of the calling function.
+		/// Will be automatically set, but can be overridden when necessary.
+        /// </summary>
         [Parameter()]
         public string FunctionName;
 
+        /// <summary>
+        /// The name of the module, the calling function is part of.
+		/// Will be automatically set, but can be overridden when necessary.
+        /// </summary>
         [Parameter()]
         public string ModuleName;
 
+        /// <summary>
+        /// The file in which Write-PSFMessage was called.
+		/// Will be automatically set, but can be overridden when necessary.
+        /// </summary>
         [Parameter()]
         public string File;
 
+        /// <summary>
+        /// The line on which Write-PSFMessage was called.
+		/// Will be automatically set, but can be overridden when necessary.
+        /// </summary>
         [Parameter()]
         public int Line;
 
+        /// <summary>
+        /// If an error record should be noted with the message, add the full record here.
+		/// Especially designed for use with Warning-mode, it can legally be used in either mode.
+        /// The error will be added to the $Error variable and enqued in the logging/debugging system.
+        /// </summary>
         [Parameter()]
         public ErrorRecord[] ErrorRecord;
 
+        /// <summary>
+        /// Allows specifying an inner exception as input object. This will be passed on to the logging and used for messages.
+		/// When specifying both ErrorRecord AND Exception, Exception wins, but ErrorRecord is still used for record metadata.
+        /// </summary>
         [Parameter()]
         public Exception Exception;
 
+        /// <summary>
+        /// Setting this parameter will cause this function to write the message only once per session.
+		/// The string passed here and the calling function's name are used to create a unique ID, which is then used to register the action in the configuration system.
+		/// Thus will the lockout only be written if called once and not burden the system unduly.
+        /// This lockout will be written as a hidden value, to see it use Get-PSFConfig -Force.
+        /// </summary>
         [Parameter()]
         public string Once;
 
+        /// <summary>
+        /// Disables automatic appending of exception messages.
+		/// Use in cases where you already have a speaking message interpretation and do not need the original message.
+        /// </summary>
         [Parameter()]
         public SwitchParameter OverrideExceptionMessage;
 
+        /// <summary>
+        /// Add the object the message is all about, in order to simplify debugging / troubleshooting.
+		/// For example, when calling this from a function targeting a remote computer, the computername could be specified here, allowing all messages to easily be correlated to the object processed.
+        /// </summary>
         [Parameter()]
         public object Target;
 
+        /// <summary>
+        /// This parameters disables user-friendly warnings and enables the throwing of exceptions.
+		/// This is less user friendly, but allows catching exceptions in calling scripts.
+        /// </summary>
         [Parameter()]
         public bool EnableException;
         #endregion Parameters
@@ -99,6 +163,21 @@ namespace PSFramework.Commands
         /// Colored version of developermode
         /// </summary>
         private string _messageDeveloperColor;
+
+        /// <summary>
+        /// Scriptblock that writes the host messages
+        /// </summary>
+        private static string _writeHostScript = @"
+param ( $string )
+
+if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore }
+else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore }
+";
+
+        /// <summary>
+        /// List of tags to process
+        /// </summary>
+        private List<string> _Tags = new List<string>();
         #endregion Private fields
 
         #region Private properties
@@ -182,11 +261,6 @@ namespace PSFramework.Commands
             }
             _stackDepth = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack().Count();
 
-            if (callerFrame == null)
-                WriteVerbose("No callstack found");
-            else
-                WriteVerbose(String.Format("Calling command: {0}", callerFrame.FunctionName));
-
             if (callerFrame != null)
             {
                 if (String.IsNullOrEmpty(FunctionName))
@@ -222,6 +296,10 @@ namespace PSFramework.Commands
 
             if (MessageHost.DisableVerbosity)
                 _silent = true;
+
+            if (Tag != null)
+                foreach (string item in Tag)
+                    _Tags.Add(item);
             #endregion Resolving Meta Information
         }
 
@@ -267,14 +345,10 @@ namespace PSFramework.Commands
                 Note: Stop-PSFFunction never specifies this parameter, thus it is not necessary to check,
                 whether this function was called from Stop-PSFFunction.
              */
-            if (ErrorRecord == null)
+            if ((ErrorRecord == null) && (Exception != null))
             {
                 ErrorRecord = new ErrorRecord[1];
-
-                if (Exception != null)
-                    ErrorRecord[0] = new ErrorRecord(Exception, String.Format("{0}_{1}", ModuleName, FunctionName), ErrorCategory.NotSpecified, Target);
-                else
-                    ErrorRecord[0] = new ErrorRecord(new Exception(Message), String.Format("{0}_{1}", ModuleName, FunctionName), ErrorCategory.NotSpecified, Target);
+                ErrorRecord[0] = new ErrorRecord(Exception, String.Format("{0}_{1}", ModuleName, FunctionName), ErrorCategory.NotSpecified, Target);
             }
             #endregion Exception Integration
 
@@ -286,11 +360,11 @@ namespace PSFramework.Commands
                         foreach (ErrorRecord record in ErrorRecord)
                             WriteError(record);
 
-                LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, new List<string>(Tag), _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
+                LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, _Tags, _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
             }
             #endregion Error handling
 
-            List<string> channels = new List<string>();
+            LogEntryType channels = LogEntryType.None;
 
             #region Warning handling
             if (Level == MessageLevel.Warning)
@@ -303,7 +377,7 @@ namespace PSFramework.Commands
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
                             WriteWarning(_MessageStreams);
-                            channels.Add("Warning");
+                            channels = channels | LogEntryType.Warning;
 
                             Configuration.Config cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
@@ -317,29 +391,68 @@ namespace PSFramework.Commands
                     else
                     {
                         WriteWarning(_MessageStreams);
-                        channels.Add("Warning");
+                        channels = channels | LogEntryType.Warning;
                     }
                 }
                 WriteDebug(_MessageStreams);
-                channels.Add("Debug");
+                channels = channels | LogEntryType.Debug;
             }
             #endregion Warning handling
 
             #region Message handling
+            if (!_silent)
+            {
+                if ((MessageHost.MaximumInformation >= (int)Level) && (MessageHost.MinimumInformation <= (int)Level))
+                {
+                    if (!String.IsNullOrEmpty(Once))
+                    {
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
+                        {
+                            InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
+                            channels = channels | LogEntryType.Information;
 
+                            Configuration.Config cfg = new Configuration.Config();
+                            cfg.Module = "messageonce";
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Hidden = true;
+                            cfg.Description = "Locking setting that disables further display of the specified message";
+
+                            Configuration.ConfigurationHost.Configurations[onceName] = cfg;
+                        }
+                    }
+                    else
+                    {
+                        //InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
+                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
+                        channels = channels | LogEntryType.Information;
+                    }
+                }
+            }
+
+            if ((MessageHost.MaximumVerbose >= (int)Level) && (MessageHost.MinimumVerbose <= (int)Level))
+            {
+                WriteVerbose(_MessageStreams);
+                channels = channels | LogEntryType.Verbose;
+            }
+
+            if ((MessageHost.MaximumDebug >= (int)Level) && (MessageHost.MinimumDebug <= (int)Level))
+            {
+                WriteDebug(_MessageStreams);
+                channels = channels | LogEntryType.Debug;
+            }
             #endregion Message handling
 
             #region Logging
-
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, Target);
             #endregion Logging
-        }
 
-        /// <summary>
-        /// Processes the end phase of the cmdlet
-        /// </summary>
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
+            foreach (MessageEventSubscription subscription in MessageHost.Events.Values)
+                if (subscription.Applies(entry))
+                {
+                    try { InvokeCommand.InvokeScript(subscription.ScriptBlock.ToString(), entry); }
+                    catch (Exception e){ WriteError(new ErrorRecord(e, "", ErrorCategory.NotSpecified, entry)); }
+                }
         }
         #endregion Cmdlet Implementation
 
@@ -433,10 +546,10 @@ namespace PSFramework.Commands
                 tempLevel = tempLevel + depth * MessageHost.NestedLevelDecrement;
             }
 
-            List<string>  tags = new List<string>(Tag);
-            foreach (MessageLevelModifier modifier in MessageHost.MessageLevelModifiers.Values)
-                if (modifier.AppliesTo(FunctionName, ModuleName, tags))
-                    tempLevel = tempLevel + modifier.Modifier;
+            if (MessageHost.MessageLevelModifiers.Count > 0)
+                foreach (MessageLevelModifier modifier in MessageHost.MessageLevelModifiers.Values)
+                    if (modifier.AppliesTo(FunctionName, ModuleName, _Tags))
+                        tempLevel = tempLevel + modifier.Modifier;
 
             if (tempLevel > 9)
                 tempLevel = 9;
