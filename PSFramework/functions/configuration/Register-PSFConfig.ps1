@@ -101,7 +101,7 @@
 			
 			if (-not $Config -or ($Config.RegistryData -eq "<type not supported>"))
 			{
-				Stop-PSFFunction -Message "Invalid Input, cannot export $($Config.FullName), type not supported" -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework" -Depth 0
+				Stop-PSFFunction -Message "Invalid Input, cannot export $($Config.FullName), type not supported" -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 			
@@ -142,7 +142,7 @@
 			}
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to export $($Config.FullName), to scope $Scope" -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework" -Depth 0
+				Stop-PSFFunction -Message "Failed to export $($Config.FullName), to scope $Scope" -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 		}

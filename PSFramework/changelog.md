@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.9.13.35 : 2018-03-31
+ - Fix: Register-PSFConfig would fail with unknown parameter `-Depth`
+
 ## 0.9.13.34 : 2018-03-30
  - New: Add command Write-PSFMessageProxy (#81)
  - New: Add command Set-PSFTypeAlias (#71)
