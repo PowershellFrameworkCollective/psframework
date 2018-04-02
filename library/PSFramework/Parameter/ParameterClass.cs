@@ -9,6 +9,7 @@ namespace PSFramework.Parameter
     /// <summary>
     /// Base class of all parameter classes
     /// </summary>
+    [ParameterClass]
     public abstract class ParameterClass
     {
         #region Fields of contract

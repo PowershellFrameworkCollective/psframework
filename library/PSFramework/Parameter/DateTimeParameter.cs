@@ -11,20 +11,20 @@ namespace PSFramework.Parameter
     /// Parameter class for interpreting timespans
     /// </summary>
     [ParameterClass]
-    public class TimeSpanParameter : ParameterClass
+    public class DateTimeParameter : ParameterClass
     {
         #region Fields of contract
         /// <summary>
-        /// The resolved timespan value
+        /// The resolved datetime value
         /// </summary>
         [ParameterContract(ParameterContractType.Field, ParameterContractBehavior.Mandatory)]
-        public TimeSpan Value;
+        public DateTime Value;
         #endregion Fields of contract
 
         /// <summary>
-        /// The string value of the timespan object contained within.
+        /// The string value of the datetime object contained within.
         /// </summary>
-        /// <returns>The string value of the timespan object contained within.</returns>
+        /// <returns>The string value of the datetime object contained within.</returns>
         public override string ToString()
         {
             return Value.ToString();
@@ -32,54 +32,44 @@ namespace PSFramework.Parameter
 
         #region Operators
         /// <summary>
-        /// Implicitly converts the parameter to timespan, allowing it to be used on parameters requiring the type
+        /// Implicitly converts the parameter to datetime, allowing it to be used on parameters requiring the type
         /// </summary>
         /// <param name="Parameter">The parameterclass object to convert</param>
         [ParameterContract(ParameterContractType.Operator, ParameterContractBehavior.Conversion)]
-        public static implicit operator TimeSpan(TimeSpanParameter Parameter)
+        public static implicit operator DateTime(DateTimeParameter Parameter)
         {
             return Parameter.Value;
         }
 
         /// <summary>
-        /// Implicitly converts a timespan to this parameterclass object.
+        /// Implicitly converts a datetime to this parameterclass object.
         /// </summary>
         /// <param name="Value">The timespan object to convert</param>
         [ParameterContract(ParameterContractType.Operator, ParameterContractBehavior.Conversion)]
-        public static implicit operator TimeSpanParameter(TimeSpan Value)
+        public static implicit operator DateTimeParameter(DateTime Value)
         {
-            return new TimeSpanParameter(Value);
+            return new DateTimeParameter(Value);
         }
         #endregion Operators
-        
+
         #region Constructors
         /// <summary>
         /// Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
         /// </summary>
         /// <param name="Value">The timespan object to accept</param>
-        public TimeSpanParameter(TimeSpan Value)
+        public DateTimeParameter(DateTime Value)
         {
             this.Value = Value;
             InputObject = Value;
         }
 
         /// <summary>
-        /// Creates a TimeSpanParameter from integer, assuming it to mean seconds
-        /// </summary>
-        /// <param name="Seconds">The seconds to run</param>
-        public TimeSpanParameter(int Seconds)
-        {
-            Value = new TimeSpan(0, 0, Seconds);
-            InputObject = Seconds;
-        }
-
-        /// <summary>
         /// Creates a TimeSpanParameter from a string object
         /// </summary>
         /// <param name="Value">The string to interpret</param>
-        public TimeSpanParameter(string Value)
+        public DateTimeParameter(string Value)
         {
-            this.Value = ParseTimeSpan(Value);
+            this.Value = ParseDateTime(Value);
             InputObject = Value;
         }
 
@@ -87,7 +77,7 @@ namespace PSFramework.Parameter
         /// Creates a TimeSpanParameter from any kind of object it has been taught to understand
         /// </summary>
         /// <param name="InputObject">The object to interpret</param>
-        public TimeSpanParameter(object InputObject)
+        public DateTimeParameter(object InputObject)
         {
             if (InputObject == null)
                 throw new ArgumentException("Input must not be null");
@@ -99,14 +89,19 @@ namespace PSFramework.Parameter
 
             foreach (string name in input.TypeNames)
             {
-                if ((name == "Sqlcollaborative.Dbatools.Utility.DbaTimeSpanPretty") || (name == "Deserialized.Sqlcollaborative.Dbatools.Utility.DbaTimeSpanPretty"))
+                if ((name == "Sqlcollaborative.Dbatools.Utility.DbaDate") || (name == "Deserialized.Sqlcollaborative.Dbatools.Utility.DbaDate"))
                 {
-                    Value = new TimeSpan((long)input.Properties["Ticks"].Value);
+                    Value = new DateTime((long)input.Properties["Ticks"].Value);
                     return;
                 }
-                if ((name == "Sqlcollaborative.Dbatools.Utility.DbaTimeSpan") || (name == "Deserialized.Sqlcollaborative.Dbatools.Utility.DbaTimeSpan"))
+                if ((name == "Sqlcollaborative.Dbatools.Utility.DbaDateTime") || (name == "Deserialized.Sqlcollaborative.Dbatools.Utility.DbaDateTime"))
                 {
-                    Value = new TimeSpan((long)input.Properties["Ticks"].Value);
+                    Value = new DateTime((long)input.Properties["Ticks"].Value);
+                    return;
+                }
+                if ((name == "Sqlcollaborative.Dbatools.Utility.DbaTime") || (name == "Deserialized.Sqlcollaborative.Dbatools.Utility.DbaTime"))
+                {
+                    Value = new DateTime((long)input.Properties["Ticks"].Value);
                     return;
                 }
 
@@ -127,7 +122,7 @@ namespace PSFramework.Parameter
                 {
                     try
                     {
-                        Value = new TimeSpanParameter(input.Properties[property].Value);
+                        Value = new DateTimeParameter(input.Properties[property].Value);
                         test = true;
                         break;
                     }
@@ -136,7 +131,7 @@ namespace PSFramework.Parameter
             }
 
             if (!test)
-                throw new ArgumentException(String.Format("Could not interpret {0} (<{1}>) as valid timespan", InputObject, InputObject.GetType().Name));
+                throw new ArgumentException(String.Format("Could not interpret {0} (<{1}>) as valid datetime", InputObject, InputObject.GetType().Name));
         }
         #endregion Constructors
 
@@ -146,19 +141,22 @@ namespace PSFramework.Parameter
         /// </summary>
         /// <param name="Value">The string to interpret</param>
         /// <returns>The interpreted timespan value</returns>
-        internal static TimeSpan ParseTimeSpan(string Value)
+        internal static DateTime ParseDateTime(string Value)
         {
             if (String.IsNullOrWhiteSpace(Value))
                 throw new ArgumentNullException("Cannot parse empty string!");
 
-            try { return TimeSpan.Parse(Value, CultureInfo.CurrentCulture); }
+            try { return DateTime.Parse(Value, CultureInfo.CurrentCulture); }
             catch { }
-            try { return TimeSpan.Parse(Value, CultureInfo.InvariantCulture); }
+            try { return DateTime.Parse(Value, CultureInfo.InvariantCulture); }
             catch { }
 
             bool positive = !(Value.Contains('-'));
-            TimeSpan timeResult = new TimeSpan();
             string tempValue = Value.Replace("-", "").Trim();
+            bool date = UtilityHost.IsLike(tempValue, "D *");
+            if (date)
+                tempValue = tempValue.Substring(2);
+            TimeSpan timeResult = new TimeSpan();
 
             foreach (string element in tempValue.Split(' '))
             {
@@ -178,9 +176,15 @@ namespace PSFramework.Parameter
                     throw new ArgumentException(String.Format("Failed to parse as timespan: {0} at {1}", Value, element));
             }
 
+            DateTime result;
             if (!positive)
-                return timeResult.Negate();
-            return timeResult;
+                result = DateTime.Now.Add(timeResult.Negate());
+            else
+                result = DateTime.Now.Add(timeResult);
+
+            if (date)
+                return result.Date;
+            return result;
         }
         #endregion Helper Methods
     }

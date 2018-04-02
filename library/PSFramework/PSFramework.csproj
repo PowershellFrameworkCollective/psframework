@@ -76,6 +76,7 @@
     <Compile Include="Message\TransformType.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
+    <Compile Include="Parameter\DateTimeParameter.cs" />
     <Compile Include="Parameter\ParameterClass.cs" />
     <Compile Include="Parameter\ParameterClassAttribute.cs" />
     <Compile Include="Parameter\ParameterClasses.cs" />
