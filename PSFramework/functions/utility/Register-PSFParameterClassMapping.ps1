@@ -61,7 +61,15 @@
 		{
 			"Computer"
 			{
-				[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName, $Properties)
+				[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+			}
+			"DateTime"
+			{
+				[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+			}
+			"TimeSpan"
+			{
+				[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
 			}
 			default
 			{

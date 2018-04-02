@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.14.47 : 2018-04-02
+ - New: Parameter class `[PSFTimeSpan]` allows easy input interpretation of timespan information.
+ - New: Parameter class `[PSFDateTime]` allows easy input interpretation of datetime information.
+
 ## 0.9.13.35 : 2018-03-31
  - Fix: Register-PSFConfig would fail with unknown parameter `-Depth`
 

@@ -1,13 +1,14 @@
-﻿$mappings = @{
-	"microsoft.sqlserver.management.smo.server"  = @("NetName", "DomainInstanceName")
+﻿
+$mappings = @{
+	"microsoft.sqlserver.management.smo.server"		    = @("NetName", "DomainInstanceName")
 	"deserialized.microsoft.sqlserver.management.smo.server" = @("NetName", "DomainInstanceName")
-	"microsoft.sqlserver.management.smo.linkedserver" = @("Name")
+	"microsoft.sqlserver.management.smo.linkedserver"   = @("Name")
 	"deserialized.microsoft.sqlserver.management.smo.linkedserver" = @("Name")
-	"microsoft.activedirectory.management.adcomputer" = @("DNSHostName", "Name")
+	"microsoft.activedirectory.management.adcomputer"   = @("DNSHostName", "Name")
 	"deserialized.microsoft.activedirectory.management.adcomputer" = @("DNSHostName", "Name")
-	"Microsoft.DnsClient.Commands.DnsRecord_A"    = @("Name", "IPAddress")
+	"Microsoft.DnsClient.Commands.DnsRecord_A"		    = @("Name", "IPAddress")
 	"Deserialized.Microsoft.DnsClient.Commands.DnsRecord_A" = @("Name", "IPAddress")
-	"Microsoft.DnsClient.Commands.DnsRecord_AAAA" = @("Name", "IPAddress")
+	"Microsoft.DnsClient.Commands.DnsRecord_AAAA"	    = @("Name", "IPAddress")
 	"Deserialized.Microsoft.DnsClient.Commands.DnsRecord_AAAA" = @("Name", "IPAddress")
 }
 

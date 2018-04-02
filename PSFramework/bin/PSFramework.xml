@@ -1633,11 +1633,6 @@
             The resolved computername
             </summary>
         </member>
-        <member name="F:PSFramework.Parameter.ComputerParameter.InputObject">
-            <summary>
-            The original input object
-            </summary>
-        </member>
         <member name="P:PSFramework.Parameter.ComputerParameter.IsLocalhost">
             <summary>
             Whether the computername is actually localhost or one of its equivalents
@@ -1659,19 +1654,6 @@
             Overrides the default ToString() method
             </summary>
             <returns></returns>
-        </member>
-        <member name="F:PSFramework.Parameter.ComputerParameter._PropertyMapping">
-            <summary>
-            Contains the list of property mappings.
-            Types can be registered to it, allowing the parameter class to blindly interpret unknown types
-            </summary>
-        </member>
-        <member name="M:PSFramework.Parameter.ComputerParameter.SetTypePropertyMapping(System.String,System.Collections.Generic.List{System.String})">
-            <summary>
-            Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
-            </summary>
-            <param name="Name">The name of the type. Use the FullName of the type</param>
-            <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid computername was found</param>
         </member>
         <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(System.String)">
             <summary>
@@ -1746,6 +1728,88 @@
             The input object is a live cim session object
             </summary>
         </member>
+        <member name="T:PSFramework.Parameter.DateTimeParameter">
+            <summary>
+            Parameter class for interpreting timespans
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.DateTimeParameter.Value">
+            <summary>
+            The resolved datetime value
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.ToString">
+            <summary>
+            The string value of the datetime object contained within.
+            </summary>
+            <returns>The string value of the datetime object contained within.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.op_Implicit(PSFramework.Parameter.DateTimeParameter)~System.DateTime">
+            <summary>
+            Implicitly converts the parameter to datetime, allowing it to be used on parameters requiring the type
+            </summary>
+            <param name="Parameter">The parameterclass object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.op_Implicit(System.DateTime)~PSFramework.Parameter.DateTimeParameter">
+            <summary>
+            Implicitly converts a datetime to this parameterclass object.
+            </summary>
+            <param name="Value">The timespan object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.DateTime)">
+            <summary>
+            Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
+            </summary>
+            <param name="Value">The timespan object to accept</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.String)">
+            <summary>
+            Creates a TimeSpanParameter from a string object
+            </summary>
+            <param name="Value">The string to interpret</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.Object)">
+            <summary>
+            Creates a TimeSpanParameter from any kind of object it has been taught to understand
+            </summary>
+            <param name="InputObject">The object to interpret</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.ParseDateTime(System.String)">
+            <summary>
+            Parses an input string as timespan
+            </summary>
+            <param name="Value">The string to interpret</param>
+            <returns>The interpreted timespan value</returns>
+        </member>
+        <member name="T:PSFramework.Parameter.ParameterClass">
+            <summary>
+            Base class of all parameter classes
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClass.InputObject">
+            <summary>
+            The original item presented as input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClass._PropertyMapping">
+            <summary>
+            Contains the list of property mappings.
+            Types can be registered to it, allowing the parameter class to blindly interpret unknown types
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.ParameterClass.SetTypePropertyMapping(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
+            </summary>
+            <param name="Name">The name of the type. Use the FullName of the type</param>
+            <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid property was found</param>
+        </member>
+        <member name="M:PSFramework.Parameter.ParameterClass.ToString">
+            <summary>
+            Returns the string representation of the parameter. Should be overridden by inheriting classes.
+            </summary>
+            <returns>The string representation of the object</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ParameterClassAttribute">
             <summary>
             Attribute marking a class
@@ -1759,6 +1823,16 @@
         <member name="F:PSFramework.Parameter.ParameterClasses.Computer">
             <summary>
             The computer parameter class allows easily targeting a computer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.DateTime">
+            <summary>
+            The datetime parameter class allows for an easy way to specify a datetime
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.TimeSpan">
+            <summary>
+            The timespan parameter class allows for an easy way to specify a timespan
             </summary>
         </member>
         <member name="T:PSFramework.Parameter.ParameterContractAttribute">
@@ -1842,6 +1916,65 @@
             <summary>
             The contracted element is an operator, facilitating type conversion. Generally into a dedicated object type this parameterclass abstracts.
             </summary>
+        </member>
+        <member name="T:PSFramework.Parameter.TimeSpanParameter">
+            <summary>
+            Parameter class for interpreting timespans
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.TimeSpanParameter.Value">
+            <summary>
+            The resolved timespan value
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.ToString">
+            <summary>
+            The string value of the timespan object contained within.
+            </summary>
+            <returns>The string value of the timespan object contained within.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.op_Implicit(PSFramework.Parameter.TimeSpanParameter)~System.TimeSpan">
+            <summary>
+            Implicitly converts the parameter to timespan, allowing it to be used on parameters requiring the type
+            </summary>
+            <param name="Parameter">The parameterclass object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.op_Implicit(System.TimeSpan)~PSFramework.Parameter.TimeSpanParameter">
+            <summary>
+            Implicitly converts a timespan to this parameterclass object.
+            </summary>
+            <param name="Value">The timespan object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
+            </summary>
+            <param name="Value">The timespan object to accept</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.Int32)">
+            <summary>
+            Creates a TimeSpanParameter from integer, assuming it to mean seconds
+            </summary>
+            <param name="Seconds">The seconds to run</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.String)">
+            <summary>
+            Creates a TimeSpanParameter from a string object
+            </summary>
+            <param name="Value">The string to interpret</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.Object)">
+            <summary>
+            Creates a TimeSpanParameter from any kind of object it has been taught to understand
+            </summary>
+            <param name="InputObject">The object to interpret</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.ParseTimeSpan(System.String)">
+            <summary>
+            Parses an input string as timespan
+            </summary>
+            <param name="Value">The string to interpret</param>
+            <returns>The interpreted timespan value</returns>
         </member>
         <member name="T:PSFramework.PSFCore.PSFCoreHost">
             <summary>

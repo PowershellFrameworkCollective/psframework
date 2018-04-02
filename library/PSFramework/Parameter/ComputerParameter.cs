@@ -1,6 +1,5 @@
 ﻿using Microsoft.Management.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net;
@@ -14,7 +13,7 @@ namespace PSFramework.Parameter
     /// Parameter class that converts various input into a unified input representation
     /// </summary>
     [ParameterClass]
-    public class ComputerParameter
+    public class ComputerParameter : ParameterClass
     {
         #region Fields of contract
         private string _ComputerName;
@@ -32,13 +31,7 @@ namespace PSFramework.Parameter
                 _ComputerName = value;
             }
         }
-
-        /// <summary>
-        /// The original input object
-        /// </summary>
-        [ParameterContract(ParameterContractType.Field, ParameterContractBehavior.Mandatory)]
-        public object InputObject;
-
+        
         /// <summary>
         /// Whether the computername is actually localhost or one of its equivalents
         /// </summary>
@@ -73,22 +66,6 @@ namespace PSFramework.Parameter
         public override string ToString()
         {
             return ComputerName;
-        }
-
-        /// <summary>
-        /// Contains the list of property mappings.
-        /// Types can be registered to it, allowing the parameter class to blindly interpret unknown types
-        /// </summary>
-        private static Dictionary<string, List<string>> _PropertyMapping = new Dictionary<string, List<string>>();
-
-        /// <summary>
-        /// Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
-        /// </summary>
-        /// <param name="Name">The name of the type. Use the FullName of the type</param>
-        /// <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid computername was found</param>
-        public static void SetTypePropertyMapping(string Name, List<string> PropertyName)
-        {
-            _PropertyMapping[Name.ToLower()] = PropertyName;
         }
         #endregion Statics & Stuff
 
