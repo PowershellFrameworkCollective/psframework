@@ -17,6 +17,11 @@ namespace PSFramework.Parameter
         Computer,
 
         /// <summary>
+        /// The datetime parameter class allows for an easy way to specify a datetime
+        /// </summary>
+        DateTime,
+
+        /// <summary>
         /// The timespan parameter class allows for an easy way to specify a timespan
         /// </summary>
         TimeSpan

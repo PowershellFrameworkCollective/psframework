@@ -1825,6 +1825,11 @@
             The computer parameter class allows easily targeting a computer
             </summary>
         </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.DateTime">
+            <summary>
+            The datetime parameter class allows for an easy way to specify a datetime
+            </summary>
+        </member>
         <member name="F:PSFramework.Parameter.ParameterClasses.TimeSpan">
             <summary>
             The timespan parameter class allows for an easy way to specify a timespan
@@ -1945,6 +1950,12 @@
             Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
             </summary>
             <param name="Value">The timespan object to accept</param>
+        </member>
+        <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.Int32)">
+            <summary>
+            Creates a TimeSpanParameter from integer, assuming it to mean seconds
+            </summary>
+            <param name="Seconds">The seconds to run</param>
         </member>
         <member name="M:PSFramework.Parameter.TimeSpanParameter.#ctor(System.String)">
             <summary>
