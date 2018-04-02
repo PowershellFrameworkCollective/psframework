@@ -76,11 +76,13 @@
     <Compile Include="Message\TransformType.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
+    <Compile Include="Parameter\ParameterClass.cs" />
     <Compile Include="Parameter\ParameterClassAttribute.cs" />
     <Compile Include="Parameter\ParameterClasses.cs" />
     <Compile Include="Parameter\ParameterContractAttribute.cs" />
     <Compile Include="Parameter\ParameterContractBehavior.cs" />
     <Compile Include="Parameter\ParameterContractType.cs" />
+    <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
