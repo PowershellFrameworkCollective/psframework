@@ -2538,5 +2538,42 @@
             </summary>
             <param name="charList">Character list string</param>
         </member>
+        <member name="T:PSFramework.Validation.PsfValidateScriptAttribute">
+            <summary>
+            Class for validating against a script block.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ErrorMessage">
+             <summary>
+             Gets or sets the custom error message that is displayed to the user.
+            
+             The item being validated and the validating scriptblock is passed as the first and second
+             formatting argument.
+            
+             <example>
+             [ValidateScript("$_ % 2", ErrorMessage = "The item '{0}' did not pass validation of script '{1}'")]
+             </example>
+             </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlock">
+            <summary>
+            Gets the scriptblock to be used in the validation
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.ValidateElement(System.Object)">
+            <summary>
+            Validates that each parameter argument matches the scriptblock
+            </summary>
+            <param name="element">object to validate</param>
+            <exception cref="T:System.Management.Automation.ValidationMetadataException">if <paramref name="element"/> is invalid</exception>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.#ctor(System.Management.Automation.ScriptBlock,System.String)">
+            <summary>
+            Initializes a new instance of the ValidateScriptBlockAttribute class
+            </summary>
+            <param name="ScriptBlock">Scriptblock to match</param>
+            <param name="Message">The error message to style.</param>
+            <exception cref="T:System.ArgumentException">for invalid arguments</exception>
+        </member>
     </members>
 </doc>
