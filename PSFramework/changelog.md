@@ -4,6 +4,7 @@
  - New: Parameter Attribute: `[PSFValidateScript]`, allowing validating with scripts that offer easy to read messages.
  - New: Parameter Attribute: `[PSFValidatePattern]`, allowing validating with regex patterns that offer easy to read messages.
  - Upd: Configuration from registry order change: All users (enforced) > Per user (enforced) > Per user (default) > All users (default) (#89)
+ - Fix: Write-PSFMessage will now properly trigger when called from outside the module with `-Verbose` set
 
 ## 0.9.14.47 : 2018-04-02
  - New: Parameter class `[PSFTimeSpan]` allows easy input interpretation of timespan information.
