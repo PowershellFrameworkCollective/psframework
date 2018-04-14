@@ -135,6 +135,11 @@ namespace PSFramework.Commands
         private bool _fromStopFunction = false;
 
         /// <summary>
+        /// The current callstack
+        /// </summary>
+        private IEnumerable<CallStackFrame> _callStack = null;
+
+        /// <summary>
         /// How many items exist on the callstack
         /// </summary>
         private int _stackDepth;
@@ -253,13 +258,11 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             _timestamp = DateTime.Now;
 
             #region Resolving Meta Information
+            _callStack = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack();
             CallStackFrame callerFrame = null;
-            foreach (CallStackFrame frame in System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack())
-            {
-                callerFrame = frame;
-                break;
-            }
-            _stackDepth = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack().Count();
+            if (_callStack.Count() > 0)
+                callerFrame = _callStack.First();
+            _stackDepth = _callStack.Count();
 
             if (callerFrame != null)
             {
@@ -432,6 +435,9 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
 
             if ((MessageHost.MaximumVerbose >= (int)Level) && (MessageHost.MinimumVerbose <= (int)Level))
             {
+                if ((_callStack.Count() > 1) && _callStack.ElementAt(_callStack.Count() - 2).InvocationInfo.BoundParameters.ContainsKey("Verbose"))
+                    InvokeCommand.InvokeScript(@"$VerbosePreference = 'Continue'");
+
                 WriteVerbose(_MessageStreams);
                 channels = channels | LogEntryType.Verbose;
             }
@@ -582,7 +588,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
 
             string baseMessage = _errorQualifiedMessage;
             foreach (Match match in Regex.Matches(baseMessage, "<c=[\"'](.*?)[\"']>(.*?)</c>"))
-                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), "$2");
+                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), match.Groups[2].Value);
             _messageSimple = baseMessage;
 
             return _messageSimple;
