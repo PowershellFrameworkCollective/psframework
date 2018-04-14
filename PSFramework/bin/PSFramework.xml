@@ -114,6 +114,11 @@
             Whether this cmdlet was called by Stop-PSFFunction
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._callStack">
+            <summary>
+            The current callstack
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._stackDepth">
             <summary>
             How many items exist on the callstack
