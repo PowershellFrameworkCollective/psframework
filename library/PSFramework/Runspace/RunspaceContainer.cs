@@ -86,7 +86,7 @@ namespace PSFramework.Runspace
             int i = 0;
 
             // Wait up to the limit for the running script to notice and kill itself
-            while ((Runspace != null) && (Runspace.Runspace != null) && (Runspace.Runspace.RunspaceAvailability != RunspaceAvailability.Available) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
+            while ((Runspace != null) && (Runspace.Runspace != null) && (Runspace.Runspace.RunspaceAvailability == RunspaceAvailability.Busy) && (i < (10 * RunspaceHost.StopTimeoutSeconds)))
             {
                 i++;
                 Thread.Sleep(100);
