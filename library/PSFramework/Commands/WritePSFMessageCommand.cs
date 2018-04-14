@@ -588,7 +588,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
 
             string baseMessage = _errorQualifiedMessage;
             foreach (Match match in Regex.Matches(baseMessage, "<c=[\"'](.*?)[\"']>(.*?)</c>"))
-                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), "$2");
+                baseMessage = Regex.Replace(baseMessage, Regex.Escape(match.Value), match.Groups[2].Value);
             _messageSimple = baseMessage;
 
             return _messageSimple;
