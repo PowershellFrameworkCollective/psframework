@@ -7,6 +7,8 @@ $TypeAliasTable = @{
 	psfrgx				   = "PSFramework.Utility.RegexHelper"
 	PSFTimeSpan		       = "PSFramework.Parameter.TimeSpanParameter"
 	PSFTimeSpanParameter   = "PSFramework.Parameter.TimeSpanParameter"
+	PSFValidatePattern     = "PSFramework.Validation.PsfValidatePatternAttribute"
+	PSFValidateScript      = "PSFramework.Validation.PsfValidateScriptAttribute"
 }
 
 Set-PSFTypeAlias -Mapping $TypeAliasTable
