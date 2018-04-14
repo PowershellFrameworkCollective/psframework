@@ -101,7 +101,8 @@
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
-    <Compile Include="Validation\PsfValidateScript.cs" />
+    <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
+    <Compile Include="Validation\PsfValidateScriptAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

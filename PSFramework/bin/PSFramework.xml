@@ -2538,6 +2538,48 @@
             </summary>
             <param name="charList">Character list string</param>
         </member>
+        <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
+            <summary>
+            Validates that each parameter argument matches the RegexPattern
+            </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidatePatternAttribute.RegexPattern">
+            <summary>
+            Gets the Regex pattern to be used in the validation
+            </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidatePatternAttribute.Options">
+            <summary>
+            Gets or sets the Regex options to be used in the validation
+            </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidatePatternAttribute.ErrorMessage">
+             <summary>
+             Gets or sets the custom error message pattern that is displayed to the user.
+            
+             The text representation of the object being validated and the validating regex is passed as
+             the first and second formatting parameters to the ErrorMessage formatting pattern.
+             <example>
+             [ValidatePattern("\s+", ErrorMessage="The text '{0}' did not pass validation of regex '{1}'")]
+             </example>
+             </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidatePatternAttribute.ValidateElement(System.Object)">
+            <summary>
+            Validates that each parameter argument matches the RegexPattern
+            </summary>
+            <param name="element">object to validate</param>
+            <exception cref="T:System.Management.Automation.ValidationMetadataException">if <paramref name="element"/> is not a string
+             that matches the pattern
+             and for invalid arguments</exception>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidatePatternAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the PsfValidatePatternAttribute class
+            </summary>
+            <param name="regexPattern">Pattern string to match</param>
+            <exception cref="T:System.ArgumentException">for invalid arguments</exception>
+        </member>
         <member name="T:PSFramework.Validation.PsfValidateScriptAttribute">
             <summary>
             Class for validating against a script block.
@@ -2567,12 +2609,11 @@
             <param name="element">object to validate</param>
             <exception cref="T:System.Management.Automation.ValidationMetadataException">if <paramref name="element"/> is invalid</exception>
         </member>
-        <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.#ctor(System.Management.Automation.ScriptBlock,System.String)">
+        <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.#ctor(System.Management.Automation.ScriptBlock)">
             <summary>
             Initializes a new instance of the ValidateScriptBlockAttribute class
             </summary>
             <param name="ScriptBlock">Scriptblock to match</param>
-            <param name="Message">The error message to style.</param>
             <exception cref="T:System.ArgumentException">for invalid arguments</exception>
         </member>
     </members>

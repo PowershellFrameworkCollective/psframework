@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSFramework.Validation
 {
@@ -45,7 +41,7 @@ namespace PSFramework.Validation
 
             if (!LanguagePrimitives.IsTrue(result))
             {
-                var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {1}" : ErrorMessage;
+                var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {{ {1} }}" : ErrorMessage;
                 throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock));
             }
         }
@@ -54,12 +50,10 @@ namespace PSFramework.Validation
         /// Initializes a new instance of the ValidateScriptBlockAttribute class
         /// </summary>
         /// <param name="ScriptBlock">Scriptblock to match</param>
-        /// <param name="Message">The error message to style.</param>
         /// <exception cref="ArgumentException">for invalid arguments</exception>
-        public PsfValidateScriptAttribute(ScriptBlock ScriptBlock, string Message = "")
+        public PsfValidateScriptAttribute(ScriptBlock ScriptBlock)
         {
             this.ScriptBlock = ScriptBlock ?? throw new ArgumentNullException("Need to specify a scriptblock!");
-            ErrorMessage = Message;
         }
     }
 }
