@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.16.43 : ????-??-??
+ - New: Add command Export-PSFConfig, will export configuration items to json.
+ - Upd: Parameter class `[PSFDateTime]` will now accept integer as seconds relative to now
+
 ## 0.9.15.41 : 2018-04-14
  - New: Parameter Attribute: `[PSFValidateScript]`, allowing validating with scripts that offer easy to read messages.
  - New: Parameter Attribute: `[PSFValidatePattern]`, allowing validating with regex patterns that offer easy to read messages.
