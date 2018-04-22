@@ -1,4 +1,9 @@
-# CHANGELOG
+﻿# CHANGELOG
+
+## 0.9.16.44 : 2018-04-22
+ - Upd: Add tab completion to Export-PSFConfig.
+ - Upd: Import-PSFConfig: Added parameter `-Peek` to allow previewing data.
+ - Upd: Import-PSFConfig: Added parameter `-IncludeFilter` and `-ExcludeFilter` to allow filtering on import
 
 ## 0.9.16.43 : 2018-04-22
  - New: Add command Export-PSFConfig, will export configuration items to json.
