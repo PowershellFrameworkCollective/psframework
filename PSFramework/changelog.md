@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.16.43 : ????-??-??
+## 0.9.16.43 : 2018-04-22
  - New: Add command Export-PSFConfig, will export configuration items to json.
  - New: Add command Import-PSFConfig, will import configuration items from json.
  - Upd: Parameter class `[PSFDateTime]` will now accept integer as seconds relative to now
