@@ -73,7 +73,7 @@
 	begin
 	{
 		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		$resultantData = @{ }
+		$resultantData = @()
 	}
 	process
 	{
@@ -90,12 +90,17 @@
 				Stop-PSFFunction -Message "Could not export '$($item.FullName)': Data Type not supported" -Tag 'fail','export' -Continue -EnableException $EnableException
 			}
 			
-			$resultantData[$item.FullName] = $item.RegistryData
+			$resultantData += [pscustomobject]@{
+				FullName = $item.FullName
+				Type     = $item.RegistryData.SubString(0, $item.RegistryData.IndexOf(":"))
+				Value    = $item.RegistryData.SubString(($item.RegistryData.IndexOf(":") + 1))
+			}
+				
 		}
 	}
 	end
 	{
-		try { ([pscustomobject]$resultantData) | ConvertTo-Json | Set-Content -Path $OutPath -Encoding UTF8 -ErrorAction Stop }
+		try { $resultantData | ConvertTo-Json | Set-Content -Path $OutPath -Encoding UTF8 -ErrorAction Stop }
 		catch
 		{
 			Stop-PSFFunction -Message "Failed to export to file" -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
