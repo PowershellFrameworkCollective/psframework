@@ -1,5 +1,9 @@
 ﻿
 # Configuration
+Register-PSFTeppArgumentCompleter -Command Export-PSFConfig -Parameter FullName -Name 'PSFramework-config-fullname'
+Register-PSFTeppArgumentCompleter -Command Export-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
+Register-PSFTeppArgumentCompleter -Command Export-PSFConfig -Parameter Name -Name 'PSFramework-config-name'
+
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter FullName -Name 'PSFramework-config-fullname'
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Name -Name 'PSFramework-config-name'

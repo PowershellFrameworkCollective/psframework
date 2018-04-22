@@ -9,6 +9,7 @@
 	
 	.PARAMETER Config
 		The configuration object(s) to export.
+		Returned by Get-PSFConfig.
 	
 	.PARAMETER FullName
 		Select the configuration objects to export by filtering by their full name.
@@ -43,10 +44,6 @@
 #>
 	[CmdletBinding(DefaultParameterSetName = 'FullName')]
 	Param (
-		[Parameter(ParameterSetName = "Config", Position = 0, Mandatory = $true, ValueFromPipeline = $true)]
-		[PSFramework.Configuration.Config[]]
-		$Config,
-		
 		[Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = $true)]
 		[string]
 		$FullName,
@@ -58,6 +55,10 @@
 		[Parameter(ParameterSetName = "Module", Position = 1)]
 		[string]
 		$Name = "*",
+		
+		[Parameter(ParameterSetName = "Config", Position = 0, Mandatory = $true, ValueFromPipeline = $true)]
+		[PSFramework.Configuration.Config[]]
+		$Config,
 		
 		[Parameter(Position = 2, Mandatory = $true)]
 		[string]
