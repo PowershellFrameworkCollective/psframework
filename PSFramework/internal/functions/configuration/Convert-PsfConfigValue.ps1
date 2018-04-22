@@ -18,6 +18,7 @@
 	
 		Will return a boolean $true
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[CmdletBinding()]
 	Param (
 		[string]
