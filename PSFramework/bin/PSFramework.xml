@@ -1763,9 +1763,15 @@
         </member>
         <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.DateTime)">
             <summary>
-            Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
+            Creates a DateTimeParameter from a DateTime object (not the hardest challenge)
             </summary>
             <param name="Value">The timespan object to accept</param>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.Int32)">
+            <summary>
+            Creates a DateTimeParameter with a DateTime value in seconds relative to the specifiewd number.
+            </summary>
+            <param name="Seconds">The seconds to differ from the current time.</param>
         </member>
         <member name="M:PSFramework.Parameter.DateTimeParameter.#ctor(System.String)">
             <summary>

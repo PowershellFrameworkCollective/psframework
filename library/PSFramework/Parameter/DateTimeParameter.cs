@@ -54,13 +54,23 @@ namespace PSFramework.Parameter
 
         #region Constructors
         /// <summary>
-        /// Creates a TimeSpanParameter from a TimeSpan object (not the hardest challenge)
+        /// Creates a DateTimeParameter from a DateTime object (not the hardest challenge)
         /// </summary>
         /// <param name="Value">The timespan object to accept</param>
         public DateTimeParameter(DateTime Value)
         {
             this.Value = Value;
             InputObject = Value;
+        }
+
+        /// <summary>
+        /// Creates a DateTimeParameter with a DateTime value in seconds relative to the specifiewd number.
+        /// </summary>
+        /// <param name="Seconds">The seconds to differ from the current time.</param>
+        public DateTimeParameter(int Seconds)
+        {
+            InputObject = Seconds;
+            Value = DateTime.Now.AddSeconds(Seconds);
         }
 
         /// <summary>
