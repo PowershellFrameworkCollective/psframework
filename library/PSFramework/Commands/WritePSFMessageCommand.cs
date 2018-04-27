@@ -189,6 +189,11 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
         /// List of tags to process
         /// </summary>
         private List<string> _Tags = new List<string>();
+
+        /// <summary>
+        /// Whether debug mode is enabled
+        /// </summary>
+        private bool _isDebug;
         #endregion Private fields
 
         #region Private properties
@@ -253,6 +258,34 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
                     return GetMessageColor();
             }
         }
+
+        /// <summary>
+        /// Provide breadcrumb queue of the callstack
+        /// </summary>
+        private string _BreadCrumbsString
+        {
+            get
+            {
+                string crumbs = String.Join(" > ", _callStack.Select(name => name.FunctionName).Where(name => name != "Write-PSFMessage" && name != "Stop-PSFFunction" && name != "<ScriptBlock>").Reverse().ToList());
+                if (crumbs.EndsWith(FunctionName))
+                    return String.Format("[{0}]\n    ", crumbs);
+                return String.Format("[{0}] [{1}]\n    ", crumbs, FunctionName);
+            }
+        }
+
+        /// <summary>
+        /// Provide a breadcrumb queue of the callstack in color tags
+        /// </summary>
+        private string _BreadCrumbsStringColored
+        {
+            get
+            {
+                string crumbs = String.Join("</c> > <c='sub'>", _callStack.Select(name => name.FunctionName).Where(name => name != "Write-PSFMessage" && name != "Stop-PSFFunction" && name != "<ScriptBlock>").Reverse().ToList());
+                if (crumbs.EndsWith(FunctionName))
+                    return String.Format("[<c='sub'>{0}</c>]\n    ", crumbs);
+                return String.Format("[<c='sub'>{0}</c>] [<c='sub'>{1}</c>]\n    ", crumbs, FunctionName);
+            }
+        }
         #endregion Private properties
 
         #region Cmdlet Implementation
@@ -309,6 +342,8 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             if (Tag != null)
                 foreach (string item in Tag)
                     _Tags.Add(item);
+
+            _isDebug = (_callStack.Count() > 1) && _callStack.ElementAt(_callStack.Count() - 2).InvocationInfo.BoundParameters.ContainsKey("Debug");
             #endregion Resolving Meta Information
         }
 
@@ -452,7 +487,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             if ((MessageHost.MaximumDebug >= (int)Level) && (MessageHost.MinimumDebug <= (int)Level))
             {
                 bool restoreInquire = false;
-                if ((_callStack.Count() > 1) && _callStack.ElementAt(_callStack.Count() - 2).InvocationInfo.BoundParameters.ContainsKey("Debug"))
+                if (_isDebug)
                 {
                     if (Breakpoint.ToBool())
                         InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Inquire'"), null, null);
@@ -461,9 +496,14 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
                         InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Continue'"), null, null);
                         restoreInquire = true;
                     }
+                    WriteDebug(String.Format("{0} | {1}", Line, _MessageStreams));
+                    channels = channels | LogEntryType.Debug;
                 }
-                WriteDebug(_MessageStreams);
-                channels = channels | LogEntryType.Debug;
+                else
+                {
+                    WriteDebug(_MessageStreams);
+                    channels = channels | LogEntryType.Debug;
+                }
 
                 if (restoreInquire)
                     InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Inquire'"), null, null);
@@ -471,7 +511,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), Target);
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)
@@ -594,7 +634,19 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
         {
             if (!String.IsNullOrEmpty(_message))
                 return _message;
-            _message = String.Format("[{0}][{1}] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, GetMessageSimple());
+            if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageBreadcrumbs)
+                _message = String.Format("[{0}]{1}{2}", _timestamp.ToString("HH:mm:ss"), _BreadCrumbsString, GetMessageSimple());
+            else if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageDisplayCommand)
+                _message = String.Format("[{0}][{1}] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, GetMessageSimple());
+            else if (MessageHost.EnableMessageTimestamp)
+                _message = String.Format("[{0}] {1}", _timestamp.ToString("HH:mm:ss"), GetMessageSimple());
+            else if (MessageHost.EnableMessageBreadcrumbs)
+                _message = String.Format("{0}{1}", _BreadCrumbsString, GetMessageSimple());
+            else if (MessageHost.EnableMessageDisplayCommand)
+                _message = String.Format("[{0}] {1}", FunctionName, GetMessageSimple());
+            else
+                _message = GetMessageSimple();
+
             return _message;
         }
 
@@ -623,8 +675,20 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
         {
             if (!String.IsNullOrEmpty(_messageColor))
                 return _messageColor;
+
+            if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageBreadcrumbs)
+                _messageColor = String.Format("[<c='sub'>{0}</c>]{1} {2}", _timestamp.ToString("HH:mm:ss"), _BreadCrumbsStringColored, _errorQualifiedMessage);
+            else if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageDisplayCommand)
+                _messageColor = String.Format("[<c='sub'>{0}</c>][<c='sub'>{1}</c>] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, _errorQualifiedMessage);
+            else if (MessageHost.EnableMessageTimestamp)
+                _messageColor = String.Format("[<c='sub'>{0}</c>] {1}", _timestamp.ToString("HH:mm:ss"), _errorQualifiedMessage);
+            else if (MessageHost.EnableMessageBreadcrumbs)
+                _messageColor = String.Format("{0}{1}", _BreadCrumbsStringColored, _errorQualifiedMessage);
+            else if (MessageHost.EnableMessageDisplayCommand)
+                _messageColor = String.Format("[<c='sub'>{0}</c>] {1}", FunctionName, _errorQualifiedMessage);
+            else
+                _messageColor = _errorQualifiedMessage;
             
-            _messageColor = String.Format("[<c='sub'>{0}</c>][<c='sub'>{1}</c>] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, _errorQualifiedMessage);
             return _messageColor;
         }
 

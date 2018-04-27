@@ -164,6 +164,11 @@
             List of tags to process
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._isDebug">
+            <summary>
+            Whether debug mode is enabled
+            </summary>
+        </member>
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._errorQualifiedMessage">
             <summary>
             The input message with the error content included if desired
@@ -182,6 +187,16 @@
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._MessageHost">
             <summary>
             The final message to use for host messages (write using Write-PSFHostColor)
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.WritePSFMessageCommand._BreadCrumbsString">
+            <summary>
+            Provide breadcrumb queue of the callstack
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.WritePSFMessageCommand._BreadCrumbsStringColored">
+            <summary>
+            Provide a breadcrumb queue of the callstack in color tags
             </summary>
         </member>
         <member name="M:PSFramework.Commands.WritePSFMessageCommand.BeginProcessing">
@@ -701,7 +716,17 @@
         </member>
         <member name="F:PSFramework.Message.LogEntry.Line">
             <summary>
-            The line on which the message was written
+            The line on which the message was written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.CallStack">
+            <summary>
+            The callstack when the message was written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Username">
+            <summary>
+            The user that did the writing.
             </summary>
         </member>
         <member name="M:PSFramework.Message.LogEntry.#ctor">
@@ -709,7 +734,7 @@
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String)">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -723,8 +748,10 @@
             <param name="Runspace">The ID of the runspace that wrote the message.</param>
             <param name="ComputerName">The computer the message was generated on.</param>
             <param name="TargetObject">The object this message was all about.</param>
-            <param name="File">The file of the code that wrote the message</param>
-            <param name="Line">The line on which the message was written</param>
+            <param name="File">The file of the code that wrote the message.</param>
+            <param name="Line">The line on which the message was written.</param>
+            <param name="CallStack">The callstack that triggered the write.</param>
+            <param name="Username">The user responsible for running the code that is writing the message.</param>
         </member>
         <member name="T:PSFramework.Message.LogEntryType">
             <summary>
@@ -856,7 +883,7 @@
             <param name="Runspace">The runspace the message was written from</param>
             <param name="ComputerName">The computer the error was written on</param>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -872,6 +899,8 @@
             <param name="File">The file from which the message was written</param>
             <param name="Line">The line on which the message was written</param>
             <param name="TargetObject">The object associated with a given message.</param>
+            <param name="CallStack">The callstack at the moment the message was written.</param>
+            <param name="Username">The name of the user under which the code being executed</param>
             <returns>The entry that is being written</returns>
         </member>
         <member name="T:PSFramework.Message.MessageEventSubscription">
@@ -1069,6 +1098,21 @@
         <member name="F:PSFramework.Message.MessageHost.DisableVerbosity">
             <summary>
             Globally override all verbosity
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageTimestamp">
+            <summary>
+            Include message timestamps in verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageDisplayCommand">
+            <summary>
+            Include the message display command in the verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageBreadcrumbs">
+            <summary>
+            Include the entire callstack in the verbose message output
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">

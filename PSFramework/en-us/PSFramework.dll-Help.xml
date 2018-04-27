@@ -421,62 +421,130 @@ By default, Write-PSFMessage will not interrupt execution if the -Debug paramete
 		<command:examples>
 			<!--Examples-->
 			<command:example>
-				<maml:title>EXAMPLE 1</maml:title>
+				<maml:title>Example 1: Simple verbose message</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Verbose -Message "Connecting to $computer"</dev:code>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer"</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Connecting to $computer" to verbose.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 2</maml:title>
+				<maml:title>Example 2: Writing a warning</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer"</dev:code>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer"</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 3</maml:title>
+				<maml:title>Example 3: Including extra information</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Verbose -Message "Connecting to $computer" -Target $computer</dev:code>
+				<dev:code>Write-PSFMessage -Level Verbose -Message "Connecting to $computer" -Target $computer</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Connecting to $computer" to verbose.
 Includes the variable $computer in the message. This has no effect on the text shown but will be available for debugging purposes.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 4</maml:title>
+				<maml:title>Example 4: Writing a message once only</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Host -Message "This command has been deprecated, use 'Get-NewExample' instead" -Once 'Get-Example'</dev:code>
+				<dev:code>Write-PSFMessage -Level Host -Message "This command has been deprecated, use 'Get-NewExample' instead" -Once 'Get-Example'</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "This command has been deprecated, use 'Get-NewExample' instead" to the screen.
 This message will only be shown once per powershell process.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 5</maml:title>
+				<maml:title>Example 5: Passing on exceptions</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer" -Target $computer -ErrorRecord $_</dev:code>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer" -Target $computer -ErrorRecord $_</dev:code>
 				<dev:remarks>
-					<maml:para>Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
+					<maml:para>This example assumes to be executed within a catch block.
+Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
 Will also append the message of the exception to the text.
 Will also add the error record to the error log
 Will also log the message.</maml:para>
+					<maml:para> -</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 6: Overriding Error Messages</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to change network adapter settings, this command requires elevation. Restart your console as admin and try again" -Target $computer -ErrorRecord $_ -OverrideExceptionMessage</dev:code>
+				<dev:remarks>
+					<maml:para>Similar to Example 5, this shows how to write an error message with debugging information attached.
+The key difference here is that this assumes the error message has been properly interpreted for the end user, making it no longer desirable to automatically append the exception message.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 7: Tagging messages</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer" -Target $computer -Tag 'connect','CIM'</dev:code>
+				<dev:remarks>
+					<maml:para>This shows how to use the -Tag parameter to add tags to a message.
+These can later be used with Get-PSFMessage or the logs to filter messages by.
+Tags can also be used to apply rules to, such as where to log to.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 8: Overriding debugging information</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer" -Line 21 -File "Connect-Computer.ps1"</dev:code>
+				<dev:remarks>
+					<maml:para>The message system contains a lot of extra information that can be useful when debugging, such as file and line it was written from.
+However depending on your build and import practices, those might not be a perfect fit for you. Thus it is possible to override them, to aid with debugging your code.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 9: Explicitly specifying meta information</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Doing something" -FunctionName "Get-BeerParallel" -ModuleName "BeerFactory"</dev:code>
+				<dev:remarks>
+					<maml:para>By default, Write-PSFMessage automatically gathers module and function information.
+However, this doesn't always work, for example on scriptblocks that are run in separate runspaces.
+For those instances, you can manually specify the command to display.
+Note: Logging is runspace-safe, so you can use this command parallel in multiple runspaces. All messages from all runspaces are visible with Get-PSFMessage.</maml:para>
+					<maml:para> -</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 10: Supporting Debugging</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Level Debug -Message "Executing SQL Query 'SELECT * FROM table'" -Breakpoint</dev:code>
+				<dev:remarks>
+					<maml:para>By using the breakpoint parameter in this message, PowerShell will break into the debugger at this position, if the command writing this message is run with the -Debug parameter.
+By default, Write-PSFMessage will never interrupt execution when -Debug is specified, in contrast to how Write-Debug acts.</maml:para>
 				</dev:remarks>
 			</command:example>
 		</command:examples>
