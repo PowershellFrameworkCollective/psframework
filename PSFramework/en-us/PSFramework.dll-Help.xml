@@ -30,6 +30,199 @@ Get-Help about_psf_message</maml:para>
 		</maml:description>
 		<command:syntax>
 			<!--Parameter Sets-->
+			<command:syntaxItem parametersetname="Default">
+				<!--NAME: Default-->
+				<maml:name>Write-PSFMessage</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Level</maml:name>
+					<maml:description>
+						<maml:para>This parameter represents the verbosity of the message. The lower the number, the more important it is for a human user to read the message.
+By default, the levels are distributed like this:
+- 1-3 Direct verbose output to the user (using Write-Host)
+- 4-6 Output only visible when requesting extra verbosity (using Write-Verbose)
+- 1-9 Debugging information, written using Write-Debug</maml:para>
+						<maml:para>In addition, it is possible to select the level "Warning" which moves the message out of the configurable range:
+The user will always be shown this message, unless he silences the entire verbosity.</maml:para>
+						<maml:para>Possible levels:
+Critical (1), Important / Output / Host (2), Significant (3), VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8), InternalComment (9), Warning (666)
+Either one of the strings or its respective number will do as input.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">PSFramework.Message.MessageLevel</command:parameterValue>
+					<dev:type>
+						<maml:name>PSFramework.Message.MessageLevel</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue>[PSFramework.Message.MessageLevel]::Verbose</dev:defaultValue>
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Message</maml:name>
+					<maml:description>
+						<maml:para>The message to write/log. The function name and timestamp will automatically be prepended.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Tag</maml:name>
+					<maml:description>
+						<maml:para>Tags to add to the message written.
+This allows filtering and grouping by category of message, targeting specific messages.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String[]</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String[]</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>FunctionName</maml:name>
+					<maml:description>
+						<maml:para>The name of the calling function.
+Will be automatically set, but can be overridden when necessary.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ModuleName</maml:name>
+					<maml:description>
+						<maml:para>The name of the module, the calling function is part of.
+Will be automatically set, but can be overridden when necessary.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>File</maml:name>
+					<maml:description>
+						<maml:para>The file in which Write-PSFMessage was called.
+Will be automatically set, but can be overridden when necessary.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Line</maml:name>
+					<maml:description>
+						<maml:para>The line on which Write-PSFMessage was called.
+Will be automatically set, but can be overridden when necessary.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">int</command:parameterValue>
+					<dev:type>
+						<maml:name>int</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ErrorRecord</maml:name>
+					<maml:description>
+						<maml:para>If an error record should be noted with the message, add the full record here.
+Especially designed for use with Warning-mode, it can legally be used in either mode.
+The error will be added to the $Error variable and enqued in the logging/debugging system.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.Management.Automation.ErrorRecord[]</command:parameterValue>
+					<dev:type>
+						<maml:name>System.Management.Automation.ErrorRecord[]</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Exception</maml:name>
+					<maml:description>
+						<maml:para>Allows specifying an inner exception as input object. This will be passed on to the logging and used for messages.
+When specifying both ErrorRecord AND Exception, Exception wins, but ErrorRecord is still used for record metadata.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.Exception</command:parameterValue>
+					<dev:type>
+						<maml:name>System.Exception</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Once</maml:name>
+					<maml:description>
+						<maml:para>Setting this parameter will cause this function to write the message only once per session.
+The string passed here and the calling function's name are used to create a unique ID, which is then used to register the action in the configuration system.
+Thus will the lockout only be written if called once and not burden the system unduly.
+This lockout will be written as a hidden value, to see it use Get-PSFConfig -Force.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>OverrideExceptionMessage</maml:name>
+					<maml:description>
+						<maml:para>Disables automatic appending of exception messages.
+Use in cases where you already have a speaking message interpretation and do not need the original message.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>Switch</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Target</maml:name>
+					<maml:description>
+						<maml:para>Add the object the message is all about, in order to simplify debugging / troubleshooting.
+For example, when calling this from a function targeting a remote computer, the computername could be specified here, allowing all messages to easily be correlated to the object processed.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.Object</command:parameterValue>
+					<dev:type>
+						<maml:name>System.Object</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>EnableException</maml:name>
+					<maml:description>
+						<maml:para>This parameters disables user-friendly warnings and enables the throwing of exceptions.
+This is less user friendly, but allows catching exceptions in calling scripts.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>System.Bool</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Breakpoint</maml:name>
+					<maml:description>
+						<maml:para>The breakpoint switch enables breaking on this debug message.
+By default, Write-PSFMessage will not interrupt execution if the -Debug parameter is specified, even when writing to the debug stream.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
 		</command:syntax>
 		<command:parameters>
 			<!--All Parameters-->
@@ -212,66 +405,146 @@ This is less user friendly, but allows catching exceptions in calling scripts.</
 				</dev:type>
 				<dev:defaultValue />
 			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Breakpoint</maml:name>
+				<maml:description>
+					<maml:para>The breakpoint switch enables breaking on this debug message.
+By default, Write-PSFMessage will not interrupt execution if the -Debug parameter is specified, even when writing to the debug stream.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
 		</command:parameters>
 		<command:examples>
 			<!--Examples-->
 			<command:example>
-				<maml:title>EXAMPLE 1</maml:title>
+				<maml:title>Example 1: Simple verbose message</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Verbose -Message "Connecting to $computer"</dev:code>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer"</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Connecting to $computer" to verbose.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 2</maml:title>
+				<maml:title>Example 2: Writing a warning</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer"</dev:code>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer"</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 3</maml:title>
+				<maml:title>Example 3: Including extra information</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Verbose -Message "Connecting to $computer" -Target $computer</dev:code>
+				<dev:code>Write-PSFMessage -Level Verbose -Message "Connecting to $computer" -Target $computer</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "Connecting to $computer" to verbose.
 Includes the variable $computer in the message. This has no effect on the text shown but will be available for debugging purposes.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 4</maml:title>
+				<maml:title>Example 4: Writing a message once only</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Host -Message "This command has been deprecated, use 'Get-NewExample' instead" -Once 'Get-Example'</dev:code>
+				<dev:code>Write-PSFMessage -Level Host -Message "This command has been deprecated, use 'Get-NewExample' instead" -Once 'Get-Example'</dev:code>
 				<dev:remarks>
 					<maml:para>Writes the message "This command has been deprecated, use 'Get-NewExample' instead" to the screen.
 This message will only be shown once per powershell process.
 Will also log the message.</maml:para>
+					<maml:para> _</maml:para>
 				</dev:remarks>
 			</command:example>
 			<command:example>
-				<maml:title>EXAMPLE 5</maml:title>
+				<maml:title>Example 5: Passing on exceptions</maml:title>
 				<maml:introduction>
 					<maml:para />
 				</maml:introduction>
-				<dev:code>PS C:\&gt; Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer" -Target $computer -ErrorRecord $_</dev:code>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to retrieve additional network adapter information from $computer" -Target $computer -ErrorRecord $_</dev:code>
 				<dev:remarks>
-					<maml:para>Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
+					<maml:para>This example assumes to be executed within a catch block.
+Writes the message "Failed to retrieve additional network adapter information from $computer" as a warning.
 Will also append the message of the exception to the text.
 Will also add the error record to the error log
 Will also log the message.</maml:para>
+					<maml:para> -</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 6: Overriding Error Messages</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Level Warning -Message "Failed to change network adapter settings, this command requires elevation. Restart your console as admin and try again" -Target $computer -ErrorRecord $_ -OverrideExceptionMessage</dev:code>
+				<dev:remarks>
+					<maml:para>Similar to Example 5, this shows how to write an error message with debugging information attached.
+The key difference here is that this assumes the error message has been properly interpreted for the end user, making it no longer desirable to automatically append the exception message.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 7: Tagging messages</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer" -Target $computer -Tag 'connect','CIM'</dev:code>
+				<dev:remarks>
+					<maml:para>This shows how to use the -Tag parameter to add tags to a message.
+These can later be used with Get-PSFMessage or the logs to filter messages by.
+Tags can also be used to apply rules to, such as where to log to.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 8: Overriding debugging information</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Connecting to $computer" -Line 21 -File "Connect-Computer.ps1"</dev:code>
+				<dev:remarks>
+					<maml:para>The message system contains a lot of extra information that can be useful when debugging, such as file and line it was written from.
+However depending on your build and import practices, those might not be a perfect fit for you. Thus it is possible to override them, to aid with debugging your code.</maml:para>
+					<maml:para> _</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 9: Explicitly specifying meta information</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Message "Doing something" -FunctionName "Get-BeerParallel" -ModuleName "BeerFactory"</dev:code>
+				<dev:remarks>
+					<maml:para>By default, Write-PSFMessage automatically gathers module and function information.
+However, this doesn't always work, for example on scriptblocks that are run in separate runspaces.
+For those instances, you can manually specify the command to display.
+Note: Logging is runspace-safe, so you can use this command parallel in multiple runspaces. All messages from all runspaces are visible with Get-PSFMessage.</maml:para>
+					<maml:para> -</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 10: Supporting Debugging</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Write-PSFMessage -Level Debug -Message "Executing SQL Query 'SELECT * FROM table'" -Breakpoint</dev:code>
+				<dev:remarks>
+					<maml:para>By using the breakpoint parameter in this message, PowerShell will break into the debugger at this position, if the command writing this message is run with the -Debug parameter.
+By default, Write-PSFMessage will never interrupt execution when -Debug is specified, in contrast to how Write-Debug acts.</maml:para>
 				</dev:remarks>
 			</command:example>
 		</command:examples>
