@@ -116,6 +116,12 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public bool EnableException;
+
+        /// <summary>
+        /// Enables breakpoints on the current message. By default, setting '-Debug' will NOT cause an interrupt on the current position.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter Breakpoint;
         #endregion Parameters
 
         #region Private fields
@@ -437,15 +443,30 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             {
                 if ((_callStack.Count() > 1) && _callStack.ElementAt(_callStack.Count() - 2).InvocationInfo.BoundParameters.ContainsKey("Verbose"))
                     InvokeCommand.InvokeScript(@"$VerbosePreference = 'Continue'");
+                    //SessionState.PSVariable.Set("VerbosePreference", ActionPreference.Continue);
 
-                WriteVerbose(_MessageStreams);
+                    WriteVerbose(_MessageStreams);
                 channels = channels | LogEntryType.Verbose;
             }
 
             if ((MessageHost.MaximumDebug >= (int)Level) && (MessageHost.MinimumDebug <= (int)Level))
             {
+                bool restoreInquire = false;
+                if ((_callStack.Count() > 1) && _callStack.ElementAt(_callStack.Count() - 2).InvocationInfo.BoundParameters.ContainsKey("Debug"))
+                {
+                    if (Breakpoint.ToBool())
+                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Inquire'"), null, null);
+                    else
+                    {
+                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Continue'"), null, null);
+                        restoreInquire = true;
+                    }
+                }
                 WriteDebug(_MessageStreams);
                 channels = channels | LogEntryType.Debug;
+
+                if (restoreInquire)
+                    InvokeCommand.InvokeScript(false, ScriptBlock.Create(@"$DebugPreference = 'Inquire'"), null, null);
             }
             #endregion Message handling
 
@@ -602,7 +623,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
         {
             if (!String.IsNullOrEmpty(_messageColor))
                 return _messageColor;
-
+            
             _messageColor = String.Format("[<c='sub'>{0}</c>][<c='sub'>{1}</c>] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, _errorQualifiedMessage);
             return _messageColor;
         }
