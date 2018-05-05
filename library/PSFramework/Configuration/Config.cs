@@ -113,66 +113,13 @@ namespace PSFramework.Configuration
 
         /// <summary>
         /// The finalized value to put into the registry value when using policy to set this setting.
+        /// Deprecated property.
         /// </summary>
         public string RegistryData
         {
             get
             {
-                switch (Type)
-                {
-                    case "System.Object[]":
-                        List<string> items = new List<string>();
-
-                        foreach (object item in (object[])Value)
-                        {
-                            string temp = GetRegistryValue(item);
-                            if (temp == "<type not supported>")
-                                return temp;
-                            items.Add(temp);
-                        }
-
-                        return String.Format("array:{0}", String.Join("þþþ", items));
-                    default:
-                        return GetRegistryValue(Value);
-                }
-            }
-        }
-
-        private static string GetRegistryValue(object Item)
-        {
-            if (Item == null)
-                return "<type not supported>";
-
-            switch (Item.GetType().FullName)
-            {
-                case "System.Boolean":
-                    if ((bool)Item)
-                        return "bool:true";
-                    return "bool:false";
-                case "System.Int16":
-                    return String.Format("int:{0}", Item);
-                case "System.Int32":
-                    return String.Format("int:{0}", Item);
-                case "System.Int64":
-                    return String.Format("long:{0}", Item);
-                case "System.UInt16":
-                    return String.Format("int:{0}", Item);
-                case "System.UInt32":
-                    return String.Format("long:{0}", Item);
-                case "System.UInt64":
-                    return String.Format("long:{0}", Item);
-                case "System.Double":
-                    return String.Format("double:{0}", Item);
-                case "System.String":
-                    return String.Format("string:{0}", Item);
-                case "System.TimeSpan":
-                    return String.Format("timespan:{0}", ((TimeSpan)Item).Ticks);
-                case "System.DateTime":
-                    return String.Format("datetime:{0}", ((DateTime)Item).Ticks);
-                case "System.ConsoleColor":
-                    return String.Format("consolecolor:{0}", Item);
-                default:
-                    return "<type not supported>";
+                return ConfigurationHost.ConvertToPersistedValue(Value);
             }
         }
     }
