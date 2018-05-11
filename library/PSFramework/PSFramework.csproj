@@ -89,6 +89,7 @@
     <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
+    <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />

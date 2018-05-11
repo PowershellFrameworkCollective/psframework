@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -62,26 +63,117 @@ namespace PSFramework.Configuration
                     return new ConfigurationValue(((DateTime)Item).Ticks.ToString(), ConfigurationValueType.Datetime);
                 case "System.ConsoleColor":
                     return new ConfigurationValue(Item.ToString(), ConfigurationValueType.ConsoleColor);
+                case "System.Collections.Hashtable":
+                    List<string> hashItems = new List<string>();
+                    Hashtable tempTable = Item as Hashtable;
+                    foreach (object key in tempTable.Keys)
+                        hashItems.Add(String.Format("{0}þEþ{1}", Utf8ToBase64(key.ToString()), Utf8ToBase64(ConvertToPersistedValue(tempTable[key]).TypeQualifiedPersistedValue)));
+                    return new ConfigurationValue(String.Join("þHþ", hashItems), ConfigurationValueType.Hashtable);
                 case "System.Object[]":
                     List<string> items = new List<string>();
 
                     foreach (object item in (object[])Item)
                     {
-                        string temp = ConvertToPersistedValue(item);
-                        if (temp == "<type not supported>")
+                        ConfigurationValue temp = ConvertToPersistedValue(item);
+                        if (temp.PersistedValue == "<type not supported>")
                             return temp;
-                        items.Add(temp);
+                        items.Add(String.Format("{0}:{1}", temp.PersistedType, temp.PersistedValue));
                     }
 
-                    return String.Format("array:{0}", String.Join("þþþ", items));
+                    return new ConfigurationValue(String.Join("þþþ", items), ConfigurationValueType.Array);
                 default:
-                    return String.Format("object:{0}", Utility.UtilityHost.CompressString((PSSerializer.Serialize(Item))));
+                    return new ConfigurationValue(Utility.UtilityHost.CompressString((PSSerializer.Serialize(Item))), ConfigurationValueType.Object);
             }
         }
 
+        /// <summary>
+        /// Converts a persisted value back to its original data type
+        /// </summary>
+        /// <param name="PersistedValue">The value in its persisted state</param>
+        /// <param name="Type">The type of the persisted value</param>
+        /// <returns>The natural state of the value originally persisted</returns>
         public static object ConvertFromPersistedValue(string PersistedValue, ConfigurationValueType Type)
         {
-            return null;
+            switch (Type)
+            {
+                case ConfigurationValueType.Null:
+                    return null;
+                case ConfigurationValueType.Bool:
+                    return PersistedValue == "true";
+                case ConfigurationValueType.Int:
+                    return Int32.Parse(PersistedValue);
+                case ConfigurationValueType.Long:
+                    return Int64.Parse(PersistedValue);
+                case ConfigurationValueType.Double:
+                    return Double.Parse(PersistedValue, System.Globalization.CultureInfo.InvariantCulture);
+                case ConfigurationValueType.String:
+                    return PersistedValue;
+                case ConfigurationValueType.Timespan:
+                    return new TimeSpan(long.Parse(PersistedValue));
+                case ConfigurationValueType.Datetime:
+                    return new DateTime(long.Parse(PersistedValue));
+                case ConfigurationValueType.ConsoleColor:
+                    return Enum.Parse(typeof(ConsoleColor), PersistedValue);
+                case ConfigurationValueType.Hashtable:
+                    string[] hashItems = PersistedValue.Split(new string[1] { "þHþ" }, StringSplitOptions.None);
+                    Hashtable tempTable = new Hashtable();
+                    foreach (string tempValue in hashItems)
+                    {
+                        string[] tempPair = tempValue.Split(new string[1] { "þEþ" }, StringSplitOptions.None);
+                        tempTable[Base64ToUtf8(tempPair[0])] = ConvertFromPersistedValue(Base64ToUtf8(tempPair[1]));
+                    }
+                    return tempTable;
+                case ConfigurationValueType.Array:
+                    string[] items = PersistedValue.Split(new string[1] { "þþþ" }, StringSplitOptions.None);
+                    List<object> results = new List<object>();
+                    foreach (string item in items)
+                    {
+                        int index = item.IndexOf(':');
+                        results.Add(ConvertFromPersistedValue(item.Substring(index + 1), (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), item.Substring(0, index), true)));
+                    }
+                    return results.ToArray();
+                case ConfigurationValueType.Object:
+                    return PSSerializer.Deserialize(Utility.UtilityHost.ExpandString(PersistedValue));
+                default:
+                    return "<type not supported>";
+            }
         }
+
+        /// <summary>
+        /// Converts a persisted value back to its original data type
+        /// </summary>
+        /// <param name="TypeQualifiedPersistedValue">The value in its persisted state, with a prefixed type identifier.</param>
+        /// <returns>The natural state of the value originally persisted</returns>
+        public static object ConvertFromPersistedValue(string TypeQualifiedPersistedValue)
+        {
+            int index = TypeQualifiedPersistedValue.IndexOf(':');
+            if (index < 1)
+                throw new ArgumentException(String.Format("Bad persisted configuration value! Could not find type qualifier on {0}", TypeQualifiedPersistedValue));
+            ConfigurationValueType type = (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), TypeQualifiedPersistedValue.Substring(0, index), true);
+            string valueString = TypeQualifiedPersistedValue.Substring(index + 1);
+            return ConvertFromPersistedValue(valueString, type);
+        }
+
+        #region Private methods
+        /// <summary>
+        /// Converts a plain text into a base64 string
+        /// </summary>
+        /// <param name="Value">The string to convert</param>
+        /// <returns>base64 encoded version of string.</returns>
+        private static string Utf8ToBase64(string Value)
+        {
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Value));
+        }
+
+        /// <summary>
+        /// Converts a base64 encoded string into plain text
+        /// </summary>
+        /// <param name="Value">The string to convert</param>
+        /// <returns>Plain Text string</returns>
+        private static string Base64ToUtf8(string Value)
+        {
+            return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(Value));
+        }
+        #endregion Private methods
     }
 }

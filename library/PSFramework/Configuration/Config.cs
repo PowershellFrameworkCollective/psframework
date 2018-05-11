@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PSFramework.PSFCore;
+using System;
 using System.Management.Automation;
 
 namespace PSFramework.Configuration
@@ -51,17 +51,36 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The value stored in the configuration element
         /// </summary>
-        public Object Value
+        public object Value
         {
-            get { return _Value; }
+            get
+            {
+                if (_Value == null)
+                    return null;
+                return _Value.Value;
+            }
             set
             {
-                _Value = value;
+                if (_PolicyEnforced)
+                    return;
+                if (_Value == null)
+                    _Value = new ConfigurationValue(value);
+                else
+                    _Value.Value = value;
                 if (Initialized)
                     _Unchanged = false;
             }
         }
-        private Object _Value;
+        private ConfigurationValue _Value;
+
+        /// <summary>
+        /// The value stored in the configuration element, but without deserializing objects.
+        /// </summary>
+        public object SafeValue
+        {
+            get { return _Value.SafeValue; }
+            set { }
+        }
 
         /// <summary>
         /// Whether the value of the configuration setting has been changed since its initialization.
@@ -112,6 +131,18 @@ namespace PSFramework.Configuration
         private bool _PolicyEnforced = false;
 
         /// <summary>
+        /// Enabling this causes export to json to use simple json serialization for data transmission.
+        /// This is suitable for simple data that is not sensitive to conversion losses.
+        /// Simple export leads to exports more easily readable to the human eye.
+        /// </summary>
+        public bool SimpleExport = false;
+
+        /// <summary>
+        /// Whether this setting should be exported to a module specific file when exporting to json by modulename.
+        /// </summary>
+        public bool ModuleExport = false;
+
+        /// <summary>
         /// The finalized value to put into the registry value when using policy to set this setting.
         /// Deprecated property.
         /// </summary>
@@ -119,7 +150,28 @@ namespace PSFramework.Configuration
         {
             get
             {
-                return ConfigurationHost.ConvertToPersistedValue(Value);
+                return _Value.TypeQualifiedPersistedValue;
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Applies the persisted value to the configuration item.
+        /// This method should only be called by PSFramework internals
+        /// </summary>
+        /// <param name="Type">The type of data being specified</param>
+        /// <param name="ValueString">The value string to register</param>
+        [PsfInternal(Description = "Only intended for use within internal configuration import mechanics. Some are in script, requiring public accessibility.")]
+        public void SetPersistedValue(ConfigurationValueType Type, string ValueString)
+        {
+            if (_PolicyEnforced)
+                return;
+            if (_Value == null)
+                _Value = new ConfigurationValue(ValueString, Type);
+            else
+            {
+                _Value.PersistedType = Type;
+                _Value.PersistedValue = ValueString;
             }
         }
     }

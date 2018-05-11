@@ -72,6 +72,33 @@ namespace PSFramework.Configuration
         /// The kind of 
         /// </summary>
         public ConfigurationValueType PersistedType;
+
+        /// <summary>
+        /// The type qualified representation of the persisted value
+        /// </summary>
+        public string TypeQualifiedPersistedValue
+        {
+            get { return String.Format("{0}:{1}", PersistedType, PersistedValue); }
+            set { }
+        }
+
+        /// <summary>
+        /// Ensures wanton Get-PSFConfig will not deserialize persisted objects that might have registered deserialization in their module.
+        /// </summary>
+        public object SafeValue
+        {
+            get
+            {
+                if (PersistedType == ConfigurationValueType.Null)
+                    return null;
+                if (_Value != null)
+                    return _Value;
+                if (PersistedType == ConfigurationValueType.Object)
+                    return PersistedValue;
+                return Value;
+            }
+            set { }
+        }
         #endregion Public Properties
 
         #region Private fields

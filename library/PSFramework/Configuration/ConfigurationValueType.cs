@@ -67,6 +67,11 @@ namespace PSFramework.Configuration
         Array,
 
         /// <summary>
+        /// The value is a hashtable
+        /// </summary>
+        Hashtable,
+
+        /// <summary>
         /// The value is something indeterminate, but possibly complex
         /// </summary>
         Object,
