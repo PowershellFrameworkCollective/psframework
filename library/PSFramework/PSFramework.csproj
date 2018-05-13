@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SetPSFConfigCommand.cs" />
     <Compile Include="Commands\WritePSFMessageCommand.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigScope.cs" />

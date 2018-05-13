@@ -4,6 +4,175 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.SetPSFConfigCommand">
+            <summary>
+            Implements the Set-PSFConfig command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.FullName">
+            <summary>
+            The full name of the setting
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Module">
+            <summary>
+            The name of the module the setting belongs to.
+            Is optional due to just specifying a name is legal, in which case the first name segment becomes the module name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Name">
+            <summary>
+            The name of the setting within a module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Value">
+            <summary>
+            The value to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PersistedValue">
+            <summary>
+            The persisted value to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PersistedType">
+            <summary>
+            The persisted type to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Description">
+            <summary>
+            Add documentation to the setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Validation">
+            <summary>
+            The validation script to use.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Handler">
+            <summary>
+            The handling script to apply when changing the value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Hidden">
+            <summary>
+            Whether the setting should be hidden from casual discovery.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Default">
+            <summary>
+            Whether the setting should be applied only when nothing exists yet.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Initialize">
+            <summary>
+            Whether this is the configuration initialization call.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.SimpleExport">
+            <summary>
+            Enabling this will cause the module to use friendly json notation on export to file.
+            This may result in loss of data precision, but is more userfriendly.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.ModuleExport">
+            <summary>
+            Whether this setting applies to module scope file export.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.DisableValidation">
+            <summary>
+            Do not apply the validation script when changing values.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.DisableHandler">
+            <summary>
+            Do not run the handler script when changing values.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PassThru">
+            <summary>
+            Return the changed configuration setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.EnableException">
+            <summary>
+            Enable throwing exceptions.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Config">
+            <summary>
+            The configuration item changed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._KillIt">
+            <summary>
+            Whether execution should be terminated silently.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Initialize">
+            <summary>
+            Whether this is an initialization execution.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Persisted">
+            <summary>
+            Whether persisted values need to be restored.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Exists">
+            <summary>
+            Whether the setting already exists.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._PolicyEnforced">
+            <summary>
+            The setting to be affected was enforced by policy and cannot be changed by the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameModule">
+            <summary>
+            Processed name of module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameName">
+            <summary>
+            Processed name of setting within module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameFull">
+            <summary>
+            Processed full name of setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._ValidationErrorMessage">
+            <summary>
+            The reason validation failed.
+            Filled by ApplyValue.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.BeginProcessing">
+            <summary>
+            Implements the begin action of Set-PSFConfig
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ProcessRecord">
+            <summary>
+            Implements the process action of Set-PSFConfig
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyValue(System.Object)">
+            <summary>
+            Applies a value to a configuration item, invoking validation and handler scriptblocks.
+            </summary>
+            <param name="Value">The value to apply</param>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyCommonSettings">
+            <summary>
+            Abstracts out 
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.WritePSFMessageCommand">
             <summary>
             Cmdlet performing message handling and logging
@@ -295,6 +464,11 @@
             The value stored in the configuration element
             </summary>
         </member>
+        <member name="P:PSFramework.Configuration.Config.SafeValue">
+            <summary>
+            The value stored in the configuration element, but without deserializing objects.
+            </summary>
+        </member>
         <member name="P:PSFramework.Configuration.Config.Unchanged">
             <summary>
             Whether the value of the configuration setting has been changed since its initialization.
@@ -315,7 +489,7 @@
             Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
             </summary>
         </member>
-        <member name="F:PSFramework.Configuration.Config.Initialized">
+        <member name="P:PSFramework.Configuration.Config.Initialized">
             <summary>
             Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
             </summary>
@@ -327,7 +501,7 @@
         </member>
         <member name="P:PSFramework.Configuration.Config.PolicyEnforced">
             <summary>
-            Whether this setting was set by policy and forbids deletion.
+            Whether this setting was set by policy and forbids changes to the configuration.
             </summary>
         </member>
         <member name="F:PSFramework.Configuration.Config.SimpleExport">

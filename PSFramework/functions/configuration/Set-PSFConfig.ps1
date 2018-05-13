@@ -1,4 +1,5 @@
-﻿function Set-PSFConfig
+﻿return
+function Set-PSFConfig
 {
 <#
 	.SYNOPSIS

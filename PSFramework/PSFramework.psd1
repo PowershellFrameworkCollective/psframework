@@ -97,7 +97,6 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
-		'Set-PSFConfig',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
@@ -116,7 +115,10 @@
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = 'Write-PSFMessage' 
+	CmdletsToExport		    = @(
+		'Set-PSFConfig',
+		'Write-PSFMessage'
+	)
 	
 	# Variables to export from this module
 	VariablesToExport = ''

@@ -110,7 +110,16 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
         /// </summary>
-        public bool Initialized;
+        public bool Initialized
+        {
+            get { return _Initialized; }
+            set
+            {
+                if (!_Initialized)
+                    _Initialized = value;
+            }
+        }
+        private bool _Initialized;
 
         /// <summary>
         /// Whether this setting was set by policy
@@ -118,7 +127,7 @@ namespace PSFramework.Configuration
         public bool PolicySet = false;
 
         /// <summary>
-        /// Whether this setting was set by policy and forbids deletion.
+        /// Whether this setting was set by policy and forbids changes to the configuration.
         /// </summary>
         public bool PolicyEnforced
         {
@@ -166,6 +175,16 @@ namespace PSFramework.Configuration
         {
             if (_PolicyEnforced)
                 return;
+
+            if (Type == ConfigurationValueType.Unknown)
+            {
+                int index = ValueString.IndexOf(':');
+                if (index < 1)
+                    throw new ArgumentException(String.Format("Bad persisted configuration value! Could not find type qualifier on {0}", ValueString));
+                Type = (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), ValueString.Substring(0, index), true);
+                ValueString = ValueString.Substring(index + 1);
+            }
+
             if (_Value == null)
                 _Value = new ConfigurationValue(ValueString, Type);
             else
