@@ -38,8 +38,10 @@ namespace PSFramework.Configuration
                 if (value == null)
                 {
                     PersistedType = ConfigurationValueType.Null;
-                    PersistedValue = "null";
+                    _PersistedValue = "null";
                 }
+                else
+                    _PersistedValue = null;
 
                 _Value = value;
             }

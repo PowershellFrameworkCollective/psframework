@@ -74,10 +74,16 @@
 	
 	begin
 	{
-		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+		if ($script:NoRegistry -and ($Scope -band 14))
 		{
-			Stop-PSFFunction -Message "Cannot register configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented
+			Stop-PSFFunction -Message "Cannot register configurations on non-windows machines to registry. Please specify a file-based scope" -Tag 'NotSupported' -Category NotImplemented
 			return
+		}
+		
+		# Linux and MAC default to local user store file
+		if ($script:NoRegistry -and ($Scope -eq "UserDefault"))
+		{
+			$Scope = [PSFramework.Configuration.ConfigScope]::FileUserLocal
 		}
 		
 		$parSet = $PSCmdlet.ParameterSetName
@@ -161,38 +167,91 @@
 				$null = New-Item $Path -Force
 			}
 		}
+		
+		# For file based persistence
+		$configurationItems = @()
 	}
 	process
 	{
 		if (Test-PSFFunctionInterrupt) { return }
-		switch ($parSet)
+		
+		#region Registry Based
+		if ($Scope -band 15)
 		{
-			"Default"
+			switch ($parSet)
 			{
-				foreach ($item in $Config)
+				"Default"
 				{
-					Write-Config -Config $item -Scope $Scope -EnableException $EnableException
-				}
-				
-				foreach ($item in $FullName)
-				{
-					if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+					foreach ($item in $Config)
 					{
-						Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]) -Scope $Scope -EnableException $EnableException
+						Write-Config -Config $item -Scope $Scope -EnableException $EnableException
+					}
+					
+					foreach ($item in $FullName)
+					{
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+						{
+							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]) -Scope $Scope -EnableException $EnableException
+						}
+					}
+				}
+				"Name"
+				{
+					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
+					{
+						Write-Config -Config $item -Scope $Scope -EnableException $EnableException
 					}
 				}
 			}
-			"Name"
+		}
+		#endregion Registry Based
+		
+		#region File Based
+		else
+		{
+			switch ($parSet)
 			{
-				foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
+				"Default"
 				{
-					Write-Config -Config $item -Scope $Scope -EnableException $EnableException
+					foreach ($item in $Config)
+					{
+						$configurationItems += $item
+					}
+					
+					foreach ($item in $FullName)
+					{
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+						{
+							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]
+						}
+					}
+				}
+				"Name"
+				{
+					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
+					{
+						$configurationItems += $item
+					}
 				}
 			}
 		}
+		#endregion File Based
 	}
 	end
 	{
-		
+		#region Finish File Based Persistence
+		if ($Scope -band 16)
+		{
+			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
+		}
+		if ($Scope -band 32)
+		{
+			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileUserShared "psf_config.json")
+		}
+		if ($Scope -band 64)
+		{
+			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileSystem "psf_config.json")
+		}
+		#endregion Finish File Based Persistence
 	}
 }
