@@ -24,6 +24,9 @@
 		Exports all configuration pertinent to a module to a predefined path.
 		Exported configuration items include all settings marked as 'ModuleExport' that have been changed from the default value.
 	
+	.PARAMETER ModuleVersion
+		The configuration version of the module-settings to write.
+	
 	.PARAMETER Scope
 		Which predefined path to write module specific settings to.
 		Only file scopes are considered.
@@ -74,6 +77,10 @@
 		$ModuleName,
 		
 		[Parameter(ParameterSetName = "ModuleName")]
+		[int]
+		$ModuleVersion = 1,
+		
+		[Parameter(ParameterSetName = "ModuleName")]
 		[PSFramework.Configuration.ConfigScope]
 		$Scope = "FileUserShared",
 		
@@ -118,15 +125,15 @@
 		{
 			if ($Scope -band 16)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower()).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 			if ($Scope -band 32)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower()).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 			if ($Scope -band 64)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower()).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 		}
 	}

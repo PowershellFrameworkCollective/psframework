@@ -13,6 +13,9 @@
 	.PARAMETER ModuleName
 		Import configuration items specific to a module from the default configuration paths.
 	
+	.PARAMETER ModuleVersion
+		The configuration version of the module-settings to load.
+	
 	.PARAMETER Scope
 		Where to import the module specific configuration items form.
 		Only file-based scopes are supported for this.
@@ -51,6 +54,10 @@
 		[Parameter(ParameterSetName = "ModuleName", Mandatory = $true)]
 		[string]
 		$ModuleName,
+		
+		[Parameter(ParameterSetName = "ModuleName")]
+		[int]
+		$ModuleVersion = 1,
 		
 		[Parameter(ParameterSetName = "ModuleName")]
 		[PSFramework.Configuration.ConfigScope]
@@ -132,7 +139,7 @@
 		
 		if ($ModuleName)
 		{
-			$data = Read-PsfConfigPersisted -Module $ModuleName -Scope $Scope
+			$data = Read-PsfConfigPersisted -Module $ModuleName -Scope $Scope -ModuleVersion $ModuleVersion
 			
 			foreach ($value in $data.Values)
 			{

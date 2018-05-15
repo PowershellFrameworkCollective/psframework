@@ -15,6 +15,9 @@
 		Use this to load on-demand configuration only when the module is imported.
 		Useful when using the config system as cache.
 	
+	.PARAMETER ModuleVersion
+		The configuration version of the module-settings to load.
+	
 	.PARAMETER Hashtable
 		Rather than returning results, insert them into this hashtable.
 	
@@ -29,6 +32,9 @@
 		
 		[string]
 		$Module,
+		
+		[int]
+		$ModuleVersion = 1,
 		
 		[System.Collections.Hashtable]
 		$Hashtable,
@@ -102,7 +108,7 @@
 		if (-not $Hashtable) { $results = @{ } }
 		else { $results = $Hashtable }
 		
-		if ($Module) { $filename = "$($Module.ToLower()).json" }
+		if ($Module) { $filename = "$($Module.ToLower())-$($ModuleVersion).json" }
 		else { $filename = "psf_config.json" }
 	}
 	process
