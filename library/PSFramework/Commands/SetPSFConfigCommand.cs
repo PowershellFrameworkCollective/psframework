@@ -206,7 +206,7 @@ namespace PSFramework.Commands
             }
 
             #region Name Interpretation
-            if (ParameterSetName == "FullName")
+            if (!String.IsNullOrEmpty(FullName))
             {
                 _NameFull = FullName.Trim('.').ToLower();
                 if (!_NameFull.Contains('.'))

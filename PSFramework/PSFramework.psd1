@@ -59,7 +59,7 @@
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
-	NestedModules = @("bin\PSFramework.dll")
+	#NestedModules = @()
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
@@ -79,6 +79,7 @@
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
+		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',

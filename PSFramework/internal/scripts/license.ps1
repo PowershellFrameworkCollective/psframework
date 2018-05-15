@@ -19,3 +19,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 "@
+
+<#
+Chris Dent:
+- Import-PSFCmdlet ("https://www.indented.co.uk/cmdlets-without-a-dll/", MIT, Approved)
+
+Joel Bennet:
+- Read-PsfConfigPersisted (Module: Configuration, MIT, Approved)
+#>

@@ -1,4 +1,7 @@
-﻿# Initialize the configurations
+﻿Import-PSFCmdlet -Name Write-PSFMessage -Type ([PSFramework.Commands.WritePSFMessageCommand]) -HelpFile "$PSModuleRoot\en-us\PSFramework.dll-Help.xml" -Module $ExecutionContext.SessionState.Module
+Import-PSFCmdlet -Name Set-PSFConfig -Type ([PSFramework.Commands.SetPSFConfigCommand]) -HelpFile "$PSModuleRoot\en-us\PSFramework.dll-Help.xml" -Module $ExecutionContext.SessionState.Module
+
+# Initialize the configurations
 foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\configurationvalidation\*.ps1"))
 {
 	. Import-ModuleFile -Path $file.FullName
@@ -9,7 +12,7 @@ foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\configurations\*.
 }
 
 # Import configuration settings from registry
-. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\loadConfigurationFromRegistry.ps1"
+. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\loadConfigurationPersisted.ps1"
 
 # Load each logging provider
 foreach ($file in (Get-ChildItem -Path "$PSModuleRoot\internal\loggingProviders\"))
