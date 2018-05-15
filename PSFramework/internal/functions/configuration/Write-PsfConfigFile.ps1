@@ -18,6 +18,12 @@
 	.PARAMETER Replace
 		Completely replaces previous file contents.
 		By default, it will integrate settings into one coherent configuration file.
+	
+	.EXAMPLE
+		PS C:\> Write-PsfConfigFile -Config $items -Path .\file.json
+	
+		Exports all settings stored in $items to .\file.json.
+		If the file already exists, the new settings will be merged into the existing file.
 #>
 	[CmdletBinding()]
 	Param (
