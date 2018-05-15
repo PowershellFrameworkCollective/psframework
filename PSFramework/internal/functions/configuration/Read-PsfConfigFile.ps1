@@ -11,7 +11,7 @@
 		The path to the file to parse.
 	
 	.EXAMPLE
-		PS C:\> Read-PsfConfigFile -Path .\config.json
+		PS C:\> Read-PsfConfigFile -Path config.json
 	
 		Reads the config.json file and returns interpreted configuration objects.
 #>
@@ -24,6 +24,7 @@
 	#region Utility Function
 	function New-ConfigItem
 	{
+		[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 		[CmdletBinding()]
 		param (
 			$FullName,

@@ -24,7 +24,13 @@
 	.PARAMETER Default
 		When inserting into a hashtable, existing values are overwritten by default.
 		Enabling this setting will cause it to only insert values if the key does not exist yet.
+	
+	.EXAMPLE
+		Read-PsfConfigPersisted -Scope 127
+	
+		Read all persisted default configuration items in the default mandated order.
 #>
+	[OutputType([System.Collections.Hashtable])]
 	[CmdletBinding()]
 	Param (
 		[PSFramework.Configuration.ConfigScope]
@@ -48,6 +54,7 @@
 		#region Helper Functions
 		function New-ConfigItem
 		{
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 			[CmdletBinding()]
 			param (
 				$FullName,
