@@ -55,10 +55,10 @@
 							</TableColumnItem>
 							<TableColumnItem>
 								<ScriptBlock>
-			if ($null -ne $_.Value)
+			if ($null -ne $_.SafeValue)
 			{
-              if ($_.Value.ToString().Length -le 20) { $_.Value.ToString() }
-              else { $_.Value.ToString().SubString(0,17) + "..." }
+              if ($_.SafeValue.ToString().Length -le 20) { $_.SafeValue.ToString() }
+              else { $_.SafeValue.ToString().SubString(0,17) + "..." }
 			}
 								</ScriptBlock>
 							</TableColumnItem>

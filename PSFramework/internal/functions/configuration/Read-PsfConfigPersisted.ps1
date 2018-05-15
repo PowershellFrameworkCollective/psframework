@@ -54,15 +54,19 @@
 				$KeepPersisted,
 				
 				[switch]
-				$Enforced
+				$Enforced,
+				
+				[switch]
+				$Policy
 			)
 			
 			[pscustomobject]@{
-				FullName  = $FullName
-				Value	   = $Value
-				Type	   = $Type
-				KeepPersisted   = $KeepPersisted
-				Enforced = $Enforced
+				FullName      = $FullName
+				Value         = $Value
+				Type          = $Type
+				KeepPersisted = $KeepPersisted
+				Enforced      = $Enforced
+				Policy        = $Policy
 			}
 		}
 		
@@ -125,11 +129,11 @@
 				if ($item.Value -like "Object:*")
 				{
 					$data = $item.Value.Split(":", 2)
-					New-ConfigItem -FullName $item.Name -Type $data[0] -Value $data[1] -KeepPersisted -Enforced:$Enforced
+					New-ConfigItem -FullName $item.Name -Type $data[0] -Value $data[1] -KeepPersisted -Enforced:$Enforced -Policy
 				}
 				else
 				{
-					New-ConfigItem -FullName $item.Name -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($item.Value))
+					New-ConfigItem -FullName $item.Name -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($item.Value)) -Policy
 				}
 			}
 		}
@@ -201,6 +205,12 @@
 		
 		if ($Module) { $filename = "$($Module).xml" }
 		else { $filename = "psf_config.xml" }
+		
+		$NoRegistry = $false
+		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+		{
+			$NoRegistry = $true
+		}
 	}
 	process
 	{
@@ -216,7 +226,7 @@
 		#endregion File - Computer Wide
 		
 		#region Registry - Computer Wide
-		if ($Scope -band 4)
+		if (($Scope -band 4) -and (-not $NoRegistry))
 		{
 			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineDefault))
 			{
@@ -238,7 +248,7 @@
 		#endregion File - User Shared
 		
 		#region Registry - User Shared
-		if ($Scope -band 1)
+		if (($Scope -band 1) -and (-not $NoRegistry))
 		{
 			foreach ($item in (Read-Registry -Path $script:path_RegistryUserDefault))
 			{
@@ -260,7 +270,7 @@
 		#endregion File - User Local
 		
 		#region Registry - User Enforced
-		if ($Scope -band 2)
+		if (($Scope -band 2) -and (-not $NoRegistry))
 		{
 			foreach ($item in (Read-Registry -Path $script:path_RegistryUserEnforced -Enforced))
 			{
@@ -271,7 +281,7 @@
 		#endregion Registry - User Enforced
 		
 		#region Registry - System Enforced
-		if ($Scope -band 8)
+		if (($Scope -band 8) -and (-not $NoRegistry))
 		{
 			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineEnforced -Enforced))
 			{
