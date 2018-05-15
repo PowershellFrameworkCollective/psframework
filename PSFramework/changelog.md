@@ -1,5 +1,17 @@
 ﻿# CHANGELOG
 
+## 0.9.18.52 :2018-05-??
+ - New: Add command Import-PSFCmdlet, will register a cmdlet in PowerShell
+ - New: Add automatic config import from Json files
+ - New: Add selective per module config import from json
+ - New: Add simple json export support for improved readability in file
+ - Upd: Export-PSFConfig - Added feature to export all marked module settings to dedicated export paths
+ - Upd: Import-PSFConfig - Added feature to import from dedicated config paths by modulename
+ - Upd: Configuration - Hardened configuration properties enforced by policy against manual changes.
+ - Upd: Rewrote Set-PSFConfig as cmdlet for performance reasons
+ - Upd: Added config persistence support for Hashtable
+ - Upd: Added config persistence support for PSObjects of any kind
+
 ## 0.9.16.44 : 2018-04-22
  - Upd: Add tab completion to Export-PSFConfig.
  - Upd: Import-PSFConfig: Added parameter `-Peek` to allow previewing data.

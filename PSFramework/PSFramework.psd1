@@ -59,7 +59,7 @@
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
-	NestedModules = @("bin\PSFramework.dll")
+	#NestedModules = @()
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
@@ -79,6 +79,7 @@
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
+		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
@@ -97,7 +98,6 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
-		'Set-PSFConfig',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
@@ -116,7 +116,10 @@
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = 'Write-PSFMessage' 
+	CmdletsToExport		    = @(
+		'Set-PSFConfig',
+		'Write-PSFMessage'
+	)
 	
 	# Variables to export from this module
 	VariablesToExport = ''
