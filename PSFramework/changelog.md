@@ -5,6 +5,8 @@
  - New: Add automatic config import from Json files
  - New: Add selective per module config import from json
  - New: Add simple json export support for improved readability in file
+ - Upd: Export-PSFConfig - Added feature to export all marked module settings to dedicated export paths
+ - Upd: Import-PSFConfig - Added feature to import from dedicated config paths by modulename
  - Upd: Configuration - Hardened configuration properties enforced by policy against manual changes.
  - Upd: Rewrote Set-PSFConfig as cmdlet for performance reasons
  - Upd: Added config persistence support for Hashtable
