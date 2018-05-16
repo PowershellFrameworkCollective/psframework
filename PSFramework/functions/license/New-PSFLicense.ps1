@@ -36,8 +36,14 @@
 	.PARAMETER Text
 		The full text of your license.
 	
+	.PARAMETER Description
+		A description of the content. Useful when describing how some license is used within your own product.
+	
+	.PARAMETER Parent
+		The license of the product within which the product of this license is used.
+	
 	.PARAMETER Confirm
-				If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+		If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
 		
 	.PARAMETER WhatIf
 		If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
@@ -107,7 +113,13 @@
 		
 		[Parameter(Mandatory = $true)]
 		[String]
-		$Text
+		$Text,
+		
+		[string]
+		$Description,
+		
+		[PSFramework.License.License]
+		$Parent
 	)
 	
 	# Create and fill object
@@ -121,6 +133,8 @@
 	$license.LicenseDate = $Date
 	$license.LicenseType = $Type
 	$license.LicenseText = $Text
+	$license.Description = $Description
+	$license.Parent = $Parent
 	if ($PSCmdlet.ShouldProcess("$($license.Product) $($license.ProductVersion) ($($license.LicenseName))", "Create License"))
 	{
 		if (-not ([PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -eq $license.Product) -and ($_.ProductVersion -eq $license.ProductVersion) }))

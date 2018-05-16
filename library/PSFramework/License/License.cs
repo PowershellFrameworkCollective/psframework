@@ -52,5 +52,15 @@ namespace PSFramework.License
         /// The full license text for the pleasure of the reader.
         /// </summary>
         public string LicenseText;
+
+        /// <summary>
+        /// Add some desription to how it is used.
+        /// </summary>
+        public string Description;
+
+        /// <summary>
+        /// A parent license to indicate a product used within a product.
+        /// </summary>
+        public License Parent;
     }
 }

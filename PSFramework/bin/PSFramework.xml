@@ -805,6 +805,16 @@
             The full license text for the pleasure of the reader.
             </summary>
         </member>
+        <member name="F:PSFramework.License.License.Description">
+            <summary>
+            Add some desription to how it is used.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.Parent">
+            <summary>
+            A parent license to indicate a product used within a product.
+            </summary>
+        </member>
         <member name="T:PSFramework.License.LicenseHost">
             <summary>
             Host class covering all static needs of the licensing system.
