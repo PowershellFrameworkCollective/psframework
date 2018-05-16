@@ -11,6 +11,7 @@
  - Upd: Rewrote Set-PSFConfig as cmdlet for performance reasons
  - Upd: Added config persistence support for Hashtable
  - Upd: Added config persistence support for PSObjects of any kind
+ - Upd: New-PSFLicense - Added `-Description` and `-Parent` parameters to support inner licenses that are used within another product.
 
 ## 0.9.16.44 : 2018-04-22
  - Upd: Add tab completion to Export-PSFConfig.
