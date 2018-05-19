@@ -80,7 +80,7 @@ namespace PSFramework.Configuration
         /// </summary>
         public string TypeQualifiedPersistedValue
         {
-            get { return String.Format("{0}:{1}", PersistedType, PersistedValue); }
+            get { return String.Format("{1}:{0}", PersistedValue, PersistedType); }
             set { }
         }
 
