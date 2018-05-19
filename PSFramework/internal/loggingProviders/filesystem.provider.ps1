@@ -59,10 +59,10 @@ $begin_event = {
 		)
 		
 		# Kill too old files
-		Get-ChildItem -Path "$($Path.FullName)\*" | Where-Object Name -Match "^$([regex]::Escape($env:ComputerName))_.+" | Where-Object LastWriteTime -LT ((Get-Date) - ([PSFramework.Message.LogHost]::MaxLogFileAge)) | Remove-Item -Force -Confirm:$false
+		Get-ChildItem -Path $Path.FullName | Where-Object Name -Match "^$([regex]::Escape($env:ComputerName))_.+" | Where-Object LastWriteTime -LT ((Get-Date) - ([PSFramework.Message.LogHost]::MaxLogFileAge)) | Remove-Item -Force -Confirm:$false
 		
 		# Handle the global overcrowding
-		$files = Get-ChildItem -Path "$($Path.FullName)\*" | Where-Object Name -Match "^$([regex]::Escape($env:ComputerName))_.+" | Sort-Object LastWriteTime
+		$files = Get-ChildItem -Path $Path.FullName | Where-Object Name -Match "^$([regex]::Escape($env:ComputerName))_.+" | Sort-Object LastWriteTime
 		if (-not ($files)) { return }
 		$totalLength = $files | Measure-Object Length -Sum | Select-Object -ExpandProperty Sum
 		
@@ -103,14 +103,14 @@ $message_Event = {
 		$Message
 	)
 	
-	$filesystem_CurrentFile = "$($filesystem_root.FullName)\$($env:ComputerName)_$($pid)_message_$($filesystem_num_Message).log"
+	$filesystem_CurrentFile = Join-Path $filesystem_root.FullName "$($env:ComputerName)_$($pid)_message_$($filesystem_num_Message).log"
 	if (Test-Path $filesystem_CurrentFile)
 	{
 		$filesystem_item = Get-Item $filesystem_CurrentFile
 		if ($filesystem_item.Length -gt ([PSFramework.Message.LogHost]::MaxMessagefileBytes))
 		{
 			$filesystem_num_Message++
-			$filesystem_CurrentFile = "$($filesystem_root.FullName)\$($env:ComputerName)_$($pid)_message_$($filesystem_num_Message).log"
+			$filesystem_CurrentFile = Join-Path $($filesystem_root.FullName) "$($env:ComputerName)_$($pid)_message_$($filesystem_num_Message).log"
 		}
 	}
 	
@@ -128,7 +128,7 @@ $error_Event = {
 	
 	if ($ErrorItem)
 	{
-		$ErrorItem | Export-Clixml -Path "$($filesystem_root.FullName)\$($env:ComputerName)_$($pid)_error_$($filesystem_num_Error).xml" -Depth 3
+		$ErrorItem | Export-Clixml -Path (Join-Path $filesystem_root.FullName "$($env:ComputerName)_$($pid)_error_$($filesystem_num_Error).xml") -Depth 3
 		$filesystem_num_Error++
 	}
 	
@@ -209,7 +209,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.MaxLogFileAge' -Value (New-TimeSpan -Days 7) -Initialize -Validation "timespan" -Handler { [PSFramework.Message.LogHost]::MaxLogFileAge = $args[0] } -Description "Any logfile older than this will automatically be cleansed. This setting is global."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.MessageLogFileEnabled' -Value $true -Initialize -Validation "bool" -Handler { [PSFramework.Message.LogHost]::MessageLogFileEnabled = $args[0] } -Description "Governs, whether a log file for the system messages is written. This setting is on a per-Process basis. Runspaces share, jobs or other consoles counted separately."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.ErrorLogFileEnabled' -Value $true -Initialize -Validation "bool" -Handler { [PSFramework.Message.LogHost]::ErrorLogFileEnabled = $args[0] } -Description "Governs, whether log files for errors are written. This setting is on a per-Process basis. Runspaces share, jobs or other consoles counted separately."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.LogPath' -Value "$($env:APPDATA)\WindowsPowerShell\PSFramework\Logs" -Initialize -Validation "string" -Handler { [PSFramework.Message.LogHost]::LoggingPath = $args[0] } -Description "The path where the PSFramework writes all its logs and debugging information."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.LogPath' -Value $script:path_Logging -Initialize -Validation "string" -Handler { [PSFramework.Message.LogHost]::LoggingPath = $args[0] } -Description "The path where the PSFramework writes all its logs and debugging information."
 	
 	Set-PSFConfig -Module LoggingProvider -Name 'FileSystem.Enabled' -Value $true -Initialize -Validation "bool" -Handler { } -Description "Whether the logging provider should be enabled on registration"
 	Set-PSFConfig -Module LoggingProvider -Name 'FileSystem.AutoInstall' -Value $false -Initialize -Validation "bool" -Handler { } -Description "Whether the logging provider should be installed on registration"
