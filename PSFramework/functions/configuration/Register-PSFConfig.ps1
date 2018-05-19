@@ -117,32 +117,32 @@
 				#region User Default
 				if (1 -band $Scope)
 				{
-					Ensure-RegistryPath -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" -ErrorAction Stop
-					Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
+					Ensure-RegistryPath -Path $script:path_RegistryUserDefault -ErrorAction Stop
+					Set-ItemProperty -Path $script:path_RegistryUserDefault -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion User Default
 				
 				#region User Mandatory
 				if (2 -band $Scope)
 				{
-					Ensure-RegistryPath -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -ErrorAction Stop
-					Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
+					Ensure-RegistryPath -Path $script:path_RegistryUserEnforced -ErrorAction Stop
+					Set-ItemProperty -Path $script:path_RegistryUserEnforced -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion User Mandatory
 				
 				#region System Default
 				if (4 -band $Scope)
 				{
-					Ensure-RegistryPath -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" -ErrorAction Stop
-					Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
+					Ensure-RegistryPath -Path $script:path_RegistryMachineDefault -ErrorAction Stop
+					Set-ItemProperty -Path $script:path_RegistryMachineDefault -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion System Default
 				
 				#region System Mandatory
 				if (8 -band $Scope)
 				{
-					Ensure-RegistryPath -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -ErrorAction Stop
-					Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
+					Ensure-RegistryPath -Path $script:path_RegistryMachineEnforced -ErrorAction Stop
+					Set-ItemProperty -Path $script:path_RegistryMachineEnforced -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion System Mandatory
 			}

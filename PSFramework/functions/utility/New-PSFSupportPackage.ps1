@@ -122,7 +122,7 @@
 	}
 	process
 	{
-		$filePathXml = "$($Path.Trim('\'))\powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").xml"
+		$filePathXml = Join-Path $Path "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").xml"
 		$filePathZip = $filePathXml -replace "\.xml$", ".zip"
 		
 		Write-PSFMessage -Level Critical -Message @"
