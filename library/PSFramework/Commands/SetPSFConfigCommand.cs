@@ -341,7 +341,10 @@ namespace PSFramework.Commands
             if (!MyInvocation.BoundParameters.ContainsKey("Value"))
                 return;
 
-            try { ApplyValue(Value); }
+            try {
+                if (!Default)
+                    ApplyValue(Value);
+            }
             catch (Exception e)
             {
                 InvokeCommand.InvokeScript(true, ScriptBlock.Create(String.Format(_updateError, _NameFull, EnableException.ToBool())), null, e);

@@ -120,7 +120,7 @@ Describe "Set-PSFConfig Unit Tests" -Tag "CI","Config","Unit" {
 		
 		It "Should respect values when setting default values" {
 			Set-PSFConfig -FullName 'PSFTests.Set-PSFConfig.Test11' -Value "foo"
-			$config = Set-PSFConfig -FullName 'PSFTests.Set-PSFConfig.Test11' -Value "bar" -PassThru
+			$config = Set-PSFConfig -FullName 'PSFTests.Set-PSFConfig.Test11' -Value "bar" -Default -PassThru
 			$config.Value | Should -Be "foo"
 		}
 	}
