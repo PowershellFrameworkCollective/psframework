@@ -17,7 +17,7 @@
 	CompanyName = 'PowerShell Framework Collective'
 	
 	# Copyright statement for this module
-	Copyright = '(c) 2017. All rights reserved.'
+	Copyright = '(c) Friedrich Weinmann 2017. All rights reserved.'
 	
 	# Description of the functionality provided by this module
 	Description = 'A module that provides tools for other modules and scripts'
