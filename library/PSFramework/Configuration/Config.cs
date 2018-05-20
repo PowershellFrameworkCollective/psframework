@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PSFramework.PSFCore;
+using System;
 using System.Management.Automation;
 
 namespace PSFramework.Configuration
@@ -51,17 +51,36 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The value stored in the configuration element
         /// </summary>
-        public Object Value
+        public object Value
         {
-            get { return _Value; }
+            get
+            {
+                if (_Value == null)
+                    return null;
+                return _Value.Value;
+            }
             set
             {
-                _Value = value;
+                if (_PolicyEnforced)
+                    return;
+                if (_Value == null)
+                    _Value = new ConfigurationValue(value);
+                else
+                    _Value.Value = value;
                 if (Initialized)
                     _Unchanged = false;
             }
         }
-        private Object _Value;
+        private ConfigurationValue _Value;
+
+        /// <summary>
+        /// The value stored in the configuration element, but without deserializing objects.
+        /// </summary>
+        public object SafeValue
+        {
+            get { return _Value.SafeValue; }
+            set { }
+        }
 
         /// <summary>
         /// Whether the value of the configuration setting has been changed since its initialization.
@@ -91,7 +110,16 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
         /// </summary>
-        public bool Initialized;
+        public bool Initialized
+        {
+            get { return _Initialized; }
+            set
+            {
+                if (!_Initialized)
+                    _Initialized = value;
+            }
+        }
+        private bool _Initialized;
 
         /// <summary>
         /// Whether this setting was set by policy
@@ -99,7 +127,7 @@ namespace PSFramework.Configuration
         public bool PolicySet = false;
 
         /// <summary>
-        /// Whether this setting was set by policy and forbids deletion.
+        /// Whether this setting was set by policy and forbids changes to the configuration.
         /// </summary>
         public bool PolicyEnforced
         {
@@ -112,67 +140,57 @@ namespace PSFramework.Configuration
         private bool _PolicyEnforced = false;
 
         /// <summary>
+        /// Enabling this causes export to json to use simple json serialization for data transmission.
+        /// This is suitable for simple data that is not sensitive to conversion losses.
+        /// Simple export leads to exports more easily readable to the human eye.
+        /// </summary>
+        public bool SimpleExport = false;
+
+        /// <summary>
+        /// Whether this setting should be exported to a module specific file when exporting to json by modulename.
+        /// </summary>
+        public bool ModuleExport = false;
+
+        /// <summary>
         /// The finalized value to put into the registry value when using policy to set this setting.
+        /// Deprecated property.
         /// </summary>
         public string RegistryData
         {
             get
             {
-                switch (Type)
-                {
-                    case "System.Object[]":
-                        List<string> items = new List<string>();
-
-                        foreach (object item in (object[])Value)
-                        {
-                            string temp = GetRegistryValue(item);
-                            if (temp == "<type not supported>")
-                                return temp;
-                            items.Add(temp);
-                        }
-
-                        return String.Format("array:{0}", String.Join("þþþ", items));
-                    default:
-                        return GetRegistryValue(Value);
-                }
+                return _Value.TypeQualifiedPersistedValue;
             }
+            set { }
         }
 
-        private static string GetRegistryValue(object Item)
+        /// <summary>
+        /// Applies the persisted value to the configuration item.
+        /// This method should only be called by PSFramework internals
+        /// </summary>
+        /// <param name="Type">The type of data being specified</param>
+        /// <param name="ValueString">The value string to register</param>
+        [PsfInternal(Description = "Only intended for use within internal configuration import mechanics. Some are in script, requiring public accessibility.")]
+        public void SetPersistedValue(ConfigurationValueType Type, string ValueString)
         {
-            if (Item == null)
-                return "<type not supported>";
+            if (_PolicyEnforced)
+                return;
 
-            switch (Item.GetType().FullName)
+            if (Type == ConfigurationValueType.Unknown)
             {
-                case "System.Boolean":
-                    if ((bool)Item)
-                        return "bool:true";
-                    return "bool:false";
-                case "System.Int16":
-                    return String.Format("int:{0}", Item);
-                case "System.Int32":
-                    return String.Format("int:{0}", Item);
-                case "System.Int64":
-                    return String.Format("long:{0}", Item);
-                case "System.UInt16":
-                    return String.Format("int:{0}", Item);
-                case "System.UInt32":
-                    return String.Format("long:{0}", Item);
-                case "System.UInt64":
-                    return String.Format("long:{0}", Item);
-                case "System.Double":
-                    return String.Format("double:{0}", Item);
-                case "System.String":
-                    return String.Format("string:{0}", Item);
-                case "System.TimeSpan":
-                    return String.Format("timespan:{0}", ((TimeSpan)Item).Ticks);
-                case "System.DateTime":
-                    return String.Format("datetime:{0}", ((DateTime)Item).Ticks);
-                case "System.ConsoleColor":
-                    return String.Format("consolecolor:{0}", Item);
-                default:
-                    return "<type not supported>";
+                int index = ValueString.IndexOf(':');
+                if (index < 1)
+                    throw new ArgumentException(String.Format("Bad persisted configuration value! Could not find type qualifier on {0}", ValueString));
+                Type = (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), ValueString.Substring(0, index), true);
+                ValueString = ValueString.Substring(index + 1);
+            }
+
+            if (_Value == null)
+                _Value = new ConfigurationValue(ValueString, Type);
+            else
+            {
+                _Value.PersistedType = Type;
+                _Value.PersistedValue = ValueString;
             }
         }
     }

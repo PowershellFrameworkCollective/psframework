@@ -77,10 +77,10 @@
 		
 		switch ("$Scope")
 		{
-			"UserDefault" { $path = "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" }
-			"UserMandatory" { $path = "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" }
-			"SystemDefault" { $path = "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Default" }
-			"SystemMandatory" { $path = "HKLM:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\Config\Enforced" }
+			"UserDefault" { $path = $script:path_RegistryUserDefault }
+			"UserMandatory" { $path = $script:path_RegistryUserEnforced }
+			"SystemDefault" { $path = $script:path_RegistryMachineDefault }
+			"SystemMandatory" { $path = $script:path_RegistryMachineEnforced }
 		}
 		
 		if (Test-Path $path) { $properties = Get-ItemProperty -Path $path }

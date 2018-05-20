@@ -1,5 +1,25 @@
 ﻿# CHANGELOG
 
+## 0.9.18.52 :2018-05-20
+ - New: Add command Import-PSFCmdlet, will register a cmdlet in PowerShell
+ - New: Add automatic config import from Json files
+ - New: Add selective per module config import from json
+ - New: Add simple json export support for improved readability in file
+ - Upd: Export-PSFConfig - Added feature to export all marked module settings to dedicated export paths
+ - Upd: Import-PSFConfig - Added feature to import from dedicated config paths by modulename
+ - Upd: Configuration - Hardened configuration properties enforced by policy against manual changes.
+ - Upd: Rewrote Set-PSFConfig as cmdlet for performance reasons
+ - Upd: Added config persistence support for Hashtable
+ - Upd: Added config persistence support for PSObjects of any kind
+ - Upd: New-PSFLicense - Added `-Description` and `-Parent` parameters to support inner licenses that are used within another product.
+ - Upd: Write-PSFMessage - Disabled entering debugging breakpoints on debug stream messages when specifying the `-Debug` parameter.
+ - Upd: Write-PSFMessage - Added `-Breakpoint` parameter to enter a debugging breakpoint at this location when specifying the `-Debug` parameter.
+ - Upd: Messages: Added option `'PSFramework.Message.Style.Breadcrumbs'`, enabling display of the full command call-tree, rather than just the calling function's name in displayed messages
+ - Upd: Messages: Added option `'PSFramework.Message.Style.Functionname'`, enabling users to remove the function name from displayed messages.
+ - Upd: Messages: Added option `'PSFramework.Message.Style.Timestamp'`, enabling users to remove the timestamp from displayed messages.
+ - Upd: Messages: Messages written to debug will also include line number if displayed on screen.
+ - Upd: Messages: The in-memory message log now includes the full callstack and the username.
+
 ## 0.9.16.44 : 2018-04-22
  - Upd: Add tab completion to Export-PSFConfig.
  - Upd: Import-PSFConfig: Added parameter `-Peek` to allow previewing data.

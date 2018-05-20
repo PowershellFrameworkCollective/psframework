@@ -1,5 +1,5 @@
 ﻿$script:PSModuleRoot = $PSScriptRoot
-$script:PSModuleVersion = "0.9.16.44"
+$script:PSModuleVersion = "0.9.18.52"
 
 function Import-ModuleFile
 {
@@ -13,6 +13,9 @@ function Import-ModuleFile
 	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText($Path))), $null, $null) }
 }
 
+# Declare directory separating character for X-Plat compatibility
+$script:dc = [System.IO.Path]::DirectorySeparatorChar
+
 # Detect whether at some level dotsourcing was enforced
 $script:doDotSource = $false
 if ($psframework_dotsourcemodule) { $script:doDotSource = $true }
@@ -23,25 +26,25 @@ if (($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.OS -like "*Wind
 }
 
 # Execute Preimport actions
-. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\preimport.ps1"
+. Import-ModuleFile -Path "$($PSModuleRoot)$($dc)internal$($dc)scripts$($dc)preimport.ps1"
 
 # Import all internal functions
-foreach ($function in (Get-ChildItem "$PSModuleRoot\internal\functions\*\*.ps1"))
+foreach ($function in (Get-ChildItem "$($PSModuleRoot)$($dc)internal$($dc)functions$($dc)*$($dc)*.ps1"))
 {
 	. Import-ModuleFile -Path $function.FullName
 }
 
 # Import all public functions
-foreach ($function in (Get-ChildItem "$PSModuleRoot\functions\*\*.ps1"))
+foreach ($function in (Get-ChildItem "$($PSModuleRoot)$($dc)functions$($dc)*$($dc)*.ps1"))
 {
 	. Import-ModuleFile -Path $function.FullName
 }
 
 
 # Execute Postimport actions
-. Import-ModuleFile -Path "$PSModuleRoot\internal\scripts\postimport.ps1"
+. Import-ModuleFile -Path "$($PSModuleRoot)$($dc)internal$($dc)scripts$($dc)postimport.ps1"
 
 if ($PSCommandPath -like "*psframework.psm1*")
 {
-	Import-Module "$PSModuleRoot\bin\PSFramework.dll"
+	Import-Module "$($PSModuleRoot)$($dc)bin$($dc)PSFramework.dll"
 }

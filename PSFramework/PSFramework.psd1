@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.16.44'
+	ModuleVersion = '0.9.18.52'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -17,7 +17,7 @@
 	CompanyName = 'PowerShell Framework Collective'
 	
 	# Copyright statement for this module
-	Copyright = '(c) 2017. All rights reserved.'
+	Copyright = '(c) Friedrich Weinmann 2017. All rights reserved.'
 	
 	# Description of the functionality provided by this module
 	Description = 'A module that provides tools for other modules and scripts'
@@ -59,7 +59,7 @@
 	
 	# Modules to import as nested modules of the module specified in
 	# ModuleToProcess
-	NestedModules = @("bin\PSFramework.dll")
+	#NestedModules = @()
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
@@ -79,6 +79,7 @@
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
+		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Install-PSFLoggingProvider',
 		'New-PSFLicense',
@@ -97,7 +98,6 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
-		'Set-PSFConfig',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
@@ -116,7 +116,10 @@
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport = 'Write-PSFMessage' 
+	CmdletsToExport		    = @(
+		'Set-PSFConfig',
+		'Write-PSFMessage'
+	)
 	
 	# Variables to export from this module
 	VariablesToExport = ''

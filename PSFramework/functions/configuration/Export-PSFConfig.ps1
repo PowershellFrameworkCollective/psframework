@@ -7,10 +7,6 @@
 	.DESCRIPTION
 		Exports configuration items to a Json file.
 	
-	.PARAMETER Config
-		The configuration object(s) to export.
-		Returned by Get-PSFConfig.
-	
 	.PARAMETER FullName
 		Select the configuration objects to export by filtering by their full name.
 	
@@ -19,6 +15,22 @@
 	
 	.PARAMETER Name
 		Select the configuration objects to export by filtering by their name.
+	
+	.PARAMETER Config
+		The configuration object(s) to export.
+		Returned by Get-PSFConfig.
+	
+	.PARAMETER ModuleName
+		Exports all configuration pertinent to a module to a predefined path.
+		Exported configuration items include all settings marked as 'ModuleExport' that have been changed from the default value.
+	
+	.PARAMETER ModuleVersion
+		The configuration version of the module-settings to write.
+	
+	.PARAMETER Scope
+		Which predefined path to write module specific settings to.
+		Only file scopes are considered.
+		By default it writes to the suer profile.
 	
 	.PARAMETER OutPath
 		The path (filename included) to export to.
@@ -34,12 +46,12 @@
 	
 	.EXAMPLE
 		PS C:\> Get-PSFConfig | Export-PSFConfig -OutPath '~/export.json'
-	
+		
 		Exports all current settings to json.
 	
 	.EXAMPLE
 		Export-PSFConfig -Module MyModule -OutPath '~/export.json' -SkipUnchanged
-	
+		
 		Exports all settings of the module 'MyModule' that are no longer the original default values to json.
 #>
 	[CmdletBinding(DefaultParameterSetName = 'FullName')]
@@ -60,7 +72,21 @@
 		[PSFramework.Configuration.Config[]]
 		$Config,
 		
-		[Parameter(Position = 2, Mandatory = $true)]
+		[Parameter(ParameterSetName = "ModuleName", Mandatory = $true)]
+		[string]
+		$ModuleName,
+		
+		[Parameter(ParameterSetName = "ModuleName")]
+		[int]
+		$ModuleVersion = 1,
+		
+		[Parameter(ParameterSetName = "ModuleName")]
+		[PSFramework.Configuration.ConfigScope]
+		$Scope = "FileUserShared",
+		
+		[Parameter(Position = 1, Mandatory = $true, ParameterSetName = 'Config')]
+		[Parameter(Position = 1, Mandatory = $true, ParameterSetName = 'FullName')]
+		[Parameter(Position = 2, Mandatory = $true, ParameterSetName = 'Module')]
 		[string]
 		$OutPath,
 		
@@ -74,38 +100,41 @@
 	begin
 	{
 		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		$resultantData = @()
 	}
 	process
 	{
-		if ($Config) { $items = $Config }
-		if ($FullName) { $items = Get-PSFConfig -FullName $FullName }
-		if ($Module) { $items = Get-PSFConfig -Module $Module -Name $Name }
-		
-		foreach ($item in $items)
+		if (-not $ModuleName)
 		{
-			if ($SkipUnchanged -and $item.Unchanged) { continue }
-			
-			if ($item.RegistryData -eq "<type not supported>")
-			{
-				Stop-PSFFunction -Message "Could not export '$($item.FullName)': Data Type not supported" -Tag 'fail','export' -Continue -EnableException $EnableException
-			}
-			
-			$resultantData += [pscustomobject]@{
-				FullName = $item.FullName
-				Type     = $item.RegistryData.SubString(0, $item.RegistryData.IndexOf(":"))
-				Value    = $item.RegistryData.SubString(($item.RegistryData.IndexOf(":") + 1))
-			}
-				
+			if ($Config) { $items = $Config }
+			if ($FullName) { $items = Get-PSFConfig -FullName $FullName }
+			if ($Module) { $items = Get-PSFConfig -Module $Module -Name $Name }
 		}
 	}
 	end
 	{
-		try { $resultantData | ConvertTo-Json | Set-Content -Path $OutPath -Encoding UTF8 -ErrorAction Stop }
-		catch
+		if (-not $ModuleName)
 		{
-			Stop-PSFFunction -Message "Failed to export to file" -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
-			return
+			try { Write-PsfConfigFile -Config $items -Path $OutPath -Replace }
+			catch
+			{
+				Stop-PSFFunction -Message "Failed to export to file" -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
+				return
+			}
+		}
+		else
+		{
+			if ($Scope -band 16)
+			{
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower())-$($ModuleVersion).json")
+			}
+			if ($Scope -band 32)
+			{
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
+			}
+			if ($Scope -band 64)
+			{
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
+			}
 		}
 	}
 }

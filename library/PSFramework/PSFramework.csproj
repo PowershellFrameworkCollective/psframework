@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
@@ -51,10 +52,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SetPSFConfigCommand.cs" />
     <Compile Include="Commands\WritePSFMessageCommand.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigScope.cs" />
     <Compile Include="Configuration\ConfigurationHost.cs" />
+    <Compile Include="Configuration\ConfigurationValue.cs" />
+    <Compile Include="Configuration\ConfigurationValueType.cs" />
     <Compile Include="License\License.cs" />
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
+    <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />

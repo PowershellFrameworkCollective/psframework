@@ -4,6 +4,175 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.SetPSFConfigCommand">
+            <summary>
+            Implements the Set-PSFConfig command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.FullName">
+            <summary>
+            The full name of the setting
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Module">
+            <summary>
+            The name of the module the setting belongs to.
+            Is optional due to just specifying a name is legal, in which case the first name segment becomes the module name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Name">
+            <summary>
+            The name of the setting within a module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Value">
+            <summary>
+            The value to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PersistedValue">
+            <summary>
+            The persisted value to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PersistedType">
+            <summary>
+            The persisted type to apply.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Description">
+            <summary>
+            Add documentation to the setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Validation">
+            <summary>
+            The validation script to use.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Handler">
+            <summary>
+            The handling script to apply when changing the value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Hidden">
+            <summary>
+            Whether the setting should be hidden from casual discovery.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Default">
+            <summary>
+            Whether the setting should be applied only when nothing exists yet.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.Initialize">
+            <summary>
+            Whether this is the configuration initialization call.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.SimpleExport">
+            <summary>
+            Enabling this will cause the module to use friendly json notation on export to file.
+            This may result in loss of data precision, but is more userfriendly.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.ModuleExport">
+            <summary>
+            Whether this setting applies to module scope file export.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.DisableValidation">
+            <summary>
+            Do not apply the validation script when changing values.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.DisableHandler">
+            <summary>
+            Do not run the handler script when changing values.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.PassThru">
+            <summary>
+            Return the changed configuration setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.EnableException">
+            <summary>
+            Enable throwing exceptions.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Config">
+            <summary>
+            The configuration item changed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._KillIt">
+            <summary>
+            Whether execution should be terminated silently.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Initialize">
+            <summary>
+            Whether this is an initialization execution.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Persisted">
+            <summary>
+            Whether persisted values need to be restored.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._Exists">
+            <summary>
+            Whether the setting already exists.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._PolicyEnforced">
+            <summary>
+            The setting to be affected was enforced by policy and cannot be changed by the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameModule">
+            <summary>
+            Processed name of module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameName">
+            <summary>
+            Processed name of setting within module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._NameFull">
+            <summary>
+            Processed full name of setting.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand._ValidationErrorMessage">
+            <summary>
+            The reason validation failed.
+            Filled by ApplyValue.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.BeginProcessing">
+            <summary>
+            Implements the begin action of Set-PSFConfig
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ProcessRecord">
+            <summary>
+            Implements the process action of Set-PSFConfig
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyValue(System.Object)">
+            <summary>
+            Applies a value to a configuration item, invoking validation and handler scriptblocks.
+            </summary>
+            <param name="Value">The value to apply</param>
+        </member>
+        <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyCommonSettings">
+            <summary>
+            Abstracts out 
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.WritePSFMessageCommand">
             <summary>
             Cmdlet performing message handling and logging
@@ -99,6 +268,11 @@
             This is less user friendly, but allows catching exceptions in calling scripts.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.Breakpoint">
+            <summary>
+            Enables breakpoints on the current message. By default, setting '-Debug' will NOT cause an interrupt on the current position.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._timestamp">
             <summary>
             The start time of the cmdlet
@@ -159,6 +333,11 @@
             List of tags to process
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand._isDebug">
+            <summary>
+            Whether debug mode is enabled
+            </summary>
+        </member>
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._errorQualifiedMessage">
             <summary>
             The input message with the error content included if desired
@@ -177,6 +356,16 @@
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._MessageHost">
             <summary>
             The final message to use for host messages (write using Write-PSFHostColor)
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.WritePSFMessageCommand._BreadCrumbsString">
+            <summary>
+            Provide breadcrumb queue of the callstack
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.WritePSFMessageCommand._BreadCrumbsStringColored">
+            <summary>
+            Provide a breadcrumb queue of the callstack in color tags
             </summary>
         </member>
         <member name="M:PSFramework.Commands.WritePSFMessageCommand.BeginProcessing">
@@ -275,6 +464,11 @@
             The value stored in the configuration element
             </summary>
         </member>
+        <member name="P:PSFramework.Configuration.Config.SafeValue">
+            <summary>
+            The value stored in the configuration element, but without deserializing objects.
+            </summary>
+        </member>
         <member name="P:PSFramework.Configuration.Config.Unchanged">
             <summary>
             Whether the value of the configuration setting has been changed since its initialization.
@@ -295,7 +489,7 @@
             Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
             </summary>
         </member>
-        <member name="F:PSFramework.Configuration.Config.Initialized">
+        <member name="P:PSFramework.Configuration.Config.Initialized">
             <summary>
             Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
             </summary>
@@ -307,13 +501,34 @@
         </member>
         <member name="P:PSFramework.Configuration.Config.PolicyEnforced">
             <summary>
-            Whether this setting was set by policy and forbids deletion.
+            Whether this setting was set by policy and forbids changes to the configuration.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.SimpleExport">
+            <summary>
+            Enabling this causes export to json to use simple json serialization for data transmission.
+            This is suitable for simple data that is not sensitive to conversion losses.
+            Simple export leads to exports more easily readable to the human eye.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.ModuleExport">
+            <summary>
+            Whether this setting should be exported to a module specific file when exporting to json by modulename.
             </summary>
         </member>
         <member name="P:PSFramework.Configuration.Config.RegistryData">
             <summary>
             The finalized value to put into the registry value when using policy to set this setting.
+            Deprecated property.
             </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.Config.SetPersistedValue(PSFramework.Configuration.ConfigurationValueType,System.String)">
+            <summary>
+            Applies the persisted value to the configuration item.
+            This method should only be called by PSFramework internals
+            </summary>
+            <param name="Type">The type of data being specified</param>
+            <param name="ValueString">The value string to register</param>
         </member>
         <member name="T:PSFramework.Configuration.ConfigScope">
             <summary>
@@ -340,6 +555,21 @@
             The configuration is enforced for all users on the system.
             </summary>
         </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileUserLocal">
+            <summary>
+            The configuration is stored as Json in the per user local machine config directory.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileUserShared">
+            <summary>
+            The configuration is stored as Json in the per user config directory shared across machines.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileSystem">
+            <summary>
+            The configuration is stored as Json in the local computer config directory.
+            </summary>
+        </member>
         <member name="T:PSFramework.Configuration.ConfigurationHost">
             <summary>
             Host class providing static configuration settings that are constant across all runspaces within the process.
@@ -358,6 +588,171 @@
         <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
             <summary>
             Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertToPersistedValue(System.Object)">
+            <summary>
+            Converts any object into its persisted state.
+            </summary>
+            <param name="Item">The item to convert.</param>
+            <returns>Its persisted state representation.</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String,PSFramework.Configuration.ConfigurationValueType)">
+            <summary>
+            Converts a persisted value back to its original data type
+            </summary>
+            <param name="PersistedValue">The value in its persisted state</param>
+            <param name="Type">The type of the persisted value</param>
+            <returns>The natural state of the value originally persisted</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String)">
+            <summary>
+            Converts a persisted value back to its original data type
+            </summary>
+            <param name="TypeQualifiedPersistedValue">The value in its persisted state, with a prefixed type identifier.</param>
+            <returns>The natural state of the value originally persisted</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.Utf8ToBase64(System.String)">
+            <summary>
+            Converts a plain text into a base64 string
+            </summary>
+            <param name="Value">The string to convert</param>
+            <returns>base64 encoded version of string.</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.Base64ToUtf8(System.String)">
+            <summary>
+            Converts a base64 encoded string into plain text
+            </summary>
+            <param name="Value">The string to convert</param>
+            <returns>Plain Text string</returns>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationValue">
+            <summary>
+            Contains all information about a configuration item's value
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.Value">
+            <summary>
+            The runtime value of the setting.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.PersistedValue">
+            <summary>
+            The value in its persisted state
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue.PersistedType">
+            <summary>
+            The kind of 
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.TypeQualifiedPersistedValue">
+            <summary>
+            The type qualified representation of the persisted value
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.SafeValue">
+            <summary>
+            Ensures wanton Get-PSFConfig will not deserialize persisted objects that might have registered deserialization in their module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue._Value">
+            <summary>
+            Internal storage for the Value property
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue._PersistedValue">
+            <summary>
+            Internal storage for the PersistedValue property
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.ToString">
+            <summary>
+            The string representation of its actual value
+            </summary>
+            <returns>Returns the type-qualified string representation of its value</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.String,PSFramework.Configuration.ConfigurationValueType)">
+            <summary>
+            Creates a value object from persisted data
+            </summary>
+            <param name="PersistedValue">The value that will be persisted</param>
+            <param name="PersistedType">The type of the value to be persisted</param>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.Object)">
+            <summary>
+            Creates a value object from runtime data
+            </summary>
+            <param name="Value">The value that will be stored</param>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationValueType">
+            <summary>
+            The data types supported by the configuration system.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Unknown">
+            <summary>
+            An unknown type, should be prevented
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Null">
+            <summary>
+            The value is as empty as the void.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Bool">
+            <summary>
+            The value is of a true/false kind
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Int">
+            <summary>
+            The value is a regular integer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Double">
+            <summary>
+            The value is a double numeric value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Long">
+            <summary>
+            The value is a long type
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.String">
+            <summary>
+            The value is a common string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Timespan">
+            <summary>
+            The value is a regular timespan
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Datetime">
+            <summary>
+            The value is a plain datetime
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.ConsoleColor">
+            <summary>
+            The value is a fancy console color
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Array">
+            <summary>
+            The value is an array full of booty
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Hashtable">
+            <summary>
+            The value is a hashtable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Object">
+            <summary>
+            The value is something indeterminate, but possibly complex
             </summary>
         </member>
         <member name="T:PSFramework.License.License">
@@ -408,6 +803,16 @@
         <member name="F:PSFramework.License.License.LicenseText">
             <summary>
             The full license text for the pleasure of the reader.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.Description">
+            <summary>
+            Add some desription to how it is used.
+            </summary>
+        </member>
+        <member name="F:PSFramework.License.License.Parent">
+            <summary>
+            A parent license to indicate a product used within a product.
             </summary>
         </member>
         <member name="T:PSFramework.License.LicenseHost">
@@ -696,7 +1101,17 @@
         </member>
         <member name="F:PSFramework.Message.LogEntry.Line">
             <summary>
-            The line on which the message was written
+            The line on which the message was written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.CallStack">
+            <summary>
+            The callstack when the message was written.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.Username">
+            <summary>
+            The user that did the writing.
             </summary>
         </member>
         <member name="M:PSFramework.Message.LogEntry.#ctor">
@@ -704,7 +1119,7 @@
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String)">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -718,8 +1133,10 @@
             <param name="Runspace">The ID of the runspace that wrote the message.</param>
             <param name="ComputerName">The computer the message was generated on.</param>
             <param name="TargetObject">The object this message was all about.</param>
-            <param name="File">The file of the code that wrote the message</param>
-            <param name="Line">The line on which the message was written</param>
+            <param name="File">The file of the code that wrote the message.</param>
+            <param name="Line">The line on which the message was written.</param>
+            <param name="CallStack">The callstack that triggered the write.</param>
+            <param name="Username">The user responsible for running the code that is writing the message.</param>
         </member>
         <member name="T:PSFramework.Message.LogEntryType">
             <summary>
@@ -851,7 +1268,7 @@
             <param name="Runspace">The runspace the message was written from</param>
             <param name="ComputerName">The computer the error was written on</param>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -867,6 +1284,8 @@
             <param name="File">The file from which the message was written</param>
             <param name="Line">The line on which the message was written</param>
             <param name="TargetObject">The object associated with a given message.</param>
+            <param name="CallStack">The callstack at the moment the message was written.</param>
+            <param name="Username">The name of the user under which the code being executed</param>
             <returns>The entry that is being written</returns>
         </member>
         <member name="T:PSFramework.Message.MessageEventSubscription">
@@ -1064,6 +1483,21 @@
         <member name="F:PSFramework.Message.MessageHost.DisableVerbosity">
             <summary>
             Globally override all verbosity
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageTimestamp">
+            <summary>
+            Include message timestamps in verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageDisplayCommand">
+            <summary>
+            Include the message display command in the verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageBreadcrumbs">
+            <summary>
+            Include the entire callstack in the verbose message output
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">
@@ -1997,6 +2431,17 @@
             Whether the current console is in unattended mode
             </summary>
         </member>
+        <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
+            <summary>
+            Attribute designating something as reserved as PSFramework-internal.
+            Changes to any component marked thus is not considered a breaking change.
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.PsfInternalAttribute.Description">
+            <summary>
+            Allows specifying a description or comments along with the attribute.
+            </summary>
+        </member>
         <member name="T:PSFramework.ResultCache.ResultCache">
             <summary>
             The class containing all things related to the result cache functionality.
@@ -2548,6 +2993,20 @@
             also added to the returned set of characters.
             </summary>
             <param name="charList">Character list string</param>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.CompressString(System.String)">
+            <summary>
+            Compress string using default zip algorithms
+            </summary>
+            <param name="String">The string to compress</param>
+            <returns>Returns a compressed string.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.ExpandString(System.String)">
+            <summary>
+            Expand a string using default zig algorithms
+            </summary>
+            <param name="CompressedString">The compressed string to expand</param>
+            <returns>Returns an expanded string.</returns>
         </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
             <summary>

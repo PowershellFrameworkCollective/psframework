@@ -75,6 +75,21 @@ namespace PSFramework.Message
         /// Globally override all verbosity
         /// </summary>
         public static bool DisableVerbosity = false;
+
+        /// <summary>
+        /// Include message timestamps in verbose message output
+        /// </summary>
+        public static bool EnableMessageTimestamp = true;
+
+        /// <summary>
+        /// Include the message display command in the verbose message output
+        /// </summary>
+        public static bool EnableMessageDisplayCommand = true;
+
+        /// <summary>
+        /// Include the entire callstack in the verbose message output
+        /// </summary>
+        public static bool EnableMessageBreadcrumbs = false;
         #endregion Defines
 
         #region Transformations
