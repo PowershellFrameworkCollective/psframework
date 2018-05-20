@@ -119,6 +119,8 @@ namespace PSFramework.Message
             this.TargetObject = TargetObject;
             this.File = File;
             this.Line = Line;
+            this.CallStack = CallStack;
+            this.Username = Username;
         }
     }
 }
