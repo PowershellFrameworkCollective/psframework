@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## 0.9.18.52 :2018-05-??
+## 0.9.18.52 :2018-05-20
  - New: Add command Import-PSFCmdlet, will register a cmdlet in PowerShell
  - New: Add automatic config import from Json files
  - New: Add selective per module config import from json
