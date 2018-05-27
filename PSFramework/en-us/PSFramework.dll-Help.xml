@@ -558,6 +558,7 @@ By default, Write-PSFMessage will never interrupt execution when -Debug is speci
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.38-->
 	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--TAG: HASCOMMONPARAMETERS-->
 		<!--Command-->
 		<command:details>
 			<command:name>Set-PSFConfig</command:name>
@@ -1387,6 +1388,18 @@ This may result in loss of data precision, but makes it easier to edit settings 
 				<dev:defaultValue />
 			</command:parameter>
 		</command:parameters>
+		<command:returnValues>
+			<!--Outputs-->
+			<command:returnValue>
+				<dev:type>
+					<maml:name>PSFramework.Configuration.Config</maml:name>
+					<maml:uri></maml:uri>
+				</dev:type>
+				<maml:description>
+					<maml:para />
+				</maml:description>
+			</command:returnValue>
+		</command:returnValues>
 		<command:examples>
 			<!--Examples-->
 			<command:example>
@@ -1445,7 +1458,156 @@ This is only set, if the setting does not exist yet. If it does, this command wi
 			<!--Links-->
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Set-PSFConfig.html</maml:uri>
 			</maml:navigationLink>
+		</maml:relatedLinks>
+	</command:command>
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--TAG: HASCOMMONPARAMETERS-->
+		<!--Command-->
+		<command:details>
+			<command:name>Remove-PSFNull</command:name>
+			<maml:description>
+				<maml:para>Filters out null objects.</maml:para>
+			</maml:description>
+			<maml:copyright>
+				<maml:para />
+			</maml:copyright>
+			<command:verb>Remove</command:verb>
+			<command:noun>PSFNull</command:noun>
+			<dev:version />
+		</command:details>
+		<maml:description>
+			<maml:para>This cmdlet can be used to filter out $null objects, empty collections and empty strings from the pipeline.</maml:para>
+		</maml:description>
+		<command:syntax>
+			<!--Parameter Sets-->
+			<command:syntaxItem>
+				<maml:name>Remove-PSFNull</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>InputObject</maml:name>
+					<maml:description>
+						<maml:para>The items to filter</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+					<dev:type>
+						<maml:name>Object</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>AllowEmptyCollections</maml:name>
+					<maml:description>
+						<maml:para>By default, empty collections are dropped from the output.
+Using this switch, they are passe along.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>AllowEmptyStrings</maml:name>
+					<maml:description>
+						<maml:para>By default, empty strings are discarded.
+Setting this switch causes them to be passed through instead.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Enumerate</maml:name>
+					<maml:description>
+						<maml:para>By default, output is not enumerated (Lists are sent along the pipeline as Lists, not individual items).
+If Remove-PSFNull should enumerate output after all, set this switch.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+		</command:syntax>
+		<command:parameters>
+			<!--All Parameters-->
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>InputObject</maml:name>
+				<maml:description>
+					<maml:para>The items to filter</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+				<dev:type>
+					<maml:name>Object</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>AllowEmptyCollections</maml:name>
+				<maml:description>
+					<maml:para>By default, empty collections are dropped from the output.
+Using this switch, they are passe along.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>AllowEmptyStrings</maml:name>
+				<maml:description>
+					<maml:para>By default, empty strings are discarded.
+Setting this switch causes them to be passed through instead.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Enumerate</maml:name>
+				<maml:description>
+					<maml:para>By default, output is not enumerated (Lists are sent along the pipeline as Lists, not individual items).
+If Remove-PSFNull should enumerate output after all, set this switch.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+		</command:parameters>
+		<command:examples>
+			<!--Examples-->
+			<command:example>
+				<maml:title>Example 1: Sweeping the Pipeline</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>C:\PS&gt; Get-Something | Remove-PSFNull | Do-Something</dev:code>
+				<dev:remarks>
+					<maml:para>In this example, Remove-PSFNull cleans up the pipeline from null-equivalent objects before passing output along to Do-Something</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<maml:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Online Documentation:</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Remove-PSFNull.html</maml:uri>
+			</maml:navigationLink>
+			<!--Links-->
 		</maml:relatedLinks>
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
