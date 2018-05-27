@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.18.52'
+	ModuleVersion = '0.9.19.55'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -108,6 +108,7 @@
 		'Stop-PSFRunspace',
 		'Test-PSFFunctionInterrupt',
 		'Test-PSFParameterBinding',
+		'Test-PSFPowerShell',
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
@@ -117,7 +118,9 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport		    = @(
+		'Remove-PSFNull',
 		'Set-PSFConfig',
+		'Test-PSFShouldProcess',
 		'Write-PSFMessage'
 	)
 	

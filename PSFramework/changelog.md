@@ -1,6 +1,11 @@
 ﻿# CHANGELOG
 
-## 0.9.18.52 :2018-05-20
+## 0.9.19.55 : 2018-05-27
+ - New: Add command Remove-PSFNull, will clean the pipeline from unwanted empty objects.
+ - New: Add command Test-PSFShouldProcess, implementing the `-Confirm` and `-WhatIf` parameters for a command. Useful to mock the test and make it more readable.
+ - New: Add command Test-PSFPowerShell, allowing simple powershell environment validation and mocking.
+
+## 0.9.18.52 : 2018-05-20
  - New: Add command Import-PSFCmdlet, will register a cmdlet in PowerShell
  - New: Add automatic config import from Json files
  - New: Add selective per module config import from json

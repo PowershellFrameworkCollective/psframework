@@ -38,6 +38,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -47,18 +50,21 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\RemovePSFNullCommand.cs" />
     <Compile Include="Commands\SetPSFConfigCommand.cs" />
+    <Compile Include="Commands\TestPSFShouldProcessCommand.cs" />
     <Compile Include="Commands\WritePSFMessageCommand.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigScope.cs" />
     <Compile Include="Configuration\ConfigurationHost.cs" />
     <Compile Include="Configuration\ConfigurationValue.cs" />
     <Compile Include="Configuration\ConfigurationValueType.cs" />
+    <Compile Include="FlowControl\OperatingSystem.cs" />
+    <Compile Include="FlowControl\PSEdition.cs" />
     <Compile Include="License\License.cs" />
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />

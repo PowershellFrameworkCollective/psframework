@@ -4,6 +4,36 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.RemovePSFNullCommand">
+            <summary>
+            Implements the Remove-PSFNull command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.InputObject">
+            <summary>
+            The objects to process
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.AllowEmptyCollections">
+            <summary>
+            Whether empty collections should be passed along
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.AllowEmptyStrings">
+            <summary>
+            Whether empty strings should be legal
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.Enumerate">
+            <summary>
+            Whether the output should be enumerated
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.RemovePSFNullCommand.ProcessRecord">
+            <summary>
+            Process items as they are passed to the cmdlet
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.SetPSFConfigCommand">
             <summary>
             Implements the Set-PSFConfig command
@@ -171,6 +201,31 @@
         <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyCommonSettings">
             <summary>
             Abstracts out 
+            </summary>
+        </member>
+        <member name="T:PSFramework.Commands.TestPSFShouldProcessCommand">
+            <summary>
+            Implements the Test-PSFShouldProcess command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.PSCmdlet">
+            <summary>
+            The PSCmdlet object of the calling command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Target">
+            <summary>
+            The target object to process
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Action">
+            <summary>
+            Description of the action to perform
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.TestPSFShouldProcessCommand.ProcessRecord">
+            <summary>
+            Perform the query
             </summary>
         </member>
         <member name="T:PSFramework.Commands.WritePSFMessageCommand">
@@ -753,6 +808,41 @@
         <member name="F:PSFramework.Configuration.ConfigurationValueType.Object">
             <summary>
             The value is something indeterminate, but possibly complex
+            </summary>
+        </member>
+        <member name="T:PSFramework.FlowControl.OperatingSystem">
+            <summary>
+            The various operating systems PowerShell can run on
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Windows">
+            <summary>
+            Common windows OS
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Linux">
+            <summary>
+            Any Linux distribution
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.MacOS">
+            <summary>
+            Any Mac Operating System
+            </summary>
+        </member>
+        <member name="T:PSFramework.FlowControl.PSEdition">
+            <summary>
+            The powershell edition
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Desktop">
+            <summary>
+            The desktop edition of PowerShell - all editions 5.1 or below
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Core">
+            <summary>
+            .NET core based editions of PowerShell
             </summary>
         </member>
         <member name="T:PSFramework.License.License">

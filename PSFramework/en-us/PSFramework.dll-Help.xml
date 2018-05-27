@@ -558,6 +558,7 @@ By default, Write-PSFMessage will never interrupt execution when -Debug is speci
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.38-->
 	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--TAG: HASCOMMONPARAMETERS-->
 		<!--Command-->
 		<command:details>
 			<command:name>Set-PSFConfig</command:name>
@@ -1387,6 +1388,18 @@ This may result in loss of data precision, but makes it easier to edit settings 
 				<dev:defaultValue />
 			</command:parameter>
 		</command:parameters>
+		<command:returnValues>
+			<!--Outputs-->
+			<command:returnValue>
+				<dev:type>
+					<maml:name>PSFramework.Configuration.Config</maml:name>
+					<maml:uri></maml:uri>
+				</dev:type>
+				<maml:description>
+					<maml:para />
+				</maml:description>
+			</command:returnValue>
+		</command:returnValues>
 		<command:examples>
 			<!--Examples-->
 			<command:example>
@@ -1445,7 +1458,282 @@ This is only set, if the setting does not exist yet. If it does, this command wi
 			<!--Links-->
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Set-PSFConfig.html</maml:uri>
 			</maml:navigationLink>
+		</maml:relatedLinks>
+	</command:command>
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--TAG: HASCOMMONPARAMETERS-->
+		<!--Command-->
+		<command:details>
+			<command:name>Remove-PSFNull</command:name>
+			<maml:description>
+				<maml:para>Filters out null objects.</maml:para>
+			</maml:description>
+			<maml:copyright>
+				<maml:para />
+			</maml:copyright>
+			<command:verb>Remove</command:verb>
+			<command:noun>PSFNull</command:noun>
+			<dev:version />
+		</command:details>
+		<maml:description>
+			<maml:para>This cmdlet can be used to filter out $null objects, empty collections and empty strings from the pipeline.</maml:para>
+		</maml:description>
+		<command:syntax>
+			<!--Parameter Sets-->
+			<command:syntaxItem>
+				<maml:name>Remove-PSFNull</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>InputObject</maml:name>
+					<maml:description>
+						<maml:para>The items to filter</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+					<dev:type>
+						<maml:name>Object</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>AllowEmptyCollections</maml:name>
+					<maml:description>
+						<maml:para>By default, empty collections are dropped from the output.
+Using this switch, they are passe along.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>AllowEmptyStrings</maml:name>
+					<maml:description>
+						<maml:para>By default, empty strings are discarded.
+Setting this switch causes them to be passed through instead.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Enumerate</maml:name>
+					<maml:description>
+						<maml:para>By default, output is not enumerated (Lists are sent along the pipeline as Lists, not individual items).
+If Remove-PSFNull should enumerate output after all, set this switch.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name>SwitchParameter</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+		</command:syntax>
+		<command:parameters>
+			<!--All Parameters-->
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>InputObject</maml:name>
+				<maml:description>
+					<maml:para>The items to filter</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+				<dev:type>
+					<maml:name>Object</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>AllowEmptyCollections</maml:name>
+				<maml:description>
+					<maml:para>By default, empty collections are dropped from the output.
+Using this switch, they are passe along.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>AllowEmptyStrings</maml:name>
+				<maml:description>
+					<maml:para>By default, empty strings are discarded.
+Setting this switch causes them to be passed through instead.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Enumerate</maml:name>
+				<maml:description>
+					<maml:para>By default, output is not enumerated (Lists are sent along the pipeline as Lists, not individual items).
+If Remove-PSFNull should enumerate output after all, set this switch.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+				<dev:type>
+					<maml:name>SwitchParameter</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+		</command:parameters>
+		<command:examples>
+			<!--Examples-->
+			<command:example>
+				<maml:title>Example 1: Sweeping the Pipeline</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>C:\PS&gt; Get-Something | Remove-PSFNull | Do-Something</dev:code>
+				<dev:remarks>
+					<maml:para>In this example, Remove-PSFNull cleans up the pipeline from null-equivalent objects before passing output along to Do-Something</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<maml:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Online Documentation:</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Remove-PSFNull.html</maml:uri>
+			</maml:navigationLink>
+			<!--Links-->
+		</maml:relatedLinks>
+	</command:command>
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--Command-->
+		<command:details>
+			<command:name>Test-PSFShouldProcess</command:name>
+			<maml:description>
+				<maml:para>Implements the shouldprocess question.</maml:para>
+			</maml:description>
+			<maml:copyright>
+				<maml:para />
+			</maml:copyright>
+			<command:verb>Test</command:verb>
+			<command:noun>PSFShouldProcess</command:noun>
+			<dev:version />
+		</command:details>
+		<maml:description>
+			<maml:para>This command can be used in other commands to implement the ShouldProcess question asked if using the command requires confirmation.
+This replaces / wraps the traditional ShouldProcess call, makes it easier to read in script and allows mocking it.</maml:para>
+		</maml:description>
+		<command:syntax>
+			<!--Parameter Sets-->
+			<command:syntaxItem parametersetname="Default">
+				<!--NAME: Default-->
+				<maml:name>Test-PSFShouldProcess</maml:name>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>PSCmdlet</maml:name>
+					<maml:description>
+						<maml:para>The $PSCmdlet variable of the calling function.
+Used to ensure the actual prompt logic as intended is being used.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.Management.Automation.PSCmdlet</command:parameterValue>
+					<dev:type>
+						<maml:name>System.Management.Automation.PSCmdlet</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Target</maml:name>
+					<maml:description>
+						<maml:para>The target that is being processed.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Action</maml:name>
+					<maml:description>
+						<maml:para>The action that will be performed on the target</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+		</command:syntax>
+		<command:parameters>
+			<!--All Parameters-->
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>PSCmdlet</maml:name>
+				<maml:description>
+					<maml:para>The $PSCmdlet variable of the calling function.
+Used to ensure the actual prompt logic as intended is being used.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.Management.Automation.PSCmdlet</command:parameterValue>
+				<dev:type>
+					<maml:name>System.Management.Automation.PSCmdlet</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Target</maml:name>
+				<maml:description>
+					<maml:para>The target that is being processed.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+				<dev:type>
+					<maml:name>System.String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Action</maml:name>
+				<maml:description>
+					<maml:para>The action that will be performed on the target</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+				<dev:type>
+					<maml:name>System.String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+		</command:parameters>
+		<command:examples>
+			<!--Examples-->
+			<command:example>
+				<maml:title>Example 1: Basic Usage</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item -Action "Performing some arbitrary action") {
+
+}</dev:code>
+				<dev:remarks>
+					<maml:para>This will test whether the user should be prompted for confirmation, will do so if necessary and report back the results.</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<maml:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Online Documentation</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Test-PSFShouldProcess.html</maml:uri>
+			</maml:navigationLink>
+			<!--Links-->
 		</maml:relatedLinks>
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->

@@ -1,5 +1,5 @@
-﻿Import-PSFCmdlet -Name Write-PSFMessage -Type ([PSFramework.Commands.WritePSFMessageCommand]) -HelpFile "$($PSModuleRoot)$($dc)en-us$($dc)PSFramework.dll-Help.xml" -Module $ExecutionContext.SessionState.Module
-Import-PSFCmdlet -Name Set-PSFConfig -Type ([PSFramework.Commands.SetPSFConfigCommand]) -HelpFile "$($PSModuleRoot)$($dc)en-us$($dc)PSFramework.dll-Help.xml" -Module $ExecutionContext.SessionState.Module
+﻿# Load the cmdlets
+. Import-ModuleFile -Path "$($PSModuleRoot)$($dc)internal$($dc)scripts$($dc)cmdlets.ps1"
 
 # Initialize the configurations
 foreach ($file in (Get-ChildItem -Path "$($PSModuleRoot)$($dc)internal$($dc)configurationvalidation$($dc)*.ps1"))
