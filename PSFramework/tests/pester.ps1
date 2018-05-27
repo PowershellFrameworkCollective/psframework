@@ -40,7 +40,7 @@ foreach ($file in (Get-ChildItem "$PSScriptRoot\general" -Filter "*.Tests.ps1"))
 }
 
 Write-PSFMessage -Level Important -Message "Proceeding with individual tests"
-foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File -Filter "*Tests..ps1"))
+foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File -Filter "*Tests.ps1"))
 {
 	Write-PSFMessage -Level Significant -Message "  Executing $($file.Name)"
 	$results = Invoke-Pester -Script $file.FullName -Show None -PassThru
