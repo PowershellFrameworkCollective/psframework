@@ -117,6 +117,7 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport		    = @(
+		'Remove-PSFNull',
 		'Set-PSFConfig',
 		'Write-PSFMessage'
 	)

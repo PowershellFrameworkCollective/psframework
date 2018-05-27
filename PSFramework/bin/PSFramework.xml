@@ -4,6 +4,36 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.RemovePSFNullCommand">
+            <summary>
+            Implements the Remove-PSFNull command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.InputObject">
+            <summary>
+            The objects to process
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.AllowEmptyCollections">
+            <summary>
+            Whether empty collections should be passed along
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.AllowEmptyStrings">
+            <summary>
+            Whether empty strings should be legal
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.RemovePSFNullCommand.Enumerate">
+            <summary>
+            Whether the output should be enumerated
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.RemovePSFNullCommand.ProcessRecord">
+            <summary>
+            Process items as they are passed to the cmdlet
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.SetPSFConfigCommand">
             <summary>
             Implements the Set-PSFConfig command
