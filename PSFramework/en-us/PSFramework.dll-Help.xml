@@ -1611,4 +1611,130 @@ If Remove-PSFNull should enumerate output after all, set this switch.</maml:para
 		</maml:relatedLinks>
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--Command-->
+		<command:details>
+			<command:name>Test-PSFShouldProcess</command:name>
+			<maml:description>
+				<maml:para>Implements the shouldprocess question.</maml:para>
+			</maml:description>
+			<maml:copyright>
+				<maml:para />
+			</maml:copyright>
+			<command:verb>Test</command:verb>
+			<command:noun>PSFShouldProcess</command:noun>
+			<dev:version />
+		</command:details>
+		<maml:description>
+			<maml:para>This command can be used in other commands to implement the ShouldProcess question asked if using the command requires confirmation.
+This replaces / wraps the traditional ShouldProcess call, makes it easier to read in script and allows mocking it.</maml:para>
+		</maml:description>
+		<command:syntax>
+			<!--Parameter Sets-->
+			<command:syntaxItem parametersetname="Default">
+				<!--NAME: Default-->
+				<maml:name>Test-PSFShouldProcess</maml:name>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>PSCmdlet</maml:name>
+					<maml:description>
+						<maml:para>The $PSCmdlet variable of the calling function.
+Used to ensure the actual prompt logic as intended is being used.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.Management.Automation.PSCmdlet</command:parameterValue>
+					<dev:type>
+						<maml:name>System.Management.Automation.PSCmdlet</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Target</maml:name>
+					<maml:description>
+						<maml:para>The target that is being processed.</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Action</maml:name>
+					<maml:description>
+						<maml:para>The action that will be performed on the target</maml:para>
+					</maml:description>
+					<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+					<dev:type>
+						<maml:name>System.String</maml:name>
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+		</command:syntax>
+		<command:parameters>
+			<!--All Parameters-->
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>PSCmdlet</maml:name>
+				<maml:description>
+					<maml:para>The $PSCmdlet variable of the calling function.
+Used to ensure the actual prompt logic as intended is being used.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.Management.Automation.PSCmdlet</command:parameterValue>
+				<dev:type>
+					<maml:name>System.Management.Automation.PSCmdlet</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Target</maml:name>
+				<maml:description>
+					<maml:para>The target that is being processed.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+				<dev:type>
+					<maml:name>System.String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="true" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Action</maml:name>
+				<maml:description>
+					<maml:para>The action that will be performed on the target</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">System.String</command:parameterValue>
+				<dev:type>
+					<maml:name>System.String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+		</command:parameters>
+		<command:examples>
+			<!--Examples-->
+			<command:example>
+				<maml:title>Example 1: Basic Usage</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item -Action "Performing some arbitrary action") {
+
+}</dev:code>
+				<dev:remarks>
+					<maml:para>This will test whether the user should be prompted for confirmation, will do so if necessary and report back the results.</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<maml:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Online Documentation</maml:linkText>
+				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Test-PSFShouldProcess.html</maml:uri>
+			</maml:navigationLink>
+			<!--Links-->
+		</maml:relatedLinks>
+	</command:command>
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
 </helpItems>

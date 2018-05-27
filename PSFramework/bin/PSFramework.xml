@@ -203,6 +203,31 @@
             Abstracts out 
             </summary>
         </member>
+        <member name="T:PSFramework.Commands.TestPSFShouldProcessCommand">
+            <summary>
+            Implements the Test-PSFShouldProcess command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.PSCmdlet">
+            <summary>
+            The PSCmdlet object of the calling command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Target">
+            <summary>
+            The target object to process
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Action">
+            <summary>
+            Description of the action to perform
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.TestPSFShouldProcessCommand.ProcessRecord">
+            <summary>
+            Perform the query
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.WritePSFMessageCommand">
             <summary>
             Cmdlet performing message handling and logging
