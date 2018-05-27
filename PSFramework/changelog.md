@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## X.X.X.X : 2018-05-27
+## 0.9.19.55 : 2018-05-27
  - New: Add command Remove-PSFNull, will clean the pipeline from unwanted empty objects.
  - New: Add command Test-PSFShouldProcess, implementing the `-Confirm` and `-WhatIf` parameters for a command. Useful to mock the test and make it more readable.
  - New: Add command Test-PSFPowerShell, allowing simple powershell environment validation and mocking.
