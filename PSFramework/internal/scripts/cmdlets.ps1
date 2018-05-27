@@ -1,4 +1,4 @@
-<#
+﻿<#
 Registers the cmdlets published by this module.
 Necessary for full hybrid module support.
 #>
