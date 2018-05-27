@@ -63,6 +63,8 @@
     <Compile Include="Configuration\ConfigurationHost.cs" />
     <Compile Include="Configuration\ConfigurationValue.cs" />
     <Compile Include="Configuration\ConfigurationValueType.cs" />
+    <Compile Include="FlowControl\OperatingSystem.cs" />
+    <Compile Include="FlowControl\PSEdition.cs" />
     <Compile Include="License\License.cs" />
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />
