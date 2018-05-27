@@ -810,6 +810,41 @@
             The value is something indeterminate, but possibly complex
             </summary>
         </member>
+        <member name="T:PSFramework.FlowControl.OperatingSystem">
+            <summary>
+            The various operating systems PowerShell can run on
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Windows">
+            <summary>
+            Common windows OS
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Linux">
+            <summary>
+            Any Linux distribution
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.MacOS">
+            <summary>
+            Any Mac Operating System
+            </summary>
+        </member>
+        <member name="T:PSFramework.FlowControl.PSEdition">
+            <summary>
+            The powershell edition
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Desktop">
+            <summary>
+            The desktop edition of PowerShell - all editions 5.1 or below
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Core">
+            <summary>
+            .NET core based editions of PowerShell
+            </summary>
+        </member>
         <member name="T:PSFramework.License.License">
             <summary>
             Contains license information for a single product

@@ -108,6 +108,7 @@
 		'Stop-PSFRunspace',
 		'Test-PSFFunctionInterrupt',
 		'Test-PSFParameterBinding',
+		'Test-PSFPowerShell',
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
