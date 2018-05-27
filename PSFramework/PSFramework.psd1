@@ -119,6 +119,7 @@
 	CmdletsToExport		    = @(
 		'Remove-PSFNull',
 		'Set-PSFConfig',
+		'Test-PSFShouldProcess',
 		'Write-PSFMessage'
 	)
 	

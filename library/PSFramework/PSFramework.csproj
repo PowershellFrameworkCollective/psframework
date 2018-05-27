@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Commands\RemovePSFNullCommand.cs" />
     <Compile Include="Commands\SetPSFConfigCommand.cs" />
+    <Compile Include="Commands\TestPSFShouldProcessCommand.cs" />
     <Compile Include="Commands\WritePSFMessageCommand.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigScope.cs" />
