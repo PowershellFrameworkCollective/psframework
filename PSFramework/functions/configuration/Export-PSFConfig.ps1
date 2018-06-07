@@ -100,12 +100,14 @@
 	begin
 	{
 		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
+		
+		$items = @()
 	}
 	process
 	{
 		if (-not $ModuleName)
 		{
-			if ($Config) { $items = $Config }
+			foreach ($item in $Config) { $items += $item }
 			if ($FullName) { $items = Get-PSFConfig -FullName $FullName }
 			if ($Module) { $items = Get-PSFConfig -Module $Module -Name $Name }
 		}
@@ -114,7 +116,7 @@
 	{
 		if (-not $ModuleName)
 		{
-			try { Write-PsfConfigFile -Config $items -Path $OutPath -Replace }
+			try { Write-PsfConfigFile -Config ($items | Where-Object { -not $SkipUnchanged -or -not $_.Unchanged } ) -Path $OutPath -Replace }
 			catch
 			{
 				Stop-PSFFunction -Message "Failed to export to file" -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
