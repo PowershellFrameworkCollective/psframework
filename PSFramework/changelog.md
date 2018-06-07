@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 0.9.19.57 : 2018-06-08
+ - Fix: Export-PSFConfig fails to accept from pipeline (#134)
+ - Fix: Export-PSFConfig ignores `-SkipUnchanged` parameter (#135)
+
 ## 0.9.19.55 : 2018-05-27
  - New: Add command Remove-PSFNull, will clean the pipeline from unwanted empty objects.
  - New: Add command Test-PSFShouldProcess, implementing the `-Confirm` and `-WhatIf` parameters for a command. Useful to mock the test and make it more readable.
