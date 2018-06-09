@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## 0.9.20.59 : 2018-06-08
+## 0.9.21.61 : 2018-06-09
  - New: Add command Resolve-PSFDefaultParameterValue, allows inheriting targeted default parameter values from the global scope.
  - New: Add command Invoke-PSFCommand, allows invoking commands with convenient parameterization and automatic integrated session management.
  - Fix: Test-PSFPowerShell rename parameter `-PSEdition` to `-Edition` due to PS6 conflict
