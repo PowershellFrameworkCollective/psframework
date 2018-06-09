@@ -27,6 +27,7 @@
 	
 		Returns a hashtable containing all default parameter values in the global scope affecting the command 'Invoke-WebRequest'.
 #>
+	[OutputType([System.Collections.Hashtable])]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
