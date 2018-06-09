@@ -82,6 +82,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Install-PSFLoggingProvider',
+		'Invoke-PSFCommand',
 		'New-PSFLicense',
 		'New-PSFMessageLevelModifier',
 		'New-PSFSupportPackage',

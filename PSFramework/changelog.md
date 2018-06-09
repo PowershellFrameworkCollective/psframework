@@ -1,6 +1,8 @@
 ﻿# CHANGELOG
 
-## 0.9.19.57 : 2018-06-08
+## 0.9.20.59 : 2018-06-08
+ - New: Add command Resolve-PSFDefaultParameterValue, allows inheriting targeted default parameter values from the global scope.
+ - Fix: Test-PSFPowerShell rename parameter `-PSEdition` to `-Edition` due to PS6 conflict
  - Fix: Export-PSFConfig fails to accept from pipeline (#134)
  - Fix: Export-PSFConfig ignores `-SkipUnchanged` parameter (#135)
 

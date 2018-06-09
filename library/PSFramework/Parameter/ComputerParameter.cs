@@ -167,6 +167,17 @@ namespace PSFramework.Parameter
         }
 
         /// <summary>
+        /// Creates a Computer Parameter from a PSSessionInfo object.
+        /// Shouldn't happen in the wild, but still a legal inmput.
+        /// </summary>
+        /// <param name="SessionInfo">The session information object to interpret</param>
+        public ComputerParameter(ComputerManagement.PSSessionInfo SessionInfo)
+            : this(SessionInfo.Session)
+        {
+
+        }
+
+        /// <summary>
         /// Creates a Computer Parameter from a CimSession
         /// </summary>
         /// <param name="Session">The session to create the parameter from</param>
