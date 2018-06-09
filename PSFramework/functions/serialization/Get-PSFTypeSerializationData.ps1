@@ -45,6 +45,7 @@
 	
 		Generates an XML text that can be used to register via Update-TypeData.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]

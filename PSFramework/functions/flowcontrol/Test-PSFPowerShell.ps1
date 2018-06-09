@@ -19,7 +19,7 @@
 	.PARAMETER PSMaxVersion
 		PowerShell most not be runnign on a version higher than this.
 	
-	.PARAMETER PSEdition
+	.PARAMETER Edition
 		PowerShell must be running in the specifioed edition (Core or Desktop)
 	
 	.PARAMETER OperatingSystem
@@ -38,7 +38,7 @@
 		Will return $false, unless the executing powershell version is at least 5.0
 	
 	.EXAMPLE
-		PS C:\> Test-PSFPowerShell -PSEdition Core
+		PS C:\> Test-PSFPowerShell -Edition Core
 	
 		Will return $true, if the current powershell session is a PowerShell core session.
 	
@@ -63,7 +63,7 @@
 		$PSMaxVersion,
 		
 		[PSFramework.FlowControl.PSEdition]
-		$PSEdition,
+		$Edition,
 		
 		[PSFramework.FlowControl.OperatingSystem]
 		[Alias('OS')]
@@ -91,14 +91,14 @@
 		#endregion PS Version Test
 		
 		#region PS Edition Test
-		if ($PSEdition -like "Desktop")
+		if ($Edition -like "Desktop")
 		{
 			if ($PSVersionTable.PSEdition -eq "Core")
 			{
 				return $false
 			}
 		}
-		if ($PSEdition -like "Core")
+		if ($Edition -like "Core")
 		{
 			if ($PSVersionTable.PSEdition -ne "Core")
 			{

@@ -1,5 +1,12 @@
 ﻿# CHANGELOG
 
+## 0.9.21.61 : 2018-06-09
+ - New: Add command Resolve-PSFDefaultParameterValue, allows inheriting targeted default parameter values from the global scope.
+ - New: Add command Invoke-PSFCommand, allows invoking commands with convenient parameterization and automatic integrated session management.
+ - Fix: Test-PSFPowerShell rename parameter `-PSEdition` to `-Edition` due to PS6 conflict
+ - Fix: Export-PSFConfig fails to accept from pipeline (#134)
+ - Fix: Export-PSFConfig ignores `-SkipUnchanged` parameter (#135)
+
 ## 0.9.19.55 : 2018-05-27
  - New: Add command Remove-PSFNull, will clean the pipeline from unwanted empty objects.
  - New: Add command Test-PSFShouldProcess, implementing the `-Confirm` and `-WhatIf` parameters for a command. Useful to mock the test and make it more readable.

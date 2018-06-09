@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.19.55'
+	ModuleVersion = '0.9.21.61'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -82,6 +82,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Install-PSFLoggingProvider',
+		'Invoke-PSFCommand',
 		'New-PSFLicense',
 		'New-PSFMessageLevelModifier',
 		'New-PSFSupportPackage',
@@ -98,6 +99,7 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
+		'Resolve-PSFDefaultParameterValue',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',

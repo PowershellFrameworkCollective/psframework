@@ -44,6 +44,6 @@
 	end
 	{
 		# If we enabled any task, start the runspace again, in case it isn't already running (no effect if it is)
-		Start-PSFRunspace -Name 'psframework.taskengine'
+		if ($didSomething) { Start-PSFRunspace -Name 'psframework.taskengine' }
 	}
 }

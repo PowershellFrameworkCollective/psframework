@@ -484,6 +484,79 @@
             </summary>
             <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
         </member>
+        <member name="T:PSFramework.ComputerManagement.ComputerManagementHost">
+            <summary>
+            Host class containing static iresources for the computer management component
+            </summary>
+        </member>
+        <member name="F:PSFramework.ComputerManagement.ComputerManagementHost.PSSessionIdleTimeout">
+            <summary>
+            The timespan a PSSession may be idle before it is cleared for cleanup
+            </summary>
+        </member>
+        <member name="T:PSFramework.ComputerManagement.PSSessionContainer">
+            <summary>
+            A class designed to contain PSSessionInfo objects
+            </summary>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.PSSessionContainer.#ctor">
+            <summary>
+            Creeates a session container dictionary, that is not opinionated about casing.
+            </summary>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.PSSessionContainer.GetExpired">
+            <summary>
+            Returns a list of all expired sessions
+            </summary>
+            <returns>The list of expired sessions</returns>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.PSSessionContainer.GetBroken">
+            <summary>
+            Returns a list of all sessions that have broken (generally by having hit the hard wsman limits or the remote computer being down)
+            </summary>
+            <returns>The list of broken sessions.</returns>
+        </member>
+        <member name="T:PSFramework.ComputerManagement.PSSessionInfo">
+            <summary>
+            Runtime information object on a PSSession connection. Used to implement session caching and disconnection.
+            </summary>
+        </member>
+        <member name="F:PSFramework.ComputerManagement.PSSessionInfo.Session">
+            <summary>
+            The session object to inform upon
+            </summary>
+        </member>
+        <member name="F:PSFramework.ComputerManagement.PSSessionInfo.LastUsed">
+            <summary>
+            The time this session object was last used
+            </summary>
+        </member>
+        <member name="P:PSFramework.ComputerManagement.PSSessionInfo.IsExpired">
+            <summary>
+            Shows whether the session has expired
+            </summary>
+        </member>
+        <member name="P:PSFramework.ComputerManagement.PSSessionInfo.ComputerName">
+            <summary>
+            Name of the remote session
+            </summary>
+        </member>
+        <member name="P:PSFramework.ComputerManagement.PSSessionInfo.Availability">
+            <summary>
+            The current state of the session
+            </summary>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.PSSessionInfo.ResetTimestamp">
+            <summary>
+            Resets the LastUsed timestamp, ensuring this session is not discarded prematurely.
+            </summary>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.PSSessionInfo.#ctor(System.Management.Automation.Runspaces.PSSession)">
+            <summary>
+            Creates a session info object from a session object.
+            </summary>
+            <param name="Session">The session to wrap inside an info object</param>
+        </member>
         <member name="T:PSFramework.Configuration.Config">
             <summary>
             Configuration Manager as well as individual configuration object.
@@ -2202,6 +2275,13 @@
             </summary>
             <param name="Session">The session to use</param>
         </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(PSFramework.ComputerManagement.PSSessionInfo)">
+            <summary>
+            Creates a Computer Parameter from a PSSessionInfo object.
+            Shouldn't happen in the wild, but still a legal inmput.
+            </summary>
+            <param name="SessionInfo">The session information object to interpret</param>
+        </member>
         <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(Microsoft.Management.Infrastructure.CimSession)">
             <summary>
             Creates a Computer Parameter from a CimSession
@@ -3097,6 +3177,12 @@
             </summary>
             <param name="CompressedString">The compressed string to expand</param>
             <returns>Returns an expanded string.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetExecutionContextFromTLS">
+            <summary>
+            Returns the execution context for the current runspace based on the current thread.
+            </summary>
+            <returns>The current execution context</returns>
         </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
             <summary>
