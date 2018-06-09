@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Management.Automation;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -219,6 +221,17 @@ namespace PSFramework.Utility
             string result = Encoding.UTF8.GetString(outputStream.ToArray());
             outputStream.Close();
             return result;
+        }
+
+        /// <summary>
+        /// Returns the execution context for the current runspace based on the current thread.
+        /// </summary>
+        /// <returns>The current execution context</returns>
+        public static object GetExecutionContextFromTLS()
+        {
+            Type pipelineType = typeof(PowerShell).Assembly.GetType("System.Management.Automation.Runspaces.LocalPipeline");
+            MethodInfo method = pipelineType.GetMethod("GetExecutionContextFromTLS", BindingFlags.Static | BindingFlags.NonPublic);
+            return method.Invoke(null, BindingFlags.NonPublic | BindingFlags.Static, null, null, System.Globalization.CultureInfo.CurrentCulture);
         }
     }
 }
