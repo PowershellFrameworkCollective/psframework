@@ -99,6 +99,7 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
+		'Resolve-PSFDefaultParameterValue',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
