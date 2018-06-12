@@ -1,4 +1,6 @@
 ﻿# CHANGELOG
+## 0.9.21.62 : 2018-06-12
+ - Fix: Invoke-PSFCommand fails with an enumeration changed exception when cleaning up sessions
 
 ## 0.9.21.61 : 2018-06-09
  - New: Add command Resolve-PSFDefaultParameterValue, allows inheriting targeted default parameter values from the global scope.
