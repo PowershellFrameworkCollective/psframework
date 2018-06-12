@@ -80,7 +80,8 @@
 		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
 		
 		#region Clean up broken sessions
-		foreach ($sessionInfo in ($psframework_pssessions.GetBroken()))
+		$broken = $psframework_pssessions.GetBroken()
+		foreach ($sessionInfo in $broken)
 		{
 			Write-PSFMessage -Level Debug -Message "Removing broken session to $($sessionInfo.ComputerName)"
 			Remove-PSSession -Session $sessionInfo.Session -ErrorAction Ignore
@@ -173,7 +174,8 @@
 	end
 	{
 		#region Cleanup expired sessions
-		foreach ($sessionInfo in ($psframework_pssessions.GetExpired()))
+		$expired = $psframework_pssessions.GetExpired()
+		foreach ($sessionInfo in $expired)
 		{
 			Write-PSFMessage -Level Debug -Message "Removing expired session to $($sessionInfo.ComputerName)"
 			Remove-PSSession -Session $sessionInfo.Session -ErrorAction Ignore
