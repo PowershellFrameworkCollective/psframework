@@ -389,8 +389,8 @@ namespace PSFramework.Commands
             if (!DisableValidation.ToBool() && (_Config.Validation != null))
             {
                 ScriptBlock tempValidation = ScriptBlock.Create(_Config.Validation.ToString());
-                if ((tempValue != null) && ((tempValue as ICollection) != null))
-                    tempValue = new object[1] { tempValue };
+                //if ((tempValue != null) && ((tempValue as ICollection) != null))
+                //    tempValue = new object[1] { tempValue };
 
                 PSObject validationResult = tempValidation.Invoke(tempValue)[0];
                 if (!(bool)validationResult.Properties["Success"].Value)

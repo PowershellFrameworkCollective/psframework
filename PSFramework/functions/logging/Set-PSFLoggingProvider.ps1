@@ -108,25 +108,30 @@
 		if (Test-PSFParameterBinding -ParameterName "IncludeModules")
 		{
 			$provider.IncludeModules = $IncludeModules
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).IncludeModules" -Value $IncludeModules
 		}
 		if (Test-PSFParameterBinding -ParameterName "ExcludeModules")
 		{
 			$provider.ExcludeModules = $ExcludeModules
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).ExcludeModules" -Value $ExcludeModules
 		}
 		
 		if (Test-PSFParameterBinding -ParameterName "IncludeTags")
 		{
 			$provider.IncludeTags = $IncludeTags
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).IncludeTags" -Value $IncludeTags
 		}
 		if (Test-PSFParameterBinding -ParameterName "ExcludeTags")
 		{
 			$provider.ExcludeTags = $ExcludeTags
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).ExcludeTags" -Value $ExcludeTags
 		}
 		#endregion Filter Configuration
 		
 		if (Test-PSFParameterBinding -ParameterName "Enabled")
 		{
 			$provider.Enabled = $Enabled
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).Enabled" -Value $Enabled
 		}
 	}
 	end
