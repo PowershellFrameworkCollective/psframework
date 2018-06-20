@@ -1066,6 +1066,31 @@
             The Product is anything other than the default types
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.LogFileFileType">
+            <summary>
+            The data format to log to in the logfile logging provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LogFileFileType.Csv">
+            <summary>
+            Write as comma separated value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LogFileFileType.Html">
+            <summary>
+            Write as Html fragment
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LogFileFileType.Json">
+            <summary>
+            Write as Json fragment
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LogFileFileType.Xml">
+            <summary>
+            Write as Xml fragment
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.Provider">
             <summary>
             Class containing all information/content needed for a logging provider
@@ -1178,6 +1203,11 @@
         <member name="F:PSFramework.Logging.Provider.ConfigurationScript">
             <summary>
             The configuration steps taken by the Set-PSFLoggingProvider function
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.Errors">
+            <summary>
+            List of errors that happened on the logging runspace.
             </summary>
         </member>
         <member name="T:PSFramework.Logging.ProviderHost">

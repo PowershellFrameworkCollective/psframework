@@ -1,4 +1,12 @@
 ﻿# CHANGELOG
+## 0.9.22.?? : 2018-06-21
+ - New: logfile logging provider, enables dedicated logging to a single file.
+ - Upd: Logging providers now have dedicated error stacks to help with debugging
+ - Fix: Automatic configuration import will now properly set policy/enforce state.
+ - Fix: Set-PSFloggingProvider now updates logging provider configuration settings.
+ - Fix: Invoke-PSFCommand fails with an enumeration changed exception when cleaning up sessions
+ - Fix: Set-PSFConfig fixed validation of collections
+
 ## 0.9.21.62 : 2018-06-12
  - Fix: Invoke-PSFCommand fails with an enumeration changed exception when cleaning up sessions
 
