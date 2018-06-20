@@ -16,8 +16,12 @@
 			{
 				if (-not $___provider.Initialized)
 				{
-					$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.BeginEvent)), $null, $null)
-					$___provider.Initialized = $true
+					try
+					{
+						$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.BeginEvent)), $null, $null)
+						$___provider.Initialized = $true
+					}
+					catch { $___provider.Errors.Push($_) }
 				}
 			}
 			#endregion Manage Begin Event
@@ -25,7 +29,8 @@
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null)
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null) }
+				catch { $___provider.Errors.Push($_) }
 			}
 			#endregion Start Event
 			
@@ -40,7 +45,8 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry)
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry) }
+							catch { $___provider.Errors.Push($_) }
 						}
 					}
 				}
@@ -59,7 +65,8 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.ErrorEvent)), $null, $Record)
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.ErrorEvent)), $null, $Record) }
+							catch { $___provider.Errors.Push($_) }
 						}
 					}
 				}
@@ -69,7 +76,8 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null)
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null) }
+				catch { $___provider.Errors.Push($_) }
 			}
 			#endregion End Event
 			
@@ -88,7 +96,8 @@
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null)
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null) }
+				catch { $___provider.Errors.Push($_) }
 			}
 			#endregion Start Event
 			
@@ -103,7 +112,8 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry)
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry) }
+							catch { $___provider.Errors.Push($_) }
 						}
 					}
 				}
@@ -122,7 +132,8 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record)
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record) }
+							catch { $___provider.Errors.Push($_) }
 						}
 					}
 				}
@@ -132,7 +143,8 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null)
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null) }
+				catch { $___provider.Errors.Push($_) }
 			}
 			#endregion End Event
 		}
@@ -141,7 +153,8 @@
 		#region Final Event
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
-			$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.FinalEvent)), $null, $null)
+			try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.FinalEvent)), $null, $null) }
+			catch { $___provider.Errors.Push($_) }
 		}
 		
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())

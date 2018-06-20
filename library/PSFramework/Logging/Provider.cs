@@ -232,5 +232,12 @@ namespace PSFramework.Logging
         /// </summary>
         public ScriptBlock ConfigurationScript;
         #endregion Function Extension / Integration
+
+        #region Troubleshooting / Analysis
+        /// <summary>
+        /// List of errors that happened on the logging runspace.
+        /// </summary>
+        public Stack<ErrorRecord> Errors = new Stack<ErrorRecord>();
+        #endregion Troubleshooting / Analysis
     }
 }
