@@ -9,8 +9,8 @@
 		{
 			if (-not $value.KeepPersisted) { Set-PSFConfig -FullName $value.FullName -Value $value.Value -EnableException }
 			else { Set-PSFConfig -FullName $value.FullName -PersistedValue $value.Value -PersistedType $value.Type -EnableException }
-			[PSFramework.Configuration.ConfigurationHost]::Configurations[$value.Name.ToLower()].PolicySet = $value.Policy
-			[PSFramework.Configuration.ConfigurationHost]::Configurations[$value.Name.ToLower()].PolicyEnforced = $value.Enforced
+			[PSFramework.Configuration.ConfigurationHost]::Configurations[$value.FullName.ToLower()].PolicySet = $value.Policy
+			[PSFramework.Configuration.ConfigurationHost]::Configurations[$value.FullName.ToLower()].PolicyEnforced = $value.Enforced
 		}
 		catch { }
 	}
