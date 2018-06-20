@@ -72,6 +72,7 @@
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />
     <Compile Include="License\ProductType.cs" />
+    <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
     <Compile Include="Message\LogEntry.cs" />
