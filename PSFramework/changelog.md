@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.22.?? : 2018-06-21
+## 0.9.22.68 : 2018-06-20
  - New: logfile logging provider, enables dedicated logging to a single file.
  - Upd: Logging providers now have dedicated error stacks to help with debugging
  - Fix: Automatic configuration import will now properly set policy/enforce state.
