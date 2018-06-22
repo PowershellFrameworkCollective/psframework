@@ -61,6 +61,19 @@
 			Policy		    = $Policy
 		}
 	}
+	
+	function Get-WebContent
+	{
+		[CmdletBinding()]
+		param (
+			[string]
+			$WebLink
+		)
+		
+		$webClient = New-Object System.Net.WebClient
+		$webClient.Encoding = [System.Text.Encoding]::UTF8
+		$webClient.DownloadString($WebLink)
+	}
 	#endregion Utility Function
 	
 	if ($Path)
@@ -70,7 +83,7 @@
 	}
 	if ($Weblink)
 	{
-		$data = Invoke-WebRequest -UseBasicParsing -Uri $Weblink | ConvertFrom-Json -ErrorAction Stop
+		$data = Get-WebContent -WebLink $Weblink | ConvertFrom-Json -ErrorAction Stop
 	}
 	if ($RawJson)
 	{

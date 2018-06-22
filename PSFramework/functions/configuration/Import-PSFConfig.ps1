@@ -90,7 +90,7 @@
 			try
 			{
 				if ($item -like "http*") { $data = Read-PsfConfigFile -Weblink $item -ErrorAction Stop }
-				if (($item -as [uri]).Scheme -eq "File") { $data = Read-PsfConfigFile -Path $item -ErrorAction Stop }
+				elseif (($item -as [uri]).Scheme -eq "File") { $data = Read-PsfConfigFile -Path $item -ErrorAction Stop }
 				else { $data = Read-PsfConfigFile -RawJson $item -ErrorAction Stop }
 			}
 			catch { Stop-PSFFunction -Message "Failed to import $item" -EnableException $EnableException -Tag 'fail', 'import' -ErrorRecord $_ -Continue -Target $item }
