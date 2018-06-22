@@ -127,15 +127,15 @@
 		{
 			if ($Scope -band 16)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower())-$($ModuleVersion).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 			if ($Scope -band 32)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 			if ($Scope -band 64)
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 		}
 	}

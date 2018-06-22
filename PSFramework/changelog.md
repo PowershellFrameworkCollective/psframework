@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+## 0.9.22.70 : 2018-06-22
+ - Upd: Import-PSFConfig now supports weblinks to raw config files or accepts input as raw json string.
+ - Fix: Export-PSFConfig will not export any module cache settings.
+
 ## 0.9.22.68 : 2018-06-20
  - New: logfile logging provider, enables dedicated logging to a single file.
  - Upd: Logging providers now have dedicated error stacks to help with debugging

@@ -10,6 +10,12 @@
 	.PARAMETER Path
 		The path to the file to parse.
 	
+	.PARAMETER WebLink
+		The link to a website to download straight as raw json.
+	
+	.PARAMETER RawJson
+		Raw json data to interpret.
+	
 	.EXAMPLE
 		PS C:\> Read-PsfConfigFile -Path config.json
 	
@@ -17,8 +23,17 @@
 #>
 	[CmdletBinding()]
 	param (
+		[Parameter(Mandatory = $true, ParameterSetName = 'Path')]
 		[string]
-		$Path
+		$Path,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'Weblink')]
+		[string]
+		$Weblink,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'RawJson')]
+		[string]
+		$RawJson
 	)
 	
 	#region Utility Function
@@ -52,11 +67,35 @@
 			Policy		    = $Policy
 		}
 	}
+	
+	function Get-WebContent
+	{
+		[CmdletBinding()]
+		param (
+			[string]
+			$WebLink
+		)
+		
+		$webClient = New-Object System.Net.WebClient
+		$webClient.Encoding = [System.Text.Encoding]::UTF8
+		$webClient.DownloadString($WebLink)
+	}
 	#endregion Utility Function
 	
-	if (-not (Test-Path $Path)) { return }
+	if ($Path)
+	{
+		if (-not (Test-Path $Path)) { return }
+		$data = Get-Content -Path $Path -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop
+	}
+	if ($Weblink)
+	{
+		$data = Get-WebContent -WebLink $Weblink | ConvertFrom-Json -ErrorAction Stop
+	}
+	if ($RawJson)
+	{
+		$data = $RawJson | ConvertFrom-Json -ErrorAction Stop
+	}
 	
-	$data = Get-Content -Path $Path -Encoding UTF8 | ConvertFrom-Json
 	foreach ($item in $data)
 	{
 		#region No Version
