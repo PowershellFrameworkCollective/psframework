@@ -17,8 +17,17 @@
 #>
 	[CmdletBinding()]
 	param (
+		[Parameter(Mandatory = $true, ParameterSetName = 'Path')]
 		[string]
-		$Path
+		$Path,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'Weblink')]
+		[string]
+		$Weblink,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'RawJson')]
+		[string]
+		$RawJson
 	)
 	
 	#region Utility Function
@@ -54,9 +63,20 @@
 	}
 	#endregion Utility Function
 	
-	if (-not (Test-Path $Path)) { return }
+	if ($Path)
+	{
+		if (-not (Test-Path $Path)) { return }
+		$data = Get-Content -Path $Path -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop
+	}
+	if ($Weblink)
+	{
+		$data = Invoke-WebRequest -UseBasicParsing -Uri $Weblink | ConvertFrom-Json -ErrorAction Stop
+	}
+	if ($RawJson)
+	{
+		$data = $RawJson | ConvertFrom-Json -ErrorAction Stop
+	}
 	
-	$data = Get-Content -Path $Path -Encoding UTF8 | ConvertFrom-Json
 	foreach ($item in $data)
 	{
 		#region No Version
