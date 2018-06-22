@@ -10,6 +10,12 @@
 	.PARAMETER Path
 		The path to the file to parse.
 	
+	.PARAMETER WebLink
+		The link to a website to download straight as raw json.
+	
+	.PARAMETER RawJson
+		Raw json data to interpret.
+	
 	.EXAMPLE
 		PS C:\> Read-PsfConfigFile -Path config.json
 	
