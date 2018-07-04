@@ -80,7 +80,7 @@ Describe "Verifying integrity of module files" {
 			$name = $file.FullName.Replace("$moduleRoot\", '')
 
 			It "[$name] Should have UTF8 encoding" {
-				Get-FileEncoding -Path $file.FullName | Should Be 'UTF8'
+				Get-FileEncoding -Path $file.FullName | Should Be 'UTF8 with BOM'
 			}
 
 			It "[$name] Should have no trailing space" {
