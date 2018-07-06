@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 
 namespace PSFramework.TabExpansion
@@ -32,5 +33,31 @@ namespace PSFramework.TabExpansion
         /// Scriptblock for users using simple-TEPP acceleration
         /// </summary>
         public ScriptBlock InnerScriptBlock;
+
+        /// <summary>
+        /// THe errors that occured during scriptblock execution.
+        /// </summary>
+        public Utility.LimitedConcurrentQueue<ErrorRecord> ErrorRecords = new Utility.LimitedConcurrentQueue<ErrorRecord>(1024);
+
+        /// <summary>
+        /// The values the last search returned
+        /// </summary>
+        public string[] LastResult;
+
+        /// <summary>
+        /// How long are previous values valid, before a new execution becomes necessary.
+        /// </summary>
+        public TimeSpan LastResultsValidity = new TimeSpan(0);
+
+        /// <summary>
+        /// Returns whether a new refresh of tab completion should be executed.
+        /// </summary>
+        bool ShouldExecute
+        {
+            get
+            {
+                return LastExecution.Add(LastResultsValidity) < DateTime.Now;
+            }
+        }
     }
 }
