@@ -15,7 +15,11 @@
 		Unknown branches will terminate the script in error.
 	
 	.PARAMETER UserMode
-		The downloaded module will be moved to the user profile, rather than program files.
+		Deprecated. The downloaded module will be moved to the user profile, rather than program files.
+		
+	.PARAMETER Scope
+		By default, the downloaded module will be moved to program files.
+		Setting this to 'CurrentUser' installs to the userprofile of the current user.
 
 	.PARAMETER Force
 		The install script will overwrite an existing module.
