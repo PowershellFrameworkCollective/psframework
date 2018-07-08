@@ -1,9 +1,10 @@
 ﻿# CHANGELOG
-## 0.9.23.74 : 2018-??-??
+## 0.9.23.75 : 2018-??-??
  - New: PsfValidateSet attribute to handle dynamic validate sets, ties into tab completion system
  - New: Add command Set-PSFTeppResult, allows refreshing tje tab completion cache
  - Upd: Register-PSFTeppScriptblock now supports result caching with timeout
  - Upd: Some documentation updates
+ - Upd: Write-PSFMessage now allows empty strings or null values
  - Fix: Failed to handle persisted empty arrays
  - Fix: Failed import in some Linux distributions due to .NET issue in Register-PSFParameterClassMapping & ComputerParameter
 

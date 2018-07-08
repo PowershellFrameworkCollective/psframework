@@ -35,6 +35,8 @@ namespace PSFramework.Commands
         /// The message to write/log. The function name and timestamp will automatically be prepended.
         /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
+        [AllowEmptyString]
+        [AllowNull]
         public string Message;
 
         /// <summary>
