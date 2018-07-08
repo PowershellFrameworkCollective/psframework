@@ -5,6 +5,12 @@ SHORT DESCRIPTION
 	Gives an overview over the components that make up the PSFramework
 	
 LONG DESCRIPTION
+	Note: All documentation has been moved to the project's website:
+	
+	  https://psframework.org
+	
+	Future content can be found there exclusively.
+
 	When scripting for our everyday work, we often end up doing two things:
 	- Implement the same functionality again and again (Example: Logging),
 	  because it either isn't worth the effort or we simply don't have the time
@@ -47,7 +53,7 @@ LONG DESCRIPTION
 	#-------------------------------------------------------------------------#
 	
 	Main Article:
-	  Get-Help about_psf_configuration
+	  https://psframework.org/documentation/documents/psframework/configuration.html
 	  
 	Key Benefits:
 	- Avoid hardcoding information

@@ -104,6 +104,7 @@
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
 		'Set-PSFTaskEngineCache',
+		'Set-PSFTeppResult',
 		'Set-PSFTypeAlias',
 		'Start-PSFRunspace',
 		'Stop-PSFFunction',
