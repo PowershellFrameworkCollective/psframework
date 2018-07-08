@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.23.75 : 2018-??-??
+## 0.9.23.76 : 2018-07-09
  - New: PsfValidateSet attribute to handle dynamic validate sets, ties into tab completion system
  - New: Add command Set-PSFTeppResult, allows refreshing tje tab completion cache
  - Upd: Register-PSFTeppScriptblock now supports result caching with timeout
