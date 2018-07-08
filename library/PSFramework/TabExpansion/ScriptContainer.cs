@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 
 namespace PSFramework.TabExpansion
@@ -42,7 +43,7 @@ namespace PSFramework.TabExpansion
         /// <summary>
         /// The values the last search returned
         /// </summary>
-        public string[] LastResult;
+        public string[] LastResult = new string[0];
 
         /// <summary>
         /// How long are previous values valid, before a new execution becomes necessary.
@@ -52,12 +53,35 @@ namespace PSFramework.TabExpansion
         /// <summary>
         /// Returns whether a new refresh of tab completion should be executed.
         /// </summary>
-        bool ShouldExecute
+        public bool ShouldExecute
         {
             get
             {
                 return LastExecution.Add(LastResultsValidity) < DateTime.Now;
             }
+        }
+
+        /// <summary>
+        /// Returns the correct results, either by 
+        /// </summary>
+        /// <returns></returns>
+        public string[] Invoke()
+        {
+            if (!ShouldExecute)
+                return LastResult;
+
+            List<string> results = new List<string>();
+
+            IEnumerable<CallStackFrame> _callStack = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack();
+            CallStackFrame callerFrame = null;
+            if (_callStack.Count() > 0)
+                callerFrame = _callStack.First();
+
+            ScriptBlock scriptBlock = ScriptBlock.Create(ScriptBlock.ToString());
+            foreach (PSObject item in scriptBlock.Invoke(callerFrame.InvocationInfo.MyCommand.Name, "", "", null, callerFrame.InvocationInfo.BoundParameters))
+                results.Add((string)item.Properties["CompletionText"].Value);
+
+            return results.ToArray();
         }
     }
 }

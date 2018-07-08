@@ -1,4 +1,12 @@
 ﻿# CHANGELOG
+## 0.9.23.74 : 2018-??-??
+ - New: PsfValidateSet attribute to handle dynamic validate sets, ties into tab completion system
+ - New: Add command Set-PSFTeppResult, allows refreshing tje tab completion cache
+ - Upd: Register-PSFTeppScriptblock now supports result caching with timeout
+ - Upd: Some documentation updates
+ - Fix: Failed to handle persisted empty arrays
+ - Fix: Failed import in some Linux distributions due to .NET issue in Register-PSFParameterClassMapping & ComputerParameter
+
 ## 0.9.22.70 : 2018-06-22
  - Upd: Import-PSFConfig now supports weblinks to raw config files or accepts input as raw json string.
  - Fix: Export-PSFConfig will not export any module cache settings.

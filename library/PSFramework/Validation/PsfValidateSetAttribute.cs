@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 
 namespace PSFramework.Validation
@@ -24,10 +25,15 @@ namespace PSFramework.Validation
         /// Name of the Tab Completion scriptblock to use for validate set.
         /// </summary>
         public string TabCompletion;
+
+        /// <summary>
+        /// Custom error message to display
+        /// </summary>
+        public string ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
         #endregion Public attribute properties
 
         /// <summary>
-        /// Validates that each parameter argument matches the scriptblock
+        /// Validates that each parameter argument matches the set of legal values
         /// </summary>
         /// <param name="element">object to validate</param>
         /// <exception cref="ValidationMetadataException">if <paramref name="element"/> is invalid</exception>
@@ -38,17 +44,27 @@ namespace PSFramework.Validation
                 throw new ValidationMetadataException("ArgumentIsEmpty", null);
             }
 
-            object result = ScriptBlock.Invoke(element);
+            string[] legalValues = GetValues();
 
-            if (!LanguagePrimitives.IsTrue(result))
-            {
-                var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {{ {1} }}" : ErrorMessage;
-                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock));
-            }
+            if (legalValues.Any(e => String.Equals(e, element.ToString(), StringComparison.OrdinalIgnoreCase)))
+                return;
+            
+            throw new ValidationMetadataException(String.Format(ErrorMessage, element, String.Join(", ", legalValues)));
         }
 
+        /*
         /// <summary>
         /// Initializes a new instance of the ValidateSetAttribute class
+        /// </summary>
+        public PsfValidateSetAttribute(params string[] Values)
+        {
+            if (Values.Length > 0)
+                this.Values = Values;
+        }
+        */
+
+        /// <summary>
+        /// Empty constructor for other attributes
         /// </summary>
         public PsfValidateSetAttribute()
         {
@@ -59,9 +75,9 @@ namespace PSFramework.Validation
         /// Returns the values provided by the options specified.
         /// </summary>
         /// <returns>The legal values you may provide.</returns>
-        private string[] GetValues()
+        public string[] GetValues()
         {
-            if (Values.Length > 0)
+            if (Values != null && Values.Length > 0)
                 return Values;
 
             if (ScriptBlock != null)
@@ -75,11 +91,10 @@ namespace PSFramework.Validation
 
             if (TabExpansion.TabExpansionHost.Scripts.ContainsKey(TabCompletion.ToLower()))
             {
-                TabExpansion.ScriptContainer container = TabExpansion.TabExpansionHost.Scripts[TabCompletion.ToLower()];
-                return container.Invoke();
+                return TabExpansion.TabExpansionHost.Scripts[TabCompletion.ToLower()].Invoke();
             }
 
-            return new string[];
+            return new string[0];
         }
     }
 }

@@ -2865,6 +2865,32 @@
             Scriptblock for users using simple-TEPP acceleration
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.ErrorRecords">
+            <summary>
+            THe errors that occured during scriptblock execution.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastResult">
+            <summary>
+            The values the last search returned
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastResultsValidity">
+            <summary>
+            How long are previous values valid, before a new execution becomes necessary.
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.ShouldExecute">
+            <summary>
+            Returns whether a new refresh of tab completion should be executed.
+            </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.Invoke">
+            <summary>
+            Returns the correct results, either by 
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:PSFramework.TabExpansion.TabExpansionHost">
             <summary>
             Class that handles the static fields supporting the ÜSFramework TabExpansion implementation
@@ -3291,6 +3317,49 @@
             </summary>
             <param name="ScriptBlock">Scriptblock to match</param>
             <exception cref="T:System.ArgumentException">for invalid arguments</exception>
+        </member>
+        <member name="T:PSFramework.Validation.PsfValidateSetAttribute">
+            <summary>
+            Class for validating against a set of legal values. Set can be dynamically calculated.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ScriptBlock">
+            <summary>
+            Gets the scriptblock to be used in the validation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.Values">
+            <summary>
+            Gets a list of string values to be used in the validation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.TabCompletion">
+            <summary>
+            Name of the Tab Completion scriptblock to use for validate set.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
+            <summary>
+            Custom error message to display
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateSetAttribute.ValidateElement(System.Object)">
+            <summary>
+            Validates that each parameter argument matches the set of legal values
+            </summary>
+            <param name="element">object to validate</param>
+            <exception cref="T:System.Management.Automation.ValidationMetadataException">if <paramref name="element"/> is invalid</exception>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateSetAttribute.#ctor">
+            <summary>
+            Empty constructor for other attributes
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateSetAttribute.GetValues">
+            <summary>
+            Returns the values provided by the options specified.
+            </summary>
+            <returns>The legal values you may provide.</returns>
         </member>
     </members>
 </doc>

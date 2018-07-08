@@ -59,12 +59,16 @@
 		$Name,
 		
 		[PSFramework.TabExpansion.TeppScriptMode]
-		$Mode = "Auto"
+		$Mode = "Auto",
+		
+		[PSFramework.Parameter.TimeSpanParameter]
+		$CacheDuration = 0
 	)
 	
 	$scp = New-Object PSFramework.TabExpansion.ScriptContainer
 	$scp.Name = $Name.ToLower()
 	$scp.LastDuration = New-TimeSpan -Seconds -1
+	$scp.LastResultsValidity = $CacheDuration
 	
 	if ($Mode -like "Auto")
 	{
@@ -90,17 +94,30 @@
 	)
 
 	$start = Get-Date
-	[PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].LastExecution = $start
-		
-	$innerScript = [ScriptBlock]::Create(([PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].InnerScriptBlock))
-	$items = $innerScript.Invoke()
-		
-	foreach ($item in ($items | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+	$scriptContainer = [PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"]
+	if ($scriptContainer.ShouldExecute)
 	{
-		New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
-	}
+		$scriptContainer.LastExecution = $start
+			
+		$innerScript = [ScriptBlock]::Create(($scriptContainer.InnerScriptBlock))
+		try { $items = $innerScript.Invoke() }
+		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
+			
+		foreach ($item in ($items | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+		{
+			New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		}
 
-	[PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].LastDuration = (Get-Date) - $start
+		$scriptContainer.LastDuration = (Get-Date) - $start
+		if ($items) { $scriptContainer.LastResult = $items }
+	}
+	else
+	{
+		foreach ($item in ($scriptContainer.LastResult | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+		{
+			New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		}
+	}
 '@.Replace("<name>", $Name.ToLower()))
 		$scp.ScriptBlock = $scr
 		$scp.InnerScriptBlock = $ScriptBlock
