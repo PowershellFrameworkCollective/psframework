@@ -30,6 +30,12 @@
 			Whether the script provided is a full or simple scriptblock.
 			By default, this function automatically detects this, but just in case, you can override this detection.
 	
+		.PARAMETER CacheDuration
+			How long a tab completion result is valid.
+			By default, PSFramework tab completion will run the scriptblock on each call.
+			This can be used together with a background refresh mechanism to offload the cost of expensive queries into the background.
+			See Set-PSFTeppResult for details on how to refresh the cache.
+	
 		.EXAMPLE
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
 			Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name "psalcohol-liquids"
