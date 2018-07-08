@@ -129,7 +129,8 @@ namespace PSFramework.Configuration
                     foreach (string item in items)
                     {
                         int index = item.IndexOf(':');
-                        results.Add(ConvertFromPersistedValue(item.Substring(index + 1), (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), item.Substring(0, index), true)));
+                        if (index > 0)
+                            results.Add(ConvertFromPersistedValue(item.Substring(index + 1), (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), item.Substring(0, index), true)));
                     }
                     return results.ToArray();
                 case ConfigurationValueType.Object:

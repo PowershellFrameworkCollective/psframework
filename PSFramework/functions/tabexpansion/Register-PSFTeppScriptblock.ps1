@@ -30,6 +30,12 @@
 			Whether the script provided is a full or simple scriptblock.
 			By default, this function automatically detects this, but just in case, you can override this detection.
 	
+		.PARAMETER CacheDuration
+			How long a tab completion result is valid.
+			By default, PSFramework tab completion will run the scriptblock on each call.
+			This can be used together with a background refresh mechanism to offload the cost of expensive queries into the background.
+			See Set-PSFTeppResult for details on how to refresh the cache.
+	
 		.EXAMPLE
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
 			Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name "psalcohol-liquids"
@@ -59,12 +65,16 @@
 		$Name,
 		
 		[PSFramework.TabExpansion.TeppScriptMode]
-		$Mode = "Auto"
+		$Mode = "Auto",
+		
+		[PSFramework.Parameter.TimeSpanParameter]
+		$CacheDuration = 0
 	)
 	
 	$scp = New-Object PSFramework.TabExpansion.ScriptContainer
 	$scp.Name = $Name.ToLower()
 	$scp.LastDuration = New-TimeSpan -Seconds -1
+	$scp.LastResultsValidity = $CacheDuration
 	
 	if ($Mode -like "Auto")
 	{
@@ -90,17 +100,30 @@
 	)
 
 	$start = Get-Date
-	[PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].LastExecution = $start
-		
-	$innerScript = [ScriptBlock]::Create(([PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].InnerScriptBlock))
-	$items = $innerScript.Invoke()
-		
-	foreach ($item in ($items | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+	$scriptContainer = [PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"]
+	if ($scriptContainer.ShouldExecute)
 	{
-		New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
-	}
+		$scriptContainer.LastExecution = $start
+			
+		$innerScript = [ScriptBlock]::Create(($scriptContainer.InnerScriptBlock))
+		try { $items = $innerScript.Invoke() }
+		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
+			
+		foreach ($item in ($items | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+		{
+			New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		}
 
-	[PSFramework.TabExpansion.TabExpansionHost]::Scripts["<name>"].LastDuration = (Get-Date) - $start
+		$scriptContainer.LastDuration = (Get-Date) - $start
+		if ($items) { $scriptContainer.LastResult = $items }
+	}
+	else
+	{
+		foreach ($item in ($scriptContainer.LastResult | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))
+		{
+			New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		}
+	}
 '@.Replace("<name>", $Name.ToLower()))
 		$scp.ScriptBlock = $scr
 		$scp.InnerScriptBlock = $ScriptBlock
