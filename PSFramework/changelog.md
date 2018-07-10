@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 0.9.23.77 : 2018-07-10
+ - Fix: Write-PSFMessage errors on repeated use of `-Once`
+
 ## 0.9.23.76 : 2018-07-09
  - New: PsfValidateSet attribute to handle dynamic validate sets, ties into tab completion system
  - New: Add command Set-PSFTeppResult, allows refreshing tje tab completion cache

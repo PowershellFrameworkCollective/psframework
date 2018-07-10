@@ -46,7 +46,7 @@
 		$scriptBlock = [PSFramework.Message.MessageHost]::TargetTransforms[$typeName]
 		try
 		{
-			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $null)
+			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $Target)
 			return $tempTarget
 		}
 		catch
@@ -60,7 +60,7 @@
 	{
 		try
 		{
-			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($transform.ScriptBlock.ToString())), $null, $null)
+			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($transform.ScriptBlock.ToString())), $null, $Target)
 			return $tempTarget
 		}
 		catch
