@@ -138,12 +138,12 @@
 					Write-PSFMessage -Level Verbose -Message "Establishing connection to $computer" -Target $computer
 					try
 					{
-						if ($Credential) { $pSSession = New-PSSession -ComputerName $computer -Credential $Credential }
-						else { $pSSession = New-PSSession -ComputerName $computer }
+						if ($Credential) { $pSSession = New-PSSession -ComputerName $computer -Credential $Credential -ErrorAction Stop}
+						else { $pSSession = New-PSSession -ComputerName $computer -ErrorAction Stop }
 					}
 					catch
 					{
-						Write-PSFMessage -Level Warning -Message "Failed to connect to $computer" -ErrorRecord $_ -Target $computer
+						Write-PSFMessage -Level Warning -Message "Failed to connect to $computer" -ErrorRecord $_ -Target $computer 3>$null
 						Write-Error -ErrorRecord $_
 						continue
 					}

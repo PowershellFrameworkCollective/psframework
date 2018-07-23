@@ -3240,6 +3240,21 @@
             </summary>
             <returns>The current execution context</returns>
         </member>
+        <member name="P:PSFramework.Utility.UtilityHost.Callstack">
+            <summary>
+            Returns the current callstack
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.UtilityHost._CallstackNew">
+            <summary>
+            Returns the current callstack on PS4+
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.UtilityHost._CallstackOld">
+            <summary>
+            Returns the current callstack on PS3
+            </summary>
+        </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
             <summary>
             Validates that each parameter argument matches the RegexPattern

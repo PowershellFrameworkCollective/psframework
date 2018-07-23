@@ -1,4 +1,9 @@
 ﻿# CHANGELOG
+## 0.9.23.80 : 2018-07-23
+ - Fix: Invoke-PSFCommand errors are not handled properly
+ - Fix: Write-PSFMessage broke PowerShell v3 compatibility
+ - Fix: Write-PSFMessage parameter `-Once` would not display correctly on host levels (#156)
+
 ## 0.9.23.77 : 2018-07-10
  - Fix: Write-PSFMessage errors on repeated use of `-Once`
 
