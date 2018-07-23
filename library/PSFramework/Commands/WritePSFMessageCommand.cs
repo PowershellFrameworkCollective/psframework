@@ -299,7 +299,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
             _timestamp = DateTime.Now;
 
             #region Resolving Meta Information
-            _callStack = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack();
+            _callStack = Utility.UtilityHost.Callstack;
             CallStackFrame callerFrame = null;
             if (_callStack.Count() > 0)
                 callerFrame = _callStack.First();
