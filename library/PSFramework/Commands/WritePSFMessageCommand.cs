@@ -456,7 +456,7 @@ else { Write-PSFHostColor -String $string -DefaultColor ([PSFramework.Message.Me
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
-                            InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
+                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
                             channels = channels | LogEntryType.Information;
 
                             Configuration.Config cfg = new Configuration.Config();
