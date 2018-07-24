@@ -2562,6 +2562,34 @@
             The contracted element is an operator, facilitating type conversion. Generally into a dedicated object type this parameterclass abstracts.
             </summary>
         </member>
+        <member name="T:PSFramework.Parameter.SelectParameter">
+            <summary>
+            Class that automatically parses input chosen for the -Property parameter of Select-PSUObject
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.SelectParameter.Value">
+            <summary>
+            The value as Select-Object wants it
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.SelectParameter.#ctor(System.String)">
+            <summary>
+            Builds a property parameter from string
+            </summary>
+            <param name="Value">The string to interpret</param>
+        </member>
+        <member name="M:PSFramework.Parameter.SelectParameter.#ctor(System.Collections.Hashtable)">
+            <summary>
+            Builds a select parameter from a hashtable (pretty straightforward)
+            </summary>
+            <param name="Hash">The hashtable to accept</param>
+        </member>
+        <member name="M:PSFramework.Parameter.SelectParameter.ToString">
+            <summary>
+            The default string representation of the wrapped object
+            </summary>
+            <returns>The string representation of the wrapped object</returns>
+        </member>
         <member name="T:PSFramework.Parameter.TimeSpanParameter">
             <summary>
             Parameter class for interpreting timespans
