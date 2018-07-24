@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+## 0.9.23.82 : 2018-07-25
+ - New: Add command Select-PSFObject, adding the ability to powerfully select stuff.
+ - Upd: Stop-PSFFunction now has a `-Cmdlet` parameter, allowing to write exceptions in the calling function's scope.
+
 ## 0.9.23.80 : 2018-07-23
  - Fix: Invoke-PSFCommand errors are not handled properly
  - Fix: Write-PSFMessage broke PowerShell v3 compatibility

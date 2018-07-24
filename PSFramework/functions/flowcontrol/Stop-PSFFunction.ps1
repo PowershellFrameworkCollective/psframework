@@ -82,6 +82,10 @@
 		.PARAMETER OverrideExceptionMessage
 			Disables automatic appending of exception messages.
             Use in cases where you already have a speaking message interpretation and do not need the original message.
+	
+		.PARAMETER Cmdlet
+			The $PSCmdlet object of the calling command.
+			Used to write exceptions in a more hidden manner, avoiding exposing internal script text in the default message display.
         
         .EXAMPLE
             Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -101,7 +105,7 @@
     #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Plain')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Message,
@@ -150,13 +154,19 @@
 		$SilentlyContinue,
 		
 		[string]
-		$ContinueLabel
+		$ContinueLabel,
+		
+		[System.Management.Automation.PSCmdlet]
+		$Cmdlet
 	)
+	
+	if ($Cmdlet) { $myCmdlet = $Cmdlet }
+	else { $myCmdlet = $PSCmdlet }
 	
 	#region Initialize information on the calling command
 	$callStack = (Get-PSCallStack)[1]
 	if (-not $FunctionName) { $FunctionName = $callStack.Command }
-	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName}
+	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName }
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	if (-not $File) { $File = $callStack.Position.File }
 	if (-not $Line) { $Line = $callStack.Position.StartLineNumber }
@@ -213,7 +223,8 @@
 		}
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage -File $File -Line $Line
+		if ($EnableException) { Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage -File $File -Line $Line 3>$null }
+		else { Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$OverrideExceptionMessage -File $File -Line $Line }
 	}
 	else
 	{
@@ -221,7 +232,8 @@
 		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
-		Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true -File $File -Line $Line
+		if ($EnableException) { Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true -File $File -Line $Line 3>$null }
+		else { Write-PSFMessage -Level Warning -Message $Message -EnableException $EnableException -FunctionName $FunctionName -Target $Target -ErrorRecord $records -Tag $Tag -ModuleName $ModuleName -OverrideExceptionMessage:$true -File $File -Line $Line }
 	}
 	#endregion Message Handling
 	
@@ -230,15 +242,15 @@
 	{
 		if ($SilentlyContinue)
 		{
-			foreach ($record in $records) { Write-Error -Message $record -Category $Category -TargetObject $Target -Exception $record.Exception -ErrorId "$($ModuleName)_$FunctionName" -ErrorAction Continue }
+			foreach ($record in $records) { $myCmdlet.WriteError($record) }
 			if ($ContinueLabel) { continue $ContinueLabel }
-			else { Continue }
+			else { continue }
 		}
 		
 		# Extra insurance that it'll stop
 		$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 		
-		throw $records[0]
+		$myCmdlet.ThrowTerminatingError($records[0])
 	}
 	#endregion Silent Mode
 	
@@ -254,7 +266,7 @@
 		if ($Continue)
 		{
 			if ($ContinueLabel) { continue $ContinueLabel }
-			else { Continue }
+			else { continue }
 		}
 		else
 		{
