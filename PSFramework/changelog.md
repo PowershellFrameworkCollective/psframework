@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## X.X.X.X : 2018-XX-XX
+## 0.9.23.82 : 2018-07-25
  - New: Add command Select-PSFObject, adding the ability to powerfully select stuff.
  - Upd: Stop-PSFFunction now has a `-Cmdlet` parameter, allowing to write exceptions in the calling function's scope.
 
