@@ -253,7 +253,7 @@
 				}
 				elseif ($ShowExcludeProperty)
 				{
-					$__propertiesToShow = @()
+					[string[]]$__propertiesToShow = @()
 					foreach ($prop in $__item.PSObject.Properties.Name)
 					{
 						if ($prop -notin $ShowExcludeProperty)
