@@ -97,6 +97,7 @@
     <Compile Include="Parameter\ParameterContractAttribute.cs" />
     <Compile Include="Parameter\ParameterContractBehavior.cs" />
     <Compile Include="Parameter\ParameterContractType.cs" />
+    <Compile Include="Parameter\SelectParameter.cs" />
     <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />

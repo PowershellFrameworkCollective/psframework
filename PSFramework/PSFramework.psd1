@@ -100,6 +100,7 @@
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
 		'Resolve-PSFDefaultParameterValue',
+		'Select-PSFObject',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
