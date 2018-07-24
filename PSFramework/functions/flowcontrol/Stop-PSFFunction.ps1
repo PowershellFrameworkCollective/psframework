@@ -105,7 +105,7 @@
     #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Plain')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Message,
@@ -155,18 +155,18 @@
 		
 		[string]
 		$ContinueLabel,
-
+		
 		[System.Management.Automation.PSCmdlet]
 		$Cmdlet
 	)
 	
 	if ($Cmdlet) { $myCmdlet = $Cmdlet }
 	else { $myCmdlet = $PSCmdlet }
-
+	
 	#region Initialize information on the calling command
 	$callStack = (Get-PSCallStack)[1]
 	if (-not $FunctionName) { $FunctionName = $callStack.Command }
-	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName}
+	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName }
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	if (-not $File) { $File = $callStack.Position.File }
 	if (-not $Line) { $Line = $callStack.Position.StartLineNumber }
@@ -244,7 +244,7 @@
 		{
 			foreach ($record in $records) { $myCmdlet.WriteError($record) }
 			if ($ContinueLabel) { continue $ContinueLabel }
-			else { Continue }
+			else { continue }
 		}
 		
 		# Extra insurance that it'll stop
@@ -266,7 +266,7 @@
 		if ($Continue)
 		{
 			if ($ContinueLabel) { continue $ContinueLabel }
-			else { Continue }
+			else { continue }
 		}
 		else
 		{
