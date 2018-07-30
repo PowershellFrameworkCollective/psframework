@@ -25,3 +25,7 @@ Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter Modul
 #region Tab Completion
 Register-PSFTeppArgumentCompleter -Command Set-PSFTeppResult -Parameter TabCompletion -Name 'PSFramework-tepp-scriptblockname'
 #endregion Tab Completion
+
+#region Utility
+Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name 'PSFramework-utility-psprovider'
+#endregion Utility

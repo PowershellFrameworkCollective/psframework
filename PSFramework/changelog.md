@@ -1,4 +1,9 @@
 ﻿# CHANGELOG
+## 0.9.24.84
+ - New: Add command Resolve-PSFPath, providing a handy way to resolve input paths in a safe manner.
+ - New: Add command Export-PSFClixml, providing clixml export by compressing
+ - New: Add command Import-PSFClixml, providing clixml import, both compressed and uncompressed
+
 ## 0.9.23.82 : 2018-07-25
  - New: Add command Select-PSFObject, adding the ability to powerfully select stuff.
  - Upd: Stop-PSFFunction now has a `-Cmdlet` parameter, allowing to write exceptions in the calling function's scope.
