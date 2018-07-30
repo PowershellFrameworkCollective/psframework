@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.24.84
+## 0.9.24.85 : 2018-07-31
  - New: Add command Resolve-PSFPath, providing a handy way to resolve input paths in a safe manner.
  - New: Add command Export-PSFClixml, providing clixml export by compressing
  - New: Add command Import-PSFClixml, providing clixml import, both compressed and uncompressed
