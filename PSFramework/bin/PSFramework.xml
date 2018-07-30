@@ -2789,6 +2789,114 @@
             The runspace has followed its order to stop and is currently disabled
             </summary>
         </member>
+        <member name="T:PSFramework.Serialization.ClixmlDataStyle">
+            <summary>
+            The serialization output options available
+            </summary>
+        </member>
+        <member name="F:PSFramework.Serialization.ClixmlDataStyle.String">
+            <summary>
+            Serialize to and from string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Serialization.ClixmlDataStyle.Byte">
+            <summary>
+            Serialize to and from byte
+            </summary>
+        </member>
+        <member name="T:PSFramework.Serialization.ClixmlSerializer">
+            <summary>
+            Class providing tools to convert to and from clixml, compressed and uncompressed, string and bytes
+            </summary>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToByteCompressed(System.Object)">
+            <summary>
+            Converts an object into compressed bytes
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <returns>A compressed byte array containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToByteCompressed(System.Object,System.Int32)">
+            <summary>
+            Converts an object into compressed bytes
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <param name="Depth">The depth to which to serialize</param>
+            <returns>A compressed byte array containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToByte(System.Object)">
+            <summary>
+            Converts an object into bytes
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <returns>A byte array containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToByte(System.Object,System.Int32)">
+            <summary>
+            Converts an object into bytes
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <param name="Depth">Overrrides the default serialization depth</param>
+            <returns>A byte array containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToStringCompressed(System.Object)">
+            <summary>
+            Converts an object into compressed string
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <returns>A compressed string containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToStringCompressed(System.Object,System.Int32)">
+            <summary>
+            Converts an object into compressed string
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <param name="Depth">The depth to which to serialize</param>
+            <returns>A compressed string containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToString(System.Object)">
+            <summary>
+            Converts an object into string
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <returns>A string containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.ToString(System.Object,System.Int32)">
+            <summary>
+            Converts an object into string
+            </summary>
+            <param name="Item">The arbitrary object to serialize</param>
+            <param name="Depth">Overrrides the default serialization depth</param>
+            <returns>A string containing the serialized inputobject</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.FromByteCompressed(System.Byte[])">
+            <summary>
+            Deserializes an object that was serialized to compressed bytes
+            </summary>
+            <param name="Bytes">The compressed bytes to deserialize into an object</param>
+            <returns>The deserialized object</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.FromStringCompressed(System.String)">
+            <summary>
+            Deserializes an object that was serialized to compressed string
+            </summary>
+            <param name="String">The compressed string to deserialize into an object</param>
+            <returns>The deserialized object</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.FromByte(System.Byte[])">
+            <summary>
+            Deserializes an object that was serialized to bytes
+            </summary>
+            <param name="Bytes">The bytes to deserialize into an object</param>
+            <returns>The deserialized object</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.ClixmlSerializer.FromString(System.String)">
+            <summary>
+            Deserializes an object that was serialized to string
+            </summary>
+            <param name="String">The string to deserialize into an object</param>
+            <returns>The deserialized object</returns>
+        </member>
         <member name="T:PSFramework.Serialization.SerializationTypeConverter">
             <summary>
             Typeconverter that does the heavy lifting of maintaining type integrity across process borders.

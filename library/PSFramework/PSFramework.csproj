@@ -106,6 +106,8 @@
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
+    <Compile Include="Serialization\ClixmlDataStyle.cs" />
+    <Compile Include="Serialization\ClixmlSerializer.cs" />
     <Compile Include="Serialization\SerializationTypeConverter.cs" />
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
