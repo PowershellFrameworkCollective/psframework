@@ -1,5 +1,5 @@
 ﻿$script:PSModuleRoot = $PSScriptRoot
-$script:PSModuleVersion = "0.9.23.82"
+$script:PSModuleVersion = "0.9.24.85"
 
 function Import-ModuleFile
 {
