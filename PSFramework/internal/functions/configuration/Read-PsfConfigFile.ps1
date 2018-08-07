@@ -108,12 +108,12 @@
 		#region Version One
 		if ($item.Version -eq 1)
 		{
-			if ($item.Style -eq "Simple") { New-ConfigItem -FullName $item.FullName -Value $item.Data }
+			if ((-not $item.Style) -or ($item.Style -eq "Simple")) { New-ConfigItem -FullName $item.FullName -Value $item.Data }
 			else
 			{
-				if ($item.Type -eq "Object")
+				if (($item.Type -eq "Object") -or ($item.Type -eq 12))
 				{
-					New-ConfigItem -FullName $item.FullName -Value $item.Data -Type "Object" -KeepPersisted
+					New-ConfigItem -FullName $item.FullName -Value $item.Value -Type "Object" -KeepPersisted -Type $item.Type
 				}
 				else
 				{

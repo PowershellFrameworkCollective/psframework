@@ -46,9 +46,9 @@
 		Unregisters all configuration settings for the module MyModule.
 #>
 	[CmdletBinding(DefaultParameterSetName = 'Pipeline')]
-    param (
-        [Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
-        [PSFramework.Configuration.Config[]]
+	param (
+		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
+		[PSFramework.Configuration.Config[]]
 		$ConfigurationItem,
 		
 		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
@@ -69,22 +69,71 @@
 	
 	begin
 	{
-		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*"))
+		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*") -and ($Scope -band 15))
 		{
-			Stop-PSFFunction -Message "Cannot unregister configurations on non-windows machines. Currently, only registering in registry is supported (This will be updated!)" -Tag 'NotSupported' -Category NotImplemented
+			Stop-PSFFunction -Message "Cannot unregister configurations from registry on non-windows machines." -Tag 'NotSupported' -Category ResourceUnavailable
 			return
 		}
 		
-		switch ("$Scope")
+		#region Initialize Collection
+		$registryProperties = @()
+		if ($Scope -band 1)
 		{
-			"UserDefault" { $path = $script:path_RegistryUserDefault }
-			"UserMandatory" { $path = $script:path_RegistryUserEnforced }
-			"SystemDefault" { $path = $script:path_RegistryMachineDefault }
-			"SystemMandatory" { $path = $script:path_RegistryMachineEnforced }
+			if (Test-Path $script:path_RegistryUserDefault) { $registryProperties += Get-ItemProperty -Path $script:path_RegistryUserDefault }
 		}
-		
-		if (Test-Path $path) { $properties = Get-ItemProperty -Path $path }
-		else { $properties = $false }
+		if ($Scope -band 2)
+		{
+			if (Test-Path $script:path_RegistryUserEnforced) { $registryProperties += Get-ItemProperty -Path $script:path_RegistryUserEnforced }
+		}
+		if ($Scope -band 4)
+		{
+			if (Test-Path $script:path_RegistryMachineDefault) { $registryProperties += Get-ItemProperty -Path $script:path_RegistryMachineDefault }
+		}
+		if ($Scope -band 8)
+		{
+			if (Test-Path $script:path_RegistryMachineEnforced) { $registryProperties += Get-ItemProperty -Path $script:path_RegistryMachineEnforced }
+		}
+		$pathProperties = @()
+		if ($Scope -band 16)
+		{
+			$fileUserLocalSettings = @()
+			if (Test-Path (Join-Path $script:path_FileUserLocal "psf_config.json")) { $fileUserLocalSettings = Get-Content (Join-Path $script:path_FileUserLocal "psf_config.json") -Encoding UTF8 | ConvertFrom-Json }
+			if ($fileUserLocalSettings)
+			{
+				$pathProperties += [pscustomobject]@{
+					Path	   = (Join-Path $script:path_FileUserLocal "psf_config.json")
+					Properties = $fileUserLocalSettings
+					Changed    = $false
+				}
+			}
+		}
+		if ($Scope -band 32)
+		{
+			$fileUserSharedSettings = @()
+			if (Test-Path (Join-Path $script:path_FileUserShared "psf_config.json")) { $fileUserSharedSettings = Get-Content (Join-Path $script:path_FileUserShared "psf_config.json") -Encoding UTF8 | ConvertFrom-Json }
+			if ($fileUserSharedSettings)
+			{
+				$pathProperties += [pscustomobject]@{
+					Path	   = (Join-Path $script:path_FileUserShared "psf_config.json")
+					Properties = $fileUserSharedSettings
+					Changed    = $false
+				}
+			}
+		}
+		if ($Scope -band 64)
+		{
+			$fileSystemSettings = @()
+			if (Test-Path (Join-Path $script:path_FileSystem "psf_config.json")) { $fileSystemSettings = Get-Content (Join-Path $script:path_FileSystem "psf_config.json") -Encoding UTF8 | ConvertFrom-Json }
+			if ($fileSystemSettings)
+			{
+				$pathProperties += [pscustomobject]@{
+					Path	   = (Join-Path $script:path_FileSystem "psf_config.json")
+					Properties = $fileSystemSettings
+					Changed    = $false
+				}
+			}
+		}
+		#endregion Initialize Collection
 		
 		$common = 'PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider'
 	}
@@ -92,14 +141,20 @@
 	{
 		if (Test-PSFFunctionInterrupt) { return }
 		# Silently skip since no action necessary
-		if (-not $properties) { return }
+		if (-not ($pathProperties -or $registryProperties)) { return }
 		
 		foreach ($item in $ConfigurationItem)
 		{
-			$itemName = $item.FullName
-			if ($properties.PSObject.Properties.Name | Where-Object { $_ -eq $itemName })
+			# Registry
+			foreach ($hive in ($registryProperties | Where-Object { $_.PSObject.Properties.Name -eq $item.FullName }))
 			{
-				Remove-ItemProperty -Path $path -Name $itemName
+				Remove-ItemProperty -Path $hive.PSPath -Name $item.FullName
+			}
+			# Prepare file
+			foreach ($fileConfig in ($pathProperties | Where-Object { $_.Properties.FullName -contains $item.FullName }))
+			{
+				$fileConfig.Properties = $fileConfig.Properties | Where-Object FullName -NE $item.FullName
+				$fileConfig.Changed = $true
 			}
 		}
 		
@@ -108,27 +163,60 @@
 			# Ignore string-casted configurations
 			if ($item -ceq "PSFramework.Configuration.Config") { continue }
 			
-			if ($properties.PSObject.Properties.Name | Where-Object { $_ -eq $item })
+			# Registry
+			foreach ($hive in ($registryProperties | Where-Object { $_.PSObject.Properties.Name -eq $item }))
 			{
-				Remove-ItemProperty -Path $path -Name $item
+				Remove-ItemProperty -Path $hive.PSPath -Name $item
+			}
+			# Prepare file
+			foreach ($fileConfig in ($pathProperties | Where-Object { $_.Properties.FullName -contains $item }))
+			{
+				$fileConfig.Properties = $fileConfig.Properties | Where-Object FullName -NE $item
+				$fileConfig.Changed = $true
 			}
 		}
 		
 		if ($Module)
 		{
-			foreach ($item in $properties.PSObject.Properties.Name)
+			$compoundName = "{0}.{1}" -f $Module, $Name
+			
+			# Registry
+			foreach ($hive in ($registryProperties | Where-Object { $_.PSObject.Properties.Name -like $compoundName }))
 			{
-				if ($item -in $common) { continue }
-				
-				if ($item -like "$($Module).$($Name)")
+				foreach ($propName in $hive.PSObject.Properties.Name)
 				{
-					Remove-ItemProperty -Path $path -Name $item
+					if ($item -in $common) { continue }
+					
+					if ($item -like $compoundName)
+					{
+						Remove-ItemProperty -Path $hive.PSPath -Name $item
+					}
 				}
+			}
+			# Prepare file
+			foreach ($fileConfig in ($pathProperties | Where-Object { $_.Properties.FullName -like $compoundName }))
+			{
+				$fileConfig.Properties = $fileConfig.Properties | Where-Object FullName -NotLike $compoundName
+				$fileConfig.Changed = $true
 			}
 		}
 	}
 	end
 	{
-	
+		if (Test-PSFFunctionInterrupt) { return }
+		
+		foreach ($fileConfig in $pathProperties)
+		{
+			if (-not $fileConfig.Changed) { continue }
+			
+			if ($fileConfig.Properties)
+			{
+				$fileConfig.Properties | ConvertTo-Json | Set-Content -Path $fileConfig.Path -Encoding UTF8
+			}
+			else
+			{
+				Remove-Item $fileConfig.Path
+			}
+		}
 	}
 }
