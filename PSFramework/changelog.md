@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.24.91
+## 0.9.24.91 : 2018-08-08
  - Upd: Export-PSFConfig: Configuration setting set for simple export are no longer marked with a style property, as it is no longer needed and was not simple enough.
  - Upd: Configuration: Made the `Style` property on json configuration files optional for simple style export files.
  - Fix: Register-PSFConfig export of multiple configuration items would only export a single one
