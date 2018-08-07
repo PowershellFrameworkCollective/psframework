@@ -215,12 +215,12 @@
 				{
 					foreach ($item in $Config)
 					{
-						$configurationItems += $item
+						if ($configurationItems.FullName -notcontains $item.FullName) { $configurationItems += $item }
 					}
 					
 					foreach ($item in $FullName)
 					{
-						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+						if (($configurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower())))
 						{
 							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]
 						}
@@ -230,7 +230,7 @@
 				{
 					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
 					{
-						$configurationItems += $item
+						if ($configurationItems.FullName -notcontains $item.FullName) { $configurationItems += $item }
 					}
 				}
 			}
@@ -242,15 +242,15 @@
 		#region Finish File Based Persistence
 		if ($Scope -band 16)
 		{
-			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
+			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
 		}
 		if ($Scope -band 32)
 		{
-			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileUserShared "psf_config.json")
+			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileUserShared "psf_config.json")
 		}
 		if ($Scope -band 64)
 		{
-			Write-PsfConfigFile -Config ($configurationItems | Select-Object -Unique) -Path (Join-Path $script:path_FileSystem "psf_config.json")
+			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileSystem "psf_config.json")
 		}
 		#endregion Finish File Based Persistence
 	}

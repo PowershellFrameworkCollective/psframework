@@ -61,11 +61,9 @@
 			$datum = @{
 				Version  = 1
 				FullName = $item.FullName
-				Style    = "Default"
 			}
 			if ($item.SimpleExport)
 			{
-				$datum["Style"] = "Simple"
 				$datum["Data"] = $item.Value
 			}
 			else
@@ -73,6 +71,7 @@
 				$persisted = [PSFramework.Configuration.ConfigurationHost]::ConvertToPersistedValue($item.Value)
 				$datum["Value"] = $persisted.PersistedValue
 				$datum["Type"] = $persisted.PersistedType
+				$datum["Style"] = "default"
 			}
 			
 			$data[$item.FullName] = [pscustomobject]$datum
