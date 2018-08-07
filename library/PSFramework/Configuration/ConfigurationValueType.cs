@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSFramework.Configuration
+﻿namespace PSFramework.Configuration
 {
     /// <summary>
     /// The data types supported by the configuration system.
@@ -14,66 +8,66 @@ namespace PSFramework.Configuration
         /// <summary>
         /// An unknown type, should be prevented
         /// </summary>
-        Unknown,
+        Unknown = 0,
 
         /// <summary>
         /// The value is as empty as the void.
         /// </summary>
-        Null,
+        Null = 1,
 
         /// <summary>
         /// The value is of a true/false kind
         /// </summary>
-        Bool,
+        Bool = 2,
 
         /// <summary>
         /// The value is a regular integer
         /// </summary>
-        Int,
+        Int = 3,
 
         /// <summary>
         /// The value is a double numeric value
         /// </summary>
-        Double,
+        Double = 4,
 
         /// <summary>
         /// The value is a long type
         /// </summary>
-        Long,
+        Long = 5,
 
         /// <summary>
         /// The value is a common string
         /// </summary>
-        String,
+        String = 6,
 
         /// <summary>
         /// The value is a regular timespan
         /// </summary>
-        Timespan,
+        Timespan = 7,
 
         /// <summary>
         /// The value is a plain datetime
         /// </summary>
-        Datetime,
+        Datetime = 8,
 
         /// <summary>
         /// The value is a fancy console color
         /// </summary>
-        ConsoleColor,
+        ConsoleColor = 9,
 
         /// <summary>
         /// The value is an array full of booty
         /// </summary>
-        Array,
+        Array = 10,
 
         /// <summary>
         /// The value is a hashtable
         /// </summary>
-        Hashtable,
+        Hashtable = 11,
 
         /// <summary>
         /// The value is something indeterminate, but possibly complex
         /// </summary>
-        Object,
+        Object = 12,
     }
 }
