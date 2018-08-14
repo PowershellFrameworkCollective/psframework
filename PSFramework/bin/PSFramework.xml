@@ -650,6 +650,11 @@
             Deprecated property.
             </summary>
         </member>
+        <member name="F:PSFramework.Configuration.Config.DefaultValue">
+            <summary>
+            The default value the configuration item was set to when initializing
+            </summary>
+        </member>
         <member name="M:PSFramework.Configuration.Config.SetPersistedValue(PSFramework.Configuration.ConfigurationValueType,System.String)">
             <summary>
             Applies the persisted value to the configuration item.
@@ -657,6 +662,11 @@
             </summary>
             <param name="Type">The type of data being specified</param>
             <param name="ValueString">The value string to register</param>
+        </member>
+        <member name="M:PSFramework.Configuration.Config.ResetValue">
+            <summary>
+            Resets the configuration value to its configured default value
+            </summary>
         </member>
         <member name="T:PSFramework.Configuration.ConfigScope">
             <summary>
@@ -3197,6 +3207,11 @@
         <member name="F:PSFramework.Utility.DynamicContentObject.Values">
             <summary>
             The full dictionary of dynamic objects
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentObject.List">
+            <summary>
+            List of all dynamic content objects registered
             </summary>
         </member>
         <member name="M:PSFramework.Utility.DynamicContentObject.Set(System.String,System.Object)">

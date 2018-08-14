@@ -185,11 +185,11 @@
 			{
 				foreach ($propName in $hive.PSObject.Properties.Name)
 				{
-					if ($item -in $common) { continue }
+					if ($propName -in $common) { continue }
 					
-					if ($item -like $compoundName)
+					if ($propName -like $compoundName)
 					{
-						Remove-ItemProperty -Path $hive.PSPath -Name $item
+						Remove-ItemProperty -Path $hive.PSPath -Name $propName
 					}
 				}
 			}

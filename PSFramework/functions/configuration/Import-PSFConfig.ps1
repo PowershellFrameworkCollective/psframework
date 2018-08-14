@@ -137,7 +137,7 @@
 					try
 					{
 						if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException }
-						else { Set-PSFConfig -FullName $element.FullName -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($element.Value, $element.Type)) -EnableException }
+						else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type }
 					}
 					catch
 					{

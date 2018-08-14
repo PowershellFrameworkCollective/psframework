@@ -78,7 +78,7 @@
 		either expressed or implied, of the FreeBSD Project.
 		"@
 	
-		This registers the Awesome Test Prodct as licensed under the common FreeBSD license.
+		This registers the Awesome Test Product as licensed under the common FreeBSD license.
 #>
 	
 	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
