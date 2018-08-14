@@ -1,4 +1,4 @@
-Describe "Get-PSFConfig Unit Tests" -Tag "CI", "Config", "Unit" {
+﻿Describe "Get-PSFConfig Unit Tests" -Tag "CI", "Config", "Unit" {
 	BeforeAll {
 		Get-PSFConfig -Module PSFTests -Force | ForEach-Object {
 			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)

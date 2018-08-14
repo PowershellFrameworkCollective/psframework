@@ -104,7 +104,8 @@ namespace PSFramework.Runspace
             {
                 try { Runspace.Runspace.Close(); }
                 catch { }
-                Runspace.Dispose();
+                if (Runspace != null)
+                    Runspace.Dispose();
                 Runspace = null;
             }
 

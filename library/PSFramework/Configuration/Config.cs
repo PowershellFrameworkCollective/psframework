@@ -117,6 +117,12 @@ namespace PSFramework.Configuration
             {
                 if (!_Initialized)
                     _Initialized = value;
+
+                // This executes only during an initialize call of Set-PSFConfig.
+                // It will be executed after the default value is set, but before any previously persisted value is written to the configuration item.
+                // It is thus safe to read from the Value property, ignoring implications for deferred deserialization.
+                if (value)
+                    DefaultValue = Value;
             }
         }
         private bool _Initialized;
@@ -165,6 +171,11 @@ namespace PSFramework.Configuration
         }
 
         /// <summary>
+        /// The default value the configuration item was set to when initializing
+        /// </summary>
+        internal object DefaultValue;
+
+        /// <summary>
         /// Applies the persisted value to the configuration item.
         /// This method should only be called by PSFramework internals
         /// </summary>
@@ -192,6 +203,20 @@ namespace PSFramework.Configuration
                 _Value.PersistedType = Type;
                 _Value.PersistedValue = ValueString;
             }
+        }
+
+        /// <summary>
+        /// Resets the configuration value to its configured default value
+        /// </summary>
+        public void ResetValue()
+        {
+            if (!Initialized)
+                throw new InvalidOperationException("Object has not been initialized yet and thus has no state to revert to!");
+
+            if (PolicyEnforced)
+                throw new UnauthorizedAccessException("This setting has been enforced by policy and cannot be changed, not even reverted to default!");
+
+            Value = DefaultValue;
         }
     }
 }

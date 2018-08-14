@@ -1,4 +1,13 @@
 ﻿# CHANGELOG
+## 0.9.24.98 : 2018-08-14
+ - New: Reset-PSFConfig: Resets configuration items to their intialized value.
+ - Upd: Add more comprehensive tests to the configuration system
+ - Upd: Add tab completion to various commands
+ - Fix: Logging Provider will not properly change settings on configuration change
+ - Fix: Import-PSFConfig incorrectly does not support deferred deserialization
+ - Fix: Unregister-PSFConfig fails to operate when specifying `-Module` and `-Name` parameters to remvoe registry values
+ - Fix: Loggung runspace stops when alternative runspace with PSFramework ends
+
 ## 0.9.24.91 : 2018-08-08
  - Upd: Export-PSFConfig: Configuration setting set for simple export are no longer marked with a style property, as it is no longer needed and was not simple enough.
  - Upd: Configuration: Made the `Style` property on json configuration files optional for simple style export files.
