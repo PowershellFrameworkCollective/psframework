@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.24.91'
+	ModuleVersion = '0.9.24.98'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -101,6 +101,7 @@
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
+		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',
 		'Resolve-PSFPath',
 		'Select-PSFObject',

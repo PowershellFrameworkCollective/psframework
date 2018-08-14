@@ -22,6 +22,34 @@ Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter FullN
 Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter Module -Name 'PSFramework-Unregister-PSFConfig-Module'
 #endregion Configuration
 
+#region License
+Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Name 'PSFramework-license-name'
+#endregion License
+
+#region Logging
+Register-PSFTeppArgumentCompleter -Command Get-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
+Register-PSFTeppArgumentCompleter -Command Install-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
+Register-PSFTeppArgumentCompleter -Command Set-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
+#endregion Logging
+
+#region Message
+Register-PSFTeppArgumentCompleter -Command Get-PSFMessage -Parameter ModuleName -Name 'PSFramework.Message.Module'
+Register-PSFTeppArgumentCompleter -Command Get-PSFMessage -Parameter FunctionName -Name 'PSFramework.Message.Function'
+Register-PSFTeppArgumentCompleter -Command Get-PSFMessage -Parameter Tag -Name 'PSFramework.Message.Tags'
+Register-PSFTeppArgumentCompleter -Command Get-PSFMessage -Parameter Runspace -Name 'PSFramework.Message.Runspace'
+Register-PSFTeppArgumentCompleter -Command Get-PSFMessage -Parameter Level -Name 'PSFramework.Message.Level'
+#endregion Message
+
+#region Runspace
+Register-PSFTeppArgumentCompleter -Command Get-PSFRunspace -Parameter Name -Name 'PSFramework-runspace-name'
+Register-PSFTeppArgumentCompleter -Command Register-PSFRunspace -Parameter Name -Name 'PSFramework-runspace-name'
+Register-PSFTeppArgumentCompleter -Command Stop-PSFRunspace -Parameter Name -Name 'PSFramework-runspace-name'
+Register-PSFTeppArgumentCompleter -Command Start-PSFRunspace -Parameter Name -Name 'PSFramework-runspace-name'
+
+Register-PSFTeppArgumentCompleter -Command Get-PSFDynamicContentObject -Parameter Name -Name 'PSFramework-dynamiccontentobject-name'
+Register-PSFTeppArgumentCompleter -Command Set-PSFDynamicContentObject -Parameter Name -Name 'PSFramework-dynamiccontentobject-name'
+#endregion Runspace
+
 #region Tab Completion
 Register-PSFTeppArgumentCompleter -Command Set-PSFTeppResult -Parameter TabCompletion -Name 'PSFramework-tepp-scriptblockname'
 #endregion Tab Completion

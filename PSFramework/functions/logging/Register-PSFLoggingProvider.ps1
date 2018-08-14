@@ -160,7 +160,7 @@
 	if ($ConfigurationSettings) { . $ConfigurationSettings }
 	if (Test-PSFParameterBinding -ParameterName Enabled)
 	{
-		Set-PSFConfig -FullName "LoggingProvider.$Name.Enabled" -Value $Enabled.ToBool()
+		Set-PSFConfig -FullName "LoggingProvider.$Name.Enabled" -Value $Enabled.ToBool() -DisableHandler
 	}
 	
 	$provider = New-Object PSFramework.Logging.Provider
@@ -219,7 +219,7 @@
 		if ($isInstalled) { $provider.Enabled = $true }
 		else
 		{
-			Stop-PSFFunction -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFProvider' to properly install the prerequisites." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+			Stop-PSFFunction -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFLoggingProvider' to properly install the prerequisites." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
 			return
 		}
 	}

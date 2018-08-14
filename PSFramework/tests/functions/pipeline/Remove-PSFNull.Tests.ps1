@@ -2,7 +2,10 @@ Describe "Remove-PSFNull Unit Tests" -Tag "CI", "Pipeline", "Unit" {
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Remove-PSFNull).ParameterSets.Name | Should -Be '__AllParameterSets'
-		(Get-Command Remove-PSFNull).Parameters.Keys | Should -Be 'InputObject', 'AllowEmptyCollections', 'AllowEmptyStrings', 'Enumerate', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+		foreach ($key in (Get-Command Remove-PSFNull).Parameters.Keys)
+		{
+			$key | Should -BeIn 'InputObject', 'AllowEmptyStrings', 'AllowEmptyCollections', 'Enumerate', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+		}
 	}
 	
 	It "Should allow only non-null values through" {

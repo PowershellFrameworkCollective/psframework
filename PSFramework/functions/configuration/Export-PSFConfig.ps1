@@ -102,9 +102,17 @@
 		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
 		
 		$items = @()
+		
+		if (($Scope -band 15) -and ($ModuleName))
+		{
+			Stop-PSFFunction -Message "Cannot export modulecache to registry! Please pick a file scope for your export destination" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'scope', 'registry'
+			return
+		}
 	}
 	process
 	{
+		if (Test-PSFFunctionInterrupt) { return }
+		
 		if (-not $ModuleName)
 		{
 			foreach ($item in $Config) { $items += $item }
@@ -114,6 +122,8 @@
 	}
 	end
 	{
+		if (Test-PSFFunctionInterrupt) { return }
+		
 		if (-not $ModuleName)
 		{
 			try { Write-PsfConfigFile -Config ($items | Where-Object { -not $SkipUnchanged -or -not $_.Unchanged } ) -Path $OutPath -Replace }

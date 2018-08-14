@@ -18,6 +18,14 @@ namespace PSFramework.Utility
         private static Dictionary<string, DynamicContentObject> Values = new Dictionary<string, DynamicContentObject>();
         
         /// <summary>
+        /// List of all dynamic content objects registered
+        /// </summary>
+        public static string[] List
+        {
+            get { return Values.Keys.ToArray(); }
+        }
+
+        /// <summary>
         /// Sets the value of a dynamic content object, creating a new one if needed
         /// </summary>
         /// <param name="Name">The name of the object</param>

@@ -113,7 +113,7 @@
 			{
 				if (($item.Type -eq "Object") -or ($item.Type -eq 12))
 				{
-					New-ConfigItem -FullName $item.FullName -Value $item.Value -Type "Object" -KeepPersisted -Type $item.Type
+					New-ConfigItem -FullName $item.FullName -Value $item.Value -Type "Object" -KeepPersisted
 				}
 				else
 				{

@@ -34,6 +34,7 @@
 	
 			Retrieve all configuration elements from all modules, even hidden ones.
     #>
+	[OutputType([PSFramework.Configuration.Config])]
 	[CmdletBinding(DefaultParameterSetName = "FullName")]
 	Param (
 		[Parameter(ParameterSetName = "FullName", Position = 0)]
