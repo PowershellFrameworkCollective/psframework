@@ -86,9 +86,12 @@
 				'Registry'
 				{
 					It "Should properly set up configuration settings in registry" {
-						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
-						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -BeNullOrEmpty
-						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
+						if (Test-Path $location.Path)
+						{
+							(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
+							(Get-ItemProperty -Path $location.Path).$settingName2 | Should -BeNullOrEmpty
+							(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
+						}
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty

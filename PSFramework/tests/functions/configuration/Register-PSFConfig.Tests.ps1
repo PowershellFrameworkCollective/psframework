@@ -28,20 +28,20 @@
 		
 		# Test Persistence for Registry > User > Default
 		It "Should correctly persist to the user-default registry location" {
-			{ Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+			{ Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 			Register-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserDefault
 			Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' | Should -Be 'int:24'
 			Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserDefault
-			{ Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+			{ Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 		}
 		
 		# Test Persistence for Registry > User > Enforced
 		It "Should correctly persist to the user-mandatory registry location" {
-			{ Get-ItemPropertyValue -Path $pathRegistryUserEnforced -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+			{ Get-ItemPropertyValue -Path $pathRegistryUserEnforced -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 			Register-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserMandatory
 			Get-ItemPropertyValue -Path $pathRegistryUserEnforced -Name 'Register-PSFConfig.Phase1.Setting1' | Should -Be 'int:24'
 			Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserMandatory
-			{ Get-ItemPropertyValue -Path $pathRegistryUserEnforced -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+			{ Get-ItemPropertyValue -Path $pathRegistryUserEnforced -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 		}
 		
 		# Only valid with elevation
@@ -49,19 +49,19 @@
 		{
 			# Test Persistence for Registry > Machine > Default
 			It "Should correctly persist to the system-default registry location" {
-				{ Get-ItemPropertyValue -Path $pathRegistryMachineDefault -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+				{ Get-ItemPropertyValue -Path $pathRegistryMachineDefault -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop} | Should -Throw
 				Register-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope SystemDefault
 				Get-ItemPropertyValue -Path $pathRegistryMachineDefault -Name 'Register-PSFConfig.Phase1.Setting1' | Should -Be 'int:24'
 				Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope SystemDefault
-				{ Get-ItemPropertyValue -Path $pathRegistryMachineDefault -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+				{ Get-ItemPropertyValue -Path $pathRegistryMachineDefault -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 			}
 			# Test Persistence for Registry > Machine > Enforced
 			It "Should correctly persist to the system-mandatory registry location" {
-				{ Get-ItemPropertyValue -Path $pathRegistryMachineEnforced -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+				{ Get-ItemPropertyValue -Path $pathRegistryMachineEnforced -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 				Register-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope SystemMandatory
 				Get-ItemPropertyValue -Path $pathRegistryMachineEnforced -Name 'Register-PSFConfig.Phase1.Setting1' | Should -Be 'int:24'
 				Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope SystemMandatory
-				{ Get-ItemPropertyValue -Path $pathRegistryMachineEnforced -Name 'Register-PSFConfig.Phase1.Setting1' } | Should -Throw
+				{ Get-ItemPropertyValue -Path $pathRegistryMachineEnforced -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
 			}
 		}
 	}
