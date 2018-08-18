@@ -106,7 +106,8 @@
 		$scriptContainer.LastExecution = $start
 			
 		$innerScript = [ScriptBlock]::Create(($scriptContainer.InnerScriptBlock))
-		try { $items = $innerScript.Invoke() }
+		# Use Write-Output to enumerate arrays properly, avoids trouble with persisting cached results
+		try { $items = $innerScript.Invoke() | Write-Output }
 		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
 			
 		foreach ($item in ($items | Where-Object { "$_" -like "$wordToComplete*"} | Sort-Object))

@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.24.98'
+	ModuleVersion = '0.9.25.107'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -104,7 +104,6 @@
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',
 		'Resolve-PSFPath',
-		'Select-PSFObject',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
@@ -127,6 +126,7 @@
 	# Cmdlets to export from this module
 	CmdletsToExport		    = @(
 		'Remove-PSFNull',
+		'Select-PSFObject',
 		'Set-PSFConfig',
 		'Test-PSFShouldProcess',
 		'Write-PSFMessage'

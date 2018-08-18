@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <helpItems schema="maml" xmlns="http://msh">
-	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.40-->
 	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
 		<!--TAG: HASCOMMONPARAMETERS-->
 		<!--Command-->
@@ -552,7 +552,7 @@ By default, Write-PSFMessage will never interrupt execution when -Debug is speci
 			<!--Links-->
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
-				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Write-PSFMessage.html</maml:uri>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Write-PSFMessage.html</maml:uri>
 			</maml:navigationLink>
 		</maml:relatedLinks>
 	</command:command>
@@ -1458,7 +1458,7 @@ This is only set, if the setting does not exist yet. If it does, this command wi
 			<!--Links-->
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
-				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Set-PSFConfig.html</maml:uri>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Set-PSFConfig.html</maml:uri>
 			</maml:navigationLink>
 		</maml:relatedLinks>
 	</command:command>
@@ -1605,7 +1605,7 @@ If Remove-PSFNull should enumerate output after all, set this switch.</maml:para
 		<maml:relatedLinks>
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation:</maml:linkText>
-				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Remove-PSFNull.html</maml:uri>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Remove-PSFNull.html</maml:uri>
 			</maml:navigationLink>
 			<!--Links-->
 		</maml:relatedLinks>
@@ -1731,10 +1731,676 @@ Used to ensure the actual prompt logic as intended is being used.</maml:para>
 		<maml:relatedLinks>
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
-				<maml:uri>http://psframework.org/documentation/commands/PSFramework/Test-PSFShouldProcess.html</maml:uri>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Test-PSFShouldProcess.html</maml:uri>
 			</maml:navigationLink>
 			<!--Links-->
 		</maml:relatedLinks>
 	</command:command>
 	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.39-->
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<!--TAG: HASCOMMONPARAMETERS-->
+		<!--Command-->
+		<command:details>
+			<command:name>Select-PSFObject</command:name>
+			<maml:description>
+				<maml:para>Wrapper around Select-Object, extends property parameter.</maml:para>
+			</maml:description>
+			<maml:copyright>
+				<maml:para />
+			</maml:copyright>
+			<command:verb>Select</command:verb>
+			<command:noun>PSFObject</command:noun>
+			<dev:version />
+		</command:details>
+		<maml:description>
+			<maml:para>Wrapper around Select-Object, extends property parameter.</maml:para>
+			<maml:para>This function allows specifying in-line transformation of the properties specified without needing to use complex hashtables.
+For example, renaming a property becomes as simple as "Length as Size"</maml:para>
+			<maml:para>Also supported:
+- Specifying a typename
+- Picking the default display properties
+- Adding to an existing object without destroying its type</maml:para>
+			<maml:para>See the description of the Property parameter for an exhaustive list of legal notations for in-line transformations.</maml:para>
+		</maml:description>
+		<command:syntax>
+			<!--Parameter Sets-->
+			<command:syntaxItem parametersetname="DefaultParameter">
+				<!--NAME: DefaultParameter-->
+				<maml:name>Select-PSFObject</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>InputObject</maml:name>
+					<maml:description>
+						<maml:para>The object(s) to select from.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Property</maml:name>
+					<maml:description>
+						<maml:para>The properties to select.
+- Supports hashtables, which will be passed through to Select-Object.
+- Supports renaming as it is possible in SQL: "Length AS Size" will select the Length property but rename it to size.
+- Supports casting to a specified type: "Address to IPAddress" or "Length to int". Uses PowerShell type-conversion.
+- Supports parsing numbers to sizes: "Length size GB:2" Converts numeric input (presumed to be bytes) to gigabyte with two decimals.
+  Also supports toggling on Unit descriptors by adding another element: "Length size GB:2:1"
+- Supports selecting properties from objects in other variables: "ComputerName from VarName" (Will insert the property 'ComputerName' from variable $VarName)
+- Supports filtering when selecting from outside objects: "ComputerName from VarName where ObjectId = Id" (Will insert the property 'ComputerName' from the object in variable $VarName, whose ObjectId property is equal to the inputs Id property)</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ExcludeProperty</maml:name>
+					<maml:description>
+						<maml:para>Properties to not list.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ExpandProperty</maml:name>
+					<maml:description>
+						<maml:para>Properties to expand.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Unique</maml:name>
+					<maml:description>
+						<maml:para>Do not list multiples of the same value.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Last</maml:name>
+					<maml:description>
+						<maml:para>Select the last n items.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>First</maml:name>
+					<maml:description>
+						<maml:para>Select the first n items.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Skip</maml:name>
+					<maml:description>
+						<maml:para>Skip the first (or last if used with -Last) n items.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Wait</maml:name>
+					<maml:description>
+						<maml:para>Indicates that the cmdlet turns off optimization.
+Windows PowerShell runs commands in the order that they appear in the command pipeline and lets them generate all objects.
+By default, if you include a Select-PSFObject command with the First or Index parameters in a command pipeline, Windows PowerShell stops the command that generates the objects as soon as the selected number of objects is generated.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowProperty</maml:name>
+					<maml:description>
+						<maml:para>Only the specified properties will be shown by default.
+Supersedes ShowExcludeProperty</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowExcludeProperty</maml:name>
+					<maml:description>
+						<maml:para>Hides the specified properties from the default display style of the output object.
+Is ignored if used together with ShowProperty.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>TypeName</maml:name>
+					<maml:description>
+						<maml:para>Adds a typename to the selected object.
+Will automatically prefix the module.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>KeepInputObject</maml:name>
+					<maml:description>
+						<maml:para>Keeps the original input object, adding new properties the select added without removing any.
+This allows you to use this command to add properties without losing the input object's type.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+			<command:syntaxItem parametersetname="SkipLastParameter">
+				<!--NAME: SkipLastParameter-->
+				<maml:name>Select-PSFObject</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>InputObject</maml:name>
+					<maml:description>
+						<maml:para>The object(s) to select from.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Property</maml:name>
+					<maml:description>
+						<maml:para>The properties to select.
+- Supports hashtables, which will be passed through to Select-Object.
+- Supports renaming as it is possible in SQL: "Length AS Size" will select the Length property but rename it to size.
+- Supports casting to a specified type: "Address to IPAddress" or "Length to int". Uses PowerShell type-conversion.
+- Supports parsing numbers to sizes: "Length size GB:2" Converts numeric input (presumed to be bytes) to gigabyte with two decimals.
+  Also supports toggling on Unit descriptors by adding another element: "Length size GB:2:1"
+- Supports selecting properties from objects in other variables: "ComputerName from VarName" (Will insert the property 'ComputerName' from variable $VarName)
+- Supports filtering when selecting from outside objects: "ComputerName from VarName where ObjectId = Id" (Will insert the property 'ComputerName' from the object in variable $VarName, whose ObjectId property is equal to the inputs Id property)</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ExcludeProperty</maml:name>
+					<maml:description>
+						<maml:para>Properties to not list.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ExpandProperty</maml:name>
+					<maml:description>
+						<maml:para>Properties to expand.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Unique</maml:name>
+					<maml:description>
+						<maml:para>Do not list multiples of the same value.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>SkipLast</maml:name>
+					<maml:description>
+						<maml:para>Skip the last n items.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowProperty</maml:name>
+					<maml:description>
+						<maml:para>Only the specified properties will be shown by default.
+Supersedes ShowExcludeProperty</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowExcludeProperty</maml:name>
+					<maml:description>
+						<maml:para>Hides the specified properties from the default display style of the output object.
+Is ignored if used together with ShowProperty.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>TypeName</maml:name>
+					<maml:description>
+						<maml:para>Adds a typename to the selected object.
+Will automatically prefix the module.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>KeepInputObject</maml:name>
+					<maml:description>
+						<maml:para>Keeps the original input object, adding new properties the select added without removing any.
+This allows you to use this command to add properties without losing the input object's type.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+			<command:syntaxItem parametersetname="IndexParameter">
+				<!--NAME: IndexParameter-->
+				<maml:name>Select-PSFObject</maml:name>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>InputObject</maml:name>
+					<maml:description>
+						<maml:para>The object(s) to select from.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Unique</maml:name>
+					<maml:description>
+						<maml:para>Do not list multiples of the same value.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Wait</maml:name>
+					<maml:description>
+						<maml:para>Indicates that the cmdlet turns off optimization.
+Windows PowerShell runs commands in the order that they appear in the command pipeline and lets them generate all objects.
+By default, if you include a Select-PSFObject command with the First or Index parameters in a command pipeline, Windows PowerShell stops the command that generates the objects as soon as the selected number of objects is generated.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>Index</maml:name>
+					<maml:description>
+						<maml:para>Specifies an array of objects based on their index values. Enter the indexes in a comma-separated list.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowProperty</maml:name>
+					<maml:description>
+						<maml:para>Only the specified properties will be shown by default.
+Supersedes ShowExcludeProperty</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>ShowExcludeProperty</maml:name>
+					<maml:description>
+						<maml:para>Hides the specified properties from the default display style of the output object.
+Is ignored if used together with ShowProperty.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>TypeName</maml:name>
+					<maml:description>
+						<maml:para>Adds a typename to the selected object.
+Will automatically prefix the module.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+				<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+					<maml:name>KeepInputObject</maml:name>
+					<maml:description>
+						<maml:para>Keeps the original input object, adding new properties the select added without removing any.
+This allows you to use this command to add properties without losing the input object's type.</maml:para>
+					</maml:description>
+					<dev:type>
+						<maml:name />
+						<maml:uri />
+					</dev:type>
+					<dev:defaultValue />
+				</command:parameter>
+			</command:syntaxItem>
+		</command:syntax>
+		<command:parameters>
+			<!--All Parameters-->
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>InputObject</maml:name>
+				<maml:description>
+					<maml:para>The object(s) to select from.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Property</maml:name>
+				<maml:description>
+					<maml:para>The properties to select.
+- Supports hashtables, which will be passed through to Select-Object.
+- Supports renaming as it is possible in SQL: "Length AS Size" will select the Length property but rename it to size.
+- Supports casting to a specified type: "Address to IPAddress" or "Length to int". Uses PowerShell type-conversion.
+- Supports parsing numbers to sizes: "Length size GB:2" Converts numeric input (presumed to be bytes) to gigabyte with two decimals.
+  Also supports toggling on Unit descriptors by adding another element: "Length size GB:2:1"
+- Supports selecting properties from objects in other variables: "ComputerName from VarName" (Will insert the property 'ComputerName' from variable $VarName)
+- Supports filtering when selecting from outside objects: "ComputerName from VarName where ObjectId = Id" (Will insert the property 'ComputerName' from the object in variable $VarName, whose ObjectId property is equal to the inputs Id property)</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>ExcludeProperty</maml:name>
+				<maml:description>
+					<maml:para>Properties to not list.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>ExpandProperty</maml:name>
+				<maml:description>
+					<maml:para>Properties to expand.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Unique</maml:name>
+				<maml:description>
+					<maml:para>Do not list multiples of the same value.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Last</maml:name>
+				<maml:description>
+					<maml:para>Select the last n items.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>First</maml:name>
+				<maml:description>
+					<maml:para>Select the first n items.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Skip</maml:name>
+				<maml:description>
+					<maml:para>Skip the first (or last if used with -Last) n items.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>SkipLast</maml:name>
+				<maml:description>
+					<maml:para>Skip the last n items.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Wait</maml:name>
+				<maml:description>
+					<maml:para>Indicates that the cmdlet turns off optimization.
+Windows PowerShell runs commands in the order that they appear in the command pipeline and lets them generate all objects.
+By default, if you include a Select-PSFObject command with the First or Index parameters in a command pipeline, Windows PowerShell stops the command that generates the objects as soon as the selected number of objects is generated.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>Index</maml:name>
+				<maml:description>
+					<maml:para>Specifies an array of objects based on their index values. Enter the indexes in a comma-separated list.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>ShowProperty</maml:name>
+				<maml:description>
+					<maml:para>Only the specified properties will be shown by default.
+Supersedes ShowExcludeProperty</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>ShowExcludeProperty</maml:name>
+				<maml:description>
+					<maml:para>Hides the specified properties from the default display style of the output object.
+Is ignored if used together with ShowProperty.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>TypeName</maml:name>
+				<maml:description>
+					<maml:para>Adds a typename to the selected object.
+Will automatically prefix the module.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+			<command:parameter required="false" globbing="false" pipelineInput="False" variableLength="false" position="named">
+				<maml:name>KeepInputObject</maml:name>
+				<maml:description>
+					<maml:para>Keeps the original input object, adding new properties the select added without removing any.
+This allows you to use this command to add properties without losing the input object's type.</maml:para>
+				</maml:description>
+				<dev:type>
+					<maml:name />
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue />
+			</command:parameter>
+		</command:parameters>
+		<command:examples>
+			<!--Examples-->
+			<command:example>
+				<maml:title>Example 1: Renaming a property</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Get-ChildItem | Select-PSFObject Name, "Length as Size"</dev:code>
+				<dev:remarks>
+					<maml:para>Selects the properties Name and Length, renaming Length to Size in the process.</maml:para>
+					<maml:para>_</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 2: Converting type</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Import-Csv .\file.csv | Select-PSFObject Name, "Length as Size to DbaSize"</dev:code>
+				<dev:remarks>
+					<maml:para>Selects the properties Name and Length, renaming Length to Size and converting it to [DbaSize] (a userfriendly representation of size numbers contained in the dbatools module)</maml:para>
+					<maml:para>_</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 3: Selecting from another object 1</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>$obj = [PSCustomObject]@{ Name = "Foo" }
+Get-ChildItem | Select-PSFObject FullName, Length, "Name from obj"</dev:code>
+				<dev:remarks>
+					<maml:para>Selects the properties FullName and Length from the input and the Name property from the object stored in $obj</maml:para>
+					<maml:para>_</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 4: Selecting from another object 2</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>$list = @()
+$list += [PSCustomObject]@{ Type = "Foo"; ID = 1 }
+$list += [PSCustomObject]@{ Type = "Bar"; ID = 2 }
+$obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
+				<dev:remarks>
+					<maml:para>This allows you to LEFT JOIN contents of another variable.
+Note that it can only do simple property-matching at this point.</maml:para>
+					<maml:para>It will select Name from the objects stored in $obj, and for each of those the ID Property on any object in $list that has a Type property of equal value as Name on the input.</maml:para>
+					<maml:para>_</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>Example 5: Naming and styling</maml:title>
+				<maml:introduction>
+					<maml:para />
+				</maml:introduction>
+				<dev:code>Get-ChildItem | Select-PSFObject Name, Length, FullName, Used, LastWriteTime, Mode -TypeName MyType -ShowExcludeProperty Mode, Used</dev:code>
+				<dev:remarks>
+					<maml:para>Lists all items in the current path, selects the properties specified (whether they exist or not) , then ...
+- Sets the name to "MyType"
+- Hides the properties "Mode" and "Used" from the default display set, causing them to be hidden from default view</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<maml:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Online Documentation</maml:linkText>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Write-PSFMessage.html</maml:uri>
+			</maml:navigationLink>
+			<!--Links-->
+		</maml:relatedLinks>
+	</command:command>
+	<!--Edited with: SAPIEN PowerShell HelpWriter 2018 v2.2.40-->
 </helpItems>

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RemovePSFNullCommand.cs" />
+    <Compile Include="Commands\SelectPSFObjectCommand.cs" />
     <Compile Include="Commands\SetPSFConfigCommand.cs" />
     <Compile Include="Commands\TestPSFShouldProcessCommand.cs" />
     <Compile Include="Commands\WritePSFMessageCommand.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
+    <Compile Include="Message\CallStack.cs" />
+    <Compile Include="Message\CallStackEntry.cs" />
     <Compile Include="Message\LogEntry.cs" />
     <Compile Include="Message\LogEntryType.cs" />
     <Compile Include="Message\LogHost.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="Utility\DynamicContentObject.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
+    <Compile Include="Utility\SupportData.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
     <Compile Include="Validation\PsfValidateScriptAttribute.cs" />

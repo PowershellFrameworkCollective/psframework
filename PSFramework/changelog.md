@@ -1,4 +1,15 @@
 ﻿# CHANGELOG
+## 0.9.25.107 : 2018-08-18
+ - Upd: Select-PSFObject: Rewritten as Cmdlet in C#, in order to better access variables in calling scopes and for better performance.
+ - Upd: New-PSFSupportPackage: Add support to selectively pick what gets exported
+ - Upd: New-PSFSupportPackage: Add configuration that allows organizations to add information on how to submit support packages.
+ - Upd: Set-PSFDynamicContentObject: Add parameters to pre-seed the object with threadsafe collections, such as queues, lists or dictionaries.
+ - Fix: Write-PSFMessage will now contain the actual callstack at the time of the writing, rather than when called.
+ - Fix: Tab Completion Scriptblocks returning un-enumerated arrays would concatenate their results on result caching
+ - Fix: New-PSFSupportPackage will not export errors
+ - Fix: Write-HostColor unintentionally adds an extra line between each line.
+ - Fix: Select-PSFObject: Erroneously adds module name to the typename when specifying a TypeName from a call within a module.
+
 ## 0.9.24.98 : 2018-08-14
  - New: Reset-PSFConfig: Resets configuration items to their intialized value.
  - Upd: Add more comprehensive tests to the configuration system
