@@ -104,7 +104,6 @@
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',
 		'Resolve-PSFPath',
-		'Select-PSFObject',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
@@ -127,6 +126,7 @@
 	# Cmdlets to export from this module
 	CmdletsToExport		    = @(
 		'Remove-PSFNull',
+		'Select-PSFObject',
 		'Set-PSFConfig',
 		'Test-PSFShouldProcess',
 		'Write-PSFMessage'
