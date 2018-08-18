@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,50 @@ namespace PSFramework.Utility
         /// The name of the object
         /// </summary>
         public string Name;
+
+        /// <summary>
+        /// Turns the value into a concurrent queue.
+        /// </summary>
+        public void ConcurrentQueue()
+        {
+            if (Value == null)
+                Value = new ConcurrentQueue<object>();
+            else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentQueue*"))
+                Value = new ConcurrentQueue<object>();
+        }
+
+        /// <summary>
+        /// Turns the value into a concurrent stack
+        /// </summary>
+        public void ConcurrentStack()
+        {
+            if (Value == null)
+                Value = new ConcurrentStack<object>();
+            else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentStack*"))
+                Value = new ConcurrentStack<object>();
+        }
+
+        /// <summary>
+        /// Turns the value into a concurrent list
+        /// </summary>
+        public void ConcurrentList()
+        {
+            if (Value == null)
+                Value = new BlockingCollection<object>();
+            else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.BlockingCollection*"))
+                Value = new BlockingCollection<object>();
+        }
+
+        /// <summary>
+        /// TUrns the value into a concurrent dictionary with case-insensitive string keys
+        /// </summary>
+        public void ConcurrentDictionary()
+        {
+            if (Value == null)
+                Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentDictionary*"))
+                Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        }
 
         /// <summary>
         /// General string representation of the value

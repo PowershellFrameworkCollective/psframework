@@ -8,6 +8,7 @@ $commonParam = @{
 }
 
 Import-PSFCmdlet @commonParam -Name Remove-PSFNull -Type ([PSFramework.Commands.RemovePSFNullCommand])
+Import-PSFCmdlet @commonParam -Name Select-PSFObject -Type ([PSFramework.Commands.SelectPSFObjectCommand])
 Import-PSFCmdlet @commonParam -Name Set-PSFConfig -Type ([PSFramework.Commands.SetPSFConfigCommand])
 Import-PSFCmdlet @commonParam -Name Test-PSFShouldProcess -Type ([PSFramework.Commands.TestPSFShouldProcessCommand])
 Import-PSFCmdlet @commonParam -Name Write-PSFMessage -Type ([PSFramework.Commands.WritePSFMessageCommand])

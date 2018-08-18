@@ -160,7 +160,7 @@ namespace PSFramework.Message
         /// <returns>The entry that is being written</returns>
         public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, object TargetObject = null)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line, CallStack, Username);
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 

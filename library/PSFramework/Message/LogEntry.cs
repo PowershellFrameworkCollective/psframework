@@ -73,7 +73,7 @@ namespace PSFramework.Message
         /// <summary>
         /// The callstack when the message was written.
         /// </summary>
-        public IEnumerable<CallStackFrame> CallStack;
+        public CallStack CallStack;
 
         /// <summary>
         /// The user that did the writing.
@@ -105,7 +105,7 @@ namespace PSFramework.Message
         /// <param name="Line">The line on which the message was written.</param>
         /// <param name="CallStack">The callstack that triggered the write.</param>
         /// <param name="Username">The user responsible for running the code that is writing the message.</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username)
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username)
         {
             this.Message = Message;
             this.Type = Type;

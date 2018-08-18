@@ -95,7 +95,7 @@
 		
 		foreach ($line in $String)
 		{
-			foreach ($row in $line.Split("`n").Split([environment]::NewLine))
+			foreach ($row in $line.Split("`n")) #.Split([environment]::NewLine))
 			{
 				if ($row -notlike '*<c=["'']*["'']>*</c>*') { Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine }
 				else
