@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.25.107
+## 0.9.25.107 : 2018-08-18
  - Upd: Select-PSFObject: Rewritten as Cmdlet in C#, in order to better access variables in calling scopes and for better performance.
  - Upd: New-PSFSupportPackage: Add support to selectively pick what gets exported
  - Upd: New-PSFSupportPackage: Add configuration that allows organizations to add information on how to submit support packages.
