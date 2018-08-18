@@ -21,6 +21,14 @@
 		The folder where to place the output xml in.
 		Defaults to your desktop.
 	
+	.PARAMETER Include
+		What to include in the export.
+		By default, all is included.
+	
+	.PARAMETER Exclude
+		Anything not to include in the export.
+		Use this to explicitly exclude content you do not wish to be part of the dump (for example for data protection reasons).
+	
 	.PARAMETER Variables
 		Name of additional variables to attach.
 		This allows you to add the content of variables to the support package, if you believe them to be relevant to the case.
@@ -44,6 +52,12 @@
 	param (
 		[string]
 		$Path = "$($env:USERPROFILE)\Desktop",
+		
+		[PSFramework.Utility.SupportData]
+		$Include = 'All',
+		
+		[PSFramework.Utility.SupportData]
+		$Exclude = 'None',
 		
 		[string[]]
 		$Variables,
@@ -122,13 +136,13 @@
 	}
 	process
 	{
-		$filePathXml = Join-Path $Path "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").xml"
-		$filePathZip = $filePathXml -replace "\.xml$", ".zip"
+		$filePathXml = Join-Path $Path "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").cliDat"
+		$filePathZip = $filePathXml -replace "\.cliDat$", ".zip"
 		
 		Write-PSFMessage -Level Critical -Message @"
 Gathering information...
 Will write the final output to: $filePathZip
-
+$(Get-PSFConfigValue -FullName 'psframework.supportpackage.contactmessage' -Fallback '')
 Be aware that this package contains a lot of information including your input history in the console.
 Please make sure no sensitive data (such as passwords) can be caught this way.
 
@@ -137,50 +151,86 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 "@
 		
 		$hash = @{ }
-		Write-PSFMessage -Level Important -Message "Collecting PSFramework logged messages (Get-PSFMessage)"
-		$hash["Messages"] = Get-PSFMessage
-		Write-PSFMessage -Level Important -Message "Collecting PSFramework logged errors (Get-PSFMessage -Errors)"
-		$hash["Errors"] = Get-PSFMessage -Errors
-		Write-PSFMessage -Level Important -Message "Trying to collect copy of console buffer (what you can see on your console)"
-		$hash["ConsoleBuffer"] = Get-ShellBuffer
-		Write-PSFMessage -Level Important -Message "Collecting Operating System information (Win32_OperatingSystem)"
-		$hash["OperatingSystem"] = Get-CimInstance -ClassName Win32_OperatingSystem
-		Write-PSFMessage -Level Important -Message "Collecting CPU information (Win32_Processor)"
-		$hash["CPU"] = Get-CimInstance -ClassName Win32_Processor
-		Write-PSFMessage -Level Important -Message "Collecting Ram information (Win32_PhysicalMemory)"
-		$hash["Ram"] = Get-CimInstance -ClassName Win32_PhysicalMemory
-		Write-PSFMessage -Level Important -Message "Collecting PowerShell & .NET Version (`$PSVersionTable)"
-		$hash["PSVersion"] = $PSVersionTable
-		Write-PSFMessage -Level Important -Message "Collecting Input history (Get-History)"
-		$hash["History"] = Get-History
-		Write-PSFMessage -Level Important -Message "Collecting list of loaded modules (Get-Module)"
-		$hash["Modules"] = Get-Module
-		Write-PSFMessage -Level Important -Message "Collecting list of loaded snapins (Get-PSSnapin)"
-		$hash["SnapIns"] = Get-PSSnapin
-		Write-PSFMessage -Level Important -Message "Collecting list of loaded assemblies (Name, Version, and Location)"
-		$hash["Assemblies"] = [appdomain]::CurrentDomain.GetAssemblies() | Select-Object CodeBase, FullName, Location, ImageRuntimeVersion, GlobalAssemblyCache, IsDynamic
-		
+		if (($Include -band 1) -and -not ($Exclude -band 1))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting PSFramework logged messages (Get-PSFMessage)"
+			$hash["Messages"] = Get-PSFMessage
+		}
+		if (($Include -band 2) -and -not ($Exclude -band 2))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting PSFramework logged errors (Get-PSFMessage -Errors)"
+			$hash["Errors"] = Get-PSFMessage -Errors
+		}
+		if (($Include -band 4) -and -not ($Exclude -band 4))
+		{
+			Write-PSFMessage -Level Important -Message "Trying to collect copy of console buffer (what you can see on your console)"
+			$hash["ConsoleBuffer"] = Get-ShellBuffer
+		}
+		if (($Include -band 8) -and -not ($Exclude -band 8))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting Operating System information (Win32_OperatingSystem)"
+			$hash["OperatingSystem"] = Get-CimInstance -ClassName Win32_OperatingSystem
+		}
+		if (($Include -band 16) -and -not ($Exclude -band 16))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting CPU information (Win32_Processor)"
+			$hash["CPU"] = Get-CimInstance -ClassName Win32_Processor
+		}
+		if (($Include -band 32) -and -not ($Exclude -band 32))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting Ram information (Win32_PhysicalMemory)"
+			$hash["Ram"] = Get-CimInstance -ClassName Win32_PhysicalMemory
+		}
+		if (($Include -band 64) -and -not ($Exclude -band 64))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting PowerShell & .NET Version (`$PSVersionTable)"
+			$hash["PSVersion"] = $PSVersionTable
+		}
+		if (($Include -band 128) -and -not ($Exclude -band 128))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting Input history (Get-History)"
+			$hash["History"] = Get-History
+		}
+		if (($Include -band 256) -and -not ($Exclude -band 256))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting list of loaded modules (Get-Module)"
+			$hash["Modules"] = Get-Module
+		}
+		if (($Include -band 512) -and -not ($Exclude -band 512))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting list of loaded snapins (Get-PSSnapin)"
+			$hash["SnapIns"] = Get-PSSnapin
+		}
+		if (($Include -band 1024) -and -not ($Exclude -band 1024))
+		{
+			Write-PSFMessage -Level Important -Message "Collecting list of loaded assemblies (Name, Version, and Location)"
+			$hash["Assemblies"] = [appdomain]::CurrentDomain.GetAssemblies() | Select-Object CodeBase, FullName, Location, ImageRuntimeVersion, GlobalAssemblyCache, IsDynamic
+		}
 		if (Test-PSFParameterBinding -ParameterName "Variables")
 		{
 			Write-PSFMessage -Level Important -Message "Adding variables specified for export: $($Variables -join ", ")"
 			$hash["Variables"] = $Variables | Get-Variable -ErrorAction Ignore
 		}
-		if (-not $ExcludeError)
+		if (($Include -band 2048) -and -not ($Exclude -band 2048) -and (-not $ExcludeError))
 		{
 			Write-PSFMessage -Level Important -Message "Adding content of `$Error"
-			$hash["PSErrors"] = $Error | ForEach-Object { New-Object PSFramework.Message.PsfException($_) }
+			$hash["PSErrors"] = @()
+			foreach ($errorItem in $global:Error) { $hash["PSErrors"] += New-Object PSFramework.Message.PsfException($errorItem) }
 		}
-		if (Test-Path function:Get-DbatoolsLog)
+		if (($Include -band 4096) -and -not ($Exclude -band 4096))
 		{
-			Write-PSFMessage -Level Important -Message "Collecting dbatools logged messages (Get-DbatoolsLog)"
-			$hash["DbatoolsMessages"] = Get-DbatoolsLog
-			Write-PSFMessage -Level Important -Message "Collecting dbatools logged errors (Get-DbatoolsLog -Errors)"
-			$hash["DbatoolsErrors"] = Get-DbatoolsLog -Errors
+			if (Test-Path function:Get-DbatoolsLog)
+			{
+				Write-PSFMessage -Level Important -Message "Collecting dbatools logged messages (Get-DbatoolsLog)"
+				$hash["DbatoolsMessages"] = Get-DbatoolsLog
+				Write-PSFMessage -Level Important -Message "Collecting dbatools logged errors (Get-DbatoolsLog -Errors)"
+				$hash["DbatoolsErrors"] = Get-DbatoolsLog -Errors
+			}
 		}
 		
 		$data = [pscustomobject]$hash
 		
-		try { $data | Export-Clixml -Path $filePathXml -ErrorAction Stop }
+		try { $data | Export-PsfClixml -Path $filePathXml -ErrorAction Stop }
 		catch
 		{
 			Stop-PSFFunction -Message "Failed to export dump to file!" -ErrorRecord $_ -Target $filePathXml

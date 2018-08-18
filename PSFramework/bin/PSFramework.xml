@@ -1242,6 +1242,78 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:PSFramework.Message.CallStack">
+            <summary>
+            Container for a callstack, to create a non-volatile copy of the relevant information
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.CallStack.Entries">
+            <summary>
+            The entries that make up the callstack
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.ToString">
+            <summary>
+            String representation of the callstack copy
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.#ctor">
+            <summary>
+            Create an empty callstack
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.#ctor(System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame})">
+            <summary>
+            Initialize a callstack from a live callstack frame
+            </summary>
+            <param name="CallStack">The live powershell callstack</param>
+        </member>
+        <member name="T:PSFramework.Message.CallStackEntry">
+            <summary>
+            A single entry within the callstack
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.CallStackEntry.FunctionName">
+            <summary>
+            The name of the command that executed
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.CallStackEntry.File">
+            <summary>
+            The file the command was defined in
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.CallStackEntry.Line">
+            <summary>
+            THe line in the scriptblock that has been executed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.CallStackEntry.InvocationInfo">
+            <summary>
+            The full invocation info object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.CallStackEntry.#ctor">
+            <summary>
+            Create an empty callstack entry.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.CallStackEntry.#ctor(System.String,System.String,System.Int32,System.Management.Automation.InvocationInfo)">
+            <summary>
+            Creates a prefilled callstack entry.
+            </summary>
+            <param name="FunctionName"></param>
+            <param name="File"></param>
+            <param name="Line"></param>
+            <param name="InvocationInfo"></param>
+        </member>
+        <member name="M:PSFramework.Message.CallStackEntry.ToString">
+            <summary>
+            The string notation of the callstack entry
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:PSFramework.Message.LogEntry">
             <summary>
             An individual entry for the message log
@@ -1322,7 +1394,7 @@
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String)">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -3238,6 +3310,26 @@
             The name of the object
             </summary>
         </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentQueue">
+            <summary>
+            Turns the value into a concurrent queue.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentStack">
+            <summary>
+            Turns the value into a concurrent stack
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentList">
+            <summary>
+            Turns the value into a concurrent list
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentDictionary">
+            <summary>
+            TUrns the value into a concurrent dictionary with case-insensitive string keys
+            </summary>
+        </member>
         <member name="M:PSFramework.Utility.DynamicContentObject.ToString">
             <summary>
             General string representation of the value
@@ -3333,6 +3425,106 @@
         <member name="F:PSFramework.Utility.RegexHelper.GuidEx">
             <summary>
             Will match any number of valid Guids in a larger text
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.SupportData">
+            <summary>
+            List of data items New-PSFSupportPackage will export
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.None">
+            <summary>
+            Nothing. Be stingy, will ya?!
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Message">
+            <summary>
+            All messages logged to the PSFramework that are still in memory
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.ErrorMessage">
+            <summary>
+            All error records logged to the PSFramework that are still in memory
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Screenshot">
+            <summary>
+            A "screenshot" record of the console buffer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.OperatingSystem">
+            <summary>
+            Data about the OS, gathered from WMI
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.CPU">
+            <summary>
+            Data about the processors, gathered from WMI
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Ram">
+            <summary>
+            Data about the ram, gathered from WMI
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.PSVersion">
+            <summary>
+            Data about the PowerShell version
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.History">
+            <summary>
+            Input history
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Module">
+            <summary>
+            List of modules that are imported
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.SnapIns">
+            <summary>
+            List of snapins that are loaded
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Assemblies">
+            <summary>
+            List of assmeblies that have been imported
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Exceptions">
+            <summary>
+            All exception records written to the global $error variable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.ExtensionData">
+            <summary>
+            Data provided by foreign modules
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.All">
+            <summary>
+            All data ill be exported
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Messages">
+            <summary>
+            PSFramework messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Critical">
+            <summary>
+            The most critical error data, including: Messages, error messages, error records and PSVersion
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.PSResource">
+            <summary>
+            PSVersion, Modules, Snapins and Assemblies
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SupportData.Environment">
+            <summary>
+            Operating System, CPU &amp; RAM
             </summary>
         </member>
         <member name="T:PSFramework.Utility.UtilityHost">
