@@ -18,7 +18,7 @@
 	
 			Enables the task named 'mymodule.maintenance'
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Enable-PSFTaskEngineTask')]
 	Param (
 		[Parameter(ValueFromPipeline = $true, Mandatory = $true)]
 		[PSFramework.TaskEngine.PsfTask[]]

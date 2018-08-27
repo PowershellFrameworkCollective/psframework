@@ -28,7 +28,7 @@
 		Returns a hashtable containing all default parameter values in the global scope affecting the command 'Invoke-WebRequest'.
 #>
 	[OutputType([System.Collections.Hashtable])]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Resolve-PSFDefaultParameterValue')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[System.Collections.Hashtable]

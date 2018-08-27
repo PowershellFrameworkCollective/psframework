@@ -45,7 +45,7 @@
 	
 		Unregisters all configuration settings for the module MyModule.
 #>
-	[CmdletBinding(DefaultParameterSetName = 'Pipeline')]
+	[CmdletBinding(DefaultParameterSetName = 'Pipeline', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Unregister-PSFConfig')]
 	param (
 		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
 		[PSFramework.Configuration.Config[]]

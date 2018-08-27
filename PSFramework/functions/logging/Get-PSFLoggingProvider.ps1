@@ -25,7 +25,7 @@
 	
 		Returns the filesystem provider
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFLoggingProvider')]
 	Param (
 		[Alias('Provider', 'ProviderName')]
 		[string]
