@@ -1,4 +1,4 @@
-﻿function Get-PSFConfigValue
+function Get-PSFConfigValue
 {
 	<#
 		.SYNOPSIS

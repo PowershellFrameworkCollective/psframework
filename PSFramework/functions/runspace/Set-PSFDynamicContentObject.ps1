@@ -1,4 +1,4 @@
-﻿function Set-PSFDynamicContentObject
+function Set-PSFDynamicContentObject
 {
 <#
 	.SYNOPSIS

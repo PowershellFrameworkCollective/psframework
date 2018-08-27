@@ -1,4 +1,4 @@
-﻿function Test-PSFTaskEngineTask
+function Test-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS

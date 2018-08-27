@@ -1,4 +1,4 @@
-﻿function Register-PSFTaskEngineTask
+function Register-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS

@@ -1,4 +1,4 @@
-﻿function Stop-PSFRunspace
+function Stop-PSFRunspace
 {
 <#
 	.SYNOPSIS

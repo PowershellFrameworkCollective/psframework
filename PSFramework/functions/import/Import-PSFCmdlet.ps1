@@ -1,4 +1,4 @@
-﻿function Import-PSFCmdlet
+function Import-PSFCmdlet
 {
 <#
 	.SYNOPSIS

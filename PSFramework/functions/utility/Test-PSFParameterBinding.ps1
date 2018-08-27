@@ -1,4 +1,4 @@
-﻿function Test-PSFParameterBinding
+function Test-PSFParameterBinding
 {
     <#
         .SYNOPSIS

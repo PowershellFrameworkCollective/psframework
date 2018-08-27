@@ -1,4 +1,4 @@
-﻿function Register-PSFConfigValidation
+function Register-PSFConfigValidation
 {
 	<#
 		.SYNOPSIS

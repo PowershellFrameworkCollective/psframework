@@ -1,4 +1,4 @@
-﻿function Reset-PSFConfig
+function Reset-PSFConfig
 {
 <#
 	.SYNOPSIS

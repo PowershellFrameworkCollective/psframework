@@ -1,4 +1,4 @@
-﻿function Write-PSFHostColor
+function Write-PSFHostColor
 {
 <#
 	.SYNOPSIS

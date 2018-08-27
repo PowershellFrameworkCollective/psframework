@@ -1,4 +1,4 @@
-﻿function Enable-PSFTaskEngineTask
+function Enable-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS

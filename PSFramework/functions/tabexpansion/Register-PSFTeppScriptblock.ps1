@@ -1,4 +1,4 @@
-﻿function Register-PSFTeppScriptblock
+function Register-PSFTeppScriptblock
 {
     <#
         .SYNOPSIS

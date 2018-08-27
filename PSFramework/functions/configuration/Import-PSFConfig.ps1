@@ -1,4 +1,4 @@
-﻿function Import-PSFConfig
+function Import-PSFConfig
 {
 <#
 	.SYNOPSIS

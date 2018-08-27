@@ -1,4 +1,4 @@
-﻿function Register-PSFLoggingProvider
+function Register-PSFLoggingProvider
 {
 	<#
 		.SYNOPSIS

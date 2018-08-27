@@ -1,4 +1,4 @@
-﻿function Register-PSFTypeSerializationData
+function Register-PSFTypeSerializationData
 {
 <#
 	.SYNOPSIS

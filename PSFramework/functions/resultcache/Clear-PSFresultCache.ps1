@@ -1,4 +1,4 @@
-﻿function Clear-PSFResultCache
+function Clear-PSFResultCache
 {
 	<#
 		.SYNOPSIS

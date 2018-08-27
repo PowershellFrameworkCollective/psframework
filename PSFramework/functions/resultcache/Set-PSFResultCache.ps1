@@ -1,4 +1,4 @@
-﻿function Set-PSFResultCache
+function Set-PSFResultCache
 {
 <#
 	.SYNOPSIS

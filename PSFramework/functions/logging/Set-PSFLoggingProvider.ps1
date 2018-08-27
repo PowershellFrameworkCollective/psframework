@@ -1,4 +1,4 @@
-﻿function Set-PSFLoggingProvider
+function Set-PSFLoggingProvider
 {
 <#
 	.SYNOPSIS

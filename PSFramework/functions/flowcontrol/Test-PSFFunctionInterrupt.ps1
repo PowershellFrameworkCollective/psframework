@@ -1,4 +1,4 @@
-﻿function Test-PSFFunctionInterrupt
+function Test-PSFFunctionInterrupt
 {
     <#
         .SYNOPSIS

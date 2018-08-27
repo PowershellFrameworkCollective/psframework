@@ -1,4 +1,4 @@
-﻿function Unregister-PSFConfig
+function Unregister-PSFConfig
 {
 <#
 	.SYNOPSIS

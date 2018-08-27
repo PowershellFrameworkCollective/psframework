@@ -1,4 +1,4 @@
-﻿function Get-PSFTypeSerializationData
+function Get-PSFTypeSerializationData
 {
 <#
 	.SYNOPSIS

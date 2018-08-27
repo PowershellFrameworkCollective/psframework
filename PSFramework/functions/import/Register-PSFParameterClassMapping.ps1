@@ -1,4 +1,4 @@
-﻿function Register-PSFParameterClassMapping
+function Register-PSFParameterClassMapping
 {
 <#
 	.SYNOPSIS

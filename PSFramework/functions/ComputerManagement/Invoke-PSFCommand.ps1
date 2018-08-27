@@ -1,4 +1,4 @@
-﻿function Invoke-PSFCommand
+function Invoke-PSFCommand
 {
 <#
 	.SYNOPSIS

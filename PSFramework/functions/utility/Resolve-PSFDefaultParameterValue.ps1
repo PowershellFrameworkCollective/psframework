@@ -1,4 +1,4 @@
-﻿function Resolve-PSFDefaultParameterValue
+function Resolve-PSFDefaultParameterValue
 {
 <#
 	.SYNOPSIS

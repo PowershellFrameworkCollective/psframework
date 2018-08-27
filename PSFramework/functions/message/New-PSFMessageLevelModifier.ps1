@@ -1,4 +1,4 @@
-﻿function New-PSFMessageLevelModifier
+function New-PSFMessageLevelModifier
 {
 	<#
 		.SYNOPSIS
