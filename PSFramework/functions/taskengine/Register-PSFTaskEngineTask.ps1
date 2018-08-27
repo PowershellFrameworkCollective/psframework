@@ -1,4 +1,4 @@
-﻿function Register-PSFTaskEngineTask
+function Register-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS
@@ -64,7 +64,7 @@
 			- Sets it to priority "Critical", ensuring it takes precedence over most other tasks.
 	#>
 	
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTaskEngineTask')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

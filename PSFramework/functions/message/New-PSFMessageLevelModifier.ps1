@@ -1,4 +1,4 @@
-﻿function New-PSFMessageLevelModifier
+function New-PSFMessageLevelModifier
 {
 	<#
 		.SYNOPSIS
@@ -61,7 +61,7 @@
 			This is useful when prioritizing your own module during development.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFMessageLevelModifier')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

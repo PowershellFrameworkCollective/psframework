@@ -1,4 +1,4 @@
-﻿function Test-PSFParameterBinding
+function Test-PSFParameterBinding
 {
     <#
         .SYNOPSIS
@@ -38,7 +38,7 @@
 	
 			Returns whether any of the specified parameters was not bound
     #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFParameterBinding')]
 	Param (
 		[Parameter(Mandatory = $true, Position = 0)]
 		[string[]]

@@ -1,4 +1,4 @@
-﻿function Get-PSFTypeSerializationData
+function Get-PSFTypeSerializationData
 {
 <#
 	.SYNOPSIS
@@ -46,7 +46,7 @@
 		Generates an XML text that can be used to register via Update-TypeData.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFTypeSerializationData')]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[object[]]

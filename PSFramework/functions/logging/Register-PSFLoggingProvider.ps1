@@ -1,4 +1,4 @@
-﻿function Register-PSFLoggingProvider
+function Register-PSFLoggingProvider
 {
 	<#
 		.SYNOPSIS
@@ -99,7 +99,7 @@
 	
 			Registers the filesystem provider, providing events for every single occasion.
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFLoggingProvider')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

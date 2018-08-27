@@ -1,4 +1,4 @@
-﻿function Get-PSFTaskEngineCache
+function Get-PSFTaskEngineCache
 {
 	<#
 		.SYNOPSIS
@@ -24,7 +24,7 @@
 			Retrieves the information stored under 'mymodule.maintenancetask'
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFTaskEngineCache')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]

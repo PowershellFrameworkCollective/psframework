@@ -1,4 +1,4 @@
-﻿function Stop-PSFRunspace
+function Stop-PSFRunspace
 {
 <#
 	.SYNOPSIS
@@ -39,7 +39,7 @@
 	.NOTES
 		Additional information about the function.
 #>
-	[CmdletBinding(SupportsShouldProcess = $true)]
+	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Stop-PSFRunspace')]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]

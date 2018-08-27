@@ -1,4 +1,4 @@
-﻿function Resolve-PSFPath
+function Resolve-PSFPath
 {
 <#
 	.SYNOPSIS
@@ -39,7 +39,7 @@
 	
 		This will resolve all items in the parent folder, whatever the current path or drive might be.
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Resolve-PSFPath')]
 	param (
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		[string[]]

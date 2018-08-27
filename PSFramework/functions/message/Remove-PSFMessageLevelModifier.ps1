@@ -1,4 +1,4 @@
-﻿function Remove-PSFMessageLevelModifier
+function Remove-PSFMessageLevelModifier
 {
 	<#
 		.SYNOPSIS
@@ -31,7 +31,7 @@
 			Removes the message level modifier named "mymodule.foo"
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Remove-PSFMessageLevelModifier')]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]

@@ -1,4 +1,4 @@
-﻿function Test-PSFTaskEngineTask
+function Test-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS
@@ -17,7 +17,7 @@
 			Returns, whether the task named 'mymodule.maintenance' has already been executed at least once.
 	#>
 	[OutputType([System.Boolean])]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFTaskEngineTask')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

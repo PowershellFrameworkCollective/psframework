@@ -1,4 +1,4 @@
-﻿function Write-PSFMessageProxy
+function Write-PSFMessageProxy
 {
 <#
 	.SYNOPSIS
@@ -25,7 +25,7 @@
 		This will create an alias named "Write-Host" pointing at "Write-PSFMessageProxy".
 		Then it will write the message "Example Message", which is automatically written to Level "Important" (which by default will be written to host).
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Write-PSFMessageProxy')]
 	Param (
 		[Parameter(Position = 0)]
 		[string]

@@ -1,4 +1,4 @@
-﻿function Set-PSFTypeAlias
+function Set-PSFTypeAlias
 {
 <#
 	.SYNOPSIS
@@ -34,7 +34,7 @@
 		Creates an alias for the type 'System.IO.Path' named 'path'
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding(DefaultParameterSetName = 'Name')]
+	[CmdletBinding(DefaultParameterSetName = 'Name', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTypeAlias')]
 	Param (
 		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Name')]
 		[string]

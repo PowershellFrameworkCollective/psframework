@@ -1,4 +1,4 @@
-﻿function Get-PSFTaskEngineTask
+function Get-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS
@@ -22,7 +22,7 @@
 			Returns all tasks registered to the task engine whose name starts with 'mymodule.'
 			(It stands to reason that only tasks belonging to the module 'mymodule' would be returned that way)
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFTaskEngineTask')]
 	Param (
 		[string]
 		$Name = "*"

@@ -1,4 +1,4 @@
-﻿function Import-PSFCmdlet
+function Import-PSFCmdlet
 {
 <#
 	.SYNOPSIS
@@ -35,7 +35,7 @@
 		Original Author: Chris Dent
 		Link: https://www.indented.co.uk/cmdlets-without-a-dll/
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Import-PSFCmdlet')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[String]

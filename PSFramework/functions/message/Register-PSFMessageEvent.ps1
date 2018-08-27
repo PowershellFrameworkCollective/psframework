@@ -1,4 +1,4 @@
-﻿function Register-PSFMessageEvent
+function Register-PSFMessageEvent
 {
 	<#
 		.SYNOPSIS
@@ -59,7 +59,7 @@
 			- To execute $ScriptBlock ...
 			- Whenever a message is written with the tag 'engine' by the module 'MyModule' at the level 'Warning'
 	#>
-	[CmdletBinding(PositionalBinding = $false)]
+	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFMessageEvent')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

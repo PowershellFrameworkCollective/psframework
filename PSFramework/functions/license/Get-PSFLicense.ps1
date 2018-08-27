@@ -1,4 +1,4 @@
-﻿function Get-PSFLicense
+function Get-PSFLicense
 {
 <#
 	.SYNOPSIS
@@ -32,7 +32,7 @@
 		Returns a list of all registered licenses for products that have commercial licenses and are libraries.
 #>
 	
-	[CmdletBinding(PositionalBinding = $false)]
+	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param (
 		[Parameter(Position = 0)]

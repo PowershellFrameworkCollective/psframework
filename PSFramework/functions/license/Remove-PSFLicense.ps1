@@ -1,4 +1,4 @@
-﻿function Remove-PSFLicense
+function Remove-PSFLicense
 {
 <#
 	.SYNOPSIS
@@ -25,7 +25,7 @@
 	
 		Removes the license for the product "FooBar" from the license store.
 #>
-	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
+	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Remove-PSFLicense')]
 	Param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]
 		[PSFramework.License.License[]]

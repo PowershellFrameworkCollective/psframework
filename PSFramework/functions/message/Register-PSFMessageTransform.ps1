@@ -1,4 +1,4 @@
-﻿function Register-PSFMessageTransform
+function Register-PSFMessageTransform
 {
 	<#
 		.SYNOPSIS
@@ -73,7 +73,7 @@
 			Adds a transform for all target objects that are of a type whose full name starts with 'mymodule.category.'
 			All target objects matching that typename will be run through the specified scriptblock, which in return generates the new target object.
 	#>
-	[CmdletBinding(PositionalBinding = $false)]
+	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFMessageTransform')]
 	Param (
 		[Parameter(Mandatory = $true, ParameterSetName = "Target")]
 		[string]

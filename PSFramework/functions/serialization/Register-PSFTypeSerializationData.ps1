@@ -1,4 +1,4 @@
-﻿function Register-PSFTypeSerializationData
+function Register-PSFTypeSerializationData
 {
 <#
 	.SYNOPSIS
@@ -24,7 +24,7 @@
 	
 		Generates a custom type serialization xml and registers it.
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTypeSerializationData')]
 	Param (
 		[Parameter(ValueFromPipeline = $true, Mandatory = $true)]
 		[string[]]

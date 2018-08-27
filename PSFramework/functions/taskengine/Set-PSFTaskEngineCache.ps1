@@ -1,4 +1,4 @@
-﻿function Set-PSFTaskEngineCache
+function Set-PSFTaskEngineCache
 {
 	<#
 		.SYNOPSIS
@@ -27,7 +27,7 @@
 			These values can now be retrieved using Get-PSFTaskEngineCache.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTaskEngineCache')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]

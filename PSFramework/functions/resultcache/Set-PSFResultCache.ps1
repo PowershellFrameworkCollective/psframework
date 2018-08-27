@@ -1,4 +1,4 @@
-﻿function Set-PSFResultCache
+function Set-PSFResultCache
 {
 <#
 	.SYNOPSIS
@@ -36,7 +36,7 @@
 		This will return all objects, even if $NoRes is set to $True.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFResultCache')]
 	param
 	(
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
