@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.9.25.112
+## 0.9.25.112 : 2018-09-04
  - Upd: Select-PSFObject: Supports adding alias properties
  - Upd: Select-PSFObject: Supports adding script property properties
  - Upd: Select-PSFObject: Supports adding script method properties
