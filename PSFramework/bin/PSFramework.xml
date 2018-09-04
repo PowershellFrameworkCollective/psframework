@@ -2862,6 +2862,12 @@
             </summary>
             <param name="StringValue">the string to parse</param>
         </member>
+        <member name="M:PSFramework.Parameter.SelectScriptMethodParameter.#ctor(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create a script method from a scriptblock. Scriptblock is processed as string!
+            </summary>
+            <param name="ScriptBlock">The scriptblock to evaluate</param>
+        </member>
         <member name="M:PSFramework.Parameter.SelectScriptMethodParameter.#ctor(System.Management.Automation.PSScriptMethod)">
             <summary>
             Create a scriptmethod from ... a scriptmethod!
@@ -2895,6 +2901,12 @@
             Create a script property from a string
             </summary>
             <param name="StringValue">The string to interpret into a scriptproperty</param>
+        </member>
+        <member name="M:PSFramework.Parameter.SelectScriptPropertyParameter.#ctor(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create a script property from a scriptblock. Scriptblock is processed as string!
+            </summary>
+            <param name="ScriptBlock">The scriptblock to evaluate</param>
         </member>
         <member name="M:PSFramework.Parameter.SelectScriptPropertyParameter.#ctor(System.Collections.Hashtable)">
             <summary>

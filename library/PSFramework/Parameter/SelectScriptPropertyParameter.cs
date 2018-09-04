@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Management.Automation.Language;
 using System.Text.RegularExpressions;
 
 namespace PSFramework.Parameter
@@ -41,13 +39,23 @@ namespace PSFramework.Parameter
             if (Regex.IsMatch(StringValue, " := .*? =: "))
             {
                 Match match = Regex.Match(StringValue, "^(.*?) := (.*?) =: (.*?)$");
-                Value.Add(new PSScriptProperty(match.Groups[1].Value, ScriptBlock.Create(ExpandScriptString(match.Groups[2].Value)), ScriptBlock.Create(ExpandScriptString(match.Groups[3].Value))));
+                Value.Add(new PSScriptProperty(match.Groups[1].Value, ScriptBlock.Create(match.Groups[2].Value), ScriptBlock.Create(match.Groups[3].Value)));
             }
             else
             {
                 Match match = Regex.Match(StringValue, "^(.*?) := (.*?)$");
-                Value.Add(new PSScriptProperty(match.Groups[1].Value, ScriptBlock.Create(ExpandScriptString(match.Groups[2].Value))));
+                Value.Add(new PSScriptProperty(match.Groups[1].Value, ScriptBlock.Create(match.Groups[2].Value)));
             }
+        }
+
+        /// <summary>
+        /// Create a script property from a scriptblock. Scriptblock is processed as string!
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to evaluate</param>
+        public SelectScriptPropertyParameter(ScriptBlock ScriptBlock)
+            :this(ScriptBlock == null ? null : ScriptBlock.ToString().Trim())
+        {
+            InputObject = ScriptBlock;
         }
 
         /// <summary>
@@ -65,6 +73,8 @@ namespace PSFramework.Parameter
                 {
                     if (((Hashtable)Hashtable[key]).ContainsKey("get") && ((Hashtable)Hashtable[key]).ContainsKey("set"))
                         Value.Add(new PSScriptProperty(key, (ScriptBlock)((Hashtable)Hashtable[key])["get"], (ScriptBlock)((Hashtable)Hashtable[key])["set"]));
+                    else if (((Hashtable)Hashtable[key]).ContainsKey("get"))
+                        Value.Add(new PSScriptProperty(key, (ScriptBlock)((Hashtable)Hashtable[key])["get"]));
                     else
                         throw new ArgumentException(String.Format("{0}: Malformed Hashtable, cannot convert to scriptproperty", key));
                 }
@@ -83,23 +93,6 @@ namespace PSFramework.Parameter
             foreach (PSScriptProperty property in Value)
                 strings.Add(String.Format("{0} := {{ {1} }} =: {{ {2} }}", property.Name, property.GetterScript, property.SetterScript));
             return String.Join(", ", strings);
-        }
-
-        private string ExpandScriptString(string ScriptString)
-        {
-            ParseError[] errors;
-            Token[] tokens;
-            Parser.ParseInput(ScriptString, out tokens, out errors);
-            List<string> results = new List<string>();
-            foreach (Token token in tokens)
-            {
-                // Commands without a dash character are assumed to be properties
-                if (((token.TokenFlags & TokenFlags.CommandName) != 0) && (!token.Text.Contains("-")))
-                    results.Add(String.Format("$this.{0}", token.Text));
-                else
-                    results.Add(token.Text);
-            }
-            return String.Join(" ", results);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PSFramework.Parameter
 {
@@ -71,6 +69,16 @@ namespace PSFramework.Parameter
                 Match match = Regex.Match(value, "^(.*?) => (.*?)$", RegexOptions.IgnoreCase);
                 Value[match.Groups[1].Value.Trim()] = ScriptBlock.Create(match.Groups[2].Value.Trim());
             }
+        }
+
+        /// <summary>
+        /// Create a script method from a scriptblock. Scriptblock is processed as string!
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to evaluate</param>
+        public SelectScriptMethodParameter(ScriptBlock ScriptBlock)
+            : this(ScriptBlock == null ? null : ScriptBlock.ToString().Trim())
+        {
+            InputObject = ScriptBlock;
         }
 
         /// <summary>
