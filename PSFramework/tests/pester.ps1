@@ -1,7 +1,13 @@
 ﻿param (
 	$TestGeneral = $true,
+	
 	$TestFunctions = $true,
-	$Show = "None"
+	
+	$Show = "None",
+	
+	$Include = "*",
+	
+	$Exclude = ""
 )
 
 Write-Host "Starting Tests" -ForegroundColor Green
@@ -57,6 +63,9 @@ if ($TestFunctions)
 		
 		foreach ($file in (Get-ChildItem $folder.FullName -Recurse -File -Filter "*Tests.ps1"))
 		{
+			if ($file.Name -notlike $Include) { continue }
+			if ($file.Name -like $Exclude) { continue }
+			
 			Write-PSFMessage -Level Significant -Message "    Executing <c='em'>$($file.Name)</c>"
 			$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru
 			foreach ($result in $results)

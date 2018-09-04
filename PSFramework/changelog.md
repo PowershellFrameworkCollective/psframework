@@ -1,4 +1,11 @@
 ﻿# CHANGELOG
+## 0.9.25.112
+ - Upd: Select-PSFObject: Supports adding alias properties
+ - Upd: Select-PSFObject: Supports adding script property properties
+ - Upd: Select-PSFObject: Supports adding script method properties
+ - Fix: Stop-PSFFunction fails when called during class constructor (#184)
+ - Fix: Stop-PSFFunction fails to interrupt when enabling exceptions but not specifying `-Cmdlet` (#185)
+
 ## 0.9.25.107 : 2018-08-18
  - Upd: Select-PSFObject: Rewritten as Cmdlet in C#, in order to better access variables in calling scopes and for better performance.
  - Upd: New-PSFSupportPackage: Add support to selectively pick what gets exported

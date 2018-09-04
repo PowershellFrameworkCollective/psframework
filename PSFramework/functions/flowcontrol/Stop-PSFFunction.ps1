@@ -166,6 +166,7 @@ function Stop-PSFFunction
 	#region Initialize information on the calling command
 	$callStack = (Get-PSCallStack)[1]
 	if (-not $FunctionName) { $FunctionName = $callStack.Command }
+	if (-not $FunctionName) { $FunctionName = "<Unknown>" }
 	if (-not $ModuleName) { $ModuleName = $callstack.InvocationInfo.MyCommand.ModuleName }
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	if (-not $File) { $File = $callStack.Position.File }
@@ -250,7 +251,9 @@ function Stop-PSFFunction
 		# Extra insurance that it'll stop
 		$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 		
-		$myCmdlet.ThrowTerminatingError($records[0])
+		# Need to use "throw" as otherwise calling function will not be interrupted without passing the cmdlet parameter
+		if ($Cmdlet) { throw $records[0] }
+		else { $Cmdlet.ThrowTerminatingError($records[0]) }
 	}
 	#endregion Silent Mode
 	
