@@ -63,4 +63,43 @@
 		$modItem.GetType().FullName | Should -Be 'System.IO.FileInfo'
 		$modItem.Size | Should -BeLike '* KB'
 	}
+	
+	It "adds aliases when using the -Alias parameter and specifying a string" {
+		$item = Get-Item "$PSScriptRoot\Select-PSFObject.Tests.ps1"
+		$modItem = $item | Select-PSFObject -KeepInputObject -Alias "Name as AliasName"
+		$modItem.AliasName | Should -Be $modItem.Name
+		$property = $modItem.PSObject.Properties["AliasName"]
+		$property.MemberType | Should -Be 'AliasProperty'
+		$property.Name | Should -Be 'AliasName'
+		$property.Value | Should -Be $modItem.Name
+		$property.ReferencedMemberName | Should -Be 'Name'
+	}
+	
+	It "adds multiple aliases when using a hashtable on the -Alias parameter" {
+		$item = Get-Item "$PSScriptRoot\Select-PSFObject.Tests.ps1"
+		$modItem = $item | Select-PSFObject -KeepInputObject -Alias @{
+			AliasName = "Name"
+			Size	  = "Length"
+			Ex	      = "Extension"
+		}
+		($modItem.PSObject.Properties | Group-Object MemberType | Where-Object Name -EQ "AliasProperty").Count | Should -Be 3
+		($modItem.PSObject.Properties | Group-Object MemberType | Where-Object Name -EQ "AliasProperty").Group.Name | Should -BeIn AliasName, Size, Ex
+	}
+	
+	It "adds a script property using the simple string notation" {
+		$item = Get-Item "$PSScriptRoot\Select-PSFObject.Tests.ps1"
+		$modItem = $item | Select-PSFObject -KeepInputObject -ScriptProperty 'Size := $this.Length * 2'
+		$modItem.Size | Should -Be ($modItem.Length * 2)
+		{ $modItem.Size = 23 } | Should -Throw
+	}
+	
+	It "adds a script property using a less simple string notation that supports settable properties" {
+		$item = Get-Item "$PSScriptRoot\Select-PSFObject.Tests.ps1"
+		$modItem = $item | Select-PSFObject Name, Length -ScriptProperty 'Size := $this.Length * 2 =: $this.Length = $args[0] / 2'
+		$modItem.Length = 42
+		$modItem.Size | Should -Be 84
+		{ $modItem.Size = 22 } | Should -Not -Throw
+		$modItem.Length | Should -Be 11
+		$modItem.Size | Should -Be 22
+	}
 }
