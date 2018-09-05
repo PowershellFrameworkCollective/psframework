@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 0.9.25.113 : 2018-09-05
+ - Fix: Stop-PSFFunction throws null method (#188)
+
 ## 0.9.25.112 : 2018-09-04
  - Upd: Select-PSFObject: Supports adding alias properties
  - Upd: Select-PSFObject: Supports adding script property properties

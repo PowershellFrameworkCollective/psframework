@@ -252,7 +252,7 @@
 		$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 		
 		# Need to use "throw" as otherwise calling function will not be interrupted without passing the cmdlet parameter
-		if ($Cmdlet) { throw $records[0] }
+		if (-not $Cmdlet) { throw $records[0] }
 		else { $Cmdlet.ThrowTerminatingError($records[0]) }
 	}
 	#endregion Silent Mode
