@@ -2638,6 +2638,67 @@
             <param name="Value">The string to interpret</param>
             <returns>The interpreted timespan value</returns>
         </member>
+        <member name="T:PSFramework.Parameter.EncodingParameter">
+            <summary>
+            Class that interprets input as an encoding
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.EncodingParameter.Encoding">
+            <summary>
+            The parsed encoding to use.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.op_Implicit(PSFramework.Parameter.EncodingParameter)~System.Text.Encoding">
+            <summary>
+            Implicitly convert the value to an encoding object
+            </summary>
+            <param name="Parameter">The parameterclass object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.op_Implicit(System.Text.Encoding)~PSFramework.Parameter.EncodingParameter">
+            <summary>
+            Implicitly convert encoding to the parameterclass by calling the correct constructor
+            </summary>
+            <param name="Encoding">The encoding to encapsule</param>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.#ctor(System.Text.Encoding)">
+            <summary>
+            Encapsule an encoding object in the parameter class
+            </summary>
+            <param name="Encoding">The encoding to wrap</param>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.#ctor(System.String)">
+            <summary>
+            Converts a string value to encoding
+            </summary>
+            <param name="EncodingString">A string value to interpret as encoding.</param>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.#ctor(System.Object)">
+            <summary>
+            Convert just about anything to encoding if registered.
+            </summary>
+            <param name="InputObject">The object to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.GetEncoding(System.String)">
+            <summary>
+            Returns the correct encoding for a given string
+            </summary>
+            <param name="Text">The string to convert to encoding</param>
+            <returns>The encoding to retrieve.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.GetEncodingString(System.Text.Encoding)">
+            <summary>
+            Returns the user-expected string from the specified encoding.
+            "Expected" in the context of PowerShell usage.
+            </summary>
+            <param name="EncodingItem">The item to convert to string</param>
+            <returns>The powershell string representation</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.ToString">
+            <summary>
+            String representation of the parameter class
+            </summary>
+            <returns>The returned encoding string</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ParameterClass">
             <summary>
             Base class of all parameter classes
@@ -2690,6 +2751,11 @@
         <member name="F:PSFramework.Parameter.ParameterClasses.TimeSpan">
             <summary>
             The timespan parameter class allows for an easy way to specify a timespan
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.Encoding">
+            <summary>
+            The encoing parameter class allows to consistently accept encodings as input.
             </summary>
         </member>
         <member name="T:PSFramework.Parameter.ParameterContractAttribute">

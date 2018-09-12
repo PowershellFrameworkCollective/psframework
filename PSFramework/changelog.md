@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+## 0.9.26.115
+ - New: Parameter class: EncodingParameter
+ - Upd: Register-PSFTaskEngineTask `-Interval` and `-Delay` parameters changed to PSFTimeSpan for greater user convenience
+
 ## 0.9.25.113 : 2018-09-05
  - Fix: Stop-PSFFunction throws null method (#188)
 
