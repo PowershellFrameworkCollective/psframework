@@ -121,6 +121,7 @@
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
+		'Wait-PSFMessage',
 		'Write-PSFHostColor',
 		'Write-PSFMessageProxy'
 	)
