@@ -55,7 +55,7 @@
 	{
 		try
 		{
-			Write-PSFMessage -Level Verbose -Message "Writing data to '$resolvedPath'"
+			Write-PSFMessage -Level Verbose -Message "Writing data to $style"
 			if ($Style -like 'Byte')
 			{
 				if ($NoCompression)

@@ -64,6 +64,7 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
