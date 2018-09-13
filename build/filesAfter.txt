@@ -1,0 +1,17 @@
+# List all files that are loaded in the preimport.ps1
+# In the order they are loaded during preimport
+
+internal\scripts\cmdlets.ps1
+internal\configurationvalidation\*.ps1
+internal\configurations\*.ps1
+internal\scripts\loadConfigurationPersisted.ps1
+internal\loggingProviders\*.ps1
+internal\scripts\async-logging2.ps1
+internal\tepp\scripts\*.ps1
+internal\tepp\tepp-assignment.ps1
+internal\parameters\*.ps1
+bin\type-aliases.ps1
+internal\scripts\taskEngine.ps1
+internal\scripts\removalEvent.ps1
+internal\scripts\variables.ps1
+internal\scripts\license.ps1
