@@ -3,7 +3,7 @@ Registers the cmdlets published by this module.
 Necessary for full hybrid module support.
 #>
 $commonParam = @{
-	HelpFile  = "$($PSModuleRoot)$($dc)en-us$($dc)PSFramework.dll-Help.xml"
+	HelpFile  = (Resolve-Path "$($script:ModuleRoot)\en-us\PSFramework.dll-Help.xml")
 	Module = $ExecutionContext.SessionState.Module
 }
 

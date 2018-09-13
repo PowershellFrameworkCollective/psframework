@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.9.25.113'
+	ModuleVersion = '0.10.27.128'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -64,6 +64,8 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'ConvertFrom-PSFClixml',
+		'ConvertTo-PSFClixml',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
@@ -119,6 +121,7 @@
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
 		'Unregister-PSFConfig',
+		'Wait-PSFMessage',
 		'Write-PSFHostColor',
 		'Write-PSFMessageProxy'
 	)

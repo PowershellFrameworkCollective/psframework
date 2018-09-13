@@ -59,7 +59,7 @@
 		$NoCompression,
 		
 		[System.Text.Encoding]
-		$Encoding = [System.Text.Encoding]::UTF8
+		$Encoding = (Get-PSFConfigValue -FullName 'PSFramework.Text.Encoding.DefaultWrite')
 	)
 	
 	begin

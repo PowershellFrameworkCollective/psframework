@@ -82,10 +82,10 @@
 		$Once,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = "Repeating")]
-		[System.TimeSpan]
+		[PSFTimeSpan]
 		$Interval,
 		
-		[System.TimeSpan]
+		[PSFTimeSpan]
 		$Delay,
 		
 		[PSFramework.TaskEngine.Priority]
@@ -131,7 +131,7 @@
 		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $true }
 		if (Test-PSFParameterBinding -ParameterName Interval)
 		{
-			if ($Interval.Ticks -le 0)
+			if ($Interval.Value.Ticks -le 0)
 			{
 				Stop-PSFFunction -Message "Failed to register task: $Name - Interval cannot be 0 or less" -Category InvalidArgument -EnableException $EnableException
 				return

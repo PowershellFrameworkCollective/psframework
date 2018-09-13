@@ -1,16 +1,22 @@
-# ignore PowerShell Studio files
-*TempPoint*
-*.pssproj
 
-# ignore the settings folder and files for VSCode
+# ignore the settings folder and files for VSCode and PSS
 .vscode/*
 *.psproj
-*.psproj.psbuild
-*.psprojs
+*TempPoint*
 
-# ignore library
-library/PSFramework/obj/*
-library/PSFramework/*.user
+# Ignore staging info from Visual Studio
+library/.vs/*
 library/PSFramework/bin/*
-library/.vs/PSFramework/v15/.suo
-library/.vs/PSFramework/v15/server/*
+library/PSFramework/obj/*
+
+# ignore PowerShell Studio MetaData
+PSFramework/PSFramework.psproj
+PSFramework/PSFramework.psproj.bak
+PSFramework/PSFramework.psprojs
+PSFramework/PSFramework.psproj
+
+# ignore the TestResults
+TestResults/*
+
+# ignore the publishing Directory
+publish/*
