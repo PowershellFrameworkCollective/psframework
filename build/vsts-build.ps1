@@ -13,11 +13,12 @@ param (
 )
 
 # Prepare publish folder
-Write-PSFMessage -Level Important -Message "Creating and populating publishing directory"
+Write-Host "Creating and populating publishing directory"
 $publishDir = New-Item -Path $RootPath -Name publish -ItemType Directory
 Copy-Item -Path "$($RootPath)\PSFramework" -Destination $publishDir.FullName -Recurse -Force
 
 # Create commands.ps1
+Write-Host "Creating command.ps1"
 $text = @()
 Get-ChildItem -Path "$($publishDir.FullName)\PSFramework\internal\functions\" -Recurse -File -Filter "*.ps1" | ForEach-Object {
 	$text += [System.IO.File]::ReadAllText($_.FullName)
@@ -28,6 +29,7 @@ Get-ChildItem -Path "$($publishDir.FullName)\PSFramework\functions\" -Recurse -F
 $text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSFramework\commands.ps1"
 
 # Create resourcesBefore.ps1
+Write-Host "Creating resourcesBefore.ps1"
 $processed = @()
 $text = @()
 foreach ($line in (Get-Content "$($PSScriptRoot)\filesBefore.txt" | Where-Object { $_ -notlike "#*" }))
@@ -47,6 +49,7 @@ foreach ($line in (Get-Content "$($PSScriptRoot)\filesBefore.txt" | Where-Object
 if ($text) { $text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSFramework\resourcesBefore.ps1" }
 
 # Create resourcesAfter.ps1
+Write-Host "Creating resourcesAfter.ps1"
 $processed = @()
 $text = @()
 foreach ($line in (Get-Content "$($PSScriptRoot)\filesAfter.txt" | Where-Object { $_ -notlike "#*" }))
@@ -67,6 +70,7 @@ if ($text) { $text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSF
 
 if (-not $SkipPublish)
 {
+	Write-Host "Publishing to gallery"
 	# Publish to Gallery
 	Publish-Module -Path "$($publishDir.FullName)\PSFramework" -NuGetApiKey $ApiKey -Force
 }
