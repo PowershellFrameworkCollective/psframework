@@ -6,7 +6,7 @@
  - New: Parameter class: EncodingParameter
  - Upd: Register-PSFTaskEngineTask `-Interval` and `-Delay` parameters changed to PSFTimeSpan for greater user convenience
  - Upd: Stop-PSFFunction add `-StepsUpward` parameter, enabling upscope interrupt signals
- - Other: Redesigned moule layout and build procedure to compile the module into few files, improving import speed
+ - Other: Redesigned module layout and build procedure to compile the module into few files, improving import speed
 
 ## 0.9.25.113 : 2018-09-05
  - Fix: Stop-PSFFunction throws null method (#188)
