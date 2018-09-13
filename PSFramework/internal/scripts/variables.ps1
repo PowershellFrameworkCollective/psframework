@@ -1,4 +1,4 @@
-#region Declare runtime variable for the flow control component
+﻿#region Declare runtime variable for the flow control component
 $paramNewVariable = @{
 	Name  = "psframework_killqueue"
 	Value = (New-Object PSFramework.Utility.LimitedConcurrentQueue[int](25))

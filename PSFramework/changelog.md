@@ -1,10 +1,12 @@
 ﻿# CHANGELOG
-## 0.9.26.118
+## 0.10.27.128
  - New: Command Wait-PSFMessage waits for logs to be flushed, also offers option to terminate logging runspaces.
  - New: Command ConvertFrom-PSFClixml converts data that was serialized from objects back _into_ that object
  - New: Command ConvertTo-PSFClixml converts objects into clixml data (binary or string, compressed or not)
  - New: Parameter class: EncodingParameter
  - Upd: Register-PSFTaskEngineTask `-Interval` and `-Delay` parameters changed to PSFTimeSpan for greater user convenience
+ - Upd: Stop-PSFFunction add `-StepsUpward` parameter, enabling upscope interrupt signals
+ - Other: Redesigned moule layout and build procedure to compile the module into few files, improving import speed
 
 ## 0.9.25.113 : 2018-09-05
  - Fix: Stop-PSFFunction throws null method (#188)
