@@ -1,5 +1,7 @@
 ﻿# CHANGELOG
-## 0.9.26.115
+## 0.9.26.117
+ - New: Command ConvertFrom-PSFClixml converts data that was serialized from objects back _into_ that object
+ - New: Command ConvertTo-PSFClixml converts objects into clixml data (binary or string, compressed or not)
  - New: Parameter class: EncodingParameter
  - Upd: Register-PSFTaskEngineTask `-Interval` and `-Delay` parameters changed to PSFTimeSpan for greater user convenience
 
