@@ -26,6 +26,7 @@
 	
 		Scans all items in the current folder and then converts that into a compressed clixml string.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[CmdletBinding()]
 	param (
 		[int]
