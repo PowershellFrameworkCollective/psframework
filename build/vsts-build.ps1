@@ -37,7 +37,7 @@ foreach ($line in (Get-Content "$($PSScriptRoot)\filesBefore.txt" | Where-Object
 	if ([string]::IsNullOrWhiteSpace($line)) { continue }
 	
 	$basePath = Join-Path "$($publishDir.FullName)\PSFramework" $line
-	foreach ($entry in (Resolve-PSFPath -Path $basePath))
+	foreach ($entry in (Resolve-Path -Path $basePath))
 	{
 		$item = Get-Item $entry
 		if ($item.PSIsContainer) { continue }
@@ -57,7 +57,7 @@ foreach ($line in (Get-Content "$($PSScriptRoot)\filesAfter.txt" | Where-Object 
 	if ([string]::IsNullOrWhiteSpace($line)) { continue }
 	
 	$basePath = Join-Path "$($publishDir.FullName)\PSFramework" $line
-	foreach ($entry in (Resolve-PSFPath -Path $basePath))
+	foreach ($entry in (Resolve-Path -Path $basePath))
 	{
 		$item = Get-Item $entry
 		if ($item.PSIsContainer) { continue }
