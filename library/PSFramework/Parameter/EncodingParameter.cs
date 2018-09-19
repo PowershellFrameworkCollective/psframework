@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
+using System.Reflection;
 using System.Text;
 
 namespace PSFramework.Parameter
@@ -108,7 +109,11 @@ namespace PSFramework.Parameter
                 case "bigendianunicode":
                     return Encoding.BigEndianUnicode;
                 case "utf8":
-                    return Encoding.UTF8;
+                    return new UTF8Encoding(true);
+                case "utf8bom":
+                    return new UTF8Encoding(true);
+                case "utf8nobom":
+                    return new UTF8Encoding(false);
                 case "utf7":
                     return Encoding.UTF7;
                 case "utf32":
@@ -144,7 +149,9 @@ namespace PSFramework.Parameter
                 case "utf-16BE":
                     return "BigEndianUnicode";
                 case "utf-8":
-                    return "UTF8";
+                    if (IsUTF8BOM(EncodingItem))
+                        return "UTF8";
+                    return "UTF8NoBom";
                 case "utf-7":
                     return "UTF7";
                 case "utf-32":
@@ -165,6 +172,20 @@ namespace PSFramework.Parameter
         public override string ToString()
         {
             return GetEncodingString(Encoding);
+        }
+
+        /// <summary>
+        /// Accepts a UTF8 encoding and returns, whether it includes writing a ByteOrderMark
+        /// </summary>
+        /// <param name="Encoding">The encoding object to interpret</param>
+        /// <returns>Whether it is with BOM or without</returns>
+        public static bool IsUTF8BOM(Encoding Encoding)
+        {
+            if (Encoding.BodyName != "utf-8")
+                throw new ArgumentException("Not a utf-8 encoding!");
+            Type type = Encoding.GetType();
+            FieldInfo info = type.GetField("emitUTF8Identifier", BindingFlags.Instance | BindingFlags.NonPublic);
+            return (bool)info.GetValue(Encoding);
         }
     }
 }

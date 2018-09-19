@@ -52,7 +52,7 @@
 	ScriptsToProcess = @()
 	
 	# Type files (.ps1xml) to be loaded when importing this module
-	TypesToProcess = @()
+	# TypesToProcess = @('xml\PSFramework.Types.ps1xml')
 	
 	# Format files (.ps1xml) to be loaded when importing this module
 	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')

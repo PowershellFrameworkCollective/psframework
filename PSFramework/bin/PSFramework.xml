@@ -2699,6 +2699,13 @@
             </summary>
             <returns>The returned encoding string</returns>
         </member>
+        <member name="M:PSFramework.Parameter.EncodingParameter.IsUTF8BOM(System.Text.Encoding)">
+            <summary>
+            Accepts a UTF8 encoding and returns, whether it includes writing a ByteOrderMark
+            </summary>
+            <param name="Encoding">The encoding object to interpret</param>
+            <returns>Whether it is with BOM or without</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ParameterClass">
             <summary>
             Base class of all parameter classes
