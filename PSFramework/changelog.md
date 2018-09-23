@@ -1,6 +1,7 @@
 ﻿# CHANGELOG
-## 0.10.27.129
- - Upd: Encoding enhanced, now supports UTF8 both with and withlut BOM
+## 0.10.27.130
+ - New: Command Get-PSFUserChoice allows prompting the user for a choice
+ - Upd: Encoding enhanced, now supports UTF8 both with and without BOM
 
 ## 0.10.27.128 : 2018-09-14
  - New: Command Wait-PSFMessage waits for logs to be flushed, also offers option to terminate logging runspaces.

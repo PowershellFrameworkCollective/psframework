@@ -82,6 +82,7 @@
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
+		'Get-PSFUserChoice',
 		'Import-PSFClixml',
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
