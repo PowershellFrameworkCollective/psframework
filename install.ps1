@@ -17,6 +17,10 @@
 	.PARAMETER UserMode
 		The downloaded module will be moved to the user profile, rather than program files.
 
+	.PARAMETER Scope
+		By default, the downloaded module will be moved to program files.
+		Setting this to 'CurrentUser' installs to the userprofile of the current user.
+
 	.PARAMETER Force
 		The install script will overwrite an existing module.
 #>
@@ -27,6 +31,10 @@ Param (
 	
 	[switch]
 	$UserMode,
+	
+	[ValidateSet('AllUsers', 'CurrentUser')]
+	[string]
+	$Scope = "AllUsers",
 	
 	[switch]
 	$Force
@@ -42,6 +50,15 @@ $BaseUrl = "https://github.com/PowershellFrameworkCollective/psframework"
 # If the module is in a subfolder of the cloned repository, specify relative path here. Empty string to skip.
 $SubFolder = "PSFramework"
 #endregion Configuration for cloning script
+
+#region Parameter Calculation
+$doUserMode = $false
+if ($UserMode) { $doUserMode = $true }
+if ($install_CurrentUser) { $doUserMode = $true }
+if ($Scope -eq 'CurrentUser') { $doUserMode = $true }
+
+if ($install_Branch) { $Branch = $install_Branch }
+#endregion Parameter Calculation
 
 #region Utility Functions
 function Compress-Archive
