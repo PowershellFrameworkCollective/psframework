@@ -29,7 +29,7 @@
 		$Path,
 		
 		[PSFEncoding]
-		$Encoding = 'UTF8'
+		$Encoding = (Get-PSFConfigValue -FullName 'psframework.text.encoding.defaultread' -Fallback 'utf-8')
 	)
 	
 	begin
