@@ -17,6 +17,10 @@
 		"This is &an example" will have the character "a" bound for the choice.
 		"This is an example" will have the character "T" bound for the choice.
 	
+		This parameter takes both strings and hashtables (in any combination).
+		A hashtable is expected to have two properties, 'Label' and 'Help'.
+		Label is the text shown in the initial prompt, help what the user sees when requesting help.
+	
 	.PARAMETER Caption
 		The title of the question, so the user knows what it is all about.
 	
@@ -36,7 +40,7 @@
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
-		[string[]]
+		[object[]]
 		$Options,
 		
 		[string]
@@ -55,8 +59,21 @@
 		$choices = @()
 		foreach ($option in $Options)
 		{
-			if ($option -match "&") { $choices += New-Object System.Management.Automation.Host.ChoiceDescription -ArgumentList $option, $option }
-			else { $choices += New-Object System.Management.Automation.Host.ChoiceDescription -ArgumentList "&$($option.Trim())", $option }
+			if ($option -is [hashtable])
+			{
+				$label = $option.Keys -match '^l' | Select-Object -First 1
+				[string]$labelValue = $option[$label]
+				$help = $option.Keys -match '^h' | Select-Object -First 1
+				[string]$helpValue = $option[$help]
+				
+			}
+			else
+			{
+				$labelValue = "$option"
+				$helpValue = "$option"
+			}
+			if ($labelValue -match "&") { $choices += New-Object System.Management.Automation.Host.ChoiceDescription -ArgumentList $labelValue, $helpValue }
+			else { $choices += New-Object System.Management.Automation.Host.ChoiceDescription -ArgumentList "&$($labelValue.Trim())", $helpValue }
 		}
 	}
 	process
