@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSFramework.Utility
 {
@@ -69,9 +67,9 @@ namespace PSFramework.Utility
         /// <summary>
         /// Turns the value into a concurrent queue.
         /// </summary>
-        public void ConcurrentQueue()
+        public void ConcurrentQueue(bool Reset = false)
         {
-            if (Value == null)
+            if (Value == null || Reset)
                 Value = new ConcurrentQueue<object>();
             else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentQueue*"))
                 Value = new ConcurrentQueue<object>();
@@ -80,9 +78,9 @@ namespace PSFramework.Utility
         /// <summary>
         /// Turns the value into a concurrent stack
         /// </summary>
-        public void ConcurrentStack()
+        public void ConcurrentStack(bool Reset = false)
         {
-            if (Value == null)
+            if (Value == null || Reset)
                 Value = new ConcurrentStack<object>();
             else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentStack*"))
                 Value = new ConcurrentStack<object>();
@@ -91,9 +89,9 @@ namespace PSFramework.Utility
         /// <summary>
         /// Turns the value into a concurrent list
         /// </summary>
-        public void ConcurrentList()
+        public void ConcurrentList(bool Reset = false)
         {
-            if (Value == null)
+            if (Value == null || Reset)
                 Value = new BlockingCollection<object>();
             else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.BlockingCollection*"))
                 Value = new BlockingCollection<object>();
@@ -102,9 +100,9 @@ namespace PSFramework.Utility
         /// <summary>
         /// TUrns the value into a concurrent dictionary with case-insensitive string keys
         /// </summary>
-        public void ConcurrentDictionary()
+        public void ConcurrentDictionary(bool Reset = false)
         {
-            if (Value == null)
+            if (Value == null || Reset)
                 Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
             else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentDictionary*"))
                 Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);

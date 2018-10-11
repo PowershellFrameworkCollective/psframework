@@ -40,6 +40,14 @@
 		Safe to use in multiple runspaces in parallel.
 		Will not apply changes if the current value is already such an object.
 	
+	.PARAMETER PassThru
+		Has the command returning the object just set.
+	
+	.PARAMETER Reset
+		Clears the dynamic content object's collection objects.
+		Use this to ensure the collection is actually empty.
+		Only used in combination of either -Queue, -Stack, -List or -Dictionary.
+	
 	.EXAMPLE
 		PS C:\> Set-PSFDynamicContentObject -Name Test -Value $Value
 		
@@ -47,7 +55,7 @@
 	
 	.EXAMPLE
 		PS C:\> Set-PSFDynamicContentObject -Name MyModule.Value -Queue
-	
+		
 		Sets the Dynamic Content Object named "MyModule.Value" to contain a threadsafe queue.
 		This queue will be safe to enqueue and dequeue from, no matter the number of runspaces accessing it simultaneously.
 #>
@@ -79,7 +87,13 @@
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Dictionary')]
 		[switch]
-		$Dictionary
+		$Dictionary,
+		
+		[switch]
+		$PassThru,
+		
+		[switch]
+		$Reset
 	)
 	
 	process
@@ -87,19 +101,23 @@
 		foreach ($item in $Name)
 		{
 			if (Test-PSFParameterBinding -ParameterName Value) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value) }
-			if ($Queue) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentQueue() }
-			if ($Stack) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentStack() }
-			if ($List) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentList() }
-			if ($Dictionary) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentDictionary() }
+			if ($Queue) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentQueue($Reset) }
+			if ($Stack) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentStack($Reset) }
+			if ($List) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentList($Reset) }
+			if ($Dictionary) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentDictionary($Reset) }
+			
+			if ($PassThru) { [PSFramework.Utility.DynamicContentObject]::Get($item) }
 		}
 		
 		foreach ($item in $Object)
 		{
 			$item.Value = $Value
-			if ($Queue) { $item.ConcurrentQueue() }
-			if ($Stack) { $item.ConcurrentStack() }
-			if ($List) { $item.ConcurrentList() }
-			if ($Dictionary) { $item.ConcurrentDictionary() }
+			if ($Queue) { $item.ConcurrentQueue($Reset) }
+			if ($Stack) { $item.ConcurrentStack($Reset) }
+			if ($List) { $item.ConcurrentList($Reset) }
+			if ($Dictionary) { $item.ConcurrentDictionary($Reset) }
+			
+			if ($PassThru) { $item }
 		}
 	}
 }
