@@ -1,5 +1,5 @@
 $script:ModuleRoot = $PSScriptRoot
-$script:ModuleVersion = "0.10.27.128"
+$script:ModuleVersion = "0.10.27.134"
 
 # Detect whether at some level dotsourcing was enforced
 $script:doDotSource = $false

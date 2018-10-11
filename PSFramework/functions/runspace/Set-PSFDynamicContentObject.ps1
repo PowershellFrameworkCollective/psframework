@@ -100,11 +100,11 @@
 	{
 		foreach ($item in $Name)
 		{
-			if (Test-PSFParameterBinding -ParameterName Value) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value) }
-			if ($Queue) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentQueue($Reset) }
-			if ($Stack) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentStack($Reset) }
-			if ($List) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentList($Reset) }
-			if ($Dictionary) { [PSFramework.Utility.DynamicContentObject]::Get($item).ConcurrentDictionary($Reset) }
+			if ($Queue) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Queue') }
+			elseif ($Stack) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Stack') }
+			elseif ($List) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'List') }
+			elseif ($Dictionary) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Dictionary') }
+			else { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Common') }
 			
 			if ($PassThru) { [PSFramework.Utility.DynamicContentObject]::Get($item) }
 		}

@@ -14,7 +14,7 @@ namespace PSFramework.Utility
         /// <summary>
         /// The full dictionary of dynamic objects
         /// </summary>
-        private static Dictionary<string, DynamicContentObject> Values = new Dictionary<string, DynamicContentObject>();
+        private static Dictionary<string, DynamicContentObject> Values = new Dictionary<string, DynamicContentObject>(StringComparer.InvariantCultureIgnoreCase);
         
         /// <summary>
         /// List of all dynamic content objects registered
@@ -29,14 +29,32 @@ namespace PSFramework.Utility
         /// </summary>
         /// <param name="Name">The name of the object</param>
         /// <param name="Value">The value to set</param>
-        public static void Set(string Name, object Value)
+        /// <param name="Type">The type of dynamic content object to create (if creatable)</param>
+        public static void Set(string Name, object Value, DynamicContentObjectType Type = DynamicContentObjectType.Common)
         {
-            string low = Name.ToLower();
-
-            if (Values.ContainsKey(low))
-                Values[low].Value = Value;
+            if (Values.ContainsKey(Name))
+                Values[Name].Value = Value;
             else
-                Values[low] = new DynamicContentObject(low, Value);
+            {
+                switch (Type)
+                {
+                    case DynamicContentObjectType.Dictionary:
+                        Values[Name] = new DynamicContentDictionary(Name, Value);
+                        break;
+                    case DynamicContentObjectType.List:
+                        Values[Name] = new DynamicContentList(Name, Value);
+                        break;
+                    case DynamicContentObjectType.Queue:
+                        Values[Name] = new DynamicContentQueue(Name, Value);
+                        break;
+                    case DynamicContentObjectType.Stack:
+                        Values[Name] = new DynamicContentStack(Name, Value);
+                        break;
+                    default:
+                        Values[Name] = new DynamicContentObject(Name, Value);
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -46,10 +64,10 @@ namespace PSFramework.Utility
         /// <returns>The Dynamic Content Object selected</returns>
         public static DynamicContentObject Get(string Name)
         {
-            if (!Values.ContainsKey(Name.ToLower()))
-                Values[Name.ToLower()] = new DynamicContentObject(Name.ToLower(), null);
+            if (!Values.ContainsKey(Name))
+                Values[Name] = new DynamicContentObject(Name, null);
 
-            return Values[Name.ToLower()];
+            return Values[Name];
         }
         #endregion Statics
 

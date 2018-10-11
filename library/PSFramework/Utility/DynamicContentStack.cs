@@ -4,82 +4,82 @@ using System.Collections.Concurrent;
 namespace PSFramework.Utility
 {
     /// <summary>
-    /// A dynamic content object that implements a queue
+    /// A dynamic content object that implements a stack
     /// </summary>
-    public class DynamicContentQueue : DynamicContentObject
+    public class DynamicContentStack : DynamicContentObject
     {
         /// <summary>
         /// The value of the dynamic content object
         /// </summary>
         public new object Value
         {
-            get { return _Queue; }
+            get { return _Stack; }
             set
             {
                 if (value == null)
-                    _Queue = new ConcurrentQueue<object>();
-                else if ((Value as ConcurrentQueue<object>) != null)
-                    _Queue = Value as ConcurrentQueue<object>;
+                    _Stack = new ConcurrentStack<object>();
+                else if ((Value as ConcurrentStack<object>) != null)
+                    _Stack = Value as ConcurrentStack<object>;
                 else
-                    throw new ArgumentException("Only accepts concurrent queues. Specify a null value to reset or queue to add items!");
+                    throw new ArgumentException("Only accepts concurrent stacks. Specify a null value to reset or queue to add items!");
             }
         }
-        private ConcurrentQueue<object> _Queue = new ConcurrentQueue<object>();
+        private ConcurrentStack<object> _Stack = new ConcurrentStack<object>();
 
         /// <summary>
-        /// Creates a dynamic content object concurrent queue 
+        /// Creates a dynamic content object concurrent stack 
         /// </summary>
         /// <param name="Name">The name of the setting</param>
         /// <param name="Value">The initial value of the object</param>
-        public DynamicContentQueue(string Name, object Value)
+        public DynamicContentStack(string Name, object Value)
             : base(Name, Value)
         {
-            
+
         }
 
         /// <summary>
-        /// How many items are currently queued
+        /// How many items are currently stacked
         /// </summary>
         public int Count
         {
-            get { return _Queue.Count; }
+            get { return _Stack.Count; }
         }
 
         /// <summary>
-        /// Returns the current queue content as array
+        /// Returns the current stack content as array
         /// </summary>
         /// <returns>The current queue content</returns>
         public object[] ToArray()
         {
-            return _Queue.ToArray();
+            return _Stack.ToArray();
         }
 
         /// <summary>
-        /// Adds an item to the queue
+        /// Adds an item to the stack
         /// </summary>
         /// <param name="Item">The item to add</param>
         public void Enqueue(object Item)
         {
-            _Queue.Enqueue(Item);
+            _Stack.Push(Item);
         }
 
         /// <summary>
-        /// Returns an object if there is anything to take from the queue
+        /// Returns an object if there is anything to take from the stack
         /// </summary>
         /// <returns>The next queued item</returns>
         public object Dequeue()
         {
             object value;
-            _Queue.TryDequeue(out value);
+            _Stack.TryPop(out value);
             return Value;
         }
 
         /// <summary>
-        /// Resets the queue by reestablishing an empty queue.
+        /// Resets the stack by reestablishing an empty stack.
         /// </summary>
         public void Reset()
         {
-            Value = new ConcurrentQueue<object>();
+            Value = new ConcurrentStack<object>();
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿# CHANGELOG
-## 0.10.27.131
+## 0.10.27.134 : 2018-10-12
  - New: Command Get-PSFUserChoice allows prompting the user for a choice
+ - New: Configuration Validator: integerarray
  - Upd: Encoding enhanced, now supports UTF8 both with and without BOM
- - Fix. Resolve-PSFPath will fail to resolve "." properly (#209)
+ - Upd: Improved Dynamic Content Objects for concurrent collections
+ - Fix: Resolve-PSFPath will fail to resolve "." properly (#209)
+ - Fix: Configuration error storing collection values in combination with setting a handler, ending up with nested arrays.
 
 ## 0.10.27.128 : 2018-09-14
  - New: Command Wait-PSFMessage waits for logs to be flushed, also offers option to terminate logging runspaces.

@@ -3098,6 +3098,31 @@
             Clears all cache properties to null
             </summary>
         </member>
+        <member name="T:PSFramework.Runspace.RunspaceBoundValue">
+            <summary>
+            Wrapper class that offers the tools to make Values runspace specific
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceBoundValue.OfferDefaultValue">
+            <summary>
+            Whether the defautl value should be offered when asking from a runspace without custom settings
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceBoundValue.DefaultValue">
+            <summary>
+            The default value to offer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceBoundValue.Values">
+            <summary>
+            The values available on a "per runspace" basis
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceBoundValue.Value">
+            <summary>
+            The value to offer or set, specific per runspace from which it is called
+            </summary>
+        </member>
         <member name="T:PSFramework.Runspace.RunspaceContainer">
             <summary>
             Class that contains the logic necessary to manage a unique runspace
@@ -3592,6 +3617,73 @@
             <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
             <returns>The next task to perform.</returns>
         </member>
+        <member name="T:PSFramework.Utility.DynamicContentDictionary">
+            <summary>
+            A dynamic content object that implements a dictionary
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentDictionary.Value">
+            <summary>
+            The value of the dynamic content object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentDictionary.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a dynamic content object concurrent dictionary 
+            </summary>
+            <param name="Name">The name of the setting</param>
+            <param name="Value">The initial value of the object</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentDictionary.Reset">
+            <summary>
+            Resets the stack by reestablishing an empty dictionary.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.DynamicContentList">
+            <summary>
+            A dynamic content object that implements a list
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentList.Value">
+            <summary>
+            The value of the dynamic content object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentList.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a dynamic content object concurrent list 
+            </summary>
+            <param name="Name">The name of the setting</param>
+            <param name="Value">The initial value of the object</param>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentList.Count">
+            <summary>
+            How many items are currently listed
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentList.ToArray">
+            <summary>
+            Returns the current list content as array
+            </summary>
+            <returns>The current queue content</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentList.Enqueue(System.Object)">
+            <summary>
+            Adds an item to the list
+            </summary>
+            <param name="Item">The item to add</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentList.Dequeue">
+            <summary>
+            Returns an object if there is anything to take from the list
+            </summary>
+            <returns>The next queued item</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentList.Reset">
+            <summary>
+            Resets the stack by reestablishing an empty list.
+            </summary>
+        </member>
         <member name="T:PSFramework.Utility.DynamicContentObject">
             <summary>
             Class that contains a value that can be updated from another runspace
@@ -3607,12 +3699,13 @@
             List of all dynamic content objects registered
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentObject.Set(System.String,System.Object)">
+        <member name="M:PSFramework.Utility.DynamicContentObject.Set(System.String,System.Object,PSFramework.Utility.DynamicContentObjectType)">
             <summary>
             Sets the value of a dynamic content object, creating a new one if needed
             </summary>
             <param name="Name">The name of the object</param>
             <param name="Value">The value to set</param>
+            <param name="Type">The type of dynamic content object to create (if creatable)</param>
         </member>
         <member name="M:PSFramework.Utility.DynamicContentObject.Get(System.String)">
             <summary>
@@ -3631,22 +3724,22 @@
             The name of the object
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentQueue">
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentQueue(System.Boolean)">
             <summary>
             Turns the value into a concurrent queue.
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentStack">
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentStack(System.Boolean)">
             <summary>
             Turns the value into a concurrent stack
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentList">
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentList(System.Boolean)">
             <summary>
             Turns the value into a concurrent list
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentDictionary">
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentDictionary(System.Boolean)">
             <summary>
             TUrns the value into a concurrent dictionary with case-insensitive string keys
             </summary>
@@ -3663,6 +3756,126 @@
             </summary>
             <param name="Name">The name of the item</param>
             <param name="Value">The value of the item</param>
+        </member>
+        <member name="T:PSFramework.Utility.DynamicContentObjectType">
+            <summary>
+            The kind of dynamic content object was specified
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.Common">
+            <summary>
+            A regular object was requested
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.Queue">
+            <summary>
+            A queue was requested
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.List">
+            <summary>
+            A list was requested
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.Stack">
+            <summary>
+            A stack was requested
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.Dictionary">
+            <summary>
+            A dictionary was requested
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.DynamicContentQueue">
+            <summary>
+            A dynamic content object that implements a queue
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentQueue.Value">
+            <summary>
+            The value of the dynamic content object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentQueue.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a dynamic content object concurrent queue 
+            </summary>
+            <param name="Name">The name of the setting</param>
+            <param name="Value">The initial value of the object</param>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentQueue.Count">
+            <summary>
+            How many items are currently queued
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentQueue.ToArray">
+            <summary>
+            Returns the current queue content as array
+            </summary>
+            <returns>The current queue content</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentQueue.Enqueue(System.Object)">
+            <summary>
+            Adds an item to the queue
+            </summary>
+            <param name="Item">The item to add</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentQueue.Dequeue">
+            <summary>
+            Returns an object if there is anything to take from the queue
+            </summary>
+            <returns>The next queued item</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentQueue.Reset">
+            <summary>
+            Resets the queue by reestablishing an empty queue.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.DynamicContentStack">
+            <summary>
+            A dynamic content object that implements a stack
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentStack.Value">
+            <summary>
+            The value of the dynamic content object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentStack.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a dynamic content object concurrent stack 
+            </summary>
+            <param name="Name">The name of the setting</param>
+            <param name="Value">The initial value of the object</param>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentStack.Count">
+            <summary>
+            How many items are currently stacked
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentStack.ToArray">
+            <summary>
+            Returns the current stack content as array
+            </summary>
+            <returns>The current queue content</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentStack.Enqueue(System.Object)">
+            <summary>
+            Adds an item to the stack
+            </summary>
+            <param name="Item">The item to add</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentStack.Dequeue">
+            <summary>
+            Returns an object if there is anything to take from the stack
+            </summary>
+            <returns>The next queued item</returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentStack.Reset">
+            <summary>
+            Resets the stack by reestablishing an empty stack.
+            </summary>
         </member>
         <member name="T:PSFramework.Utility.LimitedConcurrentQueue`1">
             <summary>

@@ -4,82 +4,82 @@ using System.Collections.Concurrent;
 namespace PSFramework.Utility
 {
     /// <summary>
-    /// A dynamic content object that implements a queue
+    /// A dynamic content object that implements a list
     /// </summary>
-    public class DynamicContentQueue : DynamicContentObject
+    public class DynamicContentList : DynamicContentObject
     {
         /// <summary>
         /// The value of the dynamic content object
         /// </summary>
         public new object Value
         {
-            get { return _Queue; }
+            get { return _List; }
             set
             {
                 if (value == null)
-                    _Queue = new ConcurrentQueue<object>();
-                else if ((Value as ConcurrentQueue<object>) != null)
-                    _Queue = Value as ConcurrentQueue<object>;
+                    _List = new BlockingCollection<object>();
+                else if ((Value as BlockingCollection<object>) != null)
+                    _List = Value as BlockingCollection<object>;
                 else
-                    throw new ArgumentException("Only accepts concurrent queues. Specify a null value to reset or queue to add items!");
+                    throw new ArgumentException("Only accepts concurrent lists. Specify a null value to reset or queue to add items!");
             }
         }
-        private ConcurrentQueue<object> _Queue = new ConcurrentQueue<object>();
+        private BlockingCollection<object> _List = new BlockingCollection<object>();
 
         /// <summary>
-        /// Creates a dynamic content object concurrent queue 
+        /// Creates a dynamic content object concurrent list 
         /// </summary>
         /// <param name="Name">The name of the setting</param>
         /// <param name="Value">The initial value of the object</param>
-        public DynamicContentQueue(string Name, object Value)
+        public DynamicContentList(string Name, object Value)
             : base(Name, Value)
         {
-            
+
         }
 
         /// <summary>
-        /// How many items are currently queued
+        /// How many items are currently listed
         /// </summary>
         public int Count
         {
-            get { return _Queue.Count; }
+            get { return _List.Count; }
         }
 
         /// <summary>
-        /// Returns the current queue content as array
+        /// Returns the current list content as array
         /// </summary>
         /// <returns>The current queue content</returns>
         public object[] ToArray()
         {
-            return _Queue.ToArray();
+            return _List.ToArray();
         }
 
         /// <summary>
-        /// Adds an item to the queue
+        /// Adds an item to the list
         /// </summary>
         /// <param name="Item">The item to add</param>
         public void Enqueue(object Item)
         {
-            _Queue.Enqueue(Item);
+            _List.Add(Item);
         }
 
         /// <summary>
-        /// Returns an object if there is anything to take from the queue
+        /// Returns an object if there is anything to take from the list
         /// </summary>
         /// <returns>The next queued item</returns>
         public object Dequeue()
         {
             object value;
-            _Queue.TryDequeue(out value);
+            _List.TryTake(out value);
             return Value;
         }
 
         /// <summary>
-        /// Resets the queue by reestablishing an empty queue.
+        /// Resets the stack by reestablishing an empty list.
         /// </summary>
         public void Reset()
         {
-            Value = new ConcurrentQueue<object>();
+            Value = new BlockingCollection<object>();
         }
     }
 }
