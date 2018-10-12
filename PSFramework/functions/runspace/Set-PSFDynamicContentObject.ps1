@@ -60,6 +60,7 @@
 		This queue will be safe to enqueue and dequeue from, no matter the number of runspaces accessing it simultaneously.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[OutputType([PSFramework.Utility.DynamicContentObject])]
 	[CmdletBinding()]
 	Param (
 		[string[]]
