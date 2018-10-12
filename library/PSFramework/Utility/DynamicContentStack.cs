@@ -58,7 +58,7 @@ namespace PSFramework.Utility
         /// Adds an item to the stack
         /// </summary>
         /// <param name="Item">The item to add</param>
-        public void Enqueue(object Item)
+        public void Push(object Item)
         {
             _Stack.Push(Item);
         }
@@ -67,11 +67,11 @@ namespace PSFramework.Utility
         /// Returns an object if there is anything to take from the stack
         /// </summary>
         /// <returns>The next queued item</returns>
-        public object Dequeue()
+        public object Pop()
         {
             object value;
             _Stack.TryPop(out value);
-            return Value;
+            return value;
         }
 
         /// <summary>

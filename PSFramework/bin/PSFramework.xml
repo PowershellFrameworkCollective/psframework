@@ -3667,13 +3667,13 @@
             </summary>
             <returns>The current queue content</returns>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentList.Enqueue(System.Object)">
+        <member name="M:PSFramework.Utility.DynamicContentList.Add(System.Object)">
             <summary>
             Adds an item to the list
             </summary>
             <param name="Item">The item to add</param>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentList.Dequeue">
+        <member name="M:PSFramework.Utility.DynamicContentList.Take">
             <summary>
             Returns an object if there is anything to take from the list
             </summary>
@@ -3860,13 +3860,13 @@
             </summary>
             <returns>The current queue content</returns>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentStack.Enqueue(System.Object)">
+        <member name="M:PSFramework.Utility.DynamicContentStack.Push(System.Object)">
             <summary>
             Adds an item to the stack
             </summary>
             <param name="Item">The item to add</param>
         </member>
-        <member name="M:PSFramework.Utility.DynamicContentStack.Dequeue">
+        <member name="M:PSFramework.Utility.DynamicContentStack.Pop">
             <summary>
             Returns an object if there is anything to take from the stack
             </summary>
