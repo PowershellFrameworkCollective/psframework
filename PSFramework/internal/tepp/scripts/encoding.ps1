@@ -2,6 +2,8 @@
 	'Unicode'
 	'BigEndianUnicode'
 	'UTF8'
+	'UTF8Bom'
+	'UTF8NoBom'
 	'UTF7'
 	'UTF32'
 	'Ascii'

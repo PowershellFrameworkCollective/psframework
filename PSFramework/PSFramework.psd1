@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.10.27.128'
+	ModuleVersion = '0.10.27.134'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -52,7 +52,7 @@
 	ScriptsToProcess = @()
 	
 	# Type files (.ps1xml) to be loaded when importing this module
-	TypesToProcess = @()
+	# TypesToProcess = @('xml\PSFramework.Types.ps1xml')
 	
 	# Format files (.ps1xml) to be loaded when importing this module
 	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')
@@ -82,6 +82,7 @@
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
+		'Get-PSFUserChoice',
 		'Import-PSFClixml',
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',

@@ -58,7 +58,7 @@
 		[switch]
 		$NoCompression,
 		
-		[System.Text.Encoding]
+		[PSFEncoding]
 		$Encoding = (Get-PSFConfigValue -FullName 'PSFramework.Text.Encoding.DefaultWrite')
 	)
 	

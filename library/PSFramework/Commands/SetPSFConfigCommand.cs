@@ -405,11 +405,12 @@ namespace PSFramework.Commands
             #region Handler
             if (!DisableHandler.ToBool() && (_Config.Handler != null))
             {
+                object handlerValue = tempValue;
                 ScriptBlock tempHandler = ScriptBlock.Create(_Config.Handler.ToString());
                 if ((tempValue != null) && ((tempValue as ICollection) != null))
-                    tempValue = new object[1] { tempValue };
+                    handlerValue = new object[1] { tempValue };
 
-                tempHandler.Invoke(tempValue);
+                tempHandler.Invoke(handlerValue);
             }
             #endregion Handler
 

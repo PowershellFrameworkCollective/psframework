@@ -50,6 +50,11 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFDynamicContentObject -Paramete
 Register-PSFTeppArgumentCompleter -Command Set-PSFDynamicContentObject -Parameter Name -Name 'PSFramework-dynamiccontentobject-name'
 #endregion Runspace
 
+#region Serialization
+Register-PSFTeppArgumentCompleter -Command Export-PSFClixml -Parameter Encoding -Name 'PSFramework-Encoding'
+Register-PSFTeppArgumentCompleter -Command Import-PSFClixml -Parameter Encoding -Name 'PSFramework-Encoding'
+#endregion Serialization
+
 #region Tab Completion
 Register-PSFTeppArgumentCompleter -Command Set-PSFTeppResult -Parameter TabCompletion -Name 'PSFramework-tepp-scriptblockname'
 #endregion Tab Completion
