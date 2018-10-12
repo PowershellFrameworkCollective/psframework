@@ -22,8 +22,8 @@ namespace PSFramework.Utility
             {
                 if (value == null)
                     _Dictionary = new ConcurrentDictionary<string,object>(StringComparer.InvariantCultureIgnoreCase);
-                else if ((Value as ConcurrentDictionary<string, object>) != null)
-                    _Dictionary = Value as ConcurrentDictionary<string, object>;
+                else if ((value as ConcurrentDictionary<string, object>) != null)
+                    _Dictionary = value as ConcurrentDictionary<string, object>;
                 else
                     throw new ArgumentException("Only accepts concurrent dictionary. Specify a null value to reset or queue to add items!");
             }

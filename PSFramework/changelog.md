@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 0.10.27.135 : 2018-10-12
+ - Fix: New dynamic content collections' Reset() method doesn't do a thing.
+
 ## 0.10.27.134 : 2018-10-12
  - New: Command Get-PSFUserChoice allows prompting the user for a choice
  - New: Configuration Validator: integerarray

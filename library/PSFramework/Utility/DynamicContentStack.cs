@@ -18,8 +18,8 @@ namespace PSFramework.Utility
             {
                 if (value == null)
                     _Stack = new ConcurrentStack<object>();
-                else if ((Value as ConcurrentStack<object>) != null)
-                    _Stack = Value as ConcurrentStack<object>;
+                else if ((value as ConcurrentStack<object>) != null)
+                    _Stack = value as ConcurrentStack<object>;
                 else
                     throw new ArgumentException("Only accepts concurrent stacks. Specify a null value to reset or queue to add items!");
             }
