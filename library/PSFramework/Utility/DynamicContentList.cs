@@ -18,8 +18,8 @@ namespace PSFramework.Utility
             {
                 if (value == null)
                     _List = new BlockingCollection<object>();
-                else if ((Value as BlockingCollection<object>) != null)
-                    _List = Value as BlockingCollection<object>;
+                else if ((value as BlockingCollection<object>) != null)
+                    _List = value as BlockingCollection<object>;
                 else
                     throw new ArgumentException("Only accepts concurrent lists. Specify a null value to reset or queue to add items!");
             }

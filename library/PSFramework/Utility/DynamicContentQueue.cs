@@ -18,8 +18,8 @@ namespace PSFramework.Utility
             {
                 if (value == null)
                     _Queue = new ConcurrentQueue<object>();
-                else if ((Value as ConcurrentQueue<object>) != null)
-                    _Queue = Value as ConcurrentQueue<object>;
+                else if ((value as ConcurrentQueue<object>) != null)
+                    _Queue = value as ConcurrentQueue<object>;
                 else
                     throw new ArgumentException("Only accepts concurrent queues. Specify a null value to reset or queue to add items!");
             }
