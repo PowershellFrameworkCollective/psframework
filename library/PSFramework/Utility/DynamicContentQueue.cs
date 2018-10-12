@@ -71,7 +71,7 @@ namespace PSFramework.Utility
         {
             object value;
             _Queue.TryDequeue(out value);
-            return Value;
+            return value;
         }
 
         /// <summary>

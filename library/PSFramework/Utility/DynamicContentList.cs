@@ -58,7 +58,7 @@ namespace PSFramework.Utility
         /// Adds an item to the list
         /// </summary>
         /// <param name="Item">The item to add</param>
-        public void Enqueue(object Item)
+        public void Add(object Item)
         {
             _List.Add(Item);
         }
@@ -67,11 +67,11 @@ namespace PSFramework.Utility
         /// Returns an object if there is anything to take from the list
         /// </summary>
         /// <returns>The next queued item</returns>
-        public object Dequeue()
+        public object Take()
         {
             object value;
             _List.TryTake(out value);
-            return Value;
+            return value;
         }
 
         /// <summary>
