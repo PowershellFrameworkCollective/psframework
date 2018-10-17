@@ -1,4 +1,4 @@
-function Set-PSFTeppResult
+﻿function Set-PSFTeppResult
 {
 <#
 	.SYNOPSIS

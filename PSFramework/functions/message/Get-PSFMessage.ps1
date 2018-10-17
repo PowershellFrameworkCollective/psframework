@@ -1,4 +1,4 @@
-function Get-PSFMessage
+﻿function Get-PSFMessage
 {
 	<#
 		.SYNOPSIS

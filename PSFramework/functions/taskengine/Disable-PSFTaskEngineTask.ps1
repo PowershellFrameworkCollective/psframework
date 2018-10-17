@@ -1,4 +1,4 @@
-function Disable-PSFTaskEngineTask
+﻿function Disable-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS

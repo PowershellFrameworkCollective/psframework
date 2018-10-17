@@ -1,4 +1,4 @@
-function Get-PSFTaskEngineCache
+﻿function Get-PSFTaskEngineCache
 {
 	<#
 		.SYNOPSIS

@@ -1,4 +1,4 @@
-function Get-PSFRunspace
+﻿function Get-PSFRunspace
 {
 <#
 	.SYNOPSIS

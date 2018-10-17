@@ -1,4 +1,4 @@
-function Remove-PSFLicense
+﻿function Remove-PSFLicense
 {
 <#
 	.SYNOPSIS

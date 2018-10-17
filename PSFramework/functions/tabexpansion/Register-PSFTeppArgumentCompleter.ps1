@@ -1,4 +1,4 @@
-function Register-PSFTeppArgumentCompleter
+﻿function Register-PSFTeppArgumentCompleter
 {
     <#
         .SYNOPSIS

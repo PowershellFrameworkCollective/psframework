@@ -1,4 +1,4 @@
-function Get-PSFMessageLevelModifier
+﻿function Get-PSFMessageLevelModifier
 {
 <#
 	.SYNOPSIS

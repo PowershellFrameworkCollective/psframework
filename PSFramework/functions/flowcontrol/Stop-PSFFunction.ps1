@@ -1,4 +1,4 @@
-function Stop-PSFFunction
+﻿function Stop-PSFFunction
 {
     <#
         .SYNOPSIS

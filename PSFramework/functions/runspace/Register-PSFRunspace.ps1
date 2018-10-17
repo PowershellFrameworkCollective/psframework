@@ -1,4 +1,4 @@
-function Register-PSFRunspace
+﻿function Register-PSFRunspace
 {
 <#
 	.SYNOPSIS

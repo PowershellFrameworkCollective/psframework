@@ -1,4 +1,4 @@
-function Install-PSFLoggingProvider
+﻿function Install-PSFLoggingProvider
 {
 	<#
 		.SYNOPSIS

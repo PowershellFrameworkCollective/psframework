@@ -1,4 +1,4 @@
-function Import-PSFClixml
+﻿function Import-PSFClixml
 {
 <#
 	.SYNOPSIS

@@ -1,4 +1,4 @@
-function Get-PSFTaskEngineTask
+﻿function Get-PSFTaskEngineTask
 {
 	<#
 		.SYNOPSIS

@@ -1,4 +1,4 @@
-function Write-PSFMessageProxy
+﻿function Write-PSFMessageProxy
 {
 <#
 	.SYNOPSIS

@@ -1,4 +1,4 @@
-function Get-PSFConfig
+﻿function Get-PSFConfig
 {
 	<#
 		.SYNOPSIS

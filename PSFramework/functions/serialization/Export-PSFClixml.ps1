@@ -1,4 +1,4 @@
-function Export-PSFClixml
+﻿function Export-PSFClixml
 {
 <#
 	.SYNOPSIS

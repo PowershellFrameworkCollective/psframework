@@ -1,4 +1,4 @@
-function Register-PSFMessageTransform
+﻿function Register-PSFMessageTransform
 {
 	<#
 		.SYNOPSIS

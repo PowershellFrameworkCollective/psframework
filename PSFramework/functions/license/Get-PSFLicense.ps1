@@ -1,4 +1,4 @@
-function Get-PSFLicense
+﻿function Get-PSFLicense
 {
 <#
 	.SYNOPSIS

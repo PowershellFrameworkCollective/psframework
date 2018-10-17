@@ -1,4 +1,4 @@
-function Register-PSFMessageEvent
+﻿function Register-PSFMessageEvent
 {
 	<#
 		.SYNOPSIS

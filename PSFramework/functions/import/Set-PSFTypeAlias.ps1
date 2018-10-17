@@ -1,4 +1,4 @@
-function Set-PSFTypeAlias
+﻿function Set-PSFTypeAlias
 {
 <#
 	.SYNOPSIS

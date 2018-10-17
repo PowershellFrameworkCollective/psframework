@@ -1,4 +1,4 @@
-function New-PSFLicense
+﻿function New-PSFLicense
 {
 <#
 	.SYNOPSIS

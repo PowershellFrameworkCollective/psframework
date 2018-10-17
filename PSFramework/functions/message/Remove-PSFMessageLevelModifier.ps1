@@ -1,4 +1,4 @@
-function Remove-PSFMessageLevelModifier
+﻿function Remove-PSFMessageLevelModifier
 {
 	<#
 		.SYNOPSIS

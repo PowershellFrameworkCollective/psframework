@@ -1,4 +1,4 @@
-function Export-PSFConfig
+﻿function Export-PSFConfig
 {
 <#
 	.SYNOPSIS

@@ -1,4 +1,4 @@
-function Test-PSFPowerShell
+﻿function Test-PSFPowerShell
 {
 <#
 	.SYNOPSIS

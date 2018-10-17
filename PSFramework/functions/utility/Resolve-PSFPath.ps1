@@ -1,4 +1,4 @@
-function Resolve-PSFPath
+﻿function Resolve-PSFPath
 {
 <#
 	.SYNOPSIS

@@ -1,4 +1,4 @@
-function Start-PSFRunspace
+﻿function Start-PSFRunspace
 {
 <#
 	.SYNOPSIS

@@ -1,4 +1,4 @@
-function Get-PSFDynamicContentObject
+﻿function Get-PSFDynamicContentObject
 {
 <#
 	.SYNOPSIS
