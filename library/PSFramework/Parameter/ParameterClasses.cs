@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSFramework.Parameter
+﻿namespace PSFramework.Parameter
 {
     /// <summary>
     /// List of available parameter classes
@@ -24,6 +18,11 @@ namespace PSFramework.Parameter
         /// <summary>
         /// The timespan parameter class allows for an easy way to specify a timespan
         /// </summary>
-        TimeSpan
+        TimeSpan,
+
+        /// <summary>
+        /// The encoing parameter class allows to consistently accept encodings as input.
+        /// </summary>
+        Encoding,
     }
 }

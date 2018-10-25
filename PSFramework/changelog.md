@@ -1,5 +1,28 @@
 ﻿# CHANGELOG
-## 0.9.25.112
+## 0.10.27.135 : 2018-10-12
+ - Fix: New dynamic content collections' Reset() method doesn't do a thing.
+
+## 0.10.27.134 : 2018-10-12
+ - New: Command Get-PSFUserChoice allows prompting the user for a choice
+ - New: Configuration Validator: integerarray
+ - Upd: Encoding enhanced, now supports UTF8 both with and without BOM
+ - Upd: Improved Dynamic Content Objects for concurrent collections
+ - Fix: Resolve-PSFPath will fail to resolve "." properly (#209)
+ - Fix: Configuration error storing collection values in combination with setting a handler, ending up with nested arrays.
+
+## 0.10.27.128 : 2018-09-14
+ - New: Command Wait-PSFMessage waits for logs to be flushed, also offers option to terminate logging runspaces.
+ - New: Command ConvertFrom-PSFClixml converts data that was serialized from objects back _into_ that object
+ - New: Command ConvertTo-PSFClixml converts objects into clixml data (binary or string, compressed or not)
+ - New: Parameter class: EncodingParameter
+ - Upd: Register-PSFTaskEngineTask `-Interval` and `-Delay` parameters changed to PSFTimeSpan for greater user convenience
+ - Upd: Stop-PSFFunction add `-StepsUpward` parameter, enabling upscope interrupt signals
+ - Other: Redesigned module layout and build procedure to compile the module into few files, improving import speed
+
+## 0.9.25.113 : 2018-09-05
+ - Fix: Stop-PSFFunction throws null method (#188)
+
+## 0.9.25.112 : 2018-09-04
  - Upd: Select-PSFObject: Supports adding alias properties
  - Upd: Select-PSFObject: Supports adding script property properties
  - Upd: Select-PSFObject: Supports adding script method properties

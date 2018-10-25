@@ -73,6 +73,10 @@
 				{
 					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
 				}
+				"Encoding"
+				{
+					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+				}
 				default
 				{
 					Stop-PSFFunction -Message "Support for the $ParameterClass parameter class has not yet been added!" -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented

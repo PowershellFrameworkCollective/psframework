@@ -1,4 +1,4 @@
-﻿<#
+<#
     .NOTES
         The original test this is based upon was written by June Blender.
 		After several rounds of modifications it stands now as it is, but the honor remains hers.
@@ -79,7 +79,7 @@ foreach ($command in $commands) {
         if ($Help.Synopsis -like '*`[`<CommonParameters`>`]*') {
             # If help is not found, synopsis in auto-generated help is the syntax diagram
             It "should not be auto-generated" {
-                $Help.Synopsis | Should Not BeLike '*`[`<CommonParameters`>`]*'
+                $Help.Synopsis | Should -Not -BeLike '*`[`<CommonParameters`>`]*'
             }
             $testhelperrors += 1
         }
@@ -88,7 +88,7 @@ foreach ($command in $commands) {
         if ([String]::IsNullOrEmpty($Help.Description.Text)) {
             # Should be a description for every function
             It "gets description for $commandName" {
-                $Help.Description | Should Not BeNullOrEmpty
+                $Help.Description | Should -Not -BeNullOrEmpty
             }
             $testhelperrors += 1
         }
@@ -97,7 +97,7 @@ foreach ($command in $commands) {
         if ([String]::IsNullOrEmpty(($Help.Examples.Example | Select-Object -First 1).Code)) {
             # Should be at least one example
             It "gets example code from $commandName" {
-                ($Help.Examples.Example | Select-Object -First 1).Code | Should Not BeNullOrEmpty
+                ($Help.Examples.Example | Select-Object -First 1).Code | Should -Not -BeNullOrEmpty
             }
             $testhelperrors += 1
         }
@@ -106,14 +106,14 @@ foreach ($command in $commands) {
         if ([String]::IsNullOrEmpty(($Help.Examples.Example.Remarks | Select-Object -First 1).Text)) {
             # Should be at least one example description
             It "gets example help from $commandName" {
-                ($Help.Examples.Example.Remarks | Select-Object -First 1).Text | Should Not BeNullOrEmpty
+                ($Help.Examples.Example.Remarks | Select-Object -First 1).Text | Should -Not -BeNullOrEmpty
             }
             $testhelperrors += 1
         }
         
         if ($testhelperrors -eq 0) {
             It "Ran silently $testhelpall tests" {
-                $testhelperrors | Should be 0
+                $testhelperrors | Should -be 0
             }
         }
         
@@ -135,7 +135,7 @@ foreach ($command in $commands) {
                 if ([String]::IsNullOrEmpty($parameterHelp.Description.Text)) {
                     # Should be a description for every parameter
                     It "gets help for parameter: $parameterName : in $commandName" {
-                        $parameterHelp.Description.Text | Should Not BeNullOrEmpty
+                        $parameterHelp.Description.Text | Should -Not -BeNullOrEmpty
                     }
                     $testparamserrors += 1
                 }
@@ -145,7 +145,7 @@ foreach ($command in $commands) {
                 if ($parameterHelp.Required -ne $codeMandatory) {
                     # Required value in Help should match IsMandatory property of parameter
                     It "help for $parameterName parameter in $commandName has correct Mandatory value" {
-                        $parameterHelp.Required | Should Be $codeMandatory
+                        $parameterHelp.Required | Should -Be $codeMandatory
                     }
                     $testparamserrors += 1
                 }
@@ -161,7 +161,7 @@ foreach ($command in $commands) {
                     if ($parameterHelp.parameterValueGroup.parameterValue -ne $names) {
                         # Parameter type in Help should match code
                         It "help for $commandName has correct parameter type for $parameterName" {
-                            $parameterHelp.parameterValueGroup.parameterValue | Should be $names
+                            $parameterHelp.parameterValueGroup.parameterValue | Should -be $names
                         }
                         $testparamserrors += 1
                     }
@@ -172,7 +172,7 @@ foreach ($command in $commands) {
                     if ($parameterHelp.parameterValueGroup.parameterValue -ne $names) {
                         # Parameter type in Help should match code
                         It "help for $commandName has correct parameter type for $parameterName" {
-                            $parameterHelp.parameterValueGroup.parameterValue | Should be $names
+                            $parameterHelp.parameterValueGroup.parameterValue | Should -be $names
                         }
                         $testparamserrors += 1
                     }
@@ -183,7 +183,7 @@ foreach ($command in $commands) {
                     if ($helpType -ne $codeType) {
                         # Parameter type in Help should match code
                         It "help for $commandName has correct parameter type for $parameterName" {
-                            $helpType | Should be $codeType
+                            $helpType | Should -be $codeType
                         }
                         $testparamserrors += 1
                     }
@@ -194,14 +194,14 @@ foreach ($command in $commands) {
                 if ($helpParm -notin $parameterNames) {
                     # Shouldn't find extra parameters in help.
                     It "finds help parameter in code: $helpParm" {
-                        $helpParm -in $parameterNames | Should Be $true
+                        $helpParm -in $parameterNames | Should -Be $true
                     }
                     $testparamserrors += 1
                 }
             }
             if ($testparamserrors -eq 0) {
                 It "Ran silently $testparamsall tests" {
-                    $testparamserrors | Should be 0
+                    $testparamserrors | Should -be 0
                 }
             }
         }

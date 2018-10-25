@@ -86,6 +86,11 @@
 		.PARAMETER Cmdlet
 			The $PSCmdlet object of the calling command.
 			Used to write exceptions in a more hidden manner, avoiding exposing internal script text in the default message display.
+	
+		.PARAMETER StepsUpward
+			When not throwing an exception and not calling continue, Stop-PSFFunction signals the calling command to stop.
+			In some cases you may want to signal a step or more further up the chain (notably from helper functions within a function).
+			This parameter allows you to add additional steps up the callstack that it will notify.
         
         .EXAMPLE
             Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -157,7 +162,10 @@
 		$ContinueLabel,
 		
 		[System.Management.Automation.PSCmdlet]
-		$Cmdlet
+		$Cmdlet,
+		
+		[int]
+		$StepsUpward = 0
 	)
 	
 	if ($Cmdlet) { $myCmdlet = $Cmdlet }
@@ -252,7 +260,7 @@
 		$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
 		
 		# Need to use "throw" as otherwise calling function will not be interrupted without passing the cmdlet parameter
-		if ($Cmdlet) { throw $records[0] }
+		if (-not $Cmdlet) { throw $records[0] }
 		else { $Cmdlet.ThrowTerminatingError($records[0]) }
 	}
 	#endregion Silent Mode
@@ -274,7 +282,8 @@
 		else
 		{
 			# Make sure the function knows it should be stopping
-			$psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode())
+			if ($StepsUpward -le 0) { $psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode()) }
+			else { $psframework_killqueue.Enqueue((Get-PSCallStack)[($StepsUpward + 1)].InvocationInfo.GetHashCode()) }
 			return
 		}
 	}

@@ -15,8 +15,8 @@
 		Unknown branches will terminate the script in error.
 	
 	.PARAMETER UserMode
-		Deprecated. The downloaded module will be moved to the user profile, rather than program files.
-		
+		The downloaded module will be moved to the user profile, rather than program files.
+
 	.PARAMETER Scope
 		By default, the downloaded module will be moved to program files.
 		Setting this to 'CurrentUser' installs to the userprofile of the current user.
@@ -2366,7 +2366,7 @@ function Write-LocalMessage
         [string]$Message
     )
 
-    if (([System.Management.Automation.PSTypeName]'PSFramework.Commands.WritePSFMessageCommand').Type) { Write-PSFMessage -Level Important -Message $Message -FunctionName "Install-$ModuleName" }
+    if (Test-Path function:Write-PSFMessage) { Write-PSFMessage -Level Important -Message $Message }
     else { Write-Host $Message }
 }
 #endregion Utility Functions

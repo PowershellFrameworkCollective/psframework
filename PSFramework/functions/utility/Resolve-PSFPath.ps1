@@ -59,6 +59,10 @@
 	{
 		foreach ($inputPath in $Path)
 		{
+			if ($inputPath -eq ".")
+			{
+				$inputPath = (Get-Location).Path
+			}
 			if ($NewChild)
 			{
 				$parent = Split-Path -Path $inputPath

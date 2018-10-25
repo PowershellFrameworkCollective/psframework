@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\PSFramework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -94,6 +95,7 @@
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
+    <Compile Include="Parameter\EncodingParameter.cs" />
     <Compile Include="Parameter\ParameterClass.cs" />
     <Compile Include="Parameter\ParameterClassAttribute.cs" />
     <Compile Include="Parameter\ParameterClasses.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="PSFCore\PSFCoreHost.cs" />
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
+    <Compile Include="Runspace\RunspaceBoundValue.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
@@ -121,7 +124,12 @@
     <Compile Include="TaskEngine\Priority.cs" />
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
+    <Compile Include="Utility\DynamicContentDictionary.cs" />
+    <Compile Include="Utility\DynamicContentList.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />
+    <Compile Include="Utility\DynamicContentObjectType.cs" />
+    <Compile Include="Utility\DynamicContentQueue.cs" />
+    <Compile Include="Utility\DynamicContentStack.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\SupportData.cs" />
