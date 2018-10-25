@@ -41,7 +41,7 @@
 		Registers the script defined in $scriptBlock under the name 'mymodule.maintenance'
 		Then it starts the runspace, running the registered $scriptBlock
 #>
-	[CmdletBinding(PositionalBinding = $false)]
+	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFRunspace')]
 	param
 	(
 		[Parameter(Mandatory = $true)]

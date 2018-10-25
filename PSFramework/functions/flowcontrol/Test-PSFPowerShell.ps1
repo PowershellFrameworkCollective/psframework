@@ -54,7 +54,7 @@
 		Will return $false unless executed on a PowerShell 6.1 console running on windows.
 #>
 	[OutputType([System.Boolean])]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFPowerShell')]
 	param (
 		[Version]
 		$PSMinVersion,

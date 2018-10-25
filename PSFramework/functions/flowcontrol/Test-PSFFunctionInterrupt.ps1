@@ -24,7 +24,7 @@
             The calling function will stop if this function returns true.
     #>
 	[OutputType([System.Boolean])]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFFunctionInterrupt')]
 	Param (
 		
 	)

@@ -48,7 +48,7 @@
 		Prevents all messages from the PSFramework module to be logged to the file system
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFLoggingProvider')]
 	Param (
 		[Alias('Provider', 'ProviderName')]
 		[string]

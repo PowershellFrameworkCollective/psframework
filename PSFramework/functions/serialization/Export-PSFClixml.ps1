@@ -40,7 +40,7 @@
 	
 		Exports a list of all items in the current path as a default clixml readable by Import-Clixml
 #>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFClixml')]
 	param (
 		[Parameter(Mandatory = $true, Position = 0)]
 		[string]

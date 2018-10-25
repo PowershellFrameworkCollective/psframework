@@ -15,7 +15,7 @@
 	
 			Disables the task named 'mymodule.maintenance'
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Disable-PSFTaskEngineTask')]
 	Param (
 		[Parameter(ValueFromPipeline = $true, Mandatory = $true)]
 		[PSFramework.TaskEngine.PsfTask[]]

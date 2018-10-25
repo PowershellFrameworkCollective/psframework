@@ -35,7 +35,7 @@
 			Retrieve all configuration elements from all modules, even hidden ones.
     #>
 	[OutputType([PSFramework.Configuration.Config])]
-	[CmdletBinding(DefaultParameterSetName = "FullName")]
+	[CmdletBinding(DefaultParameterSetName = "FullName", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfig')]
 	Param (
 		[Parameter(ParameterSetName = "FullName", Position = 0)]
 		[string]

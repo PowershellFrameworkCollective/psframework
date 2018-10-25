@@ -54,7 +54,7 @@
 		
 		Exports all settings of the module 'MyModule' that are no longer the original default values to json.
 #>
-	[CmdletBinding(DefaultParameterSetName = 'FullName')]
+	[CmdletBinding(DefaultParameterSetName = 'FullName', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFConfig')]
 	Param (
 		[Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = $true)]
 		[string]
