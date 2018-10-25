@@ -30,12 +30,12 @@ $message_Event = {
 		$Message
 	)
 
-    $params = $gelf_paramSendPsgelfTcp.Clone()
-    $params['ShortMessage'] = $Message.Message
-    $params['HostName'] = $Message.ComputerName
-    $params['DateTime'] = $Message.Timestamp
+    $gelf_params = $gelf_paramSendPsgelfTcp.Clone()
+    $gelf_params['ShortMessage'] = $Message.Message
+    $gelf_params['HostName'] = $Message.ComputerName
+    $gelf_params['DateTime'] = $Message.Timestamp
 
-    $params['Level'] = switch ($Message.Level) {
+    $gelf_params['Level'] = switch ($Message.Level) {
         'Critical' { 1 }
         'Important' { 1 }
         'Output' { 3 }
@@ -50,16 +50,16 @@ $message_Event = {
     }
 
     # build the additional fields
-    $properties = $Message.PSObject.Properties | Where-Object {
+    $gelf_properties = $Message.PSObject.Properties | Where-Object {
         $_.Name -notin @('Message', 'ComputerName', 'Timestamp', 'Level')
     }
 
-    $params['AdditionalField'] = @{'testing' = $params['Level'] }
-    foreach ($property in $properties) {
-        $params['AdditionalField'][$property.Name] = $property.Value
+    $gelf_params['AdditionalField'] = @{'testing' = $gelf_params['Level'] }
+    foreach ($gelf_property in $gelf_properties) {
+        $gelf_params['AdditionalField'][$gelf_property.Name] = $gelf_property.Value
     }
 
-    PSGELF\Send-PSGelfTCP @params
+    PSGELF\Send-PSGelfTCP @gelf_params
 }
 
 # Action that is performed for each error item that is being logged
