@@ -1,4 +1,4 @@
-# Action that is performed on registration of the provider using Register-PSFLoggingProvider
+﻿# Action that is performed on registration of the provider using Register-PSFLoggingProvider
 $registrationEvent = {
 
 }
