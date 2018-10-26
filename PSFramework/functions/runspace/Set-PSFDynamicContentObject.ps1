@@ -61,7 +61,7 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[OutputType([PSFramework.Utility.DynamicContentObject])]
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFDynamicContentObject')]
 	Param (
 		[string[]]
 		$Name,

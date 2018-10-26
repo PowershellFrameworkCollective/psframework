@@ -50,7 +50,7 @@
 	
 		Resets the configuration item named 'MyModule.Group.Setting1'.
 #>
-	[CmdletBinding(DefaultParameterSetName = 'Pipeline', SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
+	[CmdletBinding(DefaultParameterSetName = 'Pipeline', SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Reset-PSFConfig')]
 	param (
 		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
 		[PSFramework.Configuration.Config[]]

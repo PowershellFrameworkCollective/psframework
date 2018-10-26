@@ -45,7 +45,7 @@
 		Imports all the module specific settings that have been persisted in any of the default file system paths.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
-	[CmdletBinding(DefaultParameterSetName = "Path")]
+	[CmdletBinding(DefaultParameterSetName = "Path", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Import-PSFConfig')]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "Path")]
 		[string[]]

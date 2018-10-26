@@ -27,7 +27,7 @@
 	
 		Stores the names of all computers in AD into the tab completion cache of the completion scriptblock 'MyModule.Computer'
 #>
-	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
+	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTeppResult')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[PSFramework.Validation.PsfValidateSetAttribute(ScriptBlock = { [PSFramework.TabExpansion.TabExpansionHost]::Scripts.Keys } )]

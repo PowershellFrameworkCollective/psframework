@@ -1,4 +1,4 @@
-Describe "Remove-PSFNull Unit Tests" -Tag "CI", "Pipeline", "Unit" {
+﻿Describe "Remove-PSFNull Unit Tests" -Tag "CI", "Pipeline", "Unit" {
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Remove-PSFNull).ParameterSets.Name | Should -Be '__AllParameterSets'

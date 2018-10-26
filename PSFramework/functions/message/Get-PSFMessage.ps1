@@ -64,7 +64,7 @@
 	
 			Returns all log entries within the last 5 executions that contained the tag "fail"
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFMessage')]
 	param (
 		[string]
 		$FunctionName = "*",

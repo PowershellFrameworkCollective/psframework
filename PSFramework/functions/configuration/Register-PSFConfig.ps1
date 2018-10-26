@@ -47,7 +47,7 @@
 	
 		Retrieves all configuration items of the module MyModule, then registers them in registry to enforce them for all users on the current system.
 #>
-	[CmdletBinding(DefaultParameterSetName = "Default")]
+	[CmdletBinding(DefaultParameterSetName = "Default", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFConfig')]
 	Param (
 		[Parameter(ParameterSetName = "Default", Position = 0, ValueFromPipeline = $true)]
 		[PSFramework.Configuration.Config[]]
