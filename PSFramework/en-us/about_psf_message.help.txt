@@ -294,11 +294,11 @@ LONG DESCRIPTION
 	
 	Get-PSFMessage will return the messages written straight from memory, it
 	doesn't touch the logfiles itself. However, what it allows is filtering for
-	information, since the logged entries contain a lot mroe meta-data than just
+	information, since the logged entries contain a lot more meta-data than just
 	the line of text.
 	By filtering by the TargetObject property, it becomes possible to search for
 	all messages (shown or not shown. They ALL are logged and available)
-	relating to an object that was processe (Assuming the above described
+	relating to an object that was processed (Assuming the above described
 	'-Target' parameter was used and properly filled).
 	Of course, it is also possible to filter by function that wrote the message.
 	
@@ -318,7 +318,7 @@ LONG DESCRIPTION
 	
 	Messages can provide write information for the user to see on the screen.
 	However, information is easier to interpret if the essentials can be read by
-	scanning, rather than detail reading. One of the bost helps with that is
+	scanning, rather than detail reading. One of the boost helps with that is
 	color. The human eye is drawn to these words that have a different color.
 	
 	All messages in the PSFramework support a html-style tag syntax in order to
@@ -344,7 +344,7 @@ LONG DESCRIPTION
 	
 	Illegal colors will be stripped without comment.
 	
-	For the purpose of building menues or head messages (which arguably aren't
+	For the purpose of building menus or head messages (which arguably aren't
 	messages, since they do not contain information that needs to be logged),
 	there is another command available:
 	

@@ -49,7 +49,7 @@
 		}
 		
 		# Assign to new setting
-		It "Should correctly create new configuration values with this valdiation" {
+		It "Should correctly create new configuration values with this validation" {
 			$config = Set-PSFConfig -FullName 'Register-PSFConfigValidation.Phase1.Setting1' -Value 1 -Validation 'integer0or1' -EnableException -PassThru
 			$config.Validation | Should -Be $scriptblock
 		}
