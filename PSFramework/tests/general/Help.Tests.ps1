@@ -49,14 +49,14 @@ if ($SkipTest) { return }
 
 $includedNames = (Get-ChildItem $CommandPath -Recurse -File | Where-Object Name -like "*.ps1").BaseName
 $commands = Get-Command -Module (Get-Module $ModuleName) -CommandType Cmdlet, Function, Workflow | Where-Object Name -in $includedNames
-
+$ExportedCommands = ((Get-Module $ModuleName -ListAvailable).ExportedCommands).Keys
 ## When testing help, remember that help is cached at the beginning of each session.
 ## To test, restart session.
 
 
 foreach ($command in $commands) {
     $commandName = $command.Name
-    
+	$HelpUri = "https://psframework.org/documentation/commands/PSFramework/$commandName"
     # Skip all functions that are on the exclusions list
     if ($global:FunctionHelpTestExceptions -contains $commandName) { continue }
     
@@ -65,7 +65,16 @@ foreach ($command in $commands) {
     $testhelperrors = 0
     $testhelpall = 0
     Describe "Test help for $commandName" {
-        
+		
+		$testhelpall += 1
+		if (($command.HelpUri -notlike $HelpUri) -and ($ExportedCommands -contains $commandName)) {
+			# Each exported command needs a helpuri that points to the proper url.
+			It "should contain a proper helpuri" {
+				$Command.HelpUri | Should Be $HelpUri
+			}
+			$testhelperrors += 1
+		}
+		
         $testhelpall += 1
         if ($Help.Synopsis -like '*`[`<CommonParameters`>`]*') {
             # If help is not found, synopsis in auto-generated help is the syntax diagram

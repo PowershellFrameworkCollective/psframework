@@ -1,5 +1,5 @@
-$script:ModuleRoot = $PSScriptRoot
-$script:ModuleVersion = "0.10.27.135"
+﻿$script:ModuleRoot = $PSScriptRoot
+$script:ModuleVersion = (Import-PowerShellDataFile -Path "$($script:ModuleRoot)\PSFramework.psd1").ModuleVersion
 
 # Detect whether at some level dotsourcing was enforced
 $script:doDotSource = $false
@@ -25,8 +25,8 @@ if (($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.OS -like "*Wind
 	if ((Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\WindowsPowerShell\PSFramework\System" -Name "ImportIndividualFiles" -ErrorAction Ignore).ImportIndividualFiles) { $script:doDotSource = $true }
 }
 if (Test-Path (Join-Path (Resolve-Path -Path "$($script:ModuleRoot)\..") '.git')) { $importIndividualFiles = $true }
-if (-not (Test-Path (Join-Path $script:ModuleRoot "commands.ps1"))) { $importIndividualFiles = $true }
-	
+if ("<was not compiled>" -eq '<was not compiled>') { $importIndividualFiles = $true }
+
 function Import-ModuleFile
 {
 	<#
@@ -54,9 +54,10 @@ function Import-ModuleFile
 	)
 	
 	if ($doDotSource) { . (Resolve-Path $Path) }
-	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText((Resolve-Path $Path)))), $null, $null) }
+	else { $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create([io.file]::ReadAllText((Resolve-Path $Path).ProviderPath))), $null, $null) }
 }
 
+#region Load individual files
 if ($importIndividualFiles)
 {
 	# Execute Preimport actions
@@ -76,18 +77,12 @@ if ($importIndividualFiles)
 	
 	# Execute Postimport actions
 	. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\postimport.ps1"
-}
-else
-{
-	if (Test-Path (Join-Path $script:ModuleRoot "resourcesBefore.ps1"))
-	{
-		. Import-ModuleFile -Path "$($script:ModuleRoot)\resourcesBefore.ps1"
-	}
 	
-	. Import-ModuleFile -Path "$($script:ModuleRoot)\commands.ps1"
-	
-	if (Test-Path (Join-Path $script:ModuleRoot "resourcesAfter.ps1"))
-	{
-		. Import-ModuleFile -Path "$($script:ModuleRoot)\resourcesAfter.ps1"
-	}
+	# End it here, do not load compiled code below
+	return
 }
+#endregion Load individual files
+
+#region Load compiled code
+"<compile code into here>"
+#endregion Load compiled code

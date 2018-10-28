@@ -399,6 +399,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             #endregion Exception Integration
 
             #region Error handling
+            PsfExceptionRecord errorRecord = null;
             if (ErrorRecord != null)
             {
                 if (!_fromStopFunction)
@@ -406,7 +407,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                         foreach (ErrorRecord record in ErrorRecord)
                             WriteError(record);
 
-                LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, _Tags, _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
+                errorRecord = LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, _Tags, _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
             }
             #endregion Error handling
 
@@ -515,7 +516,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, Target);
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)

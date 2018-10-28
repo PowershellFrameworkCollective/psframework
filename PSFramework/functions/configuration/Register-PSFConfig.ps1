@@ -47,7 +47,7 @@
 	
 		Retrieves all configuration items of the module MyModule, then registers them in registry to enforce them for all users on the current system.
 #>
-	[CmdletBinding(DefaultParameterSetName = "Default")]
+	[CmdletBinding(DefaultParameterSetName = "Default", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFConfig')]
 	Param (
 		[Parameter(ParameterSetName = "Default", Position = 0, ValueFromPipeline = $true)]
 		[PSFramework.Configuration.Config[]]
@@ -84,6 +84,11 @@
 		if ($script:NoRegistry -and ($Scope -eq "UserDefault"))
 		{
 			$Scope = [PSFramework.Configuration.ConfigScope]::FileUserLocal
+		}
+		# Linux and MAC get redirection for SystemDefault to FileSystem
+		if ($script:NoRegistry -and ($Scope -eq "SystemDefault"))
+		{
+			$Scope = [PSFramework.Configuration.ConfigScope]::FileSystem
 		}
 		
 		$parSet = $PSCmdlet.ParameterSetName

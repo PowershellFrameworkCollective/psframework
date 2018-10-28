@@ -26,7 +26,7 @@
 		Returns a meta-information object containing the last result, when it was written and which function did the writing.
 #>
 	
-	[CmdletBinding()]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFResultCache')]
 	param (
 		[ValidateSet('Value','All')]
 		[string]

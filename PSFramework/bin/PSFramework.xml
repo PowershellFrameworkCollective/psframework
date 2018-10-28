@@ -1519,12 +1519,17 @@
             The user that did the writing.
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogEntry.ErrorRecord">
+            <summary>
+            An error record associated with the message.
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.LogEntry.#ctor">
             <summary>
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String,PSFramework.Message.PsfExceptionRecord)">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -1542,6 +1547,7 @@
             <param name="Line">The line on which the message was written.</param>
             <param name="CallStack">The callstack that triggered the write.</param>
             <param name="Username">The user responsible for running the code that is writing the message.</param>
+            <param name="ErrorRecord">An associated error item.</param>
         </member>
         <member name="T:PSFramework.Message.LogEntryType">
             <summary>
@@ -1672,8 +1678,9 @@
             <param name="Message">What message was passed to the user</param>
             <param name="Runspace">The runspace the message was written from</param>
             <param name="ComputerName">The computer the error was written on</param>
+            <returns>The error entry, so it may be included in the message generated</returns>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -1691,6 +1698,7 @@
             <param name="TargetObject">The object associated with a given message.</param>
             <param name="CallStack">The callstack at the moment the message was written.</param>
             <param name="Username">The name of the user under which the code being executed</param>
+            <param name="ErrorRecord">An associated error record</param>
             <returns>The entry that is being written</returns>
         </member>
         <member name="T:PSFramework.Message.MessageEventSubscription">
@@ -2291,6 +2299,12 @@
             <summary>
             List of Exceptions that are part of the incident (usually - but not always - only one).
             </summary>
+        </member>
+        <member name="M:PSFramework.Message.PsfExceptionRecord.ToString">
+            <summary>
+            The default string display of this message
+            </summary>
+            <returns>The message text of the exception</returns>
         </member>
         <member name="M:PSFramework.Message.PsfExceptionRecord.#ctor">
             <summary>

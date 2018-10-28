@@ -15,7 +15,7 @@
                                     	<PropertyName>Module</PropertyName>
                                     </ExpressionBinding>
                                     <NewLine/>
-                                </CustomItem> 
+                                </CustomItem>
                             </Frame>
                         </CustomItem>
                     </CustomEntry>
@@ -23,7 +23,7 @@
             </CustomControl>
         </Control>
     </Controls>
-	
+
 	<ViewDefinitions>
 		<!-- PSFramework.Configuration.Config -->
 		<View>
@@ -32,8 +32,8 @@
 				<TypeName>PSFramework.Configuration.Config</TypeName>
 			</ViewSelectedBy>
 			<GroupBy>
-                <PropertyName>Module</PropertyName> 
-                <CustomControlName>Configuration-GroupingFormat</CustomControlName>  
+                <PropertyName>Module</PropertyName>
+                <CustomControlName>Configuration-GroupingFormat</CustomControlName>
             </GroupBy>
 			<TableControl>
 				<AutoSize/>
@@ -70,7 +70,7 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+
 		<!-- PSFramework.License.License -->
 		<View>
 			<Name>PSFramework.License.License</Name>
@@ -113,7 +113,7 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+
 		<!-- PSFramework.Logging.Provider -->
 		<View>
 			<Name>PSFramework.Logging.Provider</Name>
@@ -164,7 +164,7 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+
 		<!-- PSFramework.Message.LogEntry -->
 		<View>
 			<Name>PSFramework.Message.LogEntry</Name>
@@ -215,7 +215,7 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+
 		<!-- PSFramework.Message.PsfExceptionRecord -->
 		<View>
 			<Name>PSFramework.Message.PsfExceptionRecord</Name>
@@ -262,7 +262,7 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+
 		<!-- PSFramework.TaskEngine.PsfTask -->
 		<View>
 			<Name>PSFramework.TaskEngine.PsfTask</Name>

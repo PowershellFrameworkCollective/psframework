@@ -50,7 +50,7 @@
 	
 		Resets the configuration item named 'MyModule.Group.Setting1'.
 #>
-	[CmdletBinding(DefaultParameterSetName = 'Pipeline', SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
+	[CmdletBinding(DefaultParameterSetName = 'Pipeline', SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Reset-PSFConfig')]
 	param (
 		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Pipeline')]
 		[PSFramework.Configuration.Config[]]
@@ -79,7 +79,7 @@
 		{
 			if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 			{
-				try { $item.Reset() }
+				try { $item.ResetValue() }
 				catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 			}
 		}
@@ -96,7 +96,7 @@
 			{
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 				{
-					try { $item.Reset() }
+					try { $item.ResetValue() }
 					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}
@@ -108,7 +108,7 @@
 			{
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 				{
-					try { $item.Reset() }
+					try { $item.ResetValue() }
 					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}
