@@ -7,57 +7,49 @@ Insert any build steps you may need to take before publishing it here.
 param (
 	$ApiKey,
 	
-	$SkipPublish = $false,
-	
-	$RootPath = $env:SYSTEM_DEFAULTWORKINGDIRECTORY
+	$WorkingDirectory = $env:SYSTEM_DEFAULTWORKINGDIRECTORY
 )
 
 # Prepare publish folder
-Write-Host "Creating and populating publishing directory"
-$publishDir = New-Item -Path $RootPath -Name publish -ItemType Directory
-Copy-Item -Path "$($RootPath)\PSFramework" -Destination $publishDir.FullName -Recurse -Force
+Write-PSFMessage -Level Important -Message "Creating and populating publishing directory"
+$publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory
+Copy-Item -Path "$($WorkingDirectory)\PSFramework" -Destination $publishDir.FullName -Recurse -Force
 
-# Create commands.ps1
-Write-Host "Creating command.ps1"
+#region Gather text data to compile
 $text = @()
+$processed = @()
+
+# Gather Stuff to run before
+foreach ($line in (Get-Content "$($PSScriptRoot)\filesBefore.txt" | Where-Object { $_ -notlike "#*" }))
+{
+	if ([string]::IsNullOrWhiteSpace($line)) { continue }
+	
+	$basePath = Join-Path "$($publishDir.FullName)\PSFramework" $line
+	foreach ($entry in (Resolve-PSFPath -Path $basePath))
+	{
+		$item = Get-Item $entry
+		if ($item.PSIsContainer) { continue }
+		if ($item.FullName -in $processed) { continue }
+		$text += [System.IO.File]::ReadAllText($item.FullName)
+		$processed += $item.FullName
+	}
+}
+
+# Gather commands
 Get-ChildItem -Path "$($publishDir.FullName)\PSFramework\internal\functions\" -Recurse -File -Filter "*.ps1" | ForEach-Object {
 	$text += [System.IO.File]::ReadAllText($_.FullName)
 }
 Get-ChildItem -Path "$($publishDir.FullName)\PSFramework\functions\" -Recurse -File -Filter "*.ps1" | ForEach-Object {
 	$text += [System.IO.File]::ReadAllText($_.FullName)
 }
-$text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSFramework\commands.ps1"
 
-# Create resourcesBefore.ps1
-Write-Host "Creating resourcesBefore.ps1"
-$processed = @()
-$text = @()
-foreach ($line in (Get-Content "$($PSScriptRoot)\filesBefore.txt" | Where-Object { $_ -notlike "#*" }))
-{
-	if ([string]::IsNullOrWhiteSpace($line)) { continue }
-	
-	$basePath = Join-Path "$($publishDir.FullName)\PSFramework" $line
-	foreach ($entry in (Resolve-Path -Path $basePath))
-	{
-		$item = Get-Item $entry
-		if ($item.PSIsContainer) { continue }
-		if ($item.FullName -in $processed) { continue }
-		$text += [System.IO.File]::ReadAllText($item.FullName)
-		$processed += $item.FullName
-	}
-}
-if ($text) { $text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSFramework\resourcesBefore.ps1" }
-
-# Create resourcesAfter.ps1
-Write-Host "Creating resourcesAfter.ps1"
-$processed = @()
-$text = @()
+# Gather stuff to run afterwards
 foreach ($line in (Get-Content "$($PSScriptRoot)\filesAfter.txt" | Where-Object { $_ -notlike "#*" }))
 {
 	if ([string]::IsNullOrWhiteSpace($line)) { continue }
 	
 	$basePath = Join-Path "$($publishDir.FullName)\PSFramework" $line
-	foreach ($entry in (Resolve-Path -Path $basePath))
+	foreach ($entry in (Resolve-PSFPath -Path $basePath))
 	{
 		$item = Get-Item $entry
 		if ($item.PSIsContainer) { continue }
@@ -66,11 +58,14 @@ foreach ($line in (Get-Content "$($PSScriptRoot)\filesAfter.txt" | Where-Object 
 		$processed += $item.FullName
 	}
 }
-if ($text) { $text -join "`n`n" | Set-Content -Path "$($publishDir.FullName)\PSFramework\resourcesAfter.ps1" }
+#endregion Gather text data to compile
 
-if (-not $SkipPublish)
-{
-	Write-Host "Publishing to gallery"
-	# Publish to Gallery
-	Publish-Module -Path "$($publishDir.FullName)\PSFramework" -NuGetApiKey $ApiKey -Force
-}
+#region Update the psm1 file
+$fileData = Get-Content -Path "$($publishDir.FullName)\PSFramework\PSFramework.psm1" -Raw
+$fileData = $fileData -replace '"<was not compiled>"', '"<was compiled>"'
+$fileData = $fileData -replace '"<compile code into here>"', ($text -join "`n`n")
+[System.IO.File]::WriteAllText("$($publishDir.FullName)\PSFramework\PSFramework.psm1", $fileData, [System.Text.Encoding]::UTF8)
+#endregion Update the psm1 file
+
+# Publish to Gallery
+Publish-Module -Path "$($publishDir.FullName)\PSFramework" -NuGetApiKey $ApiKey -Force
