@@ -1,4 +1,4 @@
-<#
+﻿<#
 This script publishes the module to the gallery.
 It expects as input an ApiKey authorized to publish the module.
 

@@ -1,4 +1,4 @@
-$script:ModuleRoot = $PSScriptRoot
+﻿$script:ModuleRoot = $PSScriptRoot
 $script:ModuleVersion = (Import-PowerShellDataFile -Path "$($script:ModuleRoot)\PSFramework.psd1").ModuleVersion
 
 # Detect whether at some level dotsourcing was enforced
