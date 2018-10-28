@@ -11,7 +11,7 @@ param (
 )
 
 # Prepare publish folder
-Write-PSFMessage -Level Important -Message "Creating and populating publishing directory"
+Write-Host "Creating and populating publishing directory"
 $publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory
 Copy-Item -Path "$($WorkingDirectory)\PSFramework" -Destination $publishDir.FullName -Recurse -Force
 
