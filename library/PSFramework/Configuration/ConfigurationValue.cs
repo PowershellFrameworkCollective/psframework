@@ -23,7 +23,7 @@ namespace PSFramework.Configuration
                 if (_Value != null)
                     return _Value;
 
-                if (!String.IsNullOrEmpty(PersistedValue))
+                if (PersistedValue != null)
                     try
                     {
                         _Value = ConfigurationHost.ConvertFromPersistedValue(PersistedValue, PersistedType);
@@ -54,7 +54,7 @@ namespace PSFramework.Configuration
         {
             get
             {
-                if (String.IsNullOrEmpty(_PersistedValue))
+                if (_PersistedValue == null)
                 {
                     ConfigurationValue tempValue = ConfigurationHost.ConvertToPersistedValue(_Value);
                     PersistedType = tempValue.PersistedType;

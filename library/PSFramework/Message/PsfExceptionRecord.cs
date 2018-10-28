@@ -94,6 +94,15 @@ namespace PSFramework.Message
         public List<PsfException> Exceptions = new List<PsfException>();
 
         /// <summary>
+        /// The default string display of this message
+        /// </summary>
+        /// <returns>The message text of the exception</returns>
+        public override string ToString()
+        {
+            return Message;
+        }
+
+        /// <summary>
         /// Creates an empty container. Ideal for the homeworker who loves doing it all himself.
         /// </summary>
         public PsfExceptionRecord()
