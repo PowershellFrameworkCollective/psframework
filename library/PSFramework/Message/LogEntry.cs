@@ -81,6 +81,11 @@ namespace PSFramework.Message
         public string Username;
 
         /// <summary>
+        /// An error record associated with the message.
+        /// </summary>
+        public PsfExceptionRecord ErrorRecord;
+
+        /// <summary>
         /// Creates an empty log entry
         /// </summary>
         public LogEntry()
@@ -105,7 +110,8 @@ namespace PSFramework.Message
         /// <param name="Line">The line on which the message was written.</param>
         /// <param name="CallStack">The callstack that triggered the write.</param>
         /// <param name="Username">The user responsible for running the code that is writing the message.</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username)
+        /// <param name="ErrorRecord">An associated error item.</param>
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username, PsfExceptionRecord ErrorRecord)
         {
             this.Message = Message;
             this.Type = Type;
@@ -121,6 +127,7 @@ namespace PSFramework.Message
             this.Line = Line;
             this.CallStack = CallStack;
             this.Username = Username;
+            this.ErrorRecord = ErrorRecord;
         }
     }
 }

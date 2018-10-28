@@ -85,6 +85,11 @@
 		{
 			$Scope = [PSFramework.Configuration.ConfigScope]::FileUserLocal
 		}
+		# Linux and MAC get redirection for SystemDefault to FileSystem
+		if ($script:NoRegistry -and ($Scope -eq "SystemDefault"))
+		{
+			$Scope = [PSFramework.Configuration.ConfigScope]::FileSystem
+		}
 		
 		$parSet = $PSCmdlet.ParameterSetName
 		
