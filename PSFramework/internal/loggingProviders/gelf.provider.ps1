@@ -6,21 +6,21 @@ $registrationEvent = {
 #region Logging Execution
 # Action that is performed when starting the logging script (or the very first time if enabled after launching the logging script)
 $begin_event = {
-    $gelf_gelfserver = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.GelfServer'
-    $gelf_port = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.Port'
-    $gelf_encrypt = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.Encrypt'
-
-    $gelf_paramSendPsgelfTcp = @{
-        'GelfServer' = $gelf_gelfserver
-        'Port' = $gelf_port
-        'Encrypt' = $gelf_encrypt
+    if (-not (Get-Module -Name 'PSGELF')) {
+        Import-Module -Name 'PSGELF'
     }
 }
 
 # Action that is performed at the beginning of each logging cycle
 $start_event = {
-    if (-not (Get-Module -Name 'PSGELF')) {
-        Import-Module -Name 'PSGELF'
+    $gelf_gelfserver = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.GelfServer'
+    $gelf_port = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.Port'
+    $gelf_encrypt = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.Encrypt'
+
+    $gelf_paramSendPsgelfTcp = @{
+        'GelfServer' = 'localhost'
+        'Port' = 12201
+        'Encrypt' = $false
     }
 }
 
@@ -28,7 +28,7 @@ $start_event = {
 $message_Event = {
 	Param (
 		$Message
-	)
+    )
 
     $gelf_params = $gelf_paramSendPsgelfTcp.Clone()
     $gelf_params['ShortMessage'] = $Message.Message
@@ -49,12 +49,16 @@ $message_Event = {
         default { 7 }
     }
 
-    # build the additional fields
-    $gelf_properties = $Message.PSObject.Properties | Where-Object {
-        $_.Name -notin @('Message', 'ComputerName', 'Timestamp', 'Level')
+    if ($Message.ErrorRecord) {
+        $gelf_params['FullMessage'] = $Message.ErrorRecord | ConvertTo-Json
     }
 
-    $gelf_params['AdditionalField'] = @{'testing' = $gelf_params['Level'] }
+    # build the additional fields
+    $gelf_properties = $Message.PSObject.Properties | Where-Object {
+        $_.Name -notin @('Message', 'ComputerName', 'Timestamp', 'Level', 'ErrorRecord')
+    }
+
+    $gelf_params['AdditionalField'] = @{}
     foreach ($gelf_property in $gelf_properties) {
         $gelf_params['AdditionalField'][$gelf_property.Name] = $gelf_property.Value
     }
@@ -62,11 +66,11 @@ $message_Event = {
     PSGELF\Send-PSGelfTCP @gelf_params
 }
 
-# Action that is performed for each error item that is being logged
 $error_Event = {
-	Param (
-		$ErrorItem
-	)
+    Param (
+        $ErrorItem
+    )
+
 }
 
 # Action that is performed at the end of each logging cycle
@@ -143,13 +147,13 @@ $installationScript = {
 
 # Configuration settings to initialize
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.GelfServer' -Value "" -Initialize -Validation string -Handler { } -Description "The path to where the logfile is written. Supports some placeholders such as %Date% to allow for timestamp in the name. For full documentation on the supported wildcards, see the documentation on https://psframework.org"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Port' -Value "" -Initialize -Validation string -Handler { } -Description "A special string you can use as a placeholder in the logfile path (by using '%logname%' as placeholder)"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Encrypt' -Value $true -Initialize -Validation bool -Handler { } -Description "Whether a written csv file will include headers"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.GelfServer' -Value "" -Initialize -Validation string -Handler { } -Description "The GELF server to send logs to"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Port' -Value "" -Initialize -Validation string -Handler { } -Description "The port number the GELF server listens on"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Encrypt' -Value $true -Initialize -Validation bool -Handler { } -Description "Whether to use TLS encryption when communicating with the GELF server"
 
 	Set-PSFConfig -Module LoggingProvider -Name 'GELF.Enabled' -Value $false -Initialize -Validation "bool" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['gelf']) { [PSFramework.Logging.ProviderHost]::Providers['gelf'].Enabled = $args[0] } } -Description "Whether the logging provider should be enabled on registration"
 	Set-PSFConfig -Module LoggingProvider -Name 'GELF.AutoInstall' -Value $false -Initialize -Validation "bool" -Handler { } -Description "Whether the logging provider should be installed on registration"
-	Set-PSFConfig -Module LoggingProvider -Name 'GELF.InstallOptional' -Value $true -Initialize -Validation "bool" -Handler { } -Description "Whether installing the logging provider is mandatory, in order for it to be enabled"
+	Set-PSFConfig -Module LoggingProvider -Name 'GELF.InstallOptional' -Value $false -Initialize -Validation "bool" -Handler { } -Description "Whether installing the logging provider is mandatory, in order for it to be enabled"
 	Set-PSFConfig -Module LoggingProvider -Name 'GELF.IncludeModules' -Value @() -Initialize -Validation "stringarray" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['gelf']) { [PSFramework.Logging.ProviderHost]::Providers['gelf'].IncludeModules = $args[0] } } -Description "Module whitelist. Only messages from listed modules will be logged"
 	Set-PSFConfig -Module LoggingProvider -Name 'GELF.ExcludeModules' -Value @() -Initialize -Validation "stringarray" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['gelf']) { [PSFramework.Logging.ProviderHost]::Providers['gelf'].ExcludeModules = $args[0] } } -Description "Module blacklist. Messages from listed modules will not be logged"
 	Set-PSFConfig -Module LoggingProvider -Name 'GELF.IncludeTags' -Value @() -Initialize -Validation "stringarray" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['gelf']) { [PSFramework.Logging.ProviderHost]::Providers['gelf'].IncludeTags = $args[0] } } -Description "Tag whitelist. Only messages with these tags will be logged"
