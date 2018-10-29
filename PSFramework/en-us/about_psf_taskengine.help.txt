@@ -49,7 +49,7 @@ LONG DESCRIPTION
 	#                              Running a task                             #
 	#-------------------------------------------------------------------------#
 	
-	The prinmary command to use with the task engine is the function:
+	The primary command to use with the task engine is the function:
 	  Register-PSFTaskEngineTask
 	
 	In order to function, it needs a few pieces of information:
@@ -86,7 +86,7 @@ LONG DESCRIPTION
 	
 	You can put pretty much anything you want to into the scriptblock that is
 	registered to execute. You can access any module available on the computer,
-	includuing the very module that registered the task!
+	including the very module that registered the task!
 	However no module is imported by default! Keep in mind, that not
 	necessarily all users will place your module in one of the default paths,
 	relying on implicit import may not work in that case! Both the main

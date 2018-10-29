@@ -38,7 +38,7 @@
 			(Get-PSFConfigValue -FullName 'Get-PSFConfigValue.Setting2').GetType().FullName | Should -Be "System.Int32"
 		}
 		
-		It "Should offer the fallback value in abscence of the actual value" {
+        It "Should offer the fallback value in absence of the actual value" {
 			Get-PSFConfigValue -FullName 'Get-PSFConfigValue.Setting1' -Fallback 22 | Should -Be 42
 			Get-PSFConfigValue -FullName 'Get-PSFConfigValue.Setting3' -Fallback 24 | Should -Be 24
 		}
