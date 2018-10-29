@@ -1,4 +1,15 @@
 ﻿# CHANGELOG
+## 0.10.28.144 : 2018-10-28
+ - Upd: Module Architecture update
+ - Upd: Linked online help for commands (by Andrew Pla)
+ - Upd: Configuration - redirected SystemDefault to FileSystem scope on non-Windows systems (#229)
+ - Upd: Message/Logging - Error records are now directly associated with their respective message and available as the ErrorRecord property (#230)
+ - Fix: Reset-PSFConfig fails with error (#223)
+ - Fix: Configuration: Registering empty string will register the wrong value (#224)
+ - Fix: Module on UNC Path Fails to Load (#227)
+ - Fix: Get-PSFUserChoice handling single options more gracefully (#228)
+ - Other: Add formal policy on supported platforms and breaking change policy
+
 ## 0.10.27.135 : 2018-10-12
  - Fix: New dynamic content collections' Reset() method doesn't do a thing.
 

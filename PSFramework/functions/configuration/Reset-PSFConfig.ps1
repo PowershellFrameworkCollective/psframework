@@ -79,7 +79,7 @@
 		{
 			if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 			{
-				try { $item.Reset() }
+				try { $item.ResetValue() }
 				catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 			}
 		}
@@ -96,7 +96,7 @@
 			{
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 				{
-					try { $item.Reset() }
+					try { $item.ResetValue() }
 					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}
@@ -108,7 +108,7 @@
 			{
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
 				{
-					try { $item.Reset() }
+					try { $item.ResetValue() }
 					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}

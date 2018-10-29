@@ -16,7 +16,7 @@
 			Only messages written by commands from similar modules will be returned.
 		
 		.PARAMETER Target
-			Only messags handling the specified target will be returned.
+			Only messages handling the specified target will be returned.
 		
 		.PARAMETER Tag
 			Only messages containing one of these tags will be returned.

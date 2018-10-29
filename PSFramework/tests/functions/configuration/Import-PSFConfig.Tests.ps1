@@ -71,9 +71,9 @@
 			(Get-PSFConfig -FullName 'Import-PSFConfig.Phase1.Setting3').Value.Name | Should -Be 'Windows'
 		}
 	}
-	Describe "Import paths / methodologies are aplied" {
+	Describe "Import paths / methodologies are applied" {
 		# Import from Weblink works correctly
-		It "Should correctly import configuration fron a weblink" {
+		It "Should correctly import configuration from a weblink" {
 			$webLink = 'https://raw.githubusercontent.com/PowershellFrameworkCollective/psframework/master/PSFramework/tests/testdata/configdata.json'
 			Get-PSFConfigValue -FullName 'config.import.test' | Should -BeNullOrEmpty
 			{ Import-PSFConfig -Path $webLink -ErrorAction Stop -EnableException } | Should -Not -Throw

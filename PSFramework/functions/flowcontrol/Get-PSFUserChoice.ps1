@@ -78,6 +78,10 @@
 	}
 	process
 	{
+		# Will error on one option so we just return the value 0 (which is the result of the only option the user would have)
+		# This is for cases where the developer dynamically assembles options so that they don't need to ensure a minimum of two options.
+		if ($Options.Count -eq 1) { return 0 }
+		
 		$Host.UI.PromptForChoice($Caption, $Message, $choices, $DefaultChoice)
 	}
 }

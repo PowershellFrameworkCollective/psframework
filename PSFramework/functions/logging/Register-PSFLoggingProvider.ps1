@@ -32,7 +32,7 @@
 		
 		.PARAMETER RegistrationEvent
 			Scriptblock that should be executed on registration.
-			This allows you to perform installation actions synchroneously, with direct user interaction.
+			This allows you to perform installation actions synchronously, with direct user interaction.
 			At the same time, by adding it as this parameter, it will only performed on the initial registration, rather than every time the provider is registered (runspaces, Remove-Module/Import-Module)
 		
 		.PARAMETER BeginEvent
@@ -45,13 +45,13 @@
 		
 		.PARAMETER MessageEvent
 			The actions taken to process individual messages.
-			The very act of writting logs.
+			The very act of writing logs.
 			This scriptblock receives a message object (As returned by Get-PSFMessage) as first and only argument.
 			Under some circumstances, this message may be a $null object, your scriptblock must be able to handle this.
 		
 		.PARAMETER ErrorEvent
 			The actions taken to process individual error messages.
-			The very act of writting logs.
+			The very act of writing logs.
 			This scriptblock receives a message object (As returned by 'Get-PSFMessage -Errors') as first and only argument.
 			Under some circumstances, this message may be a $null object, your scriptblock must be able to handle this.
 			This consists of complex, structured data and may not be suitable to all logging formats.
