@@ -35,13 +35,22 @@
 		foreach ($item in $InputObject)
 		{
 			if ($null -eq $item) { continue }
-			$hashTable = @{ }
-			foreach ($property in $item.PSObject.Properties)
+			if ($item -is [System.Collections.Hashtable])
 			{
-				if ($property.Name -in $Exclude) { continue }
-				$hashTable[$property.Name] = $property.Value
+				$hashTable = $item.Clone()
+				foreach ($name in $Exclude) { $hashTable.Remove($name) }
+				$hashTable
 			}
-			$hashTable
+			else
+			{
+				$hashTable = @{ }
+				foreach ($property in $item.PSObject.Properties)
+				{
+					if ($property.Name -in $Exclude) { continue }
+					$hashTable[$property.Name] = $property.Value
+				}
+				$hashTable
+			}
 		}
 	}
 }
