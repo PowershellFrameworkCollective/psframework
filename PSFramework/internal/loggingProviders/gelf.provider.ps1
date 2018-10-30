@@ -18,9 +18,9 @@ $start_event = {
     $gelf_encrypt = Get-PSFConfigValue -FullName 'PSFramework.Logging.GELF.Encrypt'
 
     $gelf_paramSendPsgelfTcp = @{
-        'GelfServer' = 'localhost'
-        'Port' = 12201
-        'Encrypt' = $false
+        'GelfServer' = $gelf_gelfserver
+        'Port' = $gelf_port
+        'Encrypt' = $gelf_encrypt
     }
 }
 
