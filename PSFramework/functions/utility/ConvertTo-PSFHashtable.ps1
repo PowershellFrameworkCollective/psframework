@@ -20,7 +20,7 @@
 	
 		Scans all items in the current path and converts those objects into hashtables.
 #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[OutputType([System.Collections.Hashtable])]
 	[CmdletBinding()]
 	Param (
 		[string[]]
