@@ -1,4 +1,4 @@
-# The PSFramework Reliability Promise
+﻿# The PSFramework Reliability Promise
 ## About
 
 The PSFramework is designed as a platform for others to build their code upon.
@@ -33,8 +33,8 @@ Now what is covered by this promise:
 
  - All functions and cmdlets signatures. Any current parameterization will keep being valid and produce the same result.
  - All logging providers. Configuration and default behavior cannot be changed.
- - All parameter classes will keep understanding current input (they may _also_ learn new things however)
- - All validation attributes will keep accepting the current definition (new definitions may be introduced however)
+ - All parameter classes will keep understanding current input (they may _also_ learn to understand new input)
+ - All validation attributes will keep accepting the current definition (but new definitions may be introduced)
  - Any otherwise advertised feature on the [documentation site](https://psframework.org/documentation/documents/psframework.html)
 
 Not covered by this promise:
