@@ -1,4 +1,4 @@
-# The PSFramework Reliability Promise
+﻿# The PSFramework Reliability Promise
 ## About
 
 The PSFramework is designed as a platform for others to build their code upon.
