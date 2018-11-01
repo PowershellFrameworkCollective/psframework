@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 0.10.28.???
+ - New: Command ConvertTo-PSFHashtable converts objects into hashtables
+
 ## 0.10.28.144 : 2018-10-28
  - Upd: Module Architecture update
  - Upd: Linked online help for commands (by Andrew Pla)

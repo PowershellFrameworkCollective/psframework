@@ -66,6 +66,7 @@
 		'Clear-PSFResultCache',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
+		'ConvertTo-PSFHashtable',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
