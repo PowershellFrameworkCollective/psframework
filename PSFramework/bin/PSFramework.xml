@@ -3209,6 +3209,24 @@
             Allows specifying a description or comments along with the attribute.
             </summary>
         </member>
+        <member name="T:PSFramework.Extension.ScriptBlockExt">
+            <summary>
+            Class that extends the scriptblock type
+            </summary>
+        </member>
+        <member name="M:PSFramework.Extension.ScriptBlockExt.DoInvokeReturnAsIs(System.Management.Automation.ScriptBlock,System.Boolean,System.Int32,System.Object,System.Object,System.Object,System.Object[])">
+            <summary>
+            Implements the internal copy of DoInvokeReturnAsIs
+            </summary>
+            <param name="ScriptBlock">The scriptblock to execute</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ErrorHandlingBehavior">How to handle errors. 2 should be the default</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
         <member name="T:PSFramework.ResultCache.ResultCache">
             <summary>
             The class containing all things related to the result cache functionality.
@@ -4097,6 +4115,38 @@
             Will match any number of valid Guids in a larger text
             </summary>
         </member>
+        <member name="T:PSFramework.Utility.ScriptBlockItem">
+            <summary>
+            A scriptblock container item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptBlockItem.Name">
+            <summary>
+            Name of the scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ScriptBlockItem.ScriptBlock">
+            <summary>
+            The scriptblock stored
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ScriptBlockItem.CountRetrieved">
+            <summary>
+            The number of times this scriptblock has been used
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ScriptBlockItem.LastRetrieved">
+            <summary>
+            When the scriptblock has last been used
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create a new scriptblock item by offering both name and code
+            </summary>
+            <param name="Name">The name of the scriptblock</param>
+            <param name="ScriptBlock">The scriptblock</param>
+        </member>
         <member name="T:PSFramework.Utility.SupportData">
             <summary>
             List of data items New-PSFSupportPackage will export
@@ -4268,6 +4318,11 @@
             Returns the current callstack on PS3
             </summary>
         </member>
+        <member name="F:PSFramework.Utility.UtilityHost.ScriptBlocks">
+            <summary>
+            Stored scriptblocks that can be retrieved on demand anywhere within the process
+            </summary>
+        </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
             <summary>
             Validates that each parameter argument matches the RegexPattern
@@ -4332,6 +4387,11 @@
             Gets the scriptblock to be used in the validation
             </summary>
         </member>
+        <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlockName">
+            <summary>
+            Name of a stored scriptblock to use
+            </summary>
+        </member>
         <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.ValidateElement(System.Object)">
             <summary>
             Validates that each parameter argument matches the scriptblock
@@ -4345,6 +4405,11 @@
             </summary>
             <param name="ScriptBlock">Scriptblock to match</param>
             <exception cref="T:System.ArgumentException">for invalid arguments</exception>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateScriptAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ValidateScriptBlockAttribute class
+            </summary>
         </member>
         <member name="T:PSFramework.Validation.PsfValidateSetAttribute">
             <summary>

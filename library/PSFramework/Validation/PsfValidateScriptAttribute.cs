@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
+using static PSFramework.Extension.ScriptBlockExt;
 
 namespace PSFramework.Validation
 {
@@ -23,7 +24,22 @@ namespace PSFramework.Validation
         /// <summary>
         /// Gets the scriptblock to be used in the validation
         /// </summary>
-        public ScriptBlock ScriptBlock { get; }
+        public ScriptBlock ScriptBlock
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ScriptBlockName))
+                    return Utility.UtilityHost.ScriptBlocks[ScriptBlockName].ScriptBlock;
+                return _ScriptBlock;
+            }
+            private set { _ScriptBlock = value; }
+        }
+        private ScriptBlock _ScriptBlock;
+
+        /// <summary>
+        /// Name of a stored scriptblock to use
+        /// </summary>
+        public string ScriptBlockName { get; private set; }
 
         /// <summary>
         /// Validates that each parameter argument matches the scriptblock
@@ -37,8 +53,8 @@ namespace PSFramework.Validation
                 throw new ValidationMetadataException("ArgumentIsEmpty", null);
             }
 
-            object result = ScriptBlock.Invoke(element);
-
+            object result = ScriptBlock.DoInvokeReturnAsIs(true, 2, element, null, null, new object[] { element });
+            
             if (!LanguagePrimitives.IsTrue(result))
             {
                 var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {{ {1} }}" : ErrorMessage;
@@ -54,6 +70,14 @@ namespace PSFramework.Validation
         public PsfValidateScriptAttribute(ScriptBlock ScriptBlock)
         {
             this.ScriptBlock = ScriptBlock ?? throw new ArgumentNullException("Need to specify a scriptblock!");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ValidateScriptBlockAttribute class
+        /// </summary>
+        public PsfValidateScriptAttribute(string ScriptBlockName)
+        {
+            this.ScriptBlockName = ScriptBlockName;
         }
     }
 }
