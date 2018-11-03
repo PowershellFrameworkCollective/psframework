@@ -28,6 +28,7 @@
 		- Access is threadsafe & Runspacesafe
 		- Overwriting the scriptblock does not affect the statistics
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Position = 0, Mandatory = $true)]
