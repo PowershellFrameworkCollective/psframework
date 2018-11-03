@@ -59,6 +59,16 @@ namespace PSFramework.Meta
         public object CommandItem;
 
         /// <summary>
+        /// Tests whether the specified cmdlet variable is the same instance of its class as this one.
+        /// </summary>
+        /// <param name="CmdletItem">The cmdlet to compare</param>
+        /// <returns>Whether the specified cmdlet is the same instance as this one</returns>
+        public bool IsCommand(PSCmdlet CmdletItem)
+        {
+            return CmdletItem.MyInvocation == InvocationInfo;
+        }
+
+        /// <summary>
         /// Create a new pipelinecommand object
         /// </summary>
         /// <param name="PipelineId">ID of the pipeline the command was read from</param>

@@ -2521,6 +2521,13 @@
             The actual PowerShell internal object representing the command on the pipeline
             </summary>
         </member>
+        <member name="M:PSFramework.Meta.PipelineCommand.IsCommand(System.Management.Automation.PSCmdlet)">
+            <summary>
+            Tests whether the specified cmdlet variable is the same instance of its class as this one.
+            </summary>
+            <param name="CmdletItem">The cmdlet to compare</param>
+            <returns>Whether the specified cmdlet is the same instance as this one</returns>
+        </member>
         <member name="M:PSFramework.Meta.PipelineCommand.#ctor(System.Int32,System.Int32,System.Management.Automation.CommandInfo,System.Management.Automation.InvocationInfo,System.Object)">
             <summary>
             Create a new pipelinecommand object
