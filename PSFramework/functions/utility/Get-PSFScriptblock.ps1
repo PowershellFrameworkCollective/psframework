@@ -32,8 +32,8 @@
 	
 		Returns scriptblock and meta information for the MyModule.TestServer scriptblock.
 #>
-	[OutputType(ParameterSetName = 'List', Type = [PSFramework.Utility.ScriptBlockItem])]
-	[OutputType(ParameterSetName = 'Name', Type = [System.Management.Automation.ScriptBlock])]
+	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'List')]
+	[OutputType([System.Management.Automation.ScriptBlock], ParameterSetName = 'Name')]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidDefaultValueForMandatoryParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Name')]
 	param (
