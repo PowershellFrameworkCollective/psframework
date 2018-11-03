@@ -2,7 +2,11 @@
 ## 0.10.28.???
  - New: Command ConvertTo-PSFHashtable converts objects into hashtables
  - New: Command Get-PSFPipeline grants access to the current pipeline and all its works.
+ - New: Command Get-PSFScriptblock retrieves scriptblocks from a static dictionary
+ - New: Command Set-PSFScriptblock stores scriptblocks in a static dictionary
  - New: Logging Provider for gelf / graylog
+ - Upd: PsfValidateScript can now consume stored scriptblocks
+ - Upd: PsfValidateScript will now understand both $_ and $args[0]
 
 ## 0.10.28.144 : 2018-10-28
  - Upd: Module Architecture update
