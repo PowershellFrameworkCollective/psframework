@@ -2481,6 +2481,128 @@
             An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
             </summary>
         </member>
+        <member name="T:PSFramework.Meta.PipelineCommand">
+            <summary>
+            Information object for a command on the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.PipelineCommand.PipelineId">
+            <summary>
+            ID of the pipeline the command was read from
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.PipelineCommand.Index">
+            <summary>
+            Index of the command within the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.PipelineCommand.Command">
+            <summary>
+            Information on the command itself
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PipelineCommand.InvocationName">
+            <summary>
+            Under what name was the command called?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.PipelineCommand.InvocationInfo">
+            <summary>
+            The full invocation information
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PipelineCommand.BoundParameters">
+            <summary>
+            The parameters that were bound to the command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.PipelineCommand.CommandItem">
+            <summary>
+            The actual PowerShell internal object representing the command on the pipeline
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.PipelineCommand.IsCommand(System.Management.Automation.PSCmdlet)">
+            <summary>
+            Tests whether the specified cmdlet variable is the same instance of its class as this one.
+            </summary>
+            <param name="CmdletItem">The cmdlet to compare</param>
+            <returns>Whether the specified cmdlet is the same instance as this one</returns>
+        </member>
+        <member name="M:PSFramework.Meta.PipelineCommand.#ctor(System.Int32,System.Int32,System.Management.Automation.CommandInfo,System.Management.Automation.InvocationInfo,System.Object)">
+            <summary>
+            Create a new pipelinecommand object
+            </summary>
+            <param name="PipelineId">ID of the pipeline the command was read from</param>
+            <param name="Index">Index of the command within the pipeline</param>
+            <param name="Command">Information on the command itself</param>
+            <param name="InvocationInfo">The full invocation information</param>
+            <param name="CommandItem">The actual PowerShell internal object representing the command on the pipeline</param>
+        </member>
+        <member name="T:PSFramework.Meta.Pipeline">
+            <summary>
+            Object representing a pipeline at runtime
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.InstanceId">
+            <summary>
+            The unique ID of the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.StartTime">
+            <summary>
+            When the pipeline was created
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.Commands">
+            <summary>
+            The commands that make up the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.Text">
+            <summary>
+            The full text of the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.Ast">
+            <summary>
+            The Ast of the pipeline
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.OutputAssigned">
+            <summary>
+            Whether the output is getting assigned to something
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.OutputAssignedTo">
+            <summary>
+            What the output gets assigned to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.InputFromVariable">
+            <summary>
+            Does the pipeline receive input from a variable?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.InputVariable">
+            <summary>
+            What variable does the pipeline receive input from
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.InputDirect">
+            <summary>
+            Does the pipeline receive a constant as input value directly?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.InputValue">
+            <summary>
+            What is the value it receives?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.Pipeline.PipelineItem">
+            <summary>
+            The actual PowerShell internal pipeline object
+            </summary>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation

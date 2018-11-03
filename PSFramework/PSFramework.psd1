@@ -78,6 +78,7 @@
 		'Get-PSFLicense',
 		'Get-PSFLoggingProvider',
 		'Get-PSFMessageLevelModifier',
+		'Get-PSFPipeline',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
 		'Get-PSFTaskEngineCache',
