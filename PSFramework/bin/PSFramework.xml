@@ -3605,7 +3605,7 @@
         </member>
         <member name="M:PSFramework.TabExpansion.ScriptContainer.Invoke">
             <summary>
-            Returns the correct results, either by 
+            Returns the correct results, either by executing the scriptblock or consulting the cache
             </summary>
             <returns></returns>
         </member>

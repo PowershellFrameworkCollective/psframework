@@ -44,7 +44,9 @@ namespace PSFramework.Validation
                 throw new ValidationMetadataException("ArgumentIsEmpty", null);
             }
 
-            string[] legalValues = GetValues();
+            List<string> legalValues = new List<string>();
+            foreach (string value in GetValues())
+                legalValues.Add(value.Trim("'".ToCharArray()));
 
             if (legalValues.Any(e => String.Equals(e, element.ToString(), StringComparison.OrdinalIgnoreCase)))
                 return;
