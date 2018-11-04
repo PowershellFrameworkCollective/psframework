@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Language;
 
 namespace PSFramework.Validation
 {
@@ -53,17 +55,6 @@ namespace PSFramework.Validation
             
             throw new ValidationMetadataException(String.Format(ErrorMessage, element, String.Join(", ", legalValues)));
         }
-
-        /*
-        /// <summary>
-        /// Initializes a new instance of the ValidateSetAttribute class
-        /// </summary>
-        public PsfValidateSetAttribute(params string[] Values)
-        {
-            if (Values.Length > 0)
-                this.Values = Values;
-        }
-        */
 
         /// <summary>
         /// Empty constructor for other attributes

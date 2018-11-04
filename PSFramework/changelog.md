@@ -7,6 +7,7 @@
  - New: Logging Provider for gelf / graylog
  - Upd: PsfValidateScript can now consume stored scriptblocks
  - Upd: PsfValidateScript will now understand both $_ and $args[0]
+ - Fix: PsfValidateSet fails on completion scriptblock with whitespace value
 
 ## 0.10.28.144 : 2018-10-28
  - Upd: Module Architecture update
