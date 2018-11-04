@@ -44,5 +44,17 @@ namespace PSFramework.Localization
                 Strings[tempFullName] = new LocalString(Module, Name);
             Strings[tempFullName].Set(Language, Text);
         }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings
+        /// </summary>
+        /// <param name="FullName">The name of the string to request. Include the modulename</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string Read(string FullName)
+        {
+            if (!Strings.ContainsKey(FullName))
+                return "";
+            return Strings[FullName].Value;
+        }
     }
 }

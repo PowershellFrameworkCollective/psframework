@@ -1238,6 +1238,13 @@
             <param name="Language">The language to set it for</param>
             <param name="Text">The text to register</param>
         </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Read(System.String)">
+            <summary>
+            Reads a localized string from the list of available strings
+            </summary>
+            <param name="FullName">The name of the string to request. Include the modulename</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
         <member name="T:PSFramework.Localization.LocalString">
             <summary>
             A string used for localized text
@@ -4702,9 +4709,14 @@
             Name of the Tab Completion scriptblock to use for validate set.
             </summary>
         </member>
-        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
+        <member name="P:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
             <summary>
             Custom error message to display
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ErrorString">
+            <summary>
+            The stored localized string to use for error messages
             </summary>
         </member>
         <member name="M:PSFramework.Validation.PsfValidateSetAttribute.ValidateElement(System.Object)">

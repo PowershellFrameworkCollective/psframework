@@ -31,7 +31,22 @@ namespace PSFramework.Validation
         /// <summary>
         /// Custom error message to display
         /// </summary>
-        public string ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ErrorString))
+                    return Localization.LocalizationHost.Read(ErrorString);
+                return _ErrorMessage;
+            }
+            set { _ErrorMessage = value; }
+        }
+        private string _ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+
+        /// <summary>
+        /// The stored localized string to use for error messages
+        /// </summary>
+        public string ErrorString;
         #endregion Public attribute properties
 
         /// <summary>
