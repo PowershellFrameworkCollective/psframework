@@ -1,4 +1,4 @@
-# The PSFramework Reliability Promise
+﻿# The PSFramework Reliability Promise
 ## About
 
 The PSFramework is designed as a platform for others to build their code upon.
@@ -33,18 +33,18 @@ Now what is covered by this promise:
 
  - All functions and cmdlets signatures. Any current parameterization will keep being valid and produce the same result.
  - All logging providers. Configuration and default behavior cannot be changed.
- - All parameter classes will keep understanding current input (they may _also_ learn new things however)
- - All validation attributes will keep accepting the current definition (new definitions may be introduced however)
+ - All parameter classes will keep understanding current input (they may _also_ learn to understand new input)
+ - All validation attributes will keep accepting the current definition (but new definitions may be introduced)
  - Any otherwise advertised feature on the [documentation site](https://psframework.org/documentation/documents/psframework.html)
 
 Not covered by this promise:
 
  - Preview features. All new commands that are being released are considered to be in preview for one month. This is designed to allow for initial user feedback to be implemented. Note: This only applies to the initial command release, _not_ to any later updates that were made after the preview stage was over.
- - Any other internal library mechanics. Some of them need to be public for script funtions to access them. That does _not_ imply they are for public consumption (You may use them for that, but at your own risk).
+ - Any other internal library mechanics. Some of them need to be public for script functions to access them. That does _not_ imply they are for public consumption (You may use them for that, but at your own risk).
  - UI User Interaction. Messages written to the host intended for a human consumption may be changed in how they are being displayed. The previous state however must be available using configuration (thus changes to the _default_ behavior can be made, as long as the old state can be reintroduced).
  - Experimental features. Any feature listed as experimental below is considered to be exempt from this policy.
  - System mandated change: If a feature needs to be adapted in order for it to be operable on all supported platforms (for example an active conflict with PowerShell Core), then that is an overriding technical need to change it.
- - A feature undergong the Process of Change.
+ - A feature undergoing the Process of Change.
 
 ## Process of Change
 

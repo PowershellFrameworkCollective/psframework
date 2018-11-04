@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -271,5 +272,10 @@ namespace PSFramework.Utility
                 return (IEnumerable<CallStackFrame>)method.Invoke(System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger, null);
             }
         }
+
+        /// <summary>
+        /// Stored scriptblocks that can be retrieved on demand anywhere within the process
+        /// </summary>
+        public static ConcurrentDictionary<string, ScriptBlockItem> ScriptBlocks = new ConcurrentDictionary<string, ScriptBlockItem>(StringComparer.InvariantCultureIgnoreCase);
     }
 }

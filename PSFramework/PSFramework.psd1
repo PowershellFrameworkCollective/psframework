@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.10.28.144'
+	ModuleVersion = '0.10.29.160'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -66,6 +66,7 @@
 		'Clear-PSFResultCache',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
+		'ConvertTo-PSFHashtable',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
@@ -75,10 +76,13 @@
 		'Get-PSFDynamicContentObject',
 		'Get-PSFMessage',
 		'Get-PSFLicense',
+		'Get-PSFLocalizedString',
 		'Get-PSFLoggingProvider',
 		'Get-PSFMessageLevelModifier',
+		'Get-PSFPipeline',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
+		'Get-PSFScriptblock',
 		'Get-PSFTaskEngineCache',
 		'Get-PSFTaskEngineTask',
 		'Get-PSFTypeSerializationData',
@@ -86,6 +90,7 @@
 		'Import-PSFClixml',
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
+		'Import-PSFLocalizedString',
 		'Install-PSFLoggingProvider',
 		'Invoke-PSFCommand',
 		'New-PSFLicense',
@@ -110,6 +115,7 @@
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',
+		'Set-PSFScriptblock',
 		'Set-PSFTaskEngineCache',
 		'Set-PSFTeppResult',
 		'Set-PSFTypeAlias',

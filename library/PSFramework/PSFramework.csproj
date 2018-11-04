@@ -74,6 +74,9 @@
     <Compile Include="License\LicenseHost.cs" />
     <Compile Include="License\LicenseType.cs" />
     <Compile Include="License\ProductType.cs" />
+    <Compile Include="Localization\LocalizationHost.cs" />
+    <Compile Include="Localization\LocalString.cs" />
+    <Compile Include="Localization\LocalStrings.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
@@ -92,6 +95,8 @@
     <Compile Include="Message\TransformError.cs" />
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
+    <Compile Include="Meta\PipelineCommand.cs" />
+    <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
+    <Compile Include="Extension\ScriptBlockExt.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
     <Compile Include="Runspace\RunspaceBoundValue.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
@@ -132,6 +138,7 @@
     <Compile Include="Utility\DynamicContentStack.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
+    <Compile Include="Utility\ScriptBlockItem.cs" />
     <Compile Include="Utility\SupportData.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />

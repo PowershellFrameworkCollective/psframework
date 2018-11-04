@@ -62,7 +62,7 @@ namespace PSFramework.TabExpansion
         }
 
         /// <summary>
-        /// Returns the correct results, either by 
+        /// Returns the correct results, either by executing the scriptblock or consulting the cache
         /// </summary>
         /// <returns></returns>
         public string[] Invoke()

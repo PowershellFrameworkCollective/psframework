@@ -10,7 +10,7 @@
 		These get merged into either a new or a specified hashtable and returned.
 	
 	.PARAMETER Reference
-		The hashtable to pick default parameter valeus from.
+		The hashtable to pick default parameter values from.
 	
 	.PARAMETER CommandName
 		The commands to pick default parameter values for.

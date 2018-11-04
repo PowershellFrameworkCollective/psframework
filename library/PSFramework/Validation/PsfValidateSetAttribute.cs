@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Language;
 
 namespace PSFramework.Validation
 {
@@ -29,7 +31,22 @@ namespace PSFramework.Validation
         /// <summary>
         /// Custom error message to display
         /// </summary>
-        public string ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ErrorString))
+                    return Localization.LocalizationHost.Read(ErrorString);
+                return _ErrorMessage;
+            }
+            set { _ErrorMessage = value; }
+        }
+        private string _ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+
+        /// <summary>
+        /// The stored localized string to use for error messages
+        /// </summary>
+        public string ErrorString;
         #endregion Public attribute properties
 
         /// <summary>
@@ -44,24 +61,15 @@ namespace PSFramework.Validation
                 throw new ValidationMetadataException("ArgumentIsEmpty", null);
             }
 
-            string[] legalValues = GetValues();
+            List<string> legalValues = new List<string>();
+            foreach (string value in GetValues())
+                legalValues.Add(value.Trim("'".ToCharArray()));
 
             if (legalValues.Any(e => String.Equals(e, element.ToString(), StringComparison.OrdinalIgnoreCase)))
                 return;
             
             throw new ValidationMetadataException(String.Format(ErrorMessage, element, String.Join(", ", legalValues)));
         }
-
-        /*
-        /// <summary>
-        /// Initializes a new instance of the ValidateSetAttribute class
-        /// </summary>
-        public PsfValidateSetAttribute(params string[] Values)
-        {
-            if (Values.Length > 0)
-                this.Values = Values;
-        }
-        */
 
         /// <summary>
         /// Empty constructor for other attributes
