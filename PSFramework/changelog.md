@@ -12,6 +12,7 @@
  - Upd: PsfValidateSet now supports localized strings using the `ErrorString` property.
  - Upd: PsfValidateScript now supports localized strings using the `ErrorString` property.
  - Fix: PsfValidateSet fails on completion scriptblock with whitespace value
+ - Fix: Get-PSFConfig will show bad value in default table. Correct data still stored (#243)
 
 ## 0.10.28.144 : 2018-10-28
  - Upd: Module Architecture update
