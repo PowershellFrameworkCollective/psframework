@@ -41,6 +41,7 @@ namespace PSFramework.Configuration
                     _PersistedValue = "null";
                 }
                 else
+                    PersistedType = ConfigurationValueType.Unknown;
                     _PersistedValue = null;
 
                 _Value = value;
