@@ -10,7 +10,7 @@ namespace PSFramework.Localization
     /// <summary>
     /// An accessor, designed to make strings more accessible from within powershell script code
     /// </summary>
-    public class LocalStrings : IDictionary<string, string>
+    public class LocalStrings : IDictionary<string, string>, IDictionary
     {
         /// <summary>
         /// The name of the module to map with this accessor
@@ -142,6 +142,57 @@ namespace PSFramework.Localization
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool Contains(object key)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(object key, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            IDictionary temp = (LocalizationHost.Strings.Values.Where(
+                o => String.Equals(_ModuleName, o.Module, StringComparison.InvariantCultureIgnoreCase)).ToDictionary(
+                pair => pair.Name, pair => pair.Value));
+            return temp.GetEnumerator();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        public void Remove(object key)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
+        public void CopyTo(Array array, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ICollection<string> Keys
         {
             get { return LocalizationHost.Strings.Values.Where(o => String.Equals(_ModuleName, o.Module, StringComparison.InvariantCultureIgnoreCase)).Select(o => o.Name).ToList(); }
@@ -171,12 +222,48 @@ namespace PSFramework.Localization
         /// <summary>
         /// 
         /// </summary>
+        ICollection IDictionary.Keys => LocalizationHost.Strings.Values.Where(o => String.Equals(_ModuleName, o.Module, StringComparison.InvariantCultureIgnoreCase)).Select(o => o.Name).ToList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ICollection IDictionary.Values => LocalizationHost.Strings.Values.Where(o => String.Equals(_ModuleName, o.Module, StringComparison.InvariantCultureIgnoreCase)).Select(o => o.Value).ToList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsFixedSize => false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public object SyncRoot => throw new NotSupportedException();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsSynchronized => false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object this[object key]
+        {
+            get { return LocalizationHost.Strings[Qualify(key.ToString())].Value; }
+            set { throw new NotSupportedException(); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public string this[string key]
         {
             get { return LocalizationHost.Strings[Qualify(key)].Value; }
-            set => throw new NotSupportedException();
+            set { throw new NotSupportedException(); }
         }
 
         /// <summary>

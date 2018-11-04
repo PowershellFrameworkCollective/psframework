@@ -1379,6 +1379,39 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Contains(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Add(System.Object,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Remove(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.CopyTo(System.Array,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="index"></param>
+        </member>
         <member name="P:PSFramework.Localization.LocalStrings.Keys">
             <summary>
             
@@ -1398,6 +1431,38 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.IsFixedSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.SyncRoot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.IsSynchronized">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Item(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
         </member>
         <member name="P:PSFramework.Localization.LocalStrings.Item(System.String)">
             <summary>
