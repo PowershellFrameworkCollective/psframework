@@ -4649,16 +4649,14 @@
             </summary>
         </member>
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ErrorMessage">
-             <summary>
-             Gets or sets the custom error message that is displayed to the user.
-            
-             The item being validated and the validating scriptblock is passed as the first and second
-             formatting argument.
-            
-             <example>
-             [ValidateScript("$_ % 2", ErrorMessage = "The item '{0}' did not pass validation of script '{1}'")]
-             </example>
-             </summary>
+            <summary>
+            Gets or sets the custom error message that is displayed to the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateScriptAttribute.ErrorString">
+            <summary>
+            The stored localized string to use for error messages
+            </summary>
         </member>
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlock">
             <summary>

@@ -11,15 +11,23 @@ namespace PSFramework.Validation
     {
         /// <summary>
         /// Gets or sets the custom error message that is displayed to the user.
-        ///
-        /// The item being validated and the validating scriptblock is passed as the first and second
-        /// formatting argument.
-        ///
-        /// <example>
-        /// [ValidateScript("$_ % 2", ErrorMessage = "The item '{0}' did not pass validation of script '{1}'")]
-        /// </example>
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ErrorString))
+                    return Localization.LocalizationHost.Read(ErrorString);
+                return _ErrorMessage;
+            }
+            set { _ErrorMessage = value; }
+        }
+        private string _ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+
+        /// <summary>
+        /// The stored localized string to use for error messages
+        /// </summary>
+        public string ErrorString;
 
         /// <summary>
         /// Gets the scriptblock to be used in the validation

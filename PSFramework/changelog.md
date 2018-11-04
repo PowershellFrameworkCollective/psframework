@@ -10,6 +10,7 @@
  - Upd: PsfValidateScript can now consume stored scriptblocks
  - Upd: PsfValidateScript will now understand both $_ and $args[0]
  - Upd: PsfValidateSet now supports localized strings using the `ErrorString` property.
+ - Upd: PsfValidateScript now supports localized strings using the `ErrorString` property.
  - Fix: PsfValidateSet fails on completion scriptblock with whitespace value
 
 ## 0.10.28.144 : 2018-10-28
