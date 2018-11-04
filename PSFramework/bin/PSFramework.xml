@@ -1206,6 +1206,284 @@
             The Product is anything other than the default types
             </summary>
         </member>
+        <member name="T:PSFramework.Localization.LocalizationHost">
+            <summary>
+            Helper class that offers static resources for the localization component
+            </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalizationHost.Language">
+            <summary>
+            The language to display text with by default. Will use thread information if not set.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalizationHost.Strings">
+            <summary>
+            List of strings registered
+            </summary>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Write(System.String,System.String,System.String)">
+            <summary>
+            Writes a localized string. If needed creates it, then sets the text of the specified language.
+            </summary>
+            <param name="FullName">The name of the value to set</param>
+            <param name="Language">The language to set it for</param>
+            <param name="Text">The text to register</param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Write(System.String,System.String,System.String,System.String)">
+            <summary>
+            Writes a localized string. If needed creates it, then sets the text of the specified language.
+            </summary>
+            <param name="Module">The name of the module for which to set a value</param>
+            <param name="Name">The name of the text for which to set the value</param>
+            <param name="Language">The language to set it for</param>
+            <param name="Text">The text to register</param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Read(System.String)">
+            <summary>
+            Reads a localized string from the list of available strings
+            </summary>
+            <param name="FullName">The name of the string to request. Include the modulename</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="T:PSFramework.Localization.LocalString">
+            <summary>
+            A string used for localized text
+            </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalString.Module">
+            <summary>
+            The name of the module the string is a part of
+            </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalString.Name">
+            <summary>
+            The name of the string
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalString.FullName">
+            <summary>
+            The full, public name of the string
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalString.Value">
+            <summary>
+            The actual string value of the text
+            </summary>
+        </member>
+        <member name="M:PSFramework.Localization.LocalString.Set(System.String,System.String)">
+            <summary>
+            Sets the text for a specific language
+            </summary>
+            <param name="Language">The language to set it for (eg: en-US; not case sensitive)</param>
+            <param name="Text">The text to apply</param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalString.GetAll">
+            <summary>
+            Returns a list of all strings
+            </summary>
+            <returns>The strings in all languages available</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalString.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new localized string
+            </summary>
+            <param name="Module"></param>
+            <param name="Name"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalString.#ctor(System.String)">
+            <summary>
+            Creates a new localized string
+            </summary>
+            <param name="FullName"></param>
+        </member>
+        <member name="T:PSFramework.Localization.LocalStrings">
+            <summary>
+            An accessor, designed to make strings more accessible from within powershell script code
+            </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalStrings._ModuleName">
+            <summary>
+            The name of the module to map with this accessor
+            </summary>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Qualify(System.String)">
+            <summary>
+            Helper method that qualifies names with the module
+            </summary>
+            <param name="Name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.ContainsKey(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Add(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Remove(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.TryGetValue(System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Add(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Contains(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.CopyTo(System.Collections.Generic.KeyValuePair{System.String,System.String}[],System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Remove(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Contains(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Add(System.Object,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.Remove(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.CopyTo(System.Array,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="index"></param>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.IsReadOnly">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.System#Collections#IDictionary#Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.IsFixedSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.SyncRoot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.IsSynchronized">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Item(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:PSFramework.Localization.LocalStrings.Item(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalStrings.#ctor(System.String)">
+            <summary>
+            Creates a wrapper around the string collection
+            </summary>
+            <param name="ModuleName">The name of the module to wrap</param>
+        </member>
         <member name="T:PSFramework.Logging.LogFileFileType">
             <summary>
             The data format to log to in the logfile logging provider
@@ -3605,7 +3883,7 @@
         </member>
         <member name="M:PSFramework.TabExpansion.ScriptContainer.Invoke">
             <summary>
-            Returns the correct results, either by 
+            Returns the correct results, either by executing the scriptblock or consulting the cache
             </summary>
             <returns></returns>
         </member>
@@ -4371,16 +4649,14 @@
             </summary>
         </member>
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ErrorMessage">
-             <summary>
-             Gets or sets the custom error message that is displayed to the user.
-            
-             The item being validated and the validating scriptblock is passed as the first and second
-             formatting argument.
-            
-             <example>
-             [ValidateScript("$_ % 2", ErrorMessage = "The item '{0}' did not pass validation of script '{1}'")]
-             </example>
-             </summary>
+            <summary>
+            Gets or sets the custom error message that is displayed to the user.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateScriptAttribute.ErrorString">
+            <summary>
+            The stored localized string to use for error messages
+            </summary>
         </member>
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlock">
             <summary>
@@ -4431,9 +4707,14 @@
             Name of the Tab Completion scriptblock to use for validate set.
             </summary>
         </member>
-        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
+        <member name="P:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
             <summary>
             Custom error message to display
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.ErrorString">
+            <summary>
+            The stored localized string to use for error messages
             </summary>
         </member>
         <member name="M:PSFramework.Validation.PsfValidateSetAttribute.ValidateElement(System.Object)">

@@ -4,9 +4,14 @@
  - New: Command Get-PSFPipeline grants access to the current pipeline and all its works.
  - New: Command Get-PSFScriptblock retrieves scriptblocks from a static dictionary
  - New: Command Set-PSFScriptblock stores scriptblocks in a static dictionary
+ - New: Command Get-PSFLocalizedString retrieves localied versions of strings
+ - New: Command Import-PSFLocalizedString imports localized strings into the strings store
  - New: Logging Provider for gelf / graylog
  - Upd: PsfValidateScript can now consume stored scriptblocks
  - Upd: PsfValidateScript will now understand both $_ and $args[0]
+ - Upd: PsfValidateSet now supports localized strings using the `ErrorString` property.
+ - Upd: PsfValidateScript now supports localized strings using the `ErrorString` property.
+ - Fix: PsfValidateSet fails on completion scriptblock with whitespace value
 
 ## 0.10.28.144 : 2018-10-28
  - Upd: Module Architecture update
