@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 0.10.28.???
+## 0.10.29.160 : 2018-11-04
  - New: Command ConvertTo-PSFHashtable converts objects into hashtables
  - New: Command Get-PSFPipeline grants access to the current pipeline and all its works.
  - New: Command Get-PSFScriptblock retrieves scriptblocks from a static dictionary
