@@ -3476,6 +3476,11 @@
             Whether the current console is in unattended mode
             </summary>
         </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.ModuleRoot">
+            <summary>
+            The path to where the module was imported from
+            </summary>
+        </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
             <summary>
             Attribute designating something as reserved as PSFramework-internal.

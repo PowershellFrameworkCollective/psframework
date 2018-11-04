@@ -11,6 +11,7 @@
  - Upd: PsfValidateScript will now understand both $_ and $args[0]
  - Upd: PsfValidateSet now supports localized strings using the `ErrorString` property.
  - Upd: PsfValidateScript now supports localized strings using the `ErrorString` property.
+ - Upd: Logging runspace now loads the same copy of PSFramework that spawned it (#238)
  - Fix: PsfValidateSet fails on completion scriptblock with whitespace value
  - Fix: Get-PSFConfig will show bad value in default table. Correct data still stored (#243)
 

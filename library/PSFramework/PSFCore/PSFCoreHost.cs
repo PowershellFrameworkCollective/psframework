@@ -15,5 +15,19 @@ namespace PSFramework.PSFCore
         /// Whether the current console is in unattended mode
         /// </summary>
         public static bool Unattended = false;
+
+        /// <summary>
+        /// The path to where the module was imported from
+        /// </summary>
+        public static string ModuleRoot
+        {
+            get { return _ModuleRoot; }
+            set
+            {
+                if (String.IsNullOrEmpty(_ModuleRoot))
+                    _ModuleRoot = value;
+            }
+        }
+        private static string _ModuleRoot;
     }
 }

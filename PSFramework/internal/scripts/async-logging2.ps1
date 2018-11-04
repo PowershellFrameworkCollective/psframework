@@ -3,6 +3,8 @@
 	{
 		$script:___ScriptName = 'PSFramework.Logging'
 		
+		Import-Module (Join-Path ([PSFramework.PSFCore.PSFCoreHost]::ModuleRoot) 'PSFramework.psd1')
+		
 		while ($true)
 		{
 			# This portion is critical to gracefully closing the script
