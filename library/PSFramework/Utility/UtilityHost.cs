@@ -236,6 +236,34 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Removes an alias from the global list of aliases
+        /// </summary>
+        /// <param name="Name">The name of the laias to kill</param>
+        /// <param name="Force">Whether to remove ReadOnly items</param>
+        public static void RemovePowerShellAlias(string Name, bool Force)
+        {
+            object context = GetExecutionContextFromTLS();
+            PropertyInfo contextProperty = context.GetType().GetProperty("TopLevelSessionState", BindingFlags.Instance | BindingFlags.NonPublic);
+            object topLevelState = contextProperty.GetValue(context);
+            PropertyInfo topLevelStateProperty = topLevelState.GetType().GetProperty("GlobalScope", BindingFlags.Instance | BindingFlags.NonPublic);
+            object globalScope = topLevelStateProperty.GetValue(topLevelState);
+            FieldInfo aliasesField = globalScope.GetType().GetField("_alias", BindingFlags.Instance | BindingFlags.NonPublic);
+            Dictionary<string, AliasInfo> aliases = (Dictionary<string, AliasInfo>)aliasesField.GetValue(globalScope);
+
+            if (!aliases.ContainsKey(Name))
+                throw new ItemNotFoundException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasNotFound"), Name));
+
+            AliasInfo alias = aliases[Name];
+
+            if ((alias.Options & ScopedItemOptions.Constant) != 0)
+                throw new InvalidOperationException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasProtected"), Name));
+            if (!Force && ((alias.Options & ScopedItemOptions.ReadOnly) != 0))
+                throw new InvalidOperationException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasReadOnly"), Name));
+            
+            aliases.Remove(Name);
+        }
+
+        /// <summary>
         /// Returns the current callstack
         /// </summary>
         public static IEnumerable<CallStackFrame> Callstack
