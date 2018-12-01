@@ -79,8 +79,7 @@
 		"@
 	
 		This registers the Awesome Test Product as licensed under the common FreeBSD license.
-#>
-	
+#>	
 	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param
@@ -123,21 +122,22 @@
 	)
 	
 	# Create and fill object
-	$license = New-Object PSFramework.License.License
-	$license.Product = $Product
-	$license.Manufacturer = $Manufacturer
-	$license.ProductVersion = $ProductVersion
-	$license.ProductType = $ProductType
-	$license.LicenseName = $Name
-	$license.LicenseVersion = $Version
-	$license.LicenseDate = $Date
-	$license.LicenseType = $Type
-	$license.LicenseText = $Text
-	$license.Description = $Description
-	$license.Parent = $Parent
+	$license = New-Object PSFramework.License.License -Property @{
+		Product	       = $Product
+		Manufacturer   = $Manufacturer
+		ProductVersion = $ProductVersion
+		ProductType    = $ProductType
+		LicenseName    = $Name
+		LicenseVersion = $Version
+		LicenseDate    = $Date
+		LicenseType    = $Type
+		LicenseText    = $Text
+		Description    = $Description
+		Parent		   = $Parent
+	}
 	if ($PSCmdlet.ShouldProcess("$($license.Product) $($license.ProductVersion) ($($license.LicenseName))", "Create License"))
 	{
-		if (-not ([PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -eq $license.Product) -and ($_.ProductVersion -eq $license.ProductVersion) }))
+		if (-not ([PSFramework.License.LicenseHost]::Get($license)))
 		{
 			[PSFramework.License.LicenseHost]::Add($license)
 		}

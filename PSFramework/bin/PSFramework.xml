@@ -1145,6 +1145,13 @@
             </summary>
             <returns>All registerd licenses</returns>
         </member>
+        <member name="M:PSFramework.License.LicenseHost.Get(PSFramework.License.License)">
+            <summary>
+            Returns a license that matches the specified license in content
+            </summary>
+            <param name="ReferenceLicense">The license based on which to search</param>
+            <returns>The matching license object</returns>
+        </member>
         <member name="M:PSFramework.License.LicenseHost.Remove(PSFramework.License.License)">
             <summary>
             Removes a spceific licenses from the list of registerd licenses

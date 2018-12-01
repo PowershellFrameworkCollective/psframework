@@ -11,21 +11,21 @@ namespace PSFramework.License
         /// <summary>
         /// No special type is present
         /// </summary>
-        Free = 0,
+        Free = 1,
 
         /// <summary>
         /// The license is for a commercial product. This means you have to acquire use permission, such as software licenses, user CALs et al.
         /// </summary>
-        Commercial = 1,
+        Commercial = 2,
 
         /// <summary>
         /// Reusing this product requires no attribution. Just use it and call it your own.
         /// </summary>
-        NoAttribution = 2,
+        NoAttribution = 4,
 
         /// <summary>
         /// This product may be used, but must not be modified in any way.
         /// </summary>
-        NoModify = 4,
+        NoModify = 8,
     }
 }

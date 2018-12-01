@@ -31,7 +31,6 @@
 	
 		Returns a list of all registered licenses for products that have commercial licenses and are libraries.
 #>
-	
 	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param (
@@ -50,31 +49,11 @@
 		$Manufacturer = "*"
 	)
 	
-	$licenses = [PSFramework.License.LicenseHost]::Get() | Where-Object { ($_.Product -like $Filter) -and ($_.Manufacturer -like $Manufacturer) }
-	if ($PSBoundParameters.ContainsKey("ProductType"))
-	{
-		$temp = $licenses
-		$licenses = @()
-		
-		:main foreach ($l in $temp)
-		{
-			foreach ($type in $ProductType)
-			{
-				if ($l.ProductType -eq $type)
-				{
-					$licenses += $l
-					continue main
-				}
-			}
-		}
-	}
-	
-	if ($PSBoundParameters.ContainsKey("LicenseType"))
-	{
-		$licenses | Where-Object { ($_.LicenseType.ToString() -match $LicenseType.ToString()) -and ($_.Manufacturer -like $Manufacturer) -and ($_.Product -like $Filter) }
-	}
-	else
-	{
-		$licenses | Where-Object { ($_.Manufacturer -like $Manufacturer) -and ($_.Product -like $Filter) }
+	[PSFramework.License.LicenseHost]::Get() | Where-Object {
+		if ($_.Product -notlike $Filter) { return $false }
+		if ($_.Manufacturer -notlike $Manufacturer) { return $false }
+		if ($ProductType -and ($_.ProductType -notin $ProductType)) { return $false }
+		if ($licenseType -and -not ($_.LicenseType -band $LicenseType)) { return $false }
+		return $true
 	}
 }
