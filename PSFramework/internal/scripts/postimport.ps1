@@ -39,6 +39,9 @@ foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\parameter
 # Import the aliases for PSFramework types
 . Import-ModuleFile -Path "$($script:ModuleRoot)\bin\type-aliases.ps1"
 
+# Load the strings
+. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\strings.ps1"
+
 # Register the task engine
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\taskEngine.ps1"
 

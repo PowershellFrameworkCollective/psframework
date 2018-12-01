@@ -11,6 +11,7 @@ internal\tepp\scripts\*.ps1
 internal\tepp\tepp-assignment.ps1
 internal\parameters\*.ps1
 bin\type-aliases.ps1
+internal\scripts\strings.ps1
 internal\scripts\taskEngine.ps1
 internal\scripts\removalEvent.ps1
 internal\scripts\variables.ps1
