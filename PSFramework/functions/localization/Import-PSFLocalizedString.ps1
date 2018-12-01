@@ -24,7 +24,7 @@
 	.EXAMPLE
 		PS C:\> Import-PSFLocalizedString -Path '$moduleRoot\strings.psd1' -Module 'MyModule'
 	
-		Improts the strigns stored in strings.psd1 for the module MyModule as 'en-US' language strings.
+		Imports the strings stored in strings.psd1 for the module MyModule as 'en-US' language strings.
 #>
 	[CmdletBinding()]
 	param (
@@ -53,9 +53,5 @@
 		{
 			[PSFramework.Localization.LocalizationHost]::Write($Module, $key, $Language, $data[$key])
 		}
-	}
-	end
-	{
-	
 	}
 }
