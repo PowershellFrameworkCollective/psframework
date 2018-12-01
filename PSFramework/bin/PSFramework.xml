@@ -4593,6 +4593,13 @@
             </summary>
             <returns>The current execution context</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.RemovePowerShellAlias(System.String,System.Boolean)">
+            <summary>
+            Removes an alias from the global list of aliases
+            </summary>
+            <param name="Name">The name of the laias to kill</param>
+            <param name="Force">Whether to remove ReadOnly items</param>
+        </member>
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
@@ -4635,9 +4642,14 @@
              The text representation of the object being validated and the validating regex is passed as
              the first and second formatting parameters to the ErrorMessage formatting pattern.
              <example>
-             [ValidatePattern("\s+", ErrorMessage="The text '{0}' did not pass validation of regex '{1}'")]
+             [PsfValidatePattern("\s+", ErrorMessage="The text '{0}' did not pass validation of regex '{1}'")]
              </example>
              </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidatePatternAttribute.ErrorString">
+            <summary>
+            The stored localized string to use for error messages
+            </summary>
         </member>
         <member name="M:PSFramework.Validation.PsfValidatePatternAttribute.ValidateElement(System.Object)">
             <summary>

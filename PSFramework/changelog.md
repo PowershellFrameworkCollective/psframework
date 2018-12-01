@@ -1,4 +1,11 @@
 ﻿# CHANGELOG
+## 0.10.30.165 : 2018-12-01
+ - New: Command Join-PSFPath performs multi-segment path joins and path normalization
+ - New: Command Remove-PSFAlias deletes global aliases
+ - New: Configuration setting to define current language
+ - Upd: PsfValidatePattern now supports localized strings using the `ErrorString` property.
+ - Fix: Race condition / concurrent access on license content during import with ramping up CPU availability
+
 ## 0.10.29.160 : 2018-11-04
  - New: Command ConvertTo-PSFHashtable converts objects into hashtables
  - New: Command Get-PSFPipeline grants access to the current pipeline and all its works.

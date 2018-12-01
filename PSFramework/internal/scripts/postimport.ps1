@@ -1,6 +1,9 @@
 ﻿# Load the cmdlets
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\cmdlets.ps1"
 
+# Load the strings
+. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\strings.ps1"
+
 # Initialize the configurations
 foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\configurationvalidation\*.ps1"))
 {
