@@ -1,4 +1,4 @@
-﻿function Import-PSFLocalizedString
+﻿function Import-LocalizedString
 {
 <#
 	.SYNOPSIS
@@ -22,7 +22,7 @@
 		Defaults to en-US.
 	
 	.EXAMPLE
-		PS C:\> Import-PSFLocalizedString -Path '$moduleRoot\strings.psd1' -Module 'MyModule'
+		PS C:\> Import-LocalizedString -Path '$moduleRoot\strings.psd1' -Module 'MyModule'
 	
 		Imports the strings stored in strings.psd1 for the module MyModule as 'en-US' language strings.
 #>
@@ -36,7 +36,6 @@
 		[string]
 		$Module,
 		
-		[PsfValidateSet(TabCompletion = 'PSFramework-LanguageNames')]
 		[string]
 		$Language = 'en-US'
 	)

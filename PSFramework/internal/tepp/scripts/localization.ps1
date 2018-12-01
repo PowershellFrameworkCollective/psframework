@@ -1,5 +1,5 @@
 ﻿Register-PSFTeppScriptblock -Name 'PSFramework-LanguageNames' -ScriptBlock {
-	[System.Globalization.CultureInfo]::GetCultures([System.Globalization.CultureTypes]::AllCultures).Name
+	[System.Globalization.CultureInfo]::GetCultures([System.Globalization.CultureTypes]::AllCultures).Name | Where-Object { $_ -and ($_.Trim()) }
 }
 
 Register-PSFTeppScriptblock -Name 'PSFramework-LocalizedStrings-Names' -ScriptBlock {

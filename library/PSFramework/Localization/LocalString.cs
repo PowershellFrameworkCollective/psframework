@@ -44,6 +44,8 @@ namespace PSFramework.Localization
                     return _Strings[LocalizationHost.Language];
                 if (_Strings.ContainsKey(CultureInfo.CurrentUICulture.Name))
                     return _Strings[CultureInfo.CurrentUICulture.Name];
+                if (_Strings.ContainsKey("en-US"))
+                    return _Strings["en-US"];
 
                 return _Strings.Values.First();
             }

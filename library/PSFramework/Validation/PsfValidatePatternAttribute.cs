@@ -20,16 +20,31 @@ namespace PSFramework.Validation
         /// </summary>
         public RegexOptions Options { set; get; } = RegexOptions.IgnoreCase;
 
-        /// <summary>
+       /// <summary>
         /// Gets or sets the custom error message pattern that is displayed to the user.
         ///
         /// The text representation of the object being validated and the validating regex is passed as
         /// the first and second formatting parameters to the ErrorMessage formatting pattern.
         /// <example>
-        /// [ValidatePattern("\s+", ErrorMessage="The text '{0}' did not pass validation of regex '{1}'")]
+        /// [PsfValidatePattern("\s+", ErrorMessage="The text '{0}' did not pass validation of regex '{1}'")]
         /// </example>
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ErrorString))
+                    return Localization.LocalizationHost.Read(ErrorString);
+                return _ErrorMessage;
+            }
+            set { _ErrorMessage = value; }
+        }
+        private string _ErrorMessage = "Failed to validate: {0} against pattern {1}";
+
+        /// <summary>
+        /// The stored localized string to use for error messages
+        /// </summary>
+        public string ErrorString;
 
         /// <summary>
         /// Validates that each parameter argument matches the RegexPattern
@@ -49,8 +64,7 @@ namespace PSFramework.Validation
             Match match = regex.Match(objectString);
             if (!match.Success)
             {
-                var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Failed to validate: {0} against pattern {1}" : ErrorMessage;
-                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, RegexPattern));
+                throw new ValidationMetadataException(String.Format(ErrorMessage, element, RegexPattern));
             }
         }
 

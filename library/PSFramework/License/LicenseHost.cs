@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace PSFramework.License
 {
@@ -10,7 +11,7 @@ namespace PSFramework.License
         /// <summary>
         /// The list containing all registered licenses.
         /// </summary>
-        public static List<License> Licenses = new List<License>();
+        public static ConcurrentDictionary<string, License> Licenses = new ConcurrentDictionary<string, License>();
 
         #region Default methods
         /// <summary>
@@ -19,9 +20,8 @@ namespace PSFramework.License
         /// <param name="License">The license to add</param>
         public static void Add(License License)
         {
-            Licenses.Add(License);
-
-            // TODO: Add code to respect policy settings to log added licenses
+            string key = string.Format("{0}|{1}", License.Product, License.ProductVersion);
+            Licenses[key] = License;
         }
 
         /// <summary>
@@ -29,16 +29,29 @@ namespace PSFramework.License
         /// </summary>
         public static void Clear()
         {
-            Licenses = new List<License>();
+            Licenses = new ConcurrentDictionary<string, License>();
         }
 
         /// <summary>
         /// Returns all registered licenses
         /// </summary>
         /// <returns>All registerd licenses</returns>
-        public static List<License> Get()
+        public static ICollection<License> Get()
         {
-            return Licenses;
+            return Licenses.Values;
+        }
+
+        /// <summary>
+        /// Returns a license that matches the specified license in content
+        /// </summary>
+        /// <param name="ReferenceLicense">The license based on which to search</param>
+        /// <returns>The matching license object</returns>
+        public static License Get(License ReferenceLicense)
+        {
+            License tempLicense = null;
+            try { Licenses.TryGetValue(string.Format("{0}|{1}", ReferenceLicense.Product, ReferenceLicense.ProductVersion), out tempLicense); }
+            catch { }
+            return tempLicense;
         }
 
         /// <summary>
@@ -47,10 +60,10 @@ namespace PSFramework.License
         /// <param name="License">License to remove</param>
         public static void Remove(License License)
         {
-            Licenses.Remove(License);
+            string key = string.Format("{0}|{1}", License.Product, License.ProductVersion);
+            License tempLicense;
+            Licenses.TryRemove(key, out tempLicense);
         }
         #endregion Default methods
-
-
     }
 }

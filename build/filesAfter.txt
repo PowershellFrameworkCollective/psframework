@@ -2,6 +2,7 @@
 # In the order they are loaded during preimport
 
 internal\scripts\cmdlets.ps1
+internal\scripts\strings.ps1
 internal\configurationvalidation\*.ps1
 internal\configurations\*.ps1
 internal\scripts\loadConfigurationPersisted.ps1
