@@ -79,7 +79,7 @@
 		"@
 	
 		This registers the Awesome Test Product as licensed under the common FreeBSD license.
-#>	
+#>
 	[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param
