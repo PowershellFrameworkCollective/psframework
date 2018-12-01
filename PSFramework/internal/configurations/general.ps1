@@ -7,3 +7,6 @@ Set-PSFConfig -Module PSFramework -Name 'SupportPackage.ContactMessage' -Value '
 Set-PSFConfig -Module PSFramework -Name 'Text.Encoding.FullTabCompletion' -Value $false -Initialize -Validation 'bool' -Description 'Whether all encodings should be part of the tab completion for encodings. By default, only a manageable subset is shown.'
 Set-PSFConfig -Module PSFramework -Name 'Text.Encoding.DefaultWrite' -Value 'utf-8' -Initialize -Validation 'string' -Description 'The default encoding to use when writing to file. Only applied by implementing commands.'
 Set-PSFConfig -Module PSFramework -Name 'Text.Encoding.DefaultRead' -Value 'utf-8' -Initialize -Validation 'string' -Description 'The default encoding to use when reading from file. Only applied by implementing commands.'
+
+# Localization Stuff
+Set-PSFConfig -Module PSFramework -Name 'Localization.Language' -Value ([System.Globalization.CultureInfo]::CurrentUICulture.Name) -Initialize -Handler { [PSFramework.Localization.LocalizationHost]::Language = $args[0] } -Validation 'languagecode' -Description 'The language the current PowerShell session is operating under'
