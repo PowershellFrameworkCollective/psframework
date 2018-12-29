@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+##
+ - Fix: Missing localized strings
+ - Fix: Missing tab completion for modules that register localized strings
+
 ## 0.10.30.165 : 2018-12-01
  - New: Command Join-PSFPath performs multi-segment path joins and path normalization
  - New: Command Remove-PSFAlias deletes global aliases

@@ -28,6 +28,7 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Nam
 
 #region Localization
 Register-PSFTeppArgumentCompleter -Command Import-PSFLocalizedString -Parameter Language -Name 'PSFramework-LanguageNames'
+Register-PSFTeppArgumentCompleter -Command Get-PSFLocalizedString -Parameter Module -Name 'PSFramework-LocalizedStrings-Modules'
 Register-PSFTeppArgumentCompleter -Command Get-PSFLocalizedString -Parameter Name -Name 'PSFramework-LocalizedStrings-Names'
 #endregion Localization
 
