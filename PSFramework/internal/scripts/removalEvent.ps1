@@ -4,6 +4,7 @@ $PSF_OnRemoveScript = {
 	if ([runspace]::DefaultRunspace.Id -eq 1)
 	{
 		Get-PSFRunspace | Stop-PSFRunspace
+		[PSFramework.PSFCore.PSFCoreHost]::Uninitialize()
 	}
 	
 	# Properly disconnect all remote sessions still held open

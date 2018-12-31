@@ -88,3 +88,6 @@ if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*
 if (-not ([PSFramework.Message.LogHost]::LoggingPath)) { [PSFramework.Message.LogHost]::LoggingPath = $script:path_Logging }
 
 [PSFramework.PSFCore.PSFCoreHost]::ModuleRoot = $script:ModuleRoot
+# Run the library initialization logic
+# Needed before the configuration system loads
+[PSFramework.PSFCore.PSFCoreHost]::Initialize()

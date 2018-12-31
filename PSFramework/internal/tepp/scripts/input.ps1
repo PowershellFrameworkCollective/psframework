@@ -19,7 +19,9 @@
 		if ($pipelineAst.PipelineElements[$inputIndex].CommandElements)
 		{
 			# Resolve command and fail if it breaks
-			$command = Get-Command $pipelineAst.PipelineElements[$inputIndex].CommandElements[0].Value -ErrorAction Ignore
+			$commandString = $pipelineAst.PipelineElements[$inputIndex].CommandElements[0].Value
+			if ($commandString -eq "?") { $commandString = (Get-Alias -Name "?").ResolvedCommand.Name }
+			$command = Get-Command $commandString -ErrorAction Ignore
 			if ($command -is [System.Management.Automation.AliasInfo]) { $command = $command.ResolvedCommand }
 			if (-not $command) { break }
 			
@@ -27,6 +29,7 @@
 			{
 				'Where-Object' { $inputIndex = $inputIndex - 1; continue main }
 				'Tee-Object' { $inputIndex = $inputIndex - 1; continue main }
+				'Sort-Object' { $inputIndex = $inputIndex - 1; continue main }
 				#region Select-Object
 				'Select-Object'
 				{
