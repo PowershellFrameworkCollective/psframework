@@ -1,4 +1,12 @@
 ﻿# CHANGELOG
+## ???
+ - Upd: Write-PSFMessage supports localized strings through the `-String` and `-StringValues` parameters
+ - Upd: Stop-PSFFunction supports localized strings through the `-String` and `-StringValues` parameters
+ - Upd: Message component supports localized strings
+ - Upd: Logging component logs in separate language than localized messages to screen / userinteraction
+ - Upd: Import-PSFLocalizedString now accepts wildcard path patterns that resovle to multiple files.
+ - fix: Missing localization strings
+ 
 ## 0.10.30.165 : 2018-12-01
  - New: Command Join-PSFPath performs multi-segment path joins and path normalization
  - New: Command Remove-PSFAlias deletes global aliases

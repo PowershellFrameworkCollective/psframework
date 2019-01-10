@@ -10,3 +10,4 @@ Set-PSFConfig -Module PSFramework -Name 'Text.Encoding.DefaultRead' -Value 'utf-
 
 # Localization Stuff
 Set-PSFConfig -Module PSFramework -Name 'Localization.Language' -Value ([System.Globalization.CultureInfo]::CurrentUICulture.Name) -Initialize -Handler { [PSFramework.Localization.LocalizationHost]::Language = $args[0] } -Validation 'languagecode' -Description 'The language the current PowerShell session is operating under'
+Set-PSFConfig -Module PSFramework -Name 'Localization.LoggingLanguage' -Value 'en-US' -Initialize -Handler { [PSFramework.Localization.LocalizationHost]::LoggingLanguage = $args[0] } -Validation 'languagecode' -Description 'The language the current PowerShell session is operating under'
