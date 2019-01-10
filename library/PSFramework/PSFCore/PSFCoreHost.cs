@@ -29,5 +29,33 @@ namespace PSFramework.PSFCore
             }
         }
         private static string _ModuleRoot;
+
+        /// <summary>
+        /// Initializes the PSFramework library.
+        /// Required for some components to work correctly.
+        /// </summary>
+        public static void Initialize()
+        {
+            if (_Initialized)
+                return;
+            _Initialized = true;
+
+            // Initialization logic goes here
+        }
+        private static bool _Initialized = false;
+
+        /// <summary>
+        /// Reverses the initialization of the PSFramework library.
+        /// Should be called when destroying the main runspace
+        /// </summary>
+        public static void Uninitialize()
+        {
+            if (!_Initialized)
+                return;
+
+            // De-Initiialization logic goes here
+
+            _Initialized = false;
+        }
     }
 }

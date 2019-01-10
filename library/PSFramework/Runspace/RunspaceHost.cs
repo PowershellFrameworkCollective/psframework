@@ -16,5 +16,10 @@ namespace PSFramework.Runspace
         /// The dictionary containing the definitive list of unique Runspace
         /// </summary>
         public static Dictionary<string, RunspaceContainer> Runspaces = new Dictionary<string, RunspaceContainer>();
+
+        /// <summary>
+        /// List of all runspace bound values in use
+        /// </summary>
+        internal static List<RunspaceBoundValue> _RunspaceBoundValues = new List<RunspaceBoundValue>();
     }
 }
