@@ -120,13 +120,23 @@ $begin_event = {
 	if ($logfile_headers -contains 'Tags')
 	{
 		$logfile_headers = $logfile_headers | ForEach-Object {
-			if ($_ -ne 'Tags') { $_ }
-			else
+			switch ($_)
 			{
-				@{
-					Name  = 'Tags'
-					Expression  = { $_.Tags -join "," }
+				'Tags'
+				{
+					@{
+						Name	   = 'Tags'
+						Expression = { $_.Tags -join "," }
+					}
 				}
+				'Message'
+				{
+					@{
+						Name	   = 'Message'
+						Expression = { $_.LogMessage }
+					}
+				}
+				default { $_ }
 			}
 		}
 	}

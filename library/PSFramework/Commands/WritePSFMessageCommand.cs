@@ -10,7 +10,7 @@ namespace PSFramework.Commands
     /// <summary>
     /// Cmdlet performing message handling and logging
     /// </summary>
-    [Cmdlet("Write","PSFMessage")]
+    [Cmdlet("Write","PSFMessage", DefaultParameterSetName = "Message")]
     public class WritePSFMessageCommand : PSCmdlet
     {
         #region Parameters
@@ -34,10 +34,23 @@ namespace PSFramework.Commands
         /// <summary>
         /// The message to write/log. The function name and timestamp will automatically be prepended.
         /// </summary>
-        [Parameter(Mandatory = true, Position = 0)]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Message")]
         [AllowEmptyString]
         [AllowNull]
         public string Message;
+
+        /// <summary>
+        /// A stored string to use to write the log.
+        /// Used in combination with the localization component.
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "String")]
+        public string String;
+
+        /// <summary>
+        /// Values to format into the localized string referred to in String.
+        /// </summary>
+        [Parameter(ParameterSetName = "String")]
+        public object[] StringValues;
 
         /// <summary>
         /// Tags to add to the message written.
@@ -207,18 +220,31 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             get
             {
                 if (ErrorRecord == null)
-                    return Message;
+                    return _ResolvedMessage;
 
                 if (ErrorRecord.Length == 0)
-                    return Message;
+                    return _ResolvedMessage;
 
                 if (OverrideExceptionMessage.ToBool())
-                    return Message;
+                    return _ResolvedMessage;
 
                 if (Regex.IsMatch(Message, Regex.Escape(ErrorRecord[0].Exception.Message)))
-                    return Message;
+                    return _ResolvedMessage;
 
-                return String.Format("{0} | {1}", Message, ErrorRecord[0].Exception.Message);
+                return String.Format("{0} | {1}", _ResolvedMessage, ErrorRecord[0].Exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Unified representation of the various ways messages can be specified
+        /// </summary>
+        private string _ResolvedMessage
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(String))
+                    return String.Format(Localization.LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String)), StringValues);
+                return Message;
             }
         }
 
@@ -516,7 +542,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)
