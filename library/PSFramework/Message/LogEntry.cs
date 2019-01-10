@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Localization;
+using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -13,7 +14,36 @@ namespace PSFramework.Message
         /// <summary>
         /// The message logged
         /// </summary>
-        public string Message;
+        public string Message
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(String))
+                    return _Message;
+                if (null == StringValue)
+                    return LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String));
+                return String.Format(LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String)), StringValue);
+            }
+            set { _Message = value; }
+        }
+        private string _Message;
+
+        /// <summary>
+        /// The message to use for logging purposes.
+        /// Using the localized string feature, this allows maintaining uniform logging languages while still supporting localized 
+        /// </summary>
+        public string LogMessage
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(String))
+                    return _Message;
+                if (null == StringValue)
+                    return LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String));
+                return String.Format(LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)), StringValue);
+            }
+            set { }
+        }
 
         /// <summary>
         /// What kind of entry was this?
@@ -86,6 +116,16 @@ namespace PSFramework.Message
         public PsfExceptionRecord ErrorRecord;
 
         /// <summary>
+        /// The string key to use when retrieving localized strings.
+        /// </summary>
+        public string String;
+
+        /// <summary>
+        /// Values to format into the localized string
+        /// </summary>
+        public object[] StringValue;
+
+        /// <summary>
         /// Creates an empty log entry
         /// </summary>
         public LogEntry()
@@ -111,7 +151,9 @@ namespace PSFramework.Message
         /// <param name="CallStack">The callstack that triggered the write.</param>
         /// <param name="Username">The user responsible for running the code that is writing the message.</param>
         /// <param name="ErrorRecord">An associated error item.</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username, PsfExceptionRecord ErrorRecord)
+        /// <param name="String">The string key to use for retrieving localized strings</param>
+        /// <param name="StringValue">The values to format into the localized string</param>
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue)
         {
             this.Message = Message;
             this.Type = Type;
@@ -128,6 +170,8 @@ namespace PSFramework.Message
             this.CallStack = CallStack;
             this.Username = Username;
             this.ErrorRecord = ErrorRecord;
+            this.String = String;
+            this.StringValue = StringValue;
         }
     }
 }

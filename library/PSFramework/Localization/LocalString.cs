@@ -52,6 +52,31 @@ namespace PSFramework.Localization
         }
 
         /// <summary>
+        /// The string value to use for logging purposes
+        /// </summary>
+        public string LogValue
+        {
+            get
+            {
+                if (_Strings.Keys.Count == 0)
+                    throw new InvalidOperationException("Cannot offer string value without at least ONE string registered");
+
+                if (LocalizationHost.ModuleLoggingLanguage.ContainsKey(Module) && _Strings.ContainsKey(LocalizationHost.ModuleLoggingLanguage[Module]))
+                    return _Strings[LocalizationHost.ModuleLoggingLanguage[Module]];
+                if (_Strings.ContainsKey(LocalizationHost.LoggingLanguage))
+                    return _Strings[LocalizationHost.LoggingLanguage];
+                if (_Strings.ContainsKey(LocalizationHost.Language))
+                    return _Strings[LocalizationHost.Language];
+                if (_Strings.ContainsKey(CultureInfo.CurrentUICulture.Name))
+                    return _Strings[CultureInfo.CurrentUICulture.Name];
+                if (_Strings.ContainsKey("en-US"))
+                    return _Strings["en-US"];
+
+                return _Strings.Values.First();
+            }
+        }
+
+        /// <summary>
         /// Sets the text for a specific language
         /// </summary>
         /// <param name="Language">The language to set it for (eg: en-US; not case sensitive)</param>

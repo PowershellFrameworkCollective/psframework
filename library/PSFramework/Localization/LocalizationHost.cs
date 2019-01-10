@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PSFramework.Localization
 {
@@ -13,9 +14,31 @@ namespace PSFramework.Localization
         public static string Language = "";
 
         /// <summary>
+        /// The default language to log in.
+        /// </summary>
+        public static string LoggingLanguage = "en-US";
+
+        /// <summary>
         /// List of strings registered
         /// </summary>
-        public static Dictionary<string, LocalString> Strings = new Dictionary<string, LocalString>();
+        public static Dictionary<string, LocalString> Strings = new Dictionary<string, LocalString>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Mapping module name to the language to use for logging.
+        /// </summary>
+        public static Dictionary<string, string> ModuleLoggingLanguage = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Configure the module specific logging language.
+        /// </summary>
+        /// <param name="Module">The module to configure</param>
+        /// <param name="Language">The language to set. Leave empty to remove entry.</param>
+        public static void SetLoggingLanguage(string Module, string Language)
+        {
+            ModuleLoggingLanguage[Module] = Language;
+            if (String.IsNullOrEmpty(Language))
+                ModuleLoggingLanguage.Remove(Module);
+        }
 
         /// <summary>
         /// Writes a localized string. If needed creates it, then sets the text of the specified language.
@@ -55,6 +78,18 @@ namespace PSFramework.Localization
             if (!Strings.ContainsKey(FullName))
                 return "";
             return Strings[FullName].Value;
+        }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings for the purpose of logging
+        /// </summary>
+        /// <param name="FullName">The name of the string to request. Include the modulename</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string ReadLog(string FullName)
+        {
+            if (!Strings.ContainsKey(FullName))
+                return String.Format("<String Key not found: {0}>", FullName);
+            return Strings[FullName].LogValue;
         }
     }
 }

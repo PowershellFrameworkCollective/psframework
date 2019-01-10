@@ -384,6 +384,17 @@
             The message to write/log. The function name and timestamp will automatically be prepended.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.String">
+            <summary>
+            A stored string to use to write the log.
+            Used in combination with the localization component.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.StringValues">
+            <summary>
+            Values to format into the localized string referred to in String.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.Tag">
             <summary>
             Tags to add to the message written.
@@ -526,6 +537,11 @@
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._errorQualifiedMessage">
             <summary>
             The input message with the error content included if desired
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.WritePSFMessageCommand._ResolvedMessage">
+            <summary>
+            Unified representation of the various ways messages can be specified
             </summary>
         </member>
         <member name="P:PSFramework.Commands.WritePSFMessageCommand._MessageSystem">
@@ -1223,10 +1239,27 @@
             The language to display text with by default. Will use thread information if not set.
             </summary>
         </member>
+        <member name="F:PSFramework.Localization.LocalizationHost.LoggingLanguage">
+            <summary>
+            The default language to log in.
+            </summary>
+        </member>
         <member name="F:PSFramework.Localization.LocalizationHost.Strings">
             <summary>
             List of strings registered
             </summary>
+        </member>
+        <member name="F:PSFramework.Localization.LocalizationHost.ModuleLoggingLanguage">
+            <summary>
+            Mapping module name to the language to use for logging.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.SetLoggingLanguage(System.String,System.String)">
+            <summary>
+            Configure the module specific logging language.
+            </summary>
+            <param name="Module">The module to configure</param>
+            <param name="Language">The language to set. Leave empty to remove entry.</param>
         </member>
         <member name="M:PSFramework.Localization.LocalizationHost.Write(System.String,System.String,System.String)">
             <summary>
@@ -1248,6 +1281,13 @@
         <member name="M:PSFramework.Localization.LocalizationHost.Read(System.String)">
             <summary>
             Reads a localized string from the list of available strings
+            </summary>
+            <param name="FullName">The name of the string to request. Include the modulename</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.ReadLog(System.String)">
+            <summary>
+            Reads a localized string from the list of available strings for the purpose of logging
             </summary>
             <param name="FullName">The name of the string to request. Include the modulename</param>
             <returns>The localized string requested. Empty string if nothing.</returns>
@@ -1275,6 +1315,11 @@
         <member name="P:PSFramework.Localization.LocalString.Value">
             <summary>
             The actual string value of the text
+            </summary>
+        </member>
+        <member name="P:PSFramework.Localization.LocalString.LogValue">
+            <summary>
+            The string value to use for logging purposes
             </summary>
         </member>
         <member name="M:PSFramework.Localization.LocalString.Set(System.String,System.String)">
@@ -1734,9 +1779,15 @@
             An individual entry for the message log
             </summary>
         </member>
-        <member name="F:PSFramework.Message.LogEntry.Message">
+        <member name="P:PSFramework.Message.LogEntry.Message">
             <summary>
             The message logged
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.LogEntry.LogMessage">
+            <summary>
+            The message to use for logging purposes.
+            Using the localized string feature, this allows maintaining uniform logging languages while still supporting localized 
             </summary>
         </member>
         <member name="F:PSFramework.Message.LogEntry.Type">
@@ -1809,12 +1860,22 @@
             An error record associated with the message.
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogEntry.String">
+            <summary>
+            The string key to use when retrieving localized strings.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogEntry.StringValue">
+            <summary>
+            Values to format into the localized string
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.LogEntry.#ctor">
             <summary>
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String,PSFramework.Message.PsfExceptionRecord)">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[])">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -1833,6 +1894,8 @@
             <param name="CallStack">The callstack that triggered the write.</param>
             <param name="Username">The user responsible for running the code that is writing the message.</param>
             <param name="ErrorRecord">An associated error item.</param>
+            <param name="String">The string key to use for retrieving localized strings</param>
+            <param name="StringValue">The values to format into the localized string</param>
         </member>
         <member name="T:PSFramework.Message.LogEntryType">
             <summary>
@@ -1983,6 +2046,29 @@
             <param name="TargetObject">The object associated with a given message.</param>
             <param name="CallStack">The callstack at the moment the message was written.</param>
             <param name="Username">The name of the user under which the code being executed</param>
+            <param name="ErrorRecord">An associated error record</param>
+            <returns>The entry that is being written</returns>
+        </member>
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[],System.Object)">
+            <summary>
+            Write a new entry to the log
+            </summary>
+            <param name="Message">The message to log</param>
+            <param name="Type">The type of the message logged</param>
+            <param name="Timestamp">When was the message generated</param>
+            <param name="FunctionName">What function wrote the message</param>
+            <param name="ModuleName">What module did the function writing this message come from?</param>
+            <param name="Tags">The tags that were applied to the message</param>
+            <param name="Level">At what level was the function written</param>
+            <param name="Runspace">The runspace the message is coming from</param>
+            <param name="ComputerName">The computer the message was generated on</param>
+            <param name="File">The file from which the message was written</param>
+            <param name="Line">The line on which the message was written</param>
+            <param name="TargetObject">The object associated with a given message.</param>
+            <param name="CallStack">The callstack at the moment the message was written.</param>
+            <param name="Username">The name of the user under which the code being executed</param>
+            <param name="String">The string key to use for retrieving localized strings</param>
+            <param name="StringValue">The values to format into the localized string</param>
             <param name="ErrorRecord">An associated error record</param>
             <returns>The entry that is being written</returns>
         </member>

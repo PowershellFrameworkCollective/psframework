@@ -31,7 +31,7 @@ $message_Event = {
     )
 
     $gelf_params = $gelf_paramSendPsgelfTcp.Clone()
-    $gelf_params['ShortMessage'] = $Message.Message
+    $gelf_params['ShortMessage'] = $Message.LogMessage
     $gelf_params['HostName'] = $Message.ComputerName
     $gelf_params['DateTime'] = $Message.Timestamp
 
@@ -55,7 +55,7 @@ $message_Event = {
 
     # build the additional fields
     $gelf_properties = $Message.PSObject.Properties | Where-Object {
-        $_.Name -notin @('Message', 'ComputerName', 'Timestamp', 'Level', 'ErrorRecord')
+        $_.Name -notin @('Message', 'LogMessage', 'ComputerName', 'Timestamp', 'Level', 'ErrorRecord')
     }
 
     $gelf_params['AdditionalField'] = @{}

@@ -63,6 +63,8 @@ Register-PSFTeppArgumentCompleter -Command Import-PSFClixml -Parameter Encoding 
 
 #region Tab Completion
 Register-PSFTeppArgumentCompleter -Command Set-PSFTeppResult -Parameter TabCompletion -Name 'PSFramework-tepp-scriptblockname'
+Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Parameter Name -Name 'PSFramework-tepp-scriptblockname'
+Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Parameter Parameter -Name 'PSFramework-tepp-parametername'
 #endregion Tab Completion
 
 #region Utility

@@ -42,15 +42,18 @@
 	
 	begin
 	{
-		try { $resolvedPath = Resolve-PSFPath -Path $Path -Provider FileSystem -SingleItem }
+		try { $resolvedPath = Resolve-PSFPath -Path $Path -Provider FileSystem }
 		catch { Stop-PSFFunction -Message "Failed to resolve path: $Path" -EnableException $true -Cmdlet $PSCmdlet -ErrorRecord $_ }
 	}
 	process
 	{
-		$data = Import-PowerShellDataFile -Path $resolvedPath
-		foreach ($key in $data.Keys)
+		foreach ($pathItem in $resolvedPath)
 		{
-			[PSFramework.Localization.LocalizationHost]::Write($Module, $key, $Language, $data[$key])
+			$data = Import-PowerShellDataFile -Path $pathItem
+			foreach ($key in $data.Keys)
+			{
+				[PSFramework.Localization.LocalizationHost]::Write($Module, $key, $Language, $data[$key])
+			}
 		}
 	}
 }
