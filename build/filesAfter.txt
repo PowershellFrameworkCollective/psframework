@@ -15,4 +15,5 @@ bin\type-aliases.ps1
 internal\scripts\taskEngine.ps1
 internal\scripts\removalEvent.ps1
 internal\scripts\variables.ps1
+internal\scripts\teppInputResources.ps1
 internal\scripts\license.ps1

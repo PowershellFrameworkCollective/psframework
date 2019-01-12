@@ -68,11 +68,11 @@ Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Pa
 #endregion Tab Completion
 
 #region Utility
-Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter Property -Name PSFramework-Input-Object
-Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExpandProperty -Name PSFramework-Input-Object
-Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExcludeProperty -Name PSFramework-Input-Object
-Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowProperty -Name PSFramework-Input-Object
-Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowExcludeProperty -Name PSFramework-Input-Object
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter Property -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExpandProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExcludeProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowExcludeProperty -Name PSFramework-Input-ObjectProperty
 
 Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name 'PSFramework-utility-psprovider'
 #endregion Utility
