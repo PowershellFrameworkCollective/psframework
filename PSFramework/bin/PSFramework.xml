@@ -1992,6 +1992,11 @@
             Governs, whether a log of recent errors is kept in memory
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.FileSystemModernLog">
+            <summary>
+            Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">
             <summary>
             The outbound queue for errors. These will be processed and written to xml
@@ -4048,12 +4053,22 @@
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
             <summary>
-            Dictionary containing a list of hashtables to explicitly add properties when completing for specific output types
+            Dictionary containing a list of hashtables to explicitly add properties when completing for specific output types.
+            Entries must have three properties:
+            - Name (Name of Property)
+            - Type (Type, not Typename, of the property. May be empty)
+            - TypeKnown (Boolean, whether the type is known)
+            Used by the Tab Completion: PSFramework-Input-ObjectProperty
             </summary>
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionCommandData">
             <summary>
             Dictionary containing a list of hashtables to explicitly add properties when completing for specific commands
+            Entries must have three properties:
+            - Name (Name of Property)
+            - Type (Type, not Typename, of the property. May be empty)
+            - TypeKnown (Boolean, whether the type is known)
+            Used by the Tab Completion: PSFramework-Input-ObjectProperty
             </summary>
         </member>
         <member name="T:PSFramework.TabExpansion.TeppScriptMode">
