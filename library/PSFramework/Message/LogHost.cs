@@ -70,6 +70,11 @@ namespace PSFramework.Message
         /// Governs, whether a log of recent errors is kept in memory
         /// </summary>
         public static bool ErrorLogEnabled = true;
+
+        /// <summary>
+        /// Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
+        /// </summary>
+        public static bool FileSystemModernLog = false;
         #endregion Defines
 
         #region Queues

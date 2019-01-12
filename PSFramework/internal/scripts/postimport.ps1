@@ -48,8 +48,11 @@ foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\parameter
 # Register the unimport reaction
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\removalEvent.ps1"
 
-# Load specialvariables
+# Load special variables
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\variables.ps1"
+
+# Load resources for TEPP input completion
+. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\teppInputResources.ps1"
 
 # Finally register the license
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\license.ps1"

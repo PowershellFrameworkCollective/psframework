@@ -1992,6 +1992,11 @@
             Governs, whether a log of recent errors is kept in memory
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.FileSystemModernLog">
+            <summary>
+            Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">
             <summary>
             The outbound queue for errors. These will be processed and written to xml
@@ -3574,6 +3579,18 @@
             The path to where the module was imported from
             </summary>
         </member>
+        <member name="M:PSFramework.PSFCore.PSFCoreHost.Initialize">
+            <summary>
+            Initializes the PSFramework library.
+            Required for some components to work correctly.
+            </summary>
+        </member>
+        <member name="M:PSFramework.PSFCore.PSFCoreHost.Uninitialize">
+            <summary>
+            Reverses the initialization of the PSFramework library.
+            Should be called when destroying the main runspace
+            </summary>
+        </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
             <summary>
             Attribute designating something as reserved as PSFramework-internal.
@@ -3653,6 +3670,35 @@
             The value to offer or set, specific per runspace from which it is called
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValue.PurgeExpired">
+            <summary>
+            Removes all value entries whose corresponding Runspace has been destroyed
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValue.Dispose">
+            <summary>
+            Destruction logic, eliminating all data stored in the object.
+            Since handles to this object are automatically stored and maintained, it is impossible to otherwise guarantee releasing the object's data for the GC.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValue.#ctor">
+            <summary>
+            Create an empty runspace bound value object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValue.#ctor(System.Object)">
+            <summary>
+            Create a runspace bound value object with its initial value
+            </summary>
+            <param name="Value">The object to set as the initial value</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValue.#ctor(System.Object,System.Boolean)">
+            <summary>
+            Create a runspace bound value object with its initial value
+            </summary>
+            <param name="Value">The object to set as the initial value</param>
+            <param name="OfferDefaultValue">Whether the initial / default value should be offered when accessed from runspaces that do not have a runspace-local value</param>
+        </member>
         <member name="T:PSFramework.Runspace.RunspaceContainer">
             <summary>
             Class that contains the logic necessary to manage a unique runspace
@@ -3725,6 +3771,11 @@
         <member name="F:PSFramework.Runspace.RunspaceHost.Runspaces">
             <summary>
             The dictionary containing the definitive list of unique Runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
+            <summary>
+            List of all runspace bound values in use
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -3998,6 +4049,26 @@
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.Cache">
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
+            <summary>
+            Dictionary containing a list of hashtables to explicitly add properties when completing for specific output types.
+            Entries must have three properties:
+            - Name (Name of Property)
+            - Type (Type, not Typename, of the property. May be empty)
+            - TypeKnown (Boolean, whether the type is known)
+            Used by the Tab Completion: PSFramework-Input-ObjectProperty
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionCommandData">
+            <summary>
+            Dictionary containing a list of hashtables to explicitly add properties when completing for specific commands
+            Entries must have three properties:
+            - Name (Name of Property)
+            - Type (Type, not Typename, of the property. May be empty)
+            - TypeKnown (Boolean, whether the type is known)
+            Used by the Tab Completion: PSFramework-Input-ObjectProperty
             </summary>
         </member>
         <member name="T:PSFramework.TabExpansion.TeppScriptMode">
@@ -4678,6 +4749,12 @@
             Returns the execution context for the current runspace based on the current thread.
             </summary>
             <returns>The current execution context</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetRunspaces">
+            <summary>
+            Returns the list of runspaces available in the process
+            </summary>
+            <returns>The lists of currently known runspaces</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.RemovePowerShellAlias(System.String,System.Boolean)">
             <summary>
