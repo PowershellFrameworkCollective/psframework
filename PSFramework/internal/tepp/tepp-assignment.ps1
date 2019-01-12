@@ -28,6 +28,7 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Nam
 
 #region Localization
 Register-PSFTeppArgumentCompleter -Command Import-PSFLocalizedString -Parameter Language -Name 'PSFramework-LanguageNames'
+Register-PSFTeppArgumentCompleter -Command Get-PSFLocalizedString -Parameter Module -Name 'PSFramework-LocalizedStrings-Modules'
 Register-PSFTeppArgumentCompleter -Command Get-PSFLocalizedString -Parameter Name -Name 'PSFramework-LocalizedStrings-Names'
 #endregion Localization
 
@@ -62,8 +63,16 @@ Register-PSFTeppArgumentCompleter -Command Import-PSFClixml -Parameter Encoding 
 
 #region Tab Completion
 Register-PSFTeppArgumentCompleter -Command Set-PSFTeppResult -Parameter TabCompletion -Name 'PSFramework-tepp-scriptblockname'
+Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Parameter Name -Name 'PSFramework-tepp-scriptblockname'
+Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Parameter Parameter -Name 'PSFramework-tepp-parametername'
 #endregion Tab Completion
 
 #region Utility
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter Property -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExpandProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExcludeProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowProperty -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowExcludeProperty -Name PSFramework-Input-ObjectProperty
+
 Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name 'PSFramework-utility-psprovider'
 #endregion Utility

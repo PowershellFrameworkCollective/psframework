@@ -5,7 +5,7 @@ namespace PSFramework.Commands
     /// <summary>
     /// Implements the Test-PSFShouldProcess command
     /// </summary>
-    [Cmdlet("Test", "PSFShouldProcess")]
+    [Cmdlet("Test", "PSFShouldProcess", SupportsShouldProcess = true)]
     public class TestPSFShouldProcessCommand : Cmdlet
     {
         /// <summary>

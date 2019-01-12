@@ -70,6 +70,11 @@ namespace PSFramework.Message
         /// Governs, whether a log of recent errors is kept in memory
         /// </summary>
         public static bool ErrorLogEnabled = true;
+
+        /// <summary>
+        /// Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
+        /// </summary>
+        public static bool FileSystemModernLog = false;
         #endregion Defines
 
         #region Queues
@@ -163,7 +168,33 @@ namespace PSFramework.Message
         /// <returns>The entry that is being written</returns>
         public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, object TargetObject = null)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username, ErrorRecord);
+            return WriteLogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, File, Line, CallStack, Username, ErrorRecord, "", null, TargetObject);
+        }
+
+        /// <summary>
+        /// Write a new entry to the log
+        /// </summary>
+        /// <param name="Message">The message to log</param>
+        /// <param name="Type">The type of the message logged</param>
+        /// <param name="Timestamp">When was the message generated</param>
+        /// <param name="FunctionName">What function wrote the message</param>
+        /// <param name="ModuleName">What module did the function writing this message come from?</param>
+        /// <param name="Tags">The tags that were applied to the message</param>
+        /// <param name="Level">At what level was the function written</param>
+        /// <param name="Runspace">The runspace the message is coming from</param>
+        /// <param name="ComputerName">The computer the message was generated on</param>
+        /// <param name="File">The file from which the message was written</param>
+        /// <param name="Line">The line on which the message was written</param>
+        /// <param name="TargetObject">The object associated with a given message.</param>
+        /// <param name="CallStack">The callstack at the moment the message was written.</param>
+        /// <param name="Username">The name of the user under which the code being executed</param>
+        /// <param name="String">The string key to use for retrieving localized strings</param>
+        /// <param name="StringValue">The values to format into the localized string</param>
+        /// <param name="ErrorRecord">An associated error record</param>
+        /// <returns>The entry that is being written</returns>
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue, object TargetObject = null)
+        {
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username, ErrorRecord, String, StringValue);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 

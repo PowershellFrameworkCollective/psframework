@@ -1,4 +1,17 @@
 ﻿# CHANGELOG
+## 0.10.31.176 : 2019-01-13
+ - New: Configuration validation: Credential. Validates PSCredential objects.
+ - New: The most awesome Tab Completion for input properties _ever_ .
+ - Upd: Write-PSFMessage supports localized strings through the `-String` and `-StringValues` parameters
+ - Upd: Stop-PSFFunction supports localized strings through the `-String` and `-StringValues` parameters
+ - Upd: Test-PSFShouldProcess now supports ShouldProcess itself. This should help silence tests on commands reyling on it.
+ - Upd: Message component supports localized strings
+ - Upd: Logging component logs in separate language than localized messages to screen / userinteraction
+ - Upd: Logging - filesystem provider now has a configuration to enable better output information: `psframework.logging.filesystem.modernlog`
+ - Upd: Import-PSFLocalizedString now accepts wildcard path patterns that resovle to multiple files.
+ - Upd: Adding tab completion for `Register-PSFTeppArgumentCompleter`
+ - fix: Missing localization strings - Fix: Missing tab completion for modules that register localized strings
+
 ## 0.10.30.165 : 2018-12-01
  - New: Command Join-PSFPath performs multi-segment path joins and path normalization
  - New: Command Remove-PSFAlias deletes global aliases

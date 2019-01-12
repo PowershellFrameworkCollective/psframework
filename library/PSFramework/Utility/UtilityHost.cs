@@ -236,6 +236,17 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Returns the list of runspaces available in the process
+        /// </summary>
+        /// <returns>The lists of currently known runspaces</returns>
+        public static ICollection<System.Management.Automation.Runspaces.Runspace> GetRunspaces()
+        {
+            Type runspaceType = typeof(System.Management.Automation.Runspaces.Runspace);
+            MethodInfo method = runspaceType.GetMethod("get_RunspaceList", BindingFlags.Static | BindingFlags.NonPublic);
+            return (ICollection < System.Management.Automation.Runspaces.Runspace > )method.Invoke(null, null);
+        }
+
+        /// <summary>
         /// Removes an alias from the global list of aliases
         /// </summary>
         /// <param name="Name">The name of the laias to kill</param>
