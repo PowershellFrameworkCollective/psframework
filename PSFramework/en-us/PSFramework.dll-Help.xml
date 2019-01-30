@@ -2397,7 +2397,7 @@ Note that it can only do simple property-matching at this point.</maml:para>
 		<maml:relatedLinks>
 			<maml:navigationLink>
 				<maml:linkText>Online Documentation</maml:linkText>
-				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Write-PSFMessage.html</maml:uri>
+				<maml:uri>https://psframework.org/documentation/commands/PSFramework/Select-PSFObject.html</maml:uri>
 			</maml:navigationLink>
 			<!--Links-->
 		</maml:relatedLinks>
