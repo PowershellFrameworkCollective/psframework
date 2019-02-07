@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+##
+ - Fix: Broken application of module / tag filters on logging providers (#272)
+
 ## 0.10.31.176 : 2019-01-13
  - New: Configuration validation: Credential. Validates PSCredential objects.
  - New: The most awesome Tab Completion for input properties _ever_ .
