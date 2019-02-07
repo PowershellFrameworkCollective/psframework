@@ -36,7 +36,7 @@
 		[string]
 		$Module,
 		
-		[PsfValidateSet(TabCompletion = 'PSFramework-LanguageNames')]
+		#[PsfValidateSet(TabCompletion = 'PSFramework-LanguageNames')]
 		[string]
 		$Language = 'en-US'
 	)
