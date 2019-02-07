@@ -3,6 +3,7 @@ $PSF_OnRemoveScript = {
 	# Stop all managed runspaces ONLY on the main runspace's termination
 	if ([runspace]::DefaultRunspace.Id -eq 1)
 	{
+		Wait-PSFMessage -Timeout 30s -Terminate
 		Get-PSFRunspace | Stop-PSFRunspace
 		[PSFramework.PSFCore.PSFCoreHost]::Uninitialize()
 	}
