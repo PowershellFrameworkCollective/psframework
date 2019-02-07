@@ -3,6 +3,7 @@
  - Fix: Broken application of module / tag filters on logging providers (#272)
  - Fix: Write-PSFMessage parameter `-String` would also require a `-StringValues` to be specified
  - Fix: Import-PSFLocalizedString removed validation on parameter `-Language` due to issues when executing during any module import.
+ - Fix: Culled logging at the end of a process
 
 ## 0.10.31.176 : 2019-01-13
  - New: Configuration validation: Credential. Validates PSCredential objects.
