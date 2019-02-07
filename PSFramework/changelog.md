@@ -1,4 +1,9 @@
 ﻿# CHANGELOG
+## 0.10.31.179 : 2019-02-07
+ - Fix: Broken application of module / tag filters on logging providers (#272)
+ - Fix: Write-PSFMessage parameter `-String` would also require a `-StringValues` to be specified
+ - Fix: Import-PSFLocalizedString removed validation on parameter `-Language` due to issues when executing during any module import.
+
 ## 0.10.31.176 : 2019-01-13
  - New: Configuration validation: Credential. Validates PSCredential objects.
  - New: The most awesome Tab Completion for input properties _ever_ .

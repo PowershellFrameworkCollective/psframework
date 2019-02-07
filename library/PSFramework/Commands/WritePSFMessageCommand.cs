@@ -50,7 +50,7 @@ namespace PSFramework.Commands
         /// Values to format into the localized string referred to in String.
         /// </summary>
         [Parameter(ParameterSetName = "String")]
-        public object[] StringValues;
+        public object[] StringValues = new object[10];
 
         /// <summary>
         /// Tags to add to the message written.
