@@ -114,6 +114,7 @@
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',
 		'Resolve-PSFPath',
+		'Select-PSFPropertyValue',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFLoggingProvider',
 		'Set-PSFResultCache',

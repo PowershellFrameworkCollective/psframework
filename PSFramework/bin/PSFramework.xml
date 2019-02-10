@@ -241,6 +241,11 @@
             Whether this setting applies to module scope file export.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.SetPSFConfigCommand.AllowDelete">
+            <summary>
+            Allow the setting to be deleted from memory. Has no effect after initialization.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.SetPSFConfigCommand.DisableValidation">
             <summary>
             Do not apply the validation script when changing values.
@@ -330,17 +335,12 @@
         </member>
         <member name="M:PSFramework.Commands.SetPSFConfigCommand.ApplyCommonSettings">
             <summary>
-            Abstracts out 
+            Abstracts out the regular settings that keep getting applied
             </summary>
         </member>
         <member name="T:PSFramework.Commands.TestPSFShouldProcessCommand">
             <summary>
             Implements the Test-PSFShouldProcess command
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.PSCmdlet">
-            <summary>
-            The PSCmdlet object of the calling command
             </summary>
         </member>
         <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Target">
@@ -351,6 +351,36 @@
         <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.Action">
             <summary>
             Description of the action to perform
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.ActionString">
+            <summary>
+            A string to use localized message for the prompt
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.ActionStringValues">
+            <summary>
+            Values to format into the localized string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand.PSCmdlet">
+            <summary>
+            The PSCmdlet object of the calling command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.TestPSFShouldProcessCommand._PSCmdlet">
+            <summary>
+            Private copy of the specified or found cmdlet object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.TestPSFShouldProcessCommand._Action">
+            <summary>
+            THe resolved action string to display
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.TestPSFShouldProcessCommand.BeginProcessing">
+            <summary>
+            Clarifies Cmdlet object during begin
             </summary>
         </member>
         <member name="M:PSFramework.Commands.TestPSFShouldProcessCommand.ProcessRecord">
@@ -763,6 +793,11 @@
             Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
             </summary>
         </member>
+        <member name="P:PSFramework.Configuration.Config.AllowDelete">
+            <summary>
+            Whether the setting can be legally deleted.
+            </summary>
+        </member>
         <member name="P:PSFramework.Configuration.Config.Initialized">
             <summary>
             Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
@@ -868,6 +903,13 @@
             <summary>
             Hashtable containing all the registered validations
             </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.DeleteConfiguration(System.String)">
+            <summary>
+            Deletes a configuration setting in compliance with policy.
+            </summary>
+            <param name="FullName">THe full name of the setting the remove</param>
+            <returns>Whether the deletion was successful</returns>
         </member>
         <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
             <summary>

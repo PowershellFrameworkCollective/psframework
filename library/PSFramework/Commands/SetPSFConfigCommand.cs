@@ -107,6 +107,12 @@ namespace PSFramework.Commands
         public SwitchParameter ModuleExport;
 
         /// <summary>
+        /// Allow the setting to be deleted from memory. Has no effect after initialization.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter AllowDelete;
+
+        /// <summary>
         /// Do not apply the validation script when changing values.
         /// </summary>
         [Parameter()]
@@ -300,9 +306,13 @@ namespace PSFramework.Commands
             _Config.Name = _NameName;
             _Config.Module = _NameModule;
             _Config.Value = Value;
-
-            ApplyCommonSettings();
             
+            ApplyCommonSettings();
+
+            // Do it again even though it is part of common settings
+            // The common settings are only applied if the parameter is set, this always will.
+            _Config.AllowDelete = AllowDelete.ToBool();
+
             _Config.Initialized = true;
             ConfigurationHost.Configurations[_NameFull] = _Config;
 
@@ -324,6 +334,7 @@ namespace PSFramework.Commands
             _Config.Name = _NameName;
             _Config.Module = _NameModule;
             _Config.Value = Value;
+            
             ApplyCommonSettings();
             ConfigurationHost.Configurations[_NameFull] = _Config;
         }
@@ -418,7 +429,7 @@ namespace PSFramework.Commands
         }
 
         /// <summary>
-        /// Abstracts out 
+        /// Abstracts out the regular settings that keep getting applied
         /// </summary>
         private void ApplyCommonSettings()
         {
@@ -431,9 +442,12 @@ namespace PSFramework.Commands
             if (Hidden.IsPresent)
                 _Config.Hidden = Hidden;
             if (SimpleExport.IsPresent)
-                _Config.SimpleExport = SimpleExport;
+                _Config.SimpleExport = SimpleExport.ToBool();
             if (ModuleExport.IsPresent)
-                _Config.ModuleExport = ModuleExport;
+                _Config.ModuleExport = ModuleExport.ToBool();
+            // Will be silently ignored if the setting is already initialized.
+            if (AllowDelete.IsPresent)
+                _Config.AllowDelete = AllowDelete.ToBool();
         }
         #endregion Private Methods
     }
