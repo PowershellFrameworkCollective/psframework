@@ -30,6 +30,10 @@
 	.PARAMETER Peek
 		Rather than applying the setting, return the configuration items that would have been applied.
 	
+	.PARAMETER AllowDelete
+		Configurations that have been imported will be flagged as deletable.
+		This allows to purge them at a later time using Remove-PSFConfig.
+	
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
@@ -74,6 +78,10 @@
 		[Parameter(ParameterSetName = "Path")]
 		[switch]
 		$Peek,
+		
+		[Parameter(ParameterSetName = 'Path')]
+		[switch]
+		$AllowDelete,
 		
 		[switch]
 		$EnableException
@@ -136,8 +144,8 @@
 				{
 					try
 					{
-						if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException }
-						else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type }
+						if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException -AllowDelete:$AllowDelete }
+						else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type -AllowDelete:$AllowDelete }
 					}
 					catch
 					{
@@ -158,9 +166,5 @@
 				else { Set-PSFConfig -FullName $value.FullName -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($value.Value, $value.Type)) -EnableException:$EnableException }
 			}
 		}
-	}
-	end
-	{
-	
 	}
 }

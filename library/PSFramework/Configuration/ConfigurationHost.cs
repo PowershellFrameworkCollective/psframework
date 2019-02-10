@@ -33,6 +33,7 @@ namespace PSFramework.Configuration
             if (!configItem.AllowDelete || configItem.PolicyEnforced)
                 return false;
 
+            Configurations.Remove(FullName);
             return true;
         }
 

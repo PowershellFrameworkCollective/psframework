@@ -109,6 +109,7 @@
 		'Register-PSFTeppScriptblock',
 		'Register-PSFTypeSerializationData',
 		'Remove-PSFAlias',
+		'Remove-PSFConfig',
 		'Remove-PSFLicense',
 		'Remove-PSFMessageLevelModifier',
 		'Reset-PSFConfig',

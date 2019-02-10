@@ -68,48 +68,53 @@
 	
 	process
 	{
-		"Default"
+		switch ($PSCmdlet.ParameterSetName)
 		{
-			#region Try removing all items specified
-			foreach ($item in $Config)
+			"Default"
 			{
-				if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
-				try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($item.FullName) }
-				catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $item.FullName -EnableException ($ErrorActionPreference -eq 'Stop') -ContinueLabel -Cmdlet $PSCmdlet }
+				#region Try removing all items specified
+				foreach ($item in $Config)
+				{
+					if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Configuration.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
+					try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($item.FullName) }
+					catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $item.FullName -EnableException ($ErrorActionPreference -eq 'Stop') -Continue -Cmdlet $PSCmdlet -ErrorRecord $_ }
+					
+					if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
+					else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
+				}
+				# Since configuration items will also bind to string, if any were included, break the switch
+				if (Test-PSFParameterBinding -ParameterName Config) { break }
+				#endregion Try removing all items specified
 				
-				if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
-				else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
+				#region Try removing all full names specified
+				foreach ($nameItem in $FullName)
+				{
+					if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Configuration.Remove-PSFConfig.ShouldRemove' -Target $nameItem)) { continue }
+					
+					try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($nameItem) }
+					catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $nameItem -EnableException ($ErrorActionPreference -eq 'Stop') -Continue -Cmdlet $PSCmdlet -ErrorRecord $_ }
+					
+					$item = Get-PSFConfig -FullName $nameItem
+					if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
+					else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
+				}
+				#endregion Try removing all full names specified
 			}
-			#endregion Try removing all items specified
-			
-			#region Try removing all full names specified
-			foreach ($nameItem in $FullName)
+			"Name"
 			{
-				if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Remove-PSFConfig.ShouldRemove' -Target $nameItem)) { continue }
-				
-				try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($nameItem) }
-				catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $nameItem -EnableException ($ErrorActionPreference -eq 'Stop') -ContinueLabel -Cmdlet $PSCmdlet }
-				
-				$item = Get-PSFConfig -FullName $nameItem
-				if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
-				else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
+				#region Try removing by filter
+				foreach ($item in (Get-PSFConfig -Module $Module -Name $Name))
+				{
+					if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Configuration.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
+					
+					try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($item.FullName) }
+					catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $item.FullName -EnableException ($ErrorActionPreference -eq 'Stop') -Continue -Cmdlet $PSCmdlet -ErrorRecord $_ }
+					
+					if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
+					else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
+				}
+				#endregion Try removing by filter
 			}
-			#endregion Try removing all full names specified
-		}
-		"Name"
-		{
-			#region Try removing by filter
-			foreach ($item in (Get-PSFConfig -Module $Module -Name $Name))
-			{
-				if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
-				
-				try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($item.FullName) }
-				catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $item.FullName -EnableException ($ErrorActionPreference -eq 'Stop') -ContinueLabel -Cmdlet $PSCmdlet }
-				
-				if ($result) { Write-PSFMessage -Level InternalComment -String Configuration.Remove-PSFConfig.DeleteSuccessful -StringValues $item.FullName }
-				else { Write-PSFMessage -Level Warning -String Configuration.Remove-PSFConfig.DeleteFailed -StringValues $item.FullName, $item.AllowDelete, $item.PolicyEnforced }
-			}
-			#endregion Try removing by filter
 		}
 	}
 }
