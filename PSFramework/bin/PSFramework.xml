@@ -670,6 +670,11 @@
             The timespan a PSSession may be idle before it is cleared for cleanup
             </summary>
         </member>
+        <member name="F:PSFramework.ComputerManagement.ComputerManagementHost.KnownSessionTypes">
+            <summary>
+            List of known session types that can be used in a SessionContainer.
+            </summary>
+        </member>
         <member name="T:PSFramework.ComputerManagement.PSSessionContainer">
             <summary>
             A class designed to contain PSSessionInfo objects
@@ -732,6 +737,27 @@
             Creates a session info object from a session object.
             </summary>
             <param name="Session">The session to wrap inside an info object</param>
+        </member>
+        <member name="T:PSFramework.ComputerManagement.SessionContainer">
+            <summary>
+            Container for multiple session objects, to pass through to internal commands
+            </summary>
+        </member>
+        <member name="F:PSFramework.ComputerManagement.SessionContainer.ComputerName">
+            <summary>
+            Name of the computer
+            </summary>
+        </member>
+        <member name="F:PSFramework.ComputerManagement.SessionContainer.Connections">
+            <summary>
+            The connections payload. One connection per connection type.
+            </summary>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.SessionContainer.ToString">
+            <summary>
+            The defautl string representation
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:PSFramework.Configuration.Config">
             <summary>
@@ -908,7 +934,7 @@
             <summary>
             Deletes a configuration setting in compliance with policy.
             </summary>
-            <param name="FullName">THe full name of the setting the remove</param>
+            <param name="FullName">The full name of the setting the remove</param>
             <returns>Whether the deletion was successful</returns>
         </member>
         <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
@@ -3071,6 +3097,12 @@
             </summary>
             <param name="Session">The session to use</param>
         </member>
+        <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(PSFramework.ComputerManagement.SessionContainer)">
+            <summary>
+            Creates a Computer Parameter from a Session Container object.
+            </summary>
+            <param name="Container">A container that can be used to store multiple types of session objects in parallel.</param>
+        </member>
         <member name="M:PSFramework.Parameter.ComputerParameter.#ctor(PSFramework.ComputerManagement.PSSessionInfo)">
             <summary>
             Creates a Computer Parameter from a PSSessionInfo object.
@@ -3131,6 +3163,11 @@
         <member name="F:PSFramework.Parameter.ComputerParameterInputType.CimSession">
             <summary>
             The input object is a live cim session object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ComputerParameterInputType.Container">
+            <summary>
+            The input object is a session container object, potentially containing live session objects of various types at the same time.
             </summary>
         </member>
         <member name="T:PSFramework.Parameter.DateTimeParameter">

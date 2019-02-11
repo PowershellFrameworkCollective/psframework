@@ -167,6 +167,17 @@ namespace PSFramework.Parameter
         }
 
         /// <summary>
+        /// Creates a Computer Parameter from a Session Container object.
+        /// </summary>
+        /// <param name="Container">A container that can be used to store multiple types of session objects in parallel.</param>
+        public ComputerParameter(ComputerManagement.SessionContainer Container)
+        {
+            InputObject = Container;
+            ComputerName = Container.ComputerName;
+            Type = ComputerParameterInputType.Container;
+        }
+
+        /// <summary>
         /// Creates a Computer Parameter from a PSSessionInfo object.
         /// Shouldn't happen in the wild, but still a legal inmput.
         /// </summary>

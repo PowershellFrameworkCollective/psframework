@@ -23,7 +23,7 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Deletes a configuration setting in compliance with policy.
         /// </summary>
-        /// <param name="FullName">THe full name of the setting the remove</param>
+        /// <param name="FullName">The full name of the setting the remove</param>
         /// <returns>Whether the deletion was successful</returns>
         public static bool DeleteConfiguration(string FullName)
         {

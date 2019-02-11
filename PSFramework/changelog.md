@@ -2,6 +2,7 @@
 ##
  - New: Command Remove-PSFConfig allows to remove configuration items from memory that have been flagged as deletable.
  - New: Command Select-PSFPropertyValue selects the value of properties based on various conditions.
+ - Upd: Configuration: Removed enforced lowercasing of configuration entries. Configuration as published before had not been case-sensitive, the new version is still not case sensitive.
  - Upd: ConvertTo-PSFHashTable now correctly operates against all dictionaries, including `$PSBoundParameters`
  - Upd: Import-PSFConfig now has a `-AllowDelete` parameter, enabling the later deletion of imported configuration settings.
  - Upd: Test-PSFShouldProcess now no longer requires specifying the `-PSCmdlet` parameter.
@@ -10,9 +11,7 @@
  - Fix: Write-PSFMessage strings: Unknown keys will no longer cause an empty message on screen, instead display the missing key.
  - Fix: Configuration - DefaultValue would be overwritten each time a configuration item's `Initialize` property is set (rather than only on the first time it is set to true)
  
- TODO: Add Tests for configuration deletability
  TODO: Add Tests for Select-PSFPropertyValue
- TODO: Troubleshoot missing message content when trying to delete a non-existing setting.
 
 ## 0.10.31.179 : 2019-02-07
  - Fix: Broken application of module / tag filters on logging providers (#272)

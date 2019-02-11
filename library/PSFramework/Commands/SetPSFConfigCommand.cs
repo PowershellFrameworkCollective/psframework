@@ -204,7 +204,7 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.Keys.Contains(Validation.ToLower()))
+            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.Keys.Contains(Validation))
             {
                 InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationValidation, Validation, String.Join(", ", ConfigurationHost.Validation.Keys), EnableException.ToBool()));
                 _KillIt = true;
@@ -214,7 +214,7 @@ namespace PSFramework.Commands
             #region Name Interpretation
             if (!String.IsNullOrEmpty(FullName))
             {
-                _NameFull = FullName.Trim('.').ToLower();
+                _NameFull = FullName.Trim('.');
                 if (!_NameFull.Contains('.'))
                 {
                     InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, FullName, EnableException.ToBool()));
@@ -230,13 +230,13 @@ namespace PSFramework.Commands
             {
                 if (!String.IsNullOrEmpty(Module))
                 {
-                    _NameModule = Module.Trim('.', ' ').ToLower();
-                    _NameName = Name.Trim('.', ' ').ToLower();
+                    _NameModule = Module.Trim('.', ' ');
+                    _NameName = Name.Trim('.', ' ');
                     _NameFull = String.Format("{0}.{1}", _NameModule, _NameName);
                 }
                 else
                 {
-                    _NameFull = Name.Trim('.').ToLower();
+                    _NameFull = Name.Trim('.');
                     if (!_NameFull.Contains('.'))
                     {
                         InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, Name, EnableException.ToBool()));
@@ -438,7 +438,7 @@ namespace PSFramework.Commands
             if (Handler != null)
                 _Config.Handler = Handler;
             if (!String.IsNullOrEmpty(Validation))
-                _Config.Validation = ConfigurationHost.Validation[Validation.ToLower()];
+                _Config.Validation = ConfigurationHost.Validation[Validation];
             if (Hidden.IsPresent)
                 _Config.Hidden = Hidden;
             if (SimpleExport.IsPresent)
