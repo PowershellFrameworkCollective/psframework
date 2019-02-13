@@ -7,6 +7,8 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter FullName -Na
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Name -Name 'PSFramework-config-name'
 
+Register-PSFTeppArgumentCompleter -Command Import-PSFConfig -Parameter Schema -Name 'PSFramework-Config-Schema'
+
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter FullName -Name 'PSFramework-config-fullname'
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Name -Name 'PSFramework-config-name'

@@ -30,7 +30,7 @@
 		}
 		
 		It "Should fail when trying to remove a non-existing setting" {
-			{ 'Remove-PSFConfig.Test1' | Remove-PSFConfig -Confirm:$false } | Should -Throw
+			{ 'Remove-PSFConfig.Test1' | Remove-PSFConfig -Confirm:$false -ErrorAction Stop } | Should -Throw
 		}
 	}
 	
@@ -66,14 +66,12 @@
 	
 	# Ensure configuration deletion policy compliance
 	Describe "Verifying deletion policy compliance is met" {
-		$WarningPreference = 'SilentlyContinue'
-		
 		$configPlain = Set-PSFConfig -Module Remove-PSFConfig -Name Test3 -Value 1 -PassThru
 		$configPolicy = Set-PSFConfig -Module Remove-PSFConfig -Name Test4 -Value 2 -AllowDelete -PassThru
 		$configPolicy.PolicyEnforced = $true
 		
 		It "Should refuse to delete a configuration setting not flagged for deletion" {
-			{ $configPlain | Remove-PSFConfig -Confirm:$false } | Should -Not -Throw
+			{ $configPlain | Remove-PSFConfig -Confirm:$false -WarningAction SilentlyContinue } | Should -Not -Throw
 			Get-PSFConfig -Module Remove-PSFConfig -Name Test3 | Should -Not -BeNullOrEmpty
 			(Get-PSFMessage | Select-Object -Last 1).String | Should -Be 'Configuration.Remove-PSFConfig.DeleteFailed'
 			
@@ -82,7 +80,7 @@
 		}
 		
 		It "Should refuse to delete a configuration setting enforced by policy, even if flagged for deletion" {
-			{ $configPolicy | Remove-PSFConfig -Confirm:$false } | Should -Not -Throw
+			{ $configPolicy | Remove-PSFConfig -Confirm:$false -WarningAction SilentlyContinue } | Should -Not -Throw
 			Get-PSFConfig -Module Remove-PSFConfig -Name Test4 | Should -Not -BeNullOrEmpty
 			(Get-PSFMessage | Select-Object -Last 1).String | Should -Be 'Configuration.Remove-PSFConfig.DeleteFailed'
 		}

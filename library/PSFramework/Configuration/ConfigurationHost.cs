@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Management.Automation;
 
 namespace PSFramework.Configuration
@@ -19,6 +20,11 @@ namespace PSFramework.Configuration
         /// Hashtable containing all the registered validations
         /// </summary>
         public static Dictionary<string, ScriptBlock> Validation = new Dictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// The list of configuration definitions, controlling how configuration data is ingested.
+        /// </summary>
+        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>();
 
         /// <summary>
         /// Deletes a configuration setting in compliance with policy.

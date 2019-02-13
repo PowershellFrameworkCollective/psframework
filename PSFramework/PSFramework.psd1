@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.10.31.179'
+	ModuleVersion = '1.0.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -96,14 +96,17 @@
 		'Join-PSFPath',
 		'New-PSFLicense',
 		'New-PSFMessageLevelModifier',
+		'New-PSFSessionContainer',
 		'New-PSFSupportPackage',
 		'Register-PSFConfig',
+		'Register-PSFConfigSchema',
 		'Register-PSFConfigValidation',
 		'Register-PSFLoggingProvider',
 		'Register-PSFMessageEvent',
 		'Register-PSFMessageTransform',
 		'Register-PSFParameterClassMapping',
 		'Register-PSFRunspace',
+		'Register-PSFSessionObjectType',
 		'Register-PSFTaskEngineTask',
 		'Register-PSFTeppArgumentCompleter',
 		'Register-PSFTeppScriptblock',

@@ -3,6 +3,7 @@
 
 internal\scripts\cmdlets.ps1
 internal\scripts\strings.ps1
+internal\configurationschemata\*.ps1
 internal\configurationvalidation\*.ps1
 internal\configurations\*.ps1
 internal\scripts\loadConfigurationPersisted.ps1
@@ -15,5 +16,6 @@ bin\type-aliases.ps1
 internal\scripts\taskEngine.ps1
 internal\scripts\removalEvent.ps1
 internal\scripts\variables.ps1
+internal\scripts\sessionRegistration.ps1
 internal\scripts\teppInputResources.ps1
 internal\scripts\license.ps1

@@ -21,6 +21,10 @@
 		Only file-based scopes are supported for this.
 		By default, all locations are queried, with user settings beating system settings.
 	
+	.PARAMETER Schema
+		The configuration schema to use for import.
+		Use Register-PSFConfigSchema to extend the way input content can be laid out.
+	
 	.PARAMETER IncludeFilter
 		If specified, only elements with names that are similar (-like) to names in this list will be imported.
 	
@@ -68,6 +72,11 @@
 		$Scope = "FileUserLocal, FileUserShared, FileSystem",
 		
 		[Parameter(ParameterSetName = "Path")]
+		[PsfValidateSet(TabCompletion = 'PSFramework-Config-Schema')]
+		[string]
+		$Schema = "Default",
+		
+		[Parameter(ParameterSetName = "Path")]
 		[string[]]
 		$IncludeFilter,
 		
@@ -89,73 +98,36 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug','start','param'
+		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
+		
+		$settings = @{
+			IncludeFilter = $IncludeFilter
+			ExcludeFilter = $ExcludeFilter
+			Peek		  = $Peek.ToBool()
+			AllowDelete   = $AllowDelete.ToBool()
+			EnableException = $EnableException.ToBool()
+			Cmdlet	      = $PSCmdlet
+			Path = (Get-Location).Path
+		}
+		
+		$schemaScript = [PSFramework.Configuration.ConfigurationHost]::Schemata[$Schema]
 	}
 	process
 	{
 		#region Explicit Path
 		foreach ($item in $Path)
 		{
-			try
-			{
-				if ($item -like "http*") { $data = Read-PsfConfigFile -Weblink $item -ErrorAction Stop }
-				else
-				{
-					$pathItem = $null
-					try { $pathItem = Resolve-PSFPath -Path $item -SingleItem -Provider FileSystem }
-					catch { }
-					if ($pathItem) { $data = Read-PsfConfigFile -Path $pathItem -ErrorAction Stop }
-					else { $data = Read-PsfConfigFile -RawJson $item -ErrorAction Stop }
-				}
-			}
-			catch { Stop-PSFFunction -Message "Failed to import $item" -EnableException $EnableException -Tag 'fail', 'import' -ErrorRecord $_ -Continue -Target $item }
+			try { $resolvedItem = Resolve-PSFPath -Path $item -Provider FileSystem }
+			catch { $resolvedItem = $item }
 			
-			:element foreach ($element in $data)
+			foreach ($rItem in $resolvedItem)
 			{
-				#region Exclude Filter
-				foreach ($exclusion in $ExcludeFilter)
-				{
-					if ($element.FullName -like $exclusion)
-					{
-						continue element
-					}
-				}
-				#endregion Exclude Filter
-				
-				#region Include Filter
-				if ($IncludeFilter)
-				{
-					$isIncluded = $false
-					foreach ($inclusion in $IncludeFilter)
-					{
-						if ($element.FullName -like $inclusion)
-						{
-							$isIncluded = $true
-							break
-						}
-					}
-					
-					if (-not $isIncluded) { continue }
-				}
-				#endregion Include Filter
-				
-				if ($Peek) { $element }
-				else
-				{
-					try
-					{
-						if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException -AllowDelete:$AllowDelete }
-						else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type -AllowDelete:$AllowDelete }
-					}
-					catch
-					{
-						Stop-PSFFunction -Message "Failed to set '$($element.FullName)'" -ErrorRecord $_ -EnableException $EnableException -Tag 'fail', 'import' -Continue -Target $item
-					}
-				}
+				& $schemaScript $rItem $settings
 			}
 		}
 		#endregion Explicit Path
 		
+		#region ModuleName
 		if ($ModuleName)
 		{
 			$data = Read-PsfConfigPersisted -Module $ModuleName -Scope $Scope -ModuleVersion $ModuleVersion
@@ -166,5 +138,6 @@
 				else { Set-PSFConfig -FullName $value.FullName -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($value.Value, $value.Type)) -EnableException:$EnableException }
 			}
 		}
+		#endregion ModuleName
 	}
 }

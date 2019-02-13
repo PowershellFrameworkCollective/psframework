@@ -753,9 +753,21 @@
             The connections payload. One connection per connection type.
             </summary>
         </member>
+        <member name="M:PSFramework.ComputerManagement.SessionContainer.op_Implicit(PSFramework.ComputerManagement.SessionContainer)~System.Management.Automation.Runspaces.PSSession">
+            <summary>
+            Converts the session container to PSSession, if one is included
+            </summary>
+            <param name="Container">The container from which to gather the PSSession</param>
+        </member>
+        <member name="M:PSFramework.ComputerManagement.SessionContainer.op_Implicit(PSFramework.ComputerManagement.SessionContainer)~Microsoft.Management.Infrastructure.CimSession">
+            <summary>
+            Converts the session container to CImSession, if one is included
+            </summary>
+            <param name="Container">The container from which to gather the CimSession</param>
+        </member>
         <member name="M:PSFramework.ComputerManagement.SessionContainer.ToString">
             <summary>
-            The defautl string representation
+            The default string representation
             </summary>
             <returns></returns>
         </member>
@@ -928,6 +940,11 @@
         <member name="F:PSFramework.Configuration.ConfigurationHost.Validation">
             <summary>
             Hashtable containing all the registered validations
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Schemata">
+            <summary>
+            The list of configuration definitions, controlling how configuration data is ingested.
             </summary>
         </member>
         <member name="M:PSFramework.Configuration.ConfigurationHost.DeleteConfiguration(System.String)">
