@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## 1.0.0
+## 1.0.0 : 2019-02-14
 Fundamental Change: The configuration system is now extensible in how it processes input.
 This unlocks fully supported custom configuration layouts, stored in any preferred notation, hosted by any preferred platform.
 
