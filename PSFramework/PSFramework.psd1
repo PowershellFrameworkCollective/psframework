@@ -64,6 +64,7 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'ConvertFrom-PSFArray',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
 		'ConvertTo-PSFHashtable',
