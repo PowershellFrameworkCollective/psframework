@@ -108,6 +108,20 @@ namespace PSFramework.Configuration
         public bool Hidden = false;
 
         /// <summary>
+        /// Whether the setting can be legally deleted.
+        /// </summary>
+        public bool AllowDelete
+        {
+            get { return _AllowDelete; }
+            set
+            {
+                if (!Initialized)
+                    _AllowDelete = value;
+            }
+        }
+        private bool _AllowDelete;
+
+        /// <summary>
         /// Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
         /// </summary>
         public bool Initialized
@@ -116,13 +130,15 @@ namespace PSFramework.Configuration
             set
             {
                 if (!_Initialized)
+                {
                     _Initialized = value;
 
-                // This executes only during an initialize call of Set-PSFConfig.
-                // It will be executed after the default value is set, but before any previously persisted value is written to the configuration item.
-                // It is thus safe to read from the Value property, ignoring implications for deferred deserialization.
-                if (value)
-                    DefaultValue = Value;
+                    // This executes only during an initialize call of Set-PSFConfig.
+                    // It will be executed after the default value is set, but before any previously persisted value is written to the configuration item.
+                    // It is thus safe to read from the Value property, ignoring implications for deferred deserialization.
+                    if (value)
+                        DefaultValue = Value;
+                }
             }
         }
         private bool _Initialized;

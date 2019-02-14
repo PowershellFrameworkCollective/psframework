@@ -41,6 +41,16 @@
 				foreach ($name in $Exclude) { $hashTable.Remove($name) }
 				$hashTable
 			}
+			elseif ($item -is [System.Collections.IDictionary])
+			{
+				$hashTable = @{ }
+				foreach ($name in $item.Keys)
+				{
+					if ($name -in $Exclude) { continue }
+					$hashTable[$name] = $item[$name]
+				}
+				$hashTable
+			}
 			else
 			{
 				$hashTable = @{ }

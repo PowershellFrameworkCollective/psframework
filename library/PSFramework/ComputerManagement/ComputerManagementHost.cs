@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace PSFramework.ComputerManagement
 {
@@ -15,5 +12,10 @@ namespace PSFramework.ComputerManagement
         /// The timespan a PSSession may be idle before it is cleared for cleanup
         /// </summary>
         public static TimeSpan PSSessionIdleTimeout = new TimeSpan(0, 15, 0);
+
+        /// <summary>
+        /// List of known session types that can be used in a SessionContainer.
+        /// </summary>
+        public static ConcurrentDictionary<string, string> KnownSessionTypes = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
     }
 }

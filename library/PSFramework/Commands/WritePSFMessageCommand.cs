@@ -243,7 +243,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             get
             {
                 if (!String.IsNullOrEmpty(String))
-                    return String.Format(Localization.LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String)), StringValues);
+                    return String.Format(Localization.LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)), StringValues);
                 return Message;
             }
         }

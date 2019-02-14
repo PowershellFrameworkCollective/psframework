@@ -16,7 +16,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Set-PSFConfig).ParameterSets.Name | Should -Be 'FullName', 'Persisted', 'Module'
-		(Get-Command Set-PSFConfig).Parameters.Keys | Should -Be 'FullName', 'Module', 'Name', 'Value', 'PersistedValue', 'PersistedType', 'Description', 'Validation', 'Handler', 'Hidden', 'Default', 'Initialize', 'SimpleExport', 'ModuleExport', 'DisableValidation', 'DisableHandler', 'PassThru', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+		(Get-Command Set-PSFConfig).Parameters.Keys | Should -Be 'FullName', 'Module', 'Name', 'Value', 'PersistedValue', 'PersistedType', 'Description', 'Validation', 'Handler', 'Hidden', 'Default', 'Initialize', 'SimpleExport', 'ModuleExport', 'AllowDelete', 'DisableValidation', 'DisableHandler', 'PassThru', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
 	}
 	
 	Describe "Basic functionality tests" {

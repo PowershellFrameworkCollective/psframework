@@ -30,5 +30,10 @@ namespace PSFramework.Parameter
         /// The input object is a live cim session object
         /// </summary>
         CimSession = 3,
+
+        /// <summary>
+        /// The input object is a session container object, potentially containing live session objects of various types at the same time.
+        /// </summary>
+        Container = 4,
     }
 }
