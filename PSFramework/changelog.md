@@ -8,6 +8,7 @@ This unlocks fully supported custom configuration layouts, stored in any preferr
  - New: Command Select-PSFPropertyValue selects the value of properties based on various conditions.
  - New: Command Register-PSFSessionObjectType registers session objects for use in Session Containers.
  - New: Command New-PSFSessionContainer creates a multi-session object in order to easily be able to pass through sessions to a single computer with multiple protocols.
+ - New: Command ConvertFrom-PSFArray flattens object properties for export to csv or other destinations that cannot handle tiered data.
  - New: Configuration Schema: 'default'. Old version configuration schema for Import-PSFConfig.
  - New: Configuration Schema: 'MetaJson'. Capable of ingesting complex json files, evaluating and expanding environment variables and loading include files.
  - Upd: Configuration: Removed enforced lowercasing of configuration entries. Configuration as published before had not been case-sensitive, the new version is still not case sensitive.
