@@ -25,6 +25,8 @@
 	
 		Create a session container containing three different kinds of session objects
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
