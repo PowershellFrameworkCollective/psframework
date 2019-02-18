@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
+    <Compile Include="Commands\PSFCmdlet.cs" />
     <Compile Include="Commands\RemovePSFNullCommand.cs" />
     <Compile Include="Commands\SelectPSFObjectCommand.cs" />
     <Compile Include="Commands\SetPSFConfigCommand.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Message\TransformError.cs" />
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
+    <Compile Include="Meta\CallerInfo.cs" />
     <Compile Include="Meta\PipelineCommand.cs" />
     <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />

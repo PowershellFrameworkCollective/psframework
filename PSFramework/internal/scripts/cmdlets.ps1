@@ -7,6 +7,7 @@ $commonParam = @{
 	Module = $ExecutionContext.SessionState.Module
 }
 
+Import-PSFCmdlet @commonParam -Name Invoke-PSFProtectedCommand -Type ([PSFramework.Commands.InvokePSFProtectedCommand])
 Import-PSFCmdlet @commonParam -Name Remove-PSFNull -Type ([PSFramework.Commands.RemovePSFNullCommand])
 Import-PSFCmdlet @commonParam -Name Select-PSFObject -Type ([PSFramework.Commands.SelectPSFObjectCommand])
 Import-PSFCmdlet @commonParam -Name Set-PSFConfig -Type ([PSFramework.Commands.SetPSFConfigCommand])

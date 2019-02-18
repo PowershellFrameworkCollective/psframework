@@ -91,5 +91,35 @@ namespace PSFramework.Localization
                 return String.Format("<String Key not found: {0}>", FullName);
             return Strings[FullName].LogValue;
         }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings for the purpose of logging
+        /// </summary>
+        /// <param name="FullName">The name of the string to request. Include the modulename</param>
+        /// <param name="StringValues">The values to format into the string</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string ReadLog(string FullName, object[] StringValues)
+        {
+            if (!Strings.ContainsKey(FullName))
+                return String.Format("<String Key not found: {0}>", FullName);
+            return String.Format(Strings[FullName].LogValue, StringValues);
+        }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings for the purpose of logging
+        /// </summary>
+        /// <param name="ModuleName">The name of the module the string belongs to.</param>
+        /// <param name="Name">The individual name of the setting.</param>
+        /// <param name="StringValues">The values to format into the string</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string ReadLog(string ModuleName, string Name, object[] StringValues)
+        {
+            string fullname = Name;
+            if (!String.IsNullOrEmpty(ModuleName) && (ModuleName != "<Unknown>"))
+                fullname = String.Format("{0}.{1}", ModuleName, Name);
+            if (!Strings.ContainsKey(fullname))
+                return String.Format("<String Key not found: {0}>", fullname);
+            return String.Format(Strings[fullname].LogValue, StringValues);
+        }
     }
 }

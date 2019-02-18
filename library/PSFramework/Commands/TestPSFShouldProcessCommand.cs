@@ -29,6 +29,7 @@ namespace PSFramework.Commands
         /// <summary>
         /// Values to format into the localized string
         /// </summary>
+        [Parameter(ParameterSetName = "String")]
         public object[] ActionStringValues = new object[10];
 
         /// <summary>

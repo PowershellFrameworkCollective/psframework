@@ -11,7 +11,7 @@
 	
 	# Schema: metajson
 	'Configuration.Schema.MetaJson.ProcessResource'	      = 'Processing resource: {0}'
-	'Configuration.Schema.MetaJson.ProcessFile' = 'Reading Node: {0}'
+	'Configuration.Schema.MetaJson.ProcessFile'		      = 'Reading Node: {0}'
 	'Configuration.Schema.MetaJson.ResolveFile'		      = 'Cannot resolve path: {0}'
 	'Configuration.Schema.MetaJson.InvalidJson'		      = 'Failed to access json content from: {0}'
 	'Configuration.Schema.MetaJson.UnknownVersion'	      = 'Unknown version "{1}" in: {0}'

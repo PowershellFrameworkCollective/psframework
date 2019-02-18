@@ -142,7 +142,8 @@
 	)
 	
 	# Cmdlets to export from this module
-	CmdletsToExport		    = @(
+	CmdletsToExport	       = @(
+		'Invoke-PSFProtectedCommand',
 		'Remove-PSFNull',
 		'Select-PSFObject',
 		'Set-PSFConfig',
