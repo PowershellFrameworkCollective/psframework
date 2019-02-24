@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace PSFramework.Localization
@@ -21,12 +22,12 @@ namespace PSFramework.Localization
         /// <summary>
         /// List of strings registered
         /// </summary>
-        public static Dictionary<string, LocalString> Strings = new Dictionary<string, LocalString>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, LocalString> Strings = new ConcurrentDictionary<string, LocalString>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Mapping module name to the language to use for logging.
         /// </summary>
-        public static Dictionary<string, string> ModuleLoggingLanguage = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, string> ModuleLoggingLanguage = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Configure the module specific logging language.
@@ -36,8 +37,9 @@ namespace PSFramework.Localization
         public static void SetLoggingLanguage(string Module, string Language)
         {
             ModuleLoggingLanguage[Module] = Language;
+            string dummy;
             if (String.IsNullOrEmpty(Language))
-                ModuleLoggingLanguage.Remove(Module);
+                ModuleLoggingLanguage.TryRemove(Module, out dummy);
         }
 
         /// <summary>

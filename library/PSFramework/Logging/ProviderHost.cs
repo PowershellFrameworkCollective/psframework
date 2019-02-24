@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace PSFramework.Logging
 {
@@ -10,7 +11,12 @@ namespace PSFramework.Logging
         /// <summary>
         /// Dictionary with all registered logging providers
         /// </summary>
-        public static Dictionary<string, Provider> Providers = new Dictionary<string, Provider>();
+        public static ConcurrentDictionary<string, Provider> Providers = new ConcurrentDictionary<string, Provider>();
+
+        /// <summary>
+        /// The current state of the logging system
+        /// </summary>
+        public static LoggingState LoggingState = LoggingState.Unstarted;
 
         /// <summary>
         /// Returns all enabled logging providers

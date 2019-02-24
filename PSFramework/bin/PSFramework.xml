@@ -1783,6 +1783,41 @@
             Write as Xml fragment
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.LoggingState">
+            <summary>
+            Used to signal the current processing state of the logging runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Unstarted">
+            <summary>
+            The initial state before the logging runspace is spun up
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Initializing">
+            <summary>
+            Spinning up logging providers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Ready">
+            <summary>
+            Ready to process messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Writing">
+            <summary>
+            Currently busy writing messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Broken">
+            <summary>
+            A critical error in the logging runspaces has occured, logging has terminated
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Stopped">
+            <summary>
+            The logging has been fully stopped
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.Provider">
             <summary>
             Class containing all information/content needed for a logging provider
@@ -1910,6 +1945,11 @@
         <member name="F:PSFramework.Logging.ProviderHost.Providers">
             <summary>
             Dictionary with all registered logging providers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderHost.LoggingState">
+            <summary>
+            The current state of the logging system
             </summary>
         </member>
         <member name="M:PSFramework.Logging.ProviderHost.GetEnabled">
@@ -4037,7 +4077,7 @@
             The dictionary containing the definitive list of unique Runspace
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
+        <member name="P:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
             <summary>
             List of all runspace bound values in use
             </summary>
@@ -4310,7 +4350,7 @@
             Field containing the scripts that were registered.
             </summary>
         </member>
-        <member name="F:PSFramework.TabExpansion.TabExpansionHost.Cache">
+        <member name="P:PSFramework.TabExpansion.TabExpansionHost.Cache">
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
             </summary>
@@ -4479,7 +4519,7 @@
             <summary>
             Returns the next task to perform. Returns null when there are no more tasks to perform
             </summary>
-            <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
+            <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This is used to avoid one misconfigured task starving all lower priority tasks, by including all tasks that have already run in a given cycle.</param>
             <returns>The next task to perform.</returns>
         </member>
         <member name="T:PSFramework.Utility.DynamicContentDictionary">

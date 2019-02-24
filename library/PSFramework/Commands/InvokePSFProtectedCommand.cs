@@ -153,13 +153,12 @@ param (
 
     $__PSFramework__EnableException
 )
-$global:vars = Get-Variable
-Stop-PSFFunction -Message $__PSFramework__Message -Exception $__PSFramework__Exception -Target $__PSFramework__Target -Continue:$__PSFramework__Continue -FunctionName $__PSFramework__FunctionName -ModuleName $__PSFramework__ModuleName -File $__PSFramework__File -Line $__PSFramework__Line -Cmdlet $__PSFramework__Cmdlet -EnableException $__PSFramework__EnableException
+
+Stop-PSFFunction -Message $__PSFramework__Message -Exception $__PSFramework__Exception -Target $__PSFramework__Target -Continue:$__PSFramework__Continue -FunctionName $__PSFramework__FunctionName -ModuleName $__PSFramework__ModuleName -File $__PSFramework__File -Line $__PSFramework__Line -Cmdlet $__PSFramework__Cmdlet -EnableException $__PSFramework__EnableException -StepsUpward 1
 return
 ");
                 object[] arguments = new object[] { _ErrorMessage, e, Target, Continue, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, PSCmdlet, EnableException };
-                PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);
-                
+                PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);                
             }
         }
         #endregion Cmdlet Implementation

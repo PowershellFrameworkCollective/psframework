@@ -204,7 +204,7 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.Keys.Contains(Validation))
+            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.ContainsKey(Validation))
             {
                 InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationValidation, Validation, String.Join(", ", ConfigurationHost.Validation.Keys), EnableException.ToBool()));
                 _KillIt = true;

@@ -10,6 +10,7 @@ namespace PSFramework.Message
     /// <summary>
     /// Container for a callstack, to create a non-volatile copy of the relevant information
     /// </summary>
+    [Serializable]
     public class CallStack
     {
         /// <summary>

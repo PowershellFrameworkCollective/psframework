@@ -81,6 +81,7 @@
     <Compile Include="Localization\LocalString.cs" />
     <Compile Include="Localization\LocalStrings.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
+    <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
     <Compile Include="Message\CallStack.cs" />

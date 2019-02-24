@@ -37,23 +37,42 @@
 		$Terminate
 	)
 	
+	begin
+	{
+		#region Helper Functions
+		function Test-LogFlushed
+		{
+			[CmdletBinding()]
+			param (
+				
+			)
+			
+			# Catch pending messages
+			if ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0) { return $false }
+			if ([PSFramework.Message.LogHost]::OutQueueError.Count -eq 0) { return $false }
+			
+			# Catch whether currently processing a message
+			if ([PSFramework.Logging.ProviderHost]::LoggingState -like 'Writing') { return $false }
+			if ([PSFramework.Logging.ProviderHost]::LoggingState -like 'Initializing') { return $false }
+			
+			return $true
+		}
+		#endregion Helper Functions
+	}
 	process
 	{
 		if (([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0) -or ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0))
 		{
-			if ((Get-PSFRunspace -Name 'psframework.logging') -notlike 'Running') { Start-PSFRunspace -Name 'psframework.logging' }
+			if ((Get-PSFRunspace -Name 'psframework.logging').State -notlike 'Running') { Start-PSFRunspace -Name 'psframework.logging' }
 		}
 		while ($Timeout.Value -gt (Get-Date))
 		{
-			if (([PSFramework.Message.LogHost]::OutQueueLog.Count -eq 0) -and ([PSFramework.Message.LogHost]::OutQueueError.Count -eq 0))
+			if (Test-LogFlushed)
 			{
 				break
 			}
-			Start-Sleep -Milliseconds 250
+			Start-Sleep -Milliseconds 50
 		}
-		
-		# To ensure enough time between message dequeue has passed and all write events were finished.
-		Start-Sleep -Seconds 3
 		
 		if ($Terminate)
 		{
