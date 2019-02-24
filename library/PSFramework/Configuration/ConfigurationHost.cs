@@ -14,17 +14,17 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Hashtable containing all the configuration entries
         /// </summary>
-        public static Dictionary<string, Config> Configurations = new Dictionary<string, Config>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, Config> Configurations = new ConcurrentDictionary<string, Config>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Hashtable containing all the registered validations
         /// </summary>
-        public static Dictionary<string, ScriptBlock> Validation = new Dictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, ScriptBlock> Validation = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// The list of configuration definitions, controlling how configuration data is ingested.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Deletes a configuration setting in compliance with policy.
@@ -39,7 +39,7 @@ namespace PSFramework.Configuration
             if (!configItem.AllowDelete || configItem.PolicyEnforced)
                 return false;
 
-            Configurations.Remove(FullName);
+            Configurations.TryRemove(FullName, out configItem);
             return true;
         }
 

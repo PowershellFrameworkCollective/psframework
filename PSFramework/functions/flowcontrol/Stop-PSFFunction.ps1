@@ -192,6 +192,10 @@
 	if (-not $ModuleName) { $ModuleName = "<Unknown>" }
 	if (-not $File) { $File = $callStack.Position.File }
 	if (-not $Line) { $Line = $callStack.Position.StartLineNumber }
+	if ((Test-PSFParameterBinding -ParameterName EnableException -Not) -and (Test-PSFFeature -Name "PSFramework.InheritEnableException" -ModuleName $ModuleName))
+	{
+		$EnableException = [bool]$PSCmdlet.GetVariableValue('EnableException')
+	}
 	#endregion Initialize information on the calling command
 	
 	#region Apply Transforms

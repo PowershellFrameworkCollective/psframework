@@ -18,6 +18,7 @@
 			{
 				if (-not $___provider.Initialized)
 				{
+					[PSFramework.Logging.ProviderHost]::LoggingState = 'Initializing'
 					try
 					{
 						$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.BeginEvent)), $null, $null)
@@ -26,6 +27,7 @@
 					catch { $___provider.Errors.Push($_) }
 				}
 			}
+			[PSFramework.Logging.ProviderHost]::LoggingState = 'Ready'
 			#endregion Manage Begin Event
 			
 			#region Start Event
@@ -43,6 +45,7 @@
 				[PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
 				if ($Entry)
 				{
+					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
 					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 					{
 						if ($___provider.MessageApplies($Entry))
@@ -63,6 +66,7 @@
 				
 				if ($Record)
 				{
+					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
 					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 					{
 						if ($___provider.MessageApplies($Record))
@@ -83,17 +87,18 @@
 			}
 			#endregion End Event
 			
-			Start-Sleep -Seconds 1
+			[PSFramework.Logging.ProviderHost]::LoggingState = 'Ready'
+			Start-Sleep -Milliseconds 100
 		}
 	}
 	catch
 	{
-		
+		$wasBroken = $true
 	}
 	finally
 	{
 		#region Flush log on exit
-		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -like "Running") -and ([PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
+		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -like "Running") -and (-not [PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
 		{
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
@@ -110,6 +115,7 @@
 				[PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
 				if ($Entry)
 				{
+					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
 					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 					{
 						if ($___provider.MessageApplies($Entry))
@@ -130,6 +136,7 @@
 				
 				if ($Record)
 				{
+					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
 					foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 					{
 						if ($___provider.MessageApplies($Record))
@@ -164,6 +171,9 @@
 			$___provider.Initialized = $false
 		}
 		#endregion Final Event
+		
+		if ($wasBroken) { [PSFramework.Logging.ProviderHost]::LoggingState = 'Broken' }
+		else { [PSFramework.Logging.ProviderHost]::LoggingState = 'Stopped' }
 		
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()
 	}

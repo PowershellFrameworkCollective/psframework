@@ -4,6 +4,126 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.InvokePSFProtectedCommand">
+            <summary>
+            A wrapper that will execute the specified scriptblock in a safe manner
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.ScriptBlock">
+            <summary>
+            The scriptblock to execute.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.Action">
+            <summary>
+            Description of the action to perform
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.ActionString">
+            <summary>
+            A string to use localized message for the prompt
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.ActionStringValues">
+            <summary>
+            Values to format into the localized string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.Target">
+            <summary>
+            The target to perform the action against
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.EnableException">
+            <summary>
+            Whether to trigger a terminating exception in case the scriptblock errors out.
+            Will be picked up automatically if not specified.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.PSCmdlet">
+            <summary>
+            The cmdlet object to use for triggering terminating errors.
+            Will be picked up automatically if not specified.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.Continue">
+            <summary>
+            Triggers the calling of 'continue' in case of error
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
+            <summary>
+            Information on the calling command, including name, module, file and line.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.InvokePSFProtectedCommand._Message">
+            <summary>
+            The message to print when prompting
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.InvokePSFProtectedCommand._ErrorMessage">
+            <summary>
+            Error message to post when execution fails
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.InvokePSFProtectedCommand.BeginProcessing">
+            <summary>
+            Prepare runtime information, such as calling command or cmdlet object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.InvokePSFProtectedCommand.ProcessRecord">
+            <summary>
+            Perform the actual logic
+            </summary>
+        </member>
+        <member name="T:PSFramework.Commands.PSFCmdlet">
+            <summary>
+            Base class for all PSFramework Cmdlets, offering some shared tooling
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.PSFCmdlet.MessageScript">
+            <summary>
+            Access a scriptblock that can be used to write a message
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String)">
+            <summary>
+            Invokes a string of text-based scriptcode
+            </summary>
+            <param name="ScriptCode">The script code to execute</param>
+            <returns>Returns whatever it will return</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.Management.Automation.ScriptBlock,System.Boolean,System.Object,System.Object,System.Object,System.Object[])">
+            <summary>
+            Do a rich invocation of the specified scriptblock
+            </summary>
+            <param name="ScriptBlock">The scriptblock to execute</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.GetCaller">
+            <summary>
+            Returns the caller CallStackFrame item
+            </summary>
+            <returns>Returns the caller CallStackFrame item</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object)">
+            <summary>
+            Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
+            </summary>
+            <param name="Message">The message to write</param>
+            <param name="Level">The level to write it at</param>
+            <param name="FunctionName">The name of the function / cmdlet to assume</param>
+            <param name="ModuleName">The name of the module to assume</param>
+            <param name="File">The file this message was written from</param>
+            <param name="Line">The line in the file this message was written from</param>
+            <param name="Tag">Tags to attach to this message</param>
+            <param name="Target">A target object to specify</param>
+        </member>
         <member name="T:PSFramework.Commands.RemovePSFNullCommand">
             <summary>
             Implements the Remove-PSFNull command
@@ -1124,6 +1244,102 @@
             The value is something indeterminate, but possibly complex
             </summary>
         </member>
+        <member name="T:PSFramework.Feature.FeatureHost">
+            <summary>
+            Manages the feature flag component
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost._ModuleFeatureFlags">
+            <summary>
+            Repository of features modules may opt into or out of
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost._ExperimentalFeatureFlags">
+            <summary>
+            Repository of features and their global enablement state
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost.Features">
+            <summary>
+            List of all registered features.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.WriteModuleFlag(System.String,System.String,System.Boolean)">
+            <summary>
+            Sets a module-scope feature flag
+            </summary>
+            <param name="ModuleName">The module for which to set the feature flag</param>
+            <param name="FeatureFlag">The flag to set it to</param>
+            <param name="Value">The value to set it to</param>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.WriteGlobalFlag(System.String,System.Boolean)">
+            <summary>
+            Sets a global feature flag
+            </summary>
+            <param name="FeatureFlag">The flag to set</param>
+            <param name="Value">The value to apply</param>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.ReadFlag(System.String,System.String)">
+            <summary>
+            Returns whether a given feature is enabled either globally or module locally
+            </summary>
+            <param name="FeatureFlag">The flag to test</param>
+            <param name="ModuleName">The module to look up (specifying this is optional, omitting this parameter will cause it to only test global flags)</param>
+            <returns>Whether the feature is enabled</returns>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.ReadModuleFlag(System.String,System.String)">
+            <summary>
+            Returns whether a module specific feature is enabled or not
+            </summary>
+            <param name="FeatureFlag">The feature flag to check for</param>
+            <param name="ModuleName">The module to check in</param>
+            <returns>Whether the features asked for is enabled for the module specified</returns>
+        </member>
+        <member name="T:PSFramework.Feature.FeatureItem">
+            <summary>
+            Represents a feature a module offers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Name">
+            <summary>
+            The name of the feature
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Owner">
+            <summary>
+            The owning module
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Global">
+            <summary>
+            Whether the feature can be set globally
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.ModuleSpecific">
+            <summary>
+            Whether the feature can be overridden on a per module bases.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Description">
+            <summary>
+            The general description of the feature for human consumption
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureItem.#ctor">
+            <summary>
+            Creates an empty feature
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureItem.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Creates a feature all fileld out.
+            </summary>
+            <param name="Name"></param>
+            <param name="Owner"></param>
+            <param name="Global"></param>
+            <param name="ModuleSpecific"></param>
+            <param name="Description"></param>
+        </member>
         <member name="T:PSFramework.FlowControl.OperatingSystem">
             <summary>
             The various operating systems PowerShell can run on
@@ -1375,6 +1591,23 @@
             Reads a localized string from the list of available strings for the purpose of logging
             </summary>
             <param name="FullName">The name of the string to request. Include the modulename</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.ReadLog(System.String,System.Object[])">
+            <summary>
+            Reads a localized string from the list of available strings for the purpose of logging
+            </summary>
+            <param name="FullName">The name of the string to request. Include the modulename</param>
+            <param name="StringValues">The values to format into the string</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.ReadLog(System.String,System.String,System.Object[])">
+            <summary>
+            Reads a localized string from the list of available strings for the purpose of logging
+            </summary>
+            <param name="ModuleName">The name of the module the string belongs to.</param>
+            <param name="Name">The individual name of the setting.</param>
+            <param name="StringValues">The values to format into the string</param>
             <returns>The localized string requested. Empty string if nothing.</returns>
         </member>
         <member name="T:PSFramework.Localization.LocalString">
@@ -1646,6 +1879,41 @@
             Write as Xml fragment
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.LoggingState">
+            <summary>
+            Used to signal the current processing state of the logging runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Unstarted">
+            <summary>
+            The initial state before the logging runspace is spun up
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Initializing">
+            <summary>
+            Spinning up logging providers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Ready">
+            <summary>
+            Ready to process messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Writing">
+            <summary>
+            Currently busy writing messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Broken">
+            <summary>
+            A critical error in the logging runspaces has occured, logging has terminated
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.LoggingState.Stopped">
+            <summary>
+            The logging has been fully stopped
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.Provider">
             <summary>
             Class containing all information/content needed for a logging provider
@@ -1773,6 +2041,11 @@
         <member name="F:PSFramework.Logging.ProviderHost.Providers">
             <summary>
             Dictionary with all registered logging providers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderHost.LoggingState">
+            <summary>
+            The current state of the logging system
             </summary>
         </member>
         <member name="M:PSFramework.Logging.ProviderHost.GetEnabled">
@@ -2942,6 +3215,37 @@
             An exception transform allows automatic transformation of exceptions. Primarily used to unwrap exceptions from an API that wraps all exceptions.
             </summary>
         </member>
+        <member name="T:PSFramework.Meta.CallerInfo">
+            <summary>
+            Helper Class parsing CallStackInfo into something usable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.CallerInfo.CallerFunction">
+            <summary>
+            The name of the function in the callstackframe
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.CallerInfo.CallerModule">
+            <summary>
+            The name of the module the function in the callstackframe is part of
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.CallerInfo.CallerFile">
+            <summary>
+            The file this was called from
+            </summary>
+        </member>
+        <member name="F:PSFramework.Meta.CallerInfo.CallerLine">
+            <summary>
+            The line in the file this was called from
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.CallerInfo.#ctor(System.Management.Automation.CallStackFrame)">
+            <summary>
+            Constructs the detailed information needed from a CallStackFrame
+            </summary>
+            <param name="Frame">The frame to parse</param>
+        </member>
         <member name="T:PSFramework.Meta.PipelineCommand">
             <summary>
             Information object for a command on the pipeline
@@ -3869,7 +4173,7 @@
             The dictionary containing the definitive list of unique Runspace
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
+        <member name="P:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
             <summary>
             List of all runspace bound values in use
             </summary>
@@ -4142,7 +4446,7 @@
             Field containing the scripts that were registered.
             </summary>
         </member>
-        <member name="F:PSFramework.TabExpansion.TabExpansionHost.Cache">
+        <member name="P:PSFramework.TabExpansion.TabExpansionHost.Cache">
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
             </summary>
@@ -4311,7 +4615,7 @@
             <summary>
             Returns the next task to perform. Returns null when there are no more tasks to perform
             </summary>
-            <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
+            <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This is used to avoid one misconfigured task starving all lower priority tasks, by including all tasks that have already run in a given cycle.</param>
             <returns>The next task to perform.</returns>
         </member>
         <member name="T:PSFramework.Utility.DynamicContentDictionary">

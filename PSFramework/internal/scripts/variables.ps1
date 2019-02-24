@@ -21,3 +21,7 @@ $paramNewVariable2 = @{
 
 New-Variable @paramNewVariable2
 #endregion Declare PSSession Cache
+
+#region Register Features
+Register-PSFFeature -Name 'PSFramework.InheritEnableException' -NotGlobal -Owner PSFramework -Description 'Causes all PSFramework commands with the -EnableException parameter to check, whether the caller has that variable set (e.g. by having a parameter with the same name) and respect that as well.'
+#endregion Register Features

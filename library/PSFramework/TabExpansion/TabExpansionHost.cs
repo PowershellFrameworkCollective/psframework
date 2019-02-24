@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Management.Automation;
@@ -19,7 +20,21 @@ namespace PSFramework.TabExpansion
         /// <summary>
         /// The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
         /// </summary>
-        public static Hashtable Cache = new Hashtable();
+        public static Hashtable Cache
+        {
+            get
+            {
+                lock(_CacheLock)
+                    return _Cache;
+            }
+            set
+            {
+                lock(_CacheLock)
+                    _Cache = value;
+            }
+        }
+        private static Hashtable _Cache = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly object _CacheLock = new object();
         #endregion State information
 
         #region Resources for individual tab completions

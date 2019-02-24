@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,12 @@ namespace PSFramework.TaskEngine
         /// <summary>
         /// The register of available tasks.
         /// </summary>
-        public static Dictionary<string, PsfTask> Tasks = new Dictionary<string, PsfTask>();
+        public static ConcurrentDictionary<string, PsfTask> Tasks = new ConcurrentDictionary<string, PsfTask>();
 
         /// <summary>
         /// Cache where modules can store cached data provided by tasks
         /// </summary>
-        public static Dictionary<string, Hashtable> Cache = new Dictionary<string, Hashtable>();
+        public static ConcurrentDictionary<string, Hashtable> Cache = new ConcurrentDictionary<string, Hashtable>();
 
         /// <summary>
         /// Whether there are any due tasks
@@ -55,7 +56,7 @@ namespace PSFramework.TaskEngine
         /// <summary>
         /// Returns the next task to perform. Returns null when there are no more tasks to perform
         /// </summary>
-        /// <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This avoids one misconfigured task starving all lower priority tasks</param>
+        /// <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This is used to avoid one misconfigured task starving all lower priority tasks, by including all tasks that have already run in a given cycle.</param>
         /// <returns>The next task to perform.</returns>
         public static PsfTask GetNextTask(string[] Exclusions)
         {

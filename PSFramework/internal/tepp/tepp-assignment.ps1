@@ -24,6 +24,12 @@ Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter FullN
 Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter Module -Name 'PSFramework-Unregister-PSFConfig-Module'
 #endregion Configuration
 
+#region Features
+Register-PSFTeppArgumentCompleter -Command Get-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+Register-PSFTeppArgumentCompleter -Command Set-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+Register-PSFTeppArgumentCompleter -Command Test-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+#endregion Features
+
 #region License
 Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Name 'PSFramework-license-name'
 #endregion License
