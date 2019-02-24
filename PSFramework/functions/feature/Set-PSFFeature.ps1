@@ -31,6 +31,7 @@
 	
 		This enables the global flag for the MyModule.Feierabend feature.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]

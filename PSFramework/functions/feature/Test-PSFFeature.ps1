@@ -20,6 +20,7 @@
 	
 		Tests whether the module SPReplicator has enabled the Enable Exception Inheritance feature.
 #>
+	[OutputType([bool])]
 	[CmdletBinding()]
 	param (
 		[PsfValidateSet(TabCompletion = 'PSFramework.Feature.Name')]

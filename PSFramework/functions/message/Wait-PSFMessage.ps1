@@ -42,6 +42,7 @@
 		#region Helper Functions
 		function Test-LogFlushed
 		{
+			[OutputType([bool])]
 			[CmdletBinding()]
 			param (
 				
