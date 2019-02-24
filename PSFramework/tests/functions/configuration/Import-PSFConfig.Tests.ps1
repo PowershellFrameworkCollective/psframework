@@ -6,12 +6,18 @@
 		Get-PSFConfig -FullName config.import.test | ForEach-Object {
 			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)
 		}
+		Get-PSFConfig -FullName MetaJson | ForEach-Object {
+			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)
+		}
 	}
 	AfterAll {
 		Get-PSFConfig -Module Import-PSFConfig -Force | ForEach-Object {
 			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)
 		}
 		Get-PSFConfig -FullName config.import.test | ForEach-Object {
+			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)
+		}
+		Get-PSFConfig -FullName MetaJson | ForEach-Object {
 			$null = [PSFramework.Configuration.ConfigurationHost]::Configurations.Remove($_.FullName)
 		}
 	}
@@ -21,7 +27,7 @@
 		(Get-Command Import-PSFConfig).ParameterSets.Name | Should -Be 'Path', 'ModuleName'
 		foreach ($key in (Get-Command Import-PSFConfig).Parameters.Keys)
 		{
-			$key | Should -BeIn 'Path', 'ModuleName', 'ModuleVersion', 'Scope', 'IncludeFilter', 'ExcludeFilter', 'Peek', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+			$key | Should -BeIn 'Path', 'ModuleName', 'ModuleVersion', 'Scope', 'Schema', 'IncludeFilter', 'ExcludeFilter', 'Peek', 'AllowDelete', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
 		}
 	}
 	
@@ -225,6 +231,98 @@
 			Import-PSFConfig -ModuleName 'Import-PSFConfig'
 			Get-PSFConfigValue 'import-psfconfig.phase3.setting1' | Should -Be 42
 			Get-PSFConfigValue 'import-psfconfig.phase3.setting2' | Should -Be 23
+		}
+	}
+	
+	# MetaJson Configuration Schema Validation
+	Describe "Imports successfully MetaJson Schema Configuration" {
+		#region Json Configuration Files
+		$json1 = @'
+{
+    "ModuleName":  "MetaJson",
+    "Version":  1,
+    "Static":  {
+                   "Setting1":  42
+               },
+    "Object":  {
+                   "Setting3":  "H4sIAAAAAAAEALVXW2/iOBh9X2n/A8oz5ELCVYBUYLqLBiia0Blp20prErd468SR7UzL/vp1EkIS4gTa1bRSC/b5rj4+tkd3u39Y4zukDBF/rBiqoeqqoTTePeyzsbLnPBhqGnP20ANM9ZBDCSPPXHWIpwXkTdjtIcZaW9ctTbeUye+/NRoj4bPxDT4v3LGiJ0NicLsujUWjE/vAOPRUYQMd/vA00raS2RtKwUE+lRhmc+LTOv24tHMWuayMLINCZoXxfJDFnTpHVMQh9LDwn0k+lRLyFmGYfKuHroDoHsDTg4h+XsWlKs8qTcDE5hT5L5M77Iq59FsOsaEkYMUIdmM9VtbAg0piZkumb0OME8hs+CiyCR4roRtAoc+VSYQqIaYR4ss7YpwJBA3hSJtKfHwjhMeh5CG+vHPoR3RVJiXAfBshZhQCLgBbFOXc1o1BS2+3DHNr6EO9N+x01W7P7LQH7ZbeH+r6SJtvL7m5507RU7/o6a8qJ0vA+I3jQMak2fSHlq6a/V67N6hPpuhHlk7OVW02Pyji8P8nc3Lz8VziZbzhgp67kEPBhdPeKi7oSDsn7GglJZ29AXyvTFYnedpE0mRH0qTOCIWP2ZYcDi9z2E5Y/AmnVQ5ne4Td6l0WSVOMm1P0EyqpHLWLclSQqtJcUVl88AI9UYN6E3LixTRWj+5lolQ0l4tRSXASo1RmZlLJiTFl2cl6Mwtp1OslceIk5cqRwY8yJAWkXaTkJ3IhPbXRLLcqcnfVykoDaSJSRX6V2pVB5pA5FAVJtXf2HLFXKXiNcARfgXfkhZ6N/hXE0CqrFmLlij4igE91W9K6MwpJ+3INjbJYMh4VfVRxKWlkiU+Jccqjj+Qh517sT86/fJPvGaQxtSQdzuM2gLE3Ql05rqxX6biUMEefggABBoeYOSW3cpfnMhiP3XetYymuMrHMjt4x+33THLRHmpiqxN9SKHZUp9+zjG6va4m/MvxIO1feUk2ZipV2YKdGyCQsvcjAo/9fpGTX6cJnxG7hBTiuRthtDwGsPF08D/guy90k05KrZeVPiIMIr9T3zsW4FUFVccO/JLMXZPB4ttk+CBZ+zUFZbbwibohhEuxj5qk4xg6kuljW2uo8ZiAAO4QRR9FtRJTNIW027D0JsSs6H926mo1MbVjNKpDjNTlSFPb4TN8g8j1Qd17FhzI77ZXuBdUu7aUUka77jGAsSC9KZkf+iy5BnBv/23h4uPamINpQg2yeno6meDeKX9GmEPOQwrEPQ04BbjY24Q4j5ys8bMkrFEBj92z2O13gml0Lmp2np19ziOTffoUJ0cfsElWh4zJjmYrL5FmijNNkpyzYjPgcIF9IY837J1ouZeK2oh/5hXIKGLx4m9wC+gL5iVe9Gg2WcE7Opz+gyB056lK84XIsSpSw2fCYQyhGu4wW1rW02PV6oON0usbAtKDeH8hp8TllF6t5ts6SNToqyhL5r7E0FywKx1/eOKNKOhr/Z5P/ANjaD5pZEQAA"
+               },
+    "Dynamic":  {
+                    "Setting2":  "Foo: %COMPUTERNAME%"
+                }
+}
+'@
+		$json2 = @'
+{
+    "Version":  1,
+    "Static":  {
+                   "MetaJson.Setting4":  42
+               },
+    "Object":  {
+                   "MetaJson.Setting5":  "H4sIAAAAAAAEALVXW2/iOBh9X2n/A8oz5ELCVYBUYLqLBiia0Blp20prErd468SR7UzL/vp1EkIS4gTa1bRSC/b5rj4+tkd3u39Y4zukDBF/rBiqoeqqoTTePeyzsbLnPBhqGnP20ANM9ZBDCSPPXHWIpwXkTdjtIcZaW9ctTbeUye+/NRoj4bPxDT4v3LGiJ0NicLsujUWjE/vAOPRUYQMd/vA00raS2RtKwUE+lRhmc+LTOv24tHMWuayMLINCZoXxfJDFnTpHVMQh9LDwn0k+lRLyFmGYfKuHroDoHsDTg4h+XsWlKs8qTcDE5hT5L5M77Iq59FsOsaEkYMUIdmM9VtbAg0piZkumb0OME8hs+CiyCR4roRtAoc+VSYQqIaYR4ss7YpwJBA3hSJtKfHwjhMeh5CG+vHPoR3RVJiXAfBshZhQCLgBbFOXc1o1BS2+3DHNr6EO9N+x01W7P7LQH7ZbeH+r6SJtvL7m5507RU7/o6a8qJ0vA+I3jQMak2fSHlq6a/V67N6hPpuhHlk7OVW02Pyji8P8nc3Lz8VziZbzhgp67kEPBhdPeKi7oSDsn7GglJZ29AXyvTFYnedpE0mRH0qTOCIWP2ZYcDi9z2E5Y/AmnVQ5ne4Td6l0WSVOMm1P0EyqpHLWLclSQqtJcUVl88AI9UYN6E3LixTRWj+5lolQ0l4tRSXASo1RmZlLJiTFl2cl6Mwtp1OslceIk5cqRwY8yJAWkXaTkJ3IhPbXRLLcqcnfVykoDaSJSRX6V2pVB5pA5FAVJtXf2HLFXKXiNcARfgXfkhZ6N/hXE0CqrFmLlij4igE91W9K6MwpJ+3INjbJYMh4VfVRxKWlkiU+Jccqjj+Qh517sT86/fJPvGaQxtSQdzuM2gLE3Ql05rqxX6biUMEefggABBoeYOSW3cpfnMhiP3XetYymuMrHMjt4x+33THLRHmpiqxN9SKHZUp9+zjG6va4m/MvxIO1feUk2ZipV2YKdGyCQsvcjAo/9fpGTX6cJnxG7hBTiuRthtDwGsPF08D/guy90k05KrZeVPiIMIr9T3zsW4FUFVccO/JLMXZPB4ttk+CBZ+zUFZbbwibohhEuxj5qk4xg6kuljW2uo8ZiAAO4QRR9FtRJTNIW027D0JsSs6H926mo1MbVjNKpDjNTlSFPb4TN8g8j1Qd17FhzI77ZXuBdUu7aUUka77jGAsSC9KZkf+iy5BnBv/23h4uPamINpQg2yeno6meDeKX9GmEPOQwrEPQ04BbjY24Q4j5ys8bMkrFEBj92z2O13gml0Lmp2np19ziOTffoUJ0cfsElWh4zJjmYrL5FmijNNkpyzYjPgcIF9IY837J1ouZeK2oh/5hXIKGLx4m9wC+gL5iVe9Gg2WcE7Opz+gyB056lK84XIsSpSw2fCYQyhGu4wW1rW02PV6oON0usbAtKDeH8hp8TllF6t5ts6SNToqyhL5r7E0FywKx1/eOKNKOhr/Z5P/ANjaD5pZEQAA"
+               },
+    "Dynamic":  {
+                    "MetaJson.Setting6":  "Foo: %COMPUTERNAME%"
+                }
+}
+'@
+		$json3 = @'
+{
+    "Static":  {
+                   "Setting7":  42
+               },
+    "ModuleName":  "MetaJson",
+    "Include":  [
+                     ".\\MetaJson.include1.json",
+                     ".\\%COMPUTERNAME%\\MetaJson.include2.json"
+                 ],
+    "Version":  1
+}
+'@
+		$json4 = @'
+{
+    "Static":  {
+                   "Setting7":  23
+               },
+    "ModuleName":  "MetaJson",
+    "Version":  1
+}
+'@
+		$json5 = @'
+{
+    "Dynamic":  {
+                   "%COMPUTERNAME%":  7
+                },
+    "ModuleName":  "MetaJson",
+    "Version":  1
+}
+'@
+		Set-Content -Value $json1 -Path 'testdrive:\MetaJson1.json'
+		Set-Content -Value $json2 -Path 'testdrive:\MetaJson2.json'
+		Set-Content -Value $json3 -Path 'testdrive:\MetaJson3.json'
+		Set-Content -Value $json4 -Path 'testdrive:\MetaJson.include1.json'
+		$null = New-Item -Path 'testdrive:\' -Name $env:COMPUTERNAME -ItemType Directory
+		Set-Content -Value $json5 -Path "testdrive:\$($env:COMPUTERNAME)\MetaJson.include2.json"
+		#endregion Json Configuration Files
+		
+		It "Should import a plain file import with Modulename correctly" {
+			{ Import-PSFConfig -Path 'testdrive:\MetaJson1.json' -Schema MetaJson -EnableException } | Should -Not -Throw
+			Get-PSFConfigValue -FullName MetaJson.Setting1 | Should -Be 42
+			Get-PSFConfigValue -FullName MetaJson.Setting2 | Should -Be "Foo: $env:COMPUTERNAME"
+			(Get-PSFConfigValue -FullName MetaJson.Setting3).Name | Should -Be 'Old'
+		}
+		
+		It "Should import a plain file import without Modulename correctly" {
+			{ Import-PSFConfig -Path 'testdrive:\MetaJson2.json' -Schema MetaJson -EnableException } | Should -Not -Throw
+			Get-PSFConfigValue -FullName MetaJson.Setting4 | Should -Be 42
+			Get-PSFConfigValue -FullName MetaJson.Setting6 | Should -Be "Foo: $env:COMPUTERNAME"
+			(Get-PSFConfigValue -FullName MetaJson.Setting5).Name | Should -Be 'Old'
+		}
+		
+		It "Should import a file with include files correctly" {
+			{ Import-PSFConfig -Path 'testdrive:\MetaJson3.json' -Schema MetaJson -EnableException } | Should -Not -Throw
+			Get-PSFConfigValue -FullName MetaJson.Setting7 | Should -Be 23
+			Get-PSFConfigValue -FullName "MetaJson.$($env:COMPUTERNAME)" | Should -Be 7
 		}
 	}
 }

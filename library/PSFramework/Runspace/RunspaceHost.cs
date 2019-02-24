@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace PSFramework.Runspace
 {
@@ -15,11 +17,20 @@ namespace PSFramework.Runspace
         /// <summary>
         /// The dictionary containing the definitive list of unique Runspace
         /// </summary>
-        public static Dictionary<string, RunspaceContainer> Runspaces = new Dictionary<string, RunspaceContainer>();
+        public static ConcurrentDictionary<string, RunspaceContainer> Runspaces = new ConcurrentDictionary<string, RunspaceContainer>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// List of all runspace bound values in use
         /// </summary>
-        internal static List<RunspaceBoundValue> _RunspaceBoundValues = new List<RunspaceBoundValue>();
+        internal static List<RunspaceBoundValue> _RunspaceBoundValues
+        {
+            get
+            {
+                lock (_runspaceBoundValuesLock)
+                    return _runspaceBoundValues;
+            }
+        }
+        private static List<RunspaceBoundValue> _runspaceBoundValues = new List<RunspaceBoundValue>();
+        private static readonly object _runspaceBoundValuesLock = new object();
     }
 }

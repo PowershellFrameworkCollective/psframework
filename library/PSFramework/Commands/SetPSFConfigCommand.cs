@@ -107,6 +107,12 @@ namespace PSFramework.Commands
         public SwitchParameter ModuleExport;
 
         /// <summary>
+        /// Allow the setting to be deleted from memory. Has no effect after initialization.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter AllowDelete;
+
+        /// <summary>
         /// Do not apply the validation script when changing values.
         /// </summary>
         [Parameter()]
@@ -198,7 +204,7 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.Keys.Contains(Validation.ToLower()))
+            if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.ContainsKey(Validation))
             {
                 InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationValidation, Validation, String.Join(", ", ConfigurationHost.Validation.Keys), EnableException.ToBool()));
                 _KillIt = true;
@@ -208,7 +214,7 @@ namespace PSFramework.Commands
             #region Name Interpretation
             if (!String.IsNullOrEmpty(FullName))
             {
-                _NameFull = FullName.Trim('.').ToLower();
+                _NameFull = FullName.Trim('.');
                 if (!_NameFull.Contains('.'))
                 {
                     InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, FullName, EnableException.ToBool()));
@@ -224,13 +230,13 @@ namespace PSFramework.Commands
             {
                 if (!String.IsNullOrEmpty(Module))
                 {
-                    _NameModule = Module.Trim('.', ' ').ToLower();
-                    _NameName = Name.Trim('.', ' ').ToLower();
+                    _NameModule = Module.Trim('.', ' ');
+                    _NameName = Name.Trim('.', ' ');
                     _NameFull = String.Format("{0}.{1}", _NameModule, _NameName);
                 }
                 else
                 {
-                    _NameFull = Name.Trim('.').ToLower();
+                    _NameFull = Name.Trim('.');
                     if (!_NameFull.Contains('.'))
                     {
                         InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, Name, EnableException.ToBool()));
@@ -300,9 +306,13 @@ namespace PSFramework.Commands
             _Config.Name = _NameName;
             _Config.Module = _NameModule;
             _Config.Value = Value;
-
-            ApplyCommonSettings();
             
+            ApplyCommonSettings();
+
+            // Do it again even though it is part of common settings
+            // The common settings are only applied if the parameter is set, this always will.
+            _Config.AllowDelete = AllowDelete.ToBool();
+
             _Config.Initialized = true;
             ConfigurationHost.Configurations[_NameFull] = _Config;
 
@@ -324,6 +334,7 @@ namespace PSFramework.Commands
             _Config.Name = _NameName;
             _Config.Module = _NameModule;
             _Config.Value = Value;
+            
             ApplyCommonSettings();
             ConfigurationHost.Configurations[_NameFull] = _Config;
         }
@@ -418,7 +429,7 @@ namespace PSFramework.Commands
         }
 
         /// <summary>
-        /// Abstracts out 
+        /// Abstracts out the regular settings that keep getting applied
         /// </summary>
         private void ApplyCommonSettings()
         {
@@ -427,13 +438,16 @@ namespace PSFramework.Commands
             if (Handler != null)
                 _Config.Handler = Handler;
             if (!String.IsNullOrEmpty(Validation))
-                _Config.Validation = ConfigurationHost.Validation[Validation.ToLower()];
+                _Config.Validation = ConfigurationHost.Validation[Validation];
             if (Hidden.IsPresent)
                 _Config.Hidden = Hidden;
             if (SimpleExport.IsPresent)
-                _Config.SimpleExport = SimpleExport;
+                _Config.SimpleExport = SimpleExport.ToBool();
             if (ModuleExport.IsPresent)
-                _Config.ModuleExport = ModuleExport;
+                _Config.ModuleExport = ModuleExport.ToBool();
+            // Will be silently ignored if the setting is already initialized.
+            if (AllowDelete.IsPresent)
+                _Config.AllowDelete = AllowDelete.ToBool();
         }
         #endregion Private Methods
     }

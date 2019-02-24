@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace PSFramework.Localization
@@ -21,12 +22,12 @@ namespace PSFramework.Localization
         /// <summary>
         /// List of strings registered
         /// </summary>
-        public static Dictionary<string, LocalString> Strings = new Dictionary<string, LocalString>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, LocalString> Strings = new ConcurrentDictionary<string, LocalString>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Mapping module name to the language to use for logging.
         /// </summary>
-        public static Dictionary<string, string> ModuleLoggingLanguage = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, string> ModuleLoggingLanguage = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Configure the module specific logging language.
@@ -36,8 +37,9 @@ namespace PSFramework.Localization
         public static void SetLoggingLanguage(string Module, string Language)
         {
             ModuleLoggingLanguage[Module] = Language;
+            string dummy;
             if (String.IsNullOrEmpty(Language))
-                ModuleLoggingLanguage.Remove(Module);
+                ModuleLoggingLanguage.TryRemove(Module, out dummy);
         }
 
         /// <summary>
@@ -90,6 +92,36 @@ namespace PSFramework.Localization
             if (!Strings.ContainsKey(FullName))
                 return String.Format("<String Key not found: {0}>", FullName);
             return Strings[FullName].LogValue;
+        }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings for the purpose of logging
+        /// </summary>
+        /// <param name="FullName">The name of the string to request. Include the modulename</param>
+        /// <param name="StringValues">The values to format into the string</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string ReadLog(string FullName, object[] StringValues)
+        {
+            if (!Strings.ContainsKey(FullName))
+                return String.Format("<String Key not found: {0}>", FullName);
+            return String.Format(Strings[FullName].LogValue, StringValues);
+        }
+
+        /// <summary>
+        /// Reads a localized string from the list of available strings for the purpose of logging
+        /// </summary>
+        /// <param name="ModuleName">The name of the module the string belongs to.</param>
+        /// <param name="Name">The individual name of the setting.</param>
+        /// <param name="StringValues">The values to format into the string</param>
+        /// <returns>The localized string requested. Empty string if nothing.</returns>
+        public static string ReadLog(string ModuleName, string Name, object[] StringValues)
+        {
+            string fullname = Name;
+            if (!String.IsNullOrEmpty(ModuleName) && (ModuleName != "<Unknown>"))
+                fullname = String.Format("{0}.{1}", ModuleName, Name);
+            if (!Strings.ContainsKey(fullname))
+                return String.Format("<String Key not found: {0}>", fullname);
+            return String.Format(Strings[fullname].LogValue, StringValues);
         }
     }
 }

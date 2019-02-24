@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Management.Automation;
 
 namespace PSFramework.Configuration
@@ -13,12 +14,34 @@ namespace PSFramework.Configuration
         /// <summary>
         /// Hashtable containing all the configuration entries
         /// </summary>
-        public static Dictionary<string, Config> Configurations = new Dictionary<string, Config>();
+        public static ConcurrentDictionary<string, Config> Configurations = new ConcurrentDictionary<string, Config>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Hashtable containing all the registered validations
         /// </summary>
-        public static Dictionary<string, ScriptBlock> Validation = new Dictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> Validation = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// The list of configuration definitions, controlling how configuration data is ingested.
+        /// </summary>
+        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Deletes a configuration setting in compliance with policy.
+        /// </summary>
+        /// <param name="FullName">The full name of the setting the remove</param>
+        /// <returns>Whether the deletion was successful</returns>
+        public static bool DeleteConfiguration(string FullName)
+        {
+            if (!Configurations.ContainsKey(FullName))
+                throw new ItemNotFoundException(String.Format(Localization.LocalizationHost.ReadLog("PSFramework.Assembly.ConfigurationHost.ConfigNotFound"), FullName));
+            Config configItem = Configurations[FullName];
+            if (!configItem.AllowDelete || configItem.PolicyEnforced)
+                return false;
+
+            Configurations.TryRemove(FullName, out configItem);
+            return true;
+        }
 
         /// <summary>
         /// Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.

@@ -7,6 +7,8 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter FullName -Na
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
 Register-PSFTeppArgumentCompleter -Command Get-PSFConfig -Parameter Name -Name 'PSFramework-config-name'
 
+Register-PSFTeppArgumentCompleter -Command Import-PSFConfig -Parameter Schema -Name 'PSFramework-Config-Schema'
+
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter FullName -Name 'PSFramework-config-fullname'
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Module -Name 'PSFramework-config-module'
 Register-PSFTeppArgumentCompleter -Command Set-PSFConfig -Parameter Name -Name 'PSFramework-config-name'
@@ -21,6 +23,12 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFConfigValue -Parameter FullNam
 Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter FullName -Name 'PSFramework-Unregister-PSFConfig-FullName'
 Register-PSFTeppArgumentCompleter -Command Unregister-PSFConfig -Parameter Module -Name 'PSFramework-Unregister-PSFConfig-Module'
 #endregion Configuration
+
+#region Features
+Register-PSFTeppArgumentCompleter -Command Get-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+Register-PSFTeppArgumentCompleter -Command Set-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+Register-PSFTeppArgumentCompleter -Command Test-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
+#endregion Features
 
 #region License
 Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Name 'PSFramework-license-name'
@@ -68,11 +76,13 @@ Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Pa
 #endregion Tab Completion
 
 #region Utility
+Register-PSFTeppArgumentCompleter -Command ConvertFrom-PSFArray -Parameter PropertyName -Name PSFramework-Input-ObjectProperty
+
+Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name PSFramework-utility-psprovider
+
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter Property -Name PSFramework-Input-ObjectProperty
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExpandProperty -Name PSFramework-Input-ObjectProperty
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ExcludeProperty -Name PSFramework-Input-ObjectProperty
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowProperty -Name PSFramework-Input-ObjectProperty
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter ShowExcludeProperty -Name PSFramework-Input-ObjectProperty
-
-Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name 'PSFramework-utility-psprovider'
 #endregion Utility

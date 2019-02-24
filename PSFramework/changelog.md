@@ -1,4 +1,39 @@
 ﻿# CHANGELOG
+## 1.0.0 : 2019-02-24
+Fundamental Change: The configuration system is now extensible in how it processes input.
+This unlocks fully supported custom configuration layouts, stored in any preferred notation, hosted by any preferred platform.
+
+Component added: Feature Management
+Enables declaring feature flags that can be set both globally as well as controlled or overridden on a per-module basis.
+
+ - New: Command Register-PSFConfigSchema extends the type of input understood as configuration data.
+ - New: Command Remove-PSFConfig allows to remove configuration items from memory that have been flagged as deletable.
+ - New: Command Select-PSFPropertyValue selects the value of properties based on various conditions.
+ - New: Command Register-PSFSessionObjectType registers session objects for use in Session Containers.
+ - New: Command New-PSFSessionContainer creates a multi-session object in order to easily be able to pass through sessions to a single computer with multiple protocols.
+ - New: Command ConvertFrom-PSFArray flattens object properties for export to csv or other destinations that cannot handle tiered data.
+ - New: Command Invoke-PSFProtectedCommand combines should process testing, error handling, messages & logging and flow control into one, neat package.
+ - New: Command Get-PSFFeature lists registered features that can be enabled or disabled.
+ - New: Command Set-PSFFeature enables or disables features supporting this component.
+ - New: Command Test-PSFFeature resolves the enablement status of a feature.
+ - New: Command Register-PSFFeature registers a feature within the feature component.
+ - New: Optional Feature: PSFramework.InheritEnableException allows inheriting the EnableException variable by commands offering that parameter. This feature is only available on a per-module basis.
+ - New: Configuration Schema: 'default'. Old version configuration schema for Import-PSFConfig.
+ - New: Configuration Schema: 'MetaJson'. Capable of ingesting complex json files, evaluating and expanding environment variables and loading include files.
+ - Upd: Configuration: Removed enforced lowercasing of configuration entries. Configuration as published before had not been case-sensitive, the new version is still not case sensitive.
+ - Upd: ConvertTo-PSFHashTable now correctly operates against all dictionaries, including `$PSBoundParameters`
+ - Upd: Invoke-PSFCommand will reuse the PSSession in a Session Container.
+ - Upd: Import-PSFConfig now has a `-AllowDelete` parameter, enabling the later deletion of imported configuration settings.
+ - Upd: Test-PSFShouldProcess now no longer requires specifying the `-PSCmdlet` parameter.
+ - Upd: Test-PSFShouldProcess now supports localized strings integration.
+ - Upd: Set-PSFConfig now has a `-AllowDelete` parameter, enabling the later deletion of a configuration setting.
+ - Upd: Import-PSFConfig now has a `-Schema` parameter, allowing to switch between configuration schemata.
+ - Upd: Major push to avoid import static resource conflict when importing in many runspaces in parallel
+ - Upd: Wait-PSFMessage will no longer cause lengthy delays when waiting for the logs to flush - now it _knows_ when it's over, rather than guessing with a margin.
+ - Fix: Write-PSFMessage strings: Unknown keys will no longer cause an empty message on screen, instead display the missing key.
+ - Fix: Configuration - DefaultValue would be overwritten each time a configuration item's `Initialize` property is set (rather than only on the first time it is set to true)
+ - Fix: Logs flushing would not reliably trigger in all circumstances
+
 ## 0.10.31.179 : 2019-02-07
  - Fix: Broken application of module / tag filters on logging providers (#272)
  - Fix: Write-PSFMessage parameter `-String` would also require a `-StringValues` to be specified

@@ -112,6 +112,7 @@
 		foreach ($computer in $ComputerName)
 		{
 			if ($computer.Type -eq "PSSession") { $sessionsToInvoke += $computer.InputObject }
+			elseif ($sessionObject = $computer.InputObject -as [System.Management.Automation.Runspaces.PSSession]) { $sessionsToInvoke += $sessionObject }
 			else
 			{
 				#region Handle localhost
@@ -138,7 +139,7 @@
 					Write-PSFMessage -Level Verbose -Message "Establishing connection to $computer" -Target $computer
 					try
 					{
-						if ($Credential) { $pSSession = New-PSSession -ComputerName $computer -Credential $Credential -ErrorAction Stop}
+						if ($Credential) { $pSSession = New-PSSession -ComputerName $computer -Credential $Credential -ErrorAction Stop }
 						else { $pSSession = New-PSSession -ComputerName $computer -ErrorAction Stop }
 					}
 					catch

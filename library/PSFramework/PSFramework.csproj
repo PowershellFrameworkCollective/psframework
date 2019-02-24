@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
+    <Compile Include="Commands\PSFCmdlet.cs" />
     <Compile Include="Commands\RemovePSFNullCommand.cs" />
     <Compile Include="Commands\SelectPSFObjectCommand.cs" />
     <Compile Include="Commands\SetPSFConfigCommand.cs" />
@@ -63,11 +65,14 @@
     <Compile Include="ComputerManagement\ComputerManagementHost.cs" />
     <Compile Include="ComputerManagement\PSSessionContainer.cs" />
     <Compile Include="ComputerManagement\PSSessionInfo.cs" />
+    <Compile Include="ComputerManagement\SessionContainer.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\ConfigScope.cs" />
     <Compile Include="Configuration\ConfigurationHost.cs" />
     <Compile Include="Configuration\ConfigurationValue.cs" />
     <Compile Include="Configuration\ConfigurationValueType.cs" />
+    <Compile Include="Feature\FeatureHost.cs" />
+    <Compile Include="Feature\FeatureItem.cs" />
     <Compile Include="FlowControl\OperatingSystem.cs" />
     <Compile Include="FlowControl\PSEdition.cs" />
     <Compile Include="License\License.cs" />
@@ -78,6 +83,7 @@
     <Compile Include="Localization\LocalString.cs" />
     <Compile Include="Localization\LocalStrings.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
+    <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
     <Compile Include="Message\CallStack.cs" />
@@ -95,6 +101,7 @@
     <Compile Include="Message\TransformError.cs" />
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
+    <Compile Include="Meta\CallerInfo.cs" />
     <Compile Include="Meta\PipelineCommand.cs" />
     <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />

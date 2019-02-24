@@ -53,7 +53,8 @@
 			
 			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item.ToLower()))
 			{
-				[PSFramework.Message.MessageHost]::MessageLevelModifiers.Remove($item.ToLower())
+				$dummy = $null
+				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item.ToLower(), [ref] $dummy)
 			}
 			else
 			{
@@ -64,7 +65,8 @@
 		{
 			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item.Name))
 			{
-				[PSFramework.Message.MessageHost]::MessageLevelModifiers.Remove($item.Name)
+				$dummy = $null
+				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item.Name, [ref]$dummy)
 			}
 			else
 			{

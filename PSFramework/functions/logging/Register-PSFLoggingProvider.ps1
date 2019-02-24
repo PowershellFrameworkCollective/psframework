@@ -189,7 +189,8 @@
 	try { if ($RegistrationEvent) { . $RegistrationEvent } }
 	catch
 	{
-		[PSFramework.Logging.ProviderHost]::Providers.Remove($Name.ToLower())
+		$dummy = $null
+		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name.ToLower(), [ref] $dummy)
 		Stop-PSFFunction -Message "Failed to register logging provider '$Name' - Registration event failed." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
 		return
 	}
