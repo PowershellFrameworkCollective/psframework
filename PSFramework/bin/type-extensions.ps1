@@ -6,5 +6,5 @@ param (
 
 $dummyItem = $null
 $null = $this.TryRemove($Item, [ref] $dummyItem)
-'@))
+'@)) -Force
 #endregion Configuration Static Remove() Compatibility
