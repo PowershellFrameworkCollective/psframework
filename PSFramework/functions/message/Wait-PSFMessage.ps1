@@ -49,7 +49,7 @@
 			
 			# Catch pending messages
 			if ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0) { return $false }
-			if ([PSFramework.Message.LogHost]::OutQueueError.Count -eq 0) { return $false }
+			if ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0) { return $false }
 			
 			# Catch whether currently processing a message
 			if ([PSFramework.Logging.ProviderHost]::LoggingState -like 'Writing') { return $false }

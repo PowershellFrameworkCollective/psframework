@@ -71,6 +71,8 @@
     <Compile Include="Configuration\ConfigurationHost.cs" />
     <Compile Include="Configuration\ConfigurationValue.cs" />
     <Compile Include="Configuration\ConfigurationValueType.cs" />
+    <Compile Include="Feature\FeatureHost.cs" />
+    <Compile Include="Feature\FeatureItem.cs" />
     <Compile Include="FlowControl\OperatingSystem.cs" />
     <Compile Include="FlowControl\PSEdition.cs" />
     <Compile Include="License\License.cs" />

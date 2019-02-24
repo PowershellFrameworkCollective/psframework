@@ -107,7 +107,7 @@ namespace PSFramework.Commands
 
             _Caller = new Meta.CallerInfo(GetCaller());
 
-            if (!MyInvocation.BoundParameters.ContainsKey("EnableException"))
+            if (!MyInvocation.BoundParameters.ContainsKey("EnableException") && Feature.FeatureHost.ReadModuleFlag("PSFramework.InheritEnableException", _Caller.CallerModule))
                 EnableException = LanguagePrimitives.IsTrue(GetVariableValue("EnableException"));
         }
 

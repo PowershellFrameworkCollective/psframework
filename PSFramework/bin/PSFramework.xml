@@ -1244,6 +1244,102 @@
             The value is something indeterminate, but possibly complex
             </summary>
         </member>
+        <member name="T:PSFramework.Feature.FeatureHost">
+            <summary>
+            Manages the feature flag component
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost._ModuleFeatureFlags">
+            <summary>
+            Repository of features modules may opt into or out of
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost._ExperimentalFeatureFlags">
+            <summary>
+            Repository of features and their global enablement state
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureHost.Features">
+            <summary>
+            List of all registered features.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.WriteModuleFlag(System.String,System.String,System.Boolean)">
+            <summary>
+            Sets a module-scope feature flag
+            </summary>
+            <param name="ModuleName">The module for which to set the feature flag</param>
+            <param name="FeatureFlag">The flag to set it to</param>
+            <param name="Value">The value to set it to</param>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.WriteGlobalFlag(System.String,System.Boolean)">
+            <summary>
+            Sets a global feature flag
+            </summary>
+            <param name="FeatureFlag">The flag to set</param>
+            <param name="Value">The value to apply</param>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.ReadFlag(System.String,System.String)">
+            <summary>
+            Returns whether a given feature is enabled either globally or module locally
+            </summary>
+            <param name="FeatureFlag">The flag to test</param>
+            <param name="ModuleName">The module to look up (specifying this is optional, omitting this parameter will cause it to only test global flags)</param>
+            <returns>Whether the feature is enabled</returns>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureHost.ReadModuleFlag(System.String,System.String)">
+            <summary>
+            Returns whether a module specific feature is enabled or not
+            </summary>
+            <param name="FeatureFlag">The feature flag to check for</param>
+            <param name="ModuleName">The module to check in</param>
+            <returns>Whether the features asked for is enabled for the module specified</returns>
+        </member>
+        <member name="T:PSFramework.Feature.FeatureItem">
+            <summary>
+            Represents a feature a module offers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Name">
+            <summary>
+            The name of the feature
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Owner">
+            <summary>
+            The owning module
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Global">
+            <summary>
+            Whether the feature can be set globally
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.ModuleSpecific">
+            <summary>
+            Whether the feature can be overridden on a per module bases.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Feature.FeatureItem.Description">
+            <summary>
+            The general description of the feature for human consumption
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureItem.#ctor">
+            <summary>
+            Creates an empty feature
+            </summary>
+        </member>
+        <member name="M:PSFramework.Feature.FeatureItem.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Creates a feature all fileld out.
+            </summary>
+            <param name="Name"></param>
+            <param name="Owner"></param>
+            <param name="Global"></param>
+            <param name="ModuleSpecific"></param>
+            <param name="Description"></param>
+        </member>
         <member name="T:PSFramework.FlowControl.OperatingSystem">
             <summary>
             The various operating systems PowerShell can run on
