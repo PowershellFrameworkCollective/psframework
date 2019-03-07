@@ -158,7 +158,7 @@ $final_event = {
 #region Function Extension / Integration
 # Script that generates the necessary dynamic parameter for Set-PSFLoggingProvider
 $configurationParameters = {
-	$configroot = "psframework.logging.filesystem"
+	$configroot = "PSFramework.Logging.FileSystem"
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
 	
@@ -179,7 +179,7 @@ $configurationParameters = {
 
 # Script that is executes when configuring the provider using Set-PSFLoggingProvider
 $configurationScript = {
-	$configroot = "psframework.logging.filesystem"
+	$configroot = "PSFramework.Logging.FileSystem"
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
 	
