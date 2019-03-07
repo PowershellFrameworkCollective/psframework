@@ -26,6 +26,9 @@
 		[string[]]
 		$Exclude,
 		
+		[string[]]
+		$Include,
+		
 		[Parameter(ValueFromPipeline = $true)]
 		$InputObject
 	)
@@ -39,6 +42,13 @@
 			{
 				$hashTable = $item.Clone()
 				foreach ($name in $Exclude) { $hashTable.Remove($name) }
+				if ($Include)
+				{
+					foreach ($key in ([object[]]$hashTable.Keys))
+					{
+						if ($key -notin $Include) { $hashTable.Remove($key) }
+					}
+				}
 				$hashTable
 			}
 			elseif ($item -is [System.Collections.IDictionary])
@@ -47,6 +57,7 @@
 				foreach ($name in $item.Keys)
 				{
 					if ($name -in $Exclude) { continue }
+					if ($Include -and ($name -notin $Include)) { continue }
 					$hashTable[$name] = $item[$name]
 				}
 				$hashTable
@@ -57,6 +68,8 @@
 				foreach ($property in $item.PSObject.Properties)
 				{
 					if ($property.Name -in $Exclude) { continue }
+					if ($Include -and ($property.Name -notin $Include)) { continue }
+					
 					$hashTable[$property.Name] = $property.Value
 				}
 				$hashTable
