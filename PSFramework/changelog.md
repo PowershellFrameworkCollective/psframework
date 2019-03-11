@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+## 1.0.2 : 2019-03-11
+ - Upd: ConvertTo-PSFHashtable now supports `-Include` & `-IncludeEmpty` parameter
+ - Fix: Broken dynamic parameters for logging providers (#287)
+
 ## 1.0.0 : 2019-02-24
 Fundamental Change: The configuration system is now extensible in how it processes input.
 This unlocks fully supported custom configuration layouts, stored in any preferred notation, hosted by any preferred platform.
