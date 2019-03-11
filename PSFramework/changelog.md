@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
-##
- - Upd: ConvertTo-PSFHashtable now supports `-Include` parameter
+## 1.0.2 : 2019-03-11
+ - Upd: ConvertTo-PSFHashtable now supports `-Include` & `-IncludeEmpty` parameter
  - Fix: Broken dynamic parameters for logging providers (#287)
 
 ## 1.0.0 : 2019-02-24
