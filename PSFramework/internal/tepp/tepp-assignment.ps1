@@ -78,6 +78,9 @@ Register-PSFTeppArgumentCompleter -Command Register-PSFTeppArgumentCompleter -Pa
 #region Utility
 Register-PSFTeppArgumentCompleter -Command ConvertFrom-PSFArray -Parameter PropertyName -Name PSFramework-Input-ObjectProperty
 
+Register-PSFTeppArgumentCompleter -Command ConvertTo-PSFHashtable -Parameter Include -Name PSFramework-Input-ObjectProperty
+Register-PSFTeppArgumentCompleter -Command ConvertTo-PSFHashtable -Parameter Exclude -Name PSFramework-Input-ObjectProperty
+
 Register-PSFTeppArgumentCompleter -Command Resolve-PSFPath -Parameter Provider -Name PSFramework-utility-psprovider
 
 Register-PSFTeppArgumentCompleter -Command Select-PSFObject -Parameter Property -Name PSFramework-Input-ObjectProperty
