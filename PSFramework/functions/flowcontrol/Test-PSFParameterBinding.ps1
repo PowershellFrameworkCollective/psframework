@@ -16,6 +16,13 @@
 	
 		.PARAMETER And
 			All specified parameters must be present, rather than at least one of them.
+	
+		.PARAMETER Mode
+			Parameters can be explicitly bound or as scriptblocks to be invoked for each item piped to the command.
+			The mode determines, which will be tested for.
+			Supported Modes: Any, Explicit, PipeScript.
+			By default, any will do.
+			Whether a parameter was bound as PipeScript is only detectable during the begin block.
         
         .PARAMETER BoundParameters
             The hashtable of bound parameters. Is automatically inherited from the calling function via default value. Needs not be bound explicitly.
@@ -51,6 +58,10 @@
 		[switch]
 		$And,
 		
+		[ValidateSet('Any', 'Explicit', 'PipeScript')]
+		[string]
+		$Mode = 'Any',
+		
 		[object]
 		$BoundParameters = (Get-PSCallStack)[0].InvocationInfo.BoundParameters
 	)
@@ -63,16 +74,30 @@
 	{
 		$test = $false
 	}
+	$pipeScriptForbidden = $Mode -eq "Explicit"
+	$explicitForbidden = $Mode -eq "PipeScript"
 	
 	foreach ($name in $ParameterName)
 	{
+		$isPipeScript = ($BoundParameters.$name.PSObject.TypeNames -eq 'System.Management.Automation.CmdletParameterBinderController+DelayedScriptBlockArgument') -as [bool]
 		if ($And)
 		{
-			if (-not $BoundParameters.ContainsKey($name)) { $test = $false }
+			if (-not $BoundParameters.ContainsKey($name))
+			{
+				$test = $false
+				continue
+			}
+			if ($isPipeScript -and $pipeScriptForbidden) { $test = $false }
+			if (-not $isPipeScript -and $explicitForbidden) { $test = $false }
+			
 		}
 		else
 		{
-			if ($BoundParameters.ContainsKey($name)) { $test = $true }
+			if ($BoundParameters.ContainsKey($name))
+			{
+				if ($isPipeScript -and -not $pipeScriptForbidden) { $test = $true }
+				if (-not $isPipeScript -and -not $explicitForbidden) { $test = $true }
+			}
 		}
 	}
 	

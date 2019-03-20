@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSFramework.TaskEngine
 {
@@ -16,12 +12,7 @@ namespace PSFramework.TaskEngine
         /// <summary>
         /// The register of available tasks.
         /// </summary>
-        public static ConcurrentDictionary<string, PsfTask> Tasks = new ConcurrentDictionary<string, PsfTask>();
-
-        /// <summary>
-        /// Cache where modules can store cached data provided by tasks
-        /// </summary>
-        public static ConcurrentDictionary<string, Hashtable> Cache = new ConcurrentDictionary<string, Hashtable>();
+        public static ConcurrentDictionary<string, PsfTask> Tasks = new ConcurrentDictionary<string, PsfTask>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Whether there are any due tasks
@@ -67,6 +58,77 @@ namespace PSFramework.TaskEngine
                     tempTask = task;
 
             return tempTask;
+        }
+
+        /// <summary>
+        /// Cache where modules can store cached data provided by tasks
+        /// </summary>
+        private static ConcurrentDictionary<string, ConcurrentDictionary<string, CacheItem>> Cache = new ConcurrentDictionary<string, ConcurrentDictionary<string, CacheItem>>(StringComparer.InvariantCultureIgnoreCase);
+        
+        /// <summary>
+        /// Return a cache item
+        /// </summary>
+        /// <param name="Module">The module the cached data belongs to</param>
+        /// <param name="Name">The cache entry the setting</param>
+        /// <returns>The cache item storing data and potentially data gathering script.</returns>
+        public static CacheItem GetCacheItem(string Module, string Name)
+        {
+            if (!Cache.ContainsKey(Module))
+                return null;
+            if (!Cache[Module].ContainsKey(Name))
+                return null;
+
+            return Cache[Module][Name];
+        }
+
+        /// <summary>
+        /// Creates a new cache item
+        /// </summary>
+        /// <param name="Module"></param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public static CacheItem NewCacheItem(string Module, string Name)
+        {
+            lock (newCacheLock)
+            {
+                if (!Cache.ContainsKey(Module))
+                    Cache[Module] = new ConcurrentDictionary<string, CacheItem>(StringComparer.InvariantCultureIgnoreCase);
+                if (!Cache[Module].ContainsKey(Name))
+                    Cache[Module][Name] = new CacheItem(Module, Name);
+
+                return Cache[Module][Name];
+            }
+        }
+        private static object newCacheLock;
+
+        /// <summary>
+        /// Return whether a given cache item has been created already.
+        /// </summary>
+        /// <param name="Module"></param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public static bool TestCacheItem(string Module, string Name)
+        {
+            lock (newCacheLock)
+            {
+                if (!Cache.ContainsKey(Module))
+                    return false;
+                if (!Cache[Module].ContainsKey(Name))
+                    return false;
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Clears expired data in order to vacate memory.
+        /// </summary>
+        public static void ClearExpiredCacheData()
+        {
+            foreach (string module in Cache.Keys)
+                foreach (string name in Cache[module].Keys)
+                    if (Cache[module][name].Expired)
+                        Cache[module][name].Value = null;
         }
     }
 }

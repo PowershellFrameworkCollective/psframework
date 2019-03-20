@@ -23,7 +23,6 @@
 	
 			Retrieves the information stored under 'mymodule.maintenancetask'
 	#>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFTaskEngineCache')]
 	Param (
 		[Parameter(Mandatory = $true)]
@@ -37,9 +36,20 @@
 		$Name
 	)
 	
-	$tempModule = $Module.ToLower()
-	$tempName = $Name.ToLower()
+	$cacheItem = [PSFramework.TaskEngine.TaskHost]::GetCacheItem($Module, $Name)
+	if (-not $cacheItem) { return }
 	
-	try { [PSFramework.TaskEngine.TaskHost]::Cache[$tempModule][$tempName] }
-	catch { }
+	if (-not $cacheItem.Expired) { return $cacheItem.Value }
+	
+	#region Expired Data
+	# Accessing an expired cache item value will clear remaining data
+	$null = $cacheItem.Value
+	
+	if ($cacheItem.Collector)
+	{
+		try { $cacheItem.Value = $cacheItem.Collector.Invoke($cacheItem.CollectorArgument) }
+		catch { throw }
+		$cacheItem.Value
+	}
+	#endregion Expired Data
 }

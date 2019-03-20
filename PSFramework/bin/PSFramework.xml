@@ -86,6 +86,11 @@
             Access a scriptblock that can be used to write a message
             </summary>
         </member>
+        <member name="P:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
+            <summary>
+            Access a scriptblock that can be used to write a message
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String)">
             <summary>
             Invokes a string of text-based scriptcode
@@ -116,6 +121,20 @@
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
             <param name="Message">The message to write</param>
+            <param name="Level">The level to write it at</param>
+            <param name="FunctionName">The name of the function / cmdlet to assume</param>
+            <param name="ModuleName">The name of the module to assume</param>
+            <param name="File">The file this message was written from</param>
+            <param name="Line">The line in the file this message was written from</param>
+            <param name="Tag">Tags to attach to this message</param>
+            <param name="Target">A target object to specify</param>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object)">
+            <summary>
+            Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
+            </summary>
+            <param name="String">The localized string to write</param>
+            <param name="StringValues">The values to format into the localized string</param>
             <param name="Level">The level to write it at</param>
             <param name="FunctionName">The name of the function / cmdlet to assume</param>
             <param name="ModuleName">The name of the module to assume</param>
@@ -4491,6 +4510,58 @@
             In Auto-Detect mode, the system detects, whether the user intended to provide a simple mode or full mode script. This is determined by whether the scriptblock contains a parameter block or not.
             </summary>
         </member>
+        <member name="T:PSFramework.TaskEngine.CacheItem">
+            <summary>
+            Runtime item handling the various meta-data for the TaskEngineCache values.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.Module">
+            <summary>
+            The module the cache item belongs to.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.Name">
+            <summary>
+            Name of the cache item.
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.CacheItem.Value">
+            <summary>
+            Value stored in the item
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.Collector">
+            <summary>
+            Scriptblock to execute to gather data to cache
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.CollectorArgument">
+            <summary>
+            An argument to pass to the collector scriptblock
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.LastSet">
+            <summary>
+            When was the value last updated
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.CacheItem.Expiration">
+            <summary>
+            How long are the values valid
+            </summary>
+        </member>
+        <member name="P:PSFramework.TaskEngine.CacheItem.Expired">
+            <summary>
+            Whether the cqached data has expired
+            </summary>
+        </member>
+        <member name="M:PSFramework.TaskEngine.CacheItem.#ctor(System.String,System.String)">
+            <summary>
+            Create a new CacheItem
+            </summary>
+            <param name="Module">The module the item belongs to</param>
+            <param name="Name">The name of the item.</param>
+        </member>
         <member name="T:PSFramework.TaskEngine.Priority">
             <summary>
             How high the priority of the task. Higher priority tasks take precedence over low priority tasks.
@@ -4566,6 +4637,16 @@
             When was the task last executed.
             </summary>
         </member>
+        <member name="P:PSFramework.TaskEngine.PsfTask.NextExecution">
+            <summary>
+            When is the task due next.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.LastDuration">
+            <summary>
+            The time the last execution took
+            </summary>
+        </member>
         <member name="F:PSFramework.TaskEngine.PsfTask.Priority">
             <summary>
             How important is this task?
@@ -4586,6 +4667,16 @@
             Returns, whether there are any actions still pending. The Task Engine runspace will terminate if there are no pending tasks left.
             </summary>
         </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.LastError">
+            <summary>
+            The last error the task had.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.State">
+            <summary>
+            The current state of the task.
+            </summary>
+        </member>
         <member name="T:PSFramework.TaskEngine.TaskHost">
             <summary>
             Host class providing access to resources needed to schedule and execute tasks in the background
@@ -4594,11 +4685,6 @@
         <member name="F:PSFramework.TaskEngine.TaskHost.Tasks">
             <summary>
             The register of available tasks.
-            </summary>
-        </member>
-        <member name="F:PSFramework.TaskEngine.TaskHost.Cache">
-            <summary>
-            Cache where modules can store cached data provided by tasks
             </summary>
         </member>
         <member name="P:PSFramework.TaskEngine.TaskHost.HasDueTasks">
@@ -4617,6 +4703,70 @@
             </summary>
             <param name="Exclusions">List of tasks not to return, even if they are ready to execute again. This is used to avoid one misconfigured task starving all lower priority tasks, by including all tasks that have already run in a given cycle.</param>
             <returns>The next task to perform.</returns>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskHost.Cache">
+            <summary>
+            Cache where modules can store cached data provided by tasks
+            </summary>
+        </member>
+        <member name="M:PSFramework.TaskEngine.TaskHost.GetCacheItem(System.String,System.String)">
+            <summary>
+            Return a cache item
+            </summary>
+            <param name="Module">The module the cached data belongs to</param>
+            <param name="Name">The cache entry the setting</param>
+            <returns>The cache item storing data and potentially data gathering script.</returns>
+        </member>
+        <member name="M:PSFramework.TaskEngine.TaskHost.NewCacheItem(System.String,System.String)">
+            <summary>
+            Creates a new cache item
+            </summary>
+            <param name="Module"></param>
+            <param name="Name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.TaskEngine.TaskHost.TestCacheItem(System.String,System.String)">
+            <summary>
+            Return whether a given cache item has been created already.
+            </summary>
+            <param name="Module"></param>
+            <param name="Name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.TaskEngine.TaskHost.ClearExpiredCacheData">
+            <summary>
+            Clears expired data in order to vacate memory.
+            </summary>
+        </member>
+        <member name="T:PSFramework.TaskEngine.TaskState">
+            <summary>
+            The state of the task or its previous execution
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskState.New">
+            <summary>
+            Task is new, hasn't executed yet
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskState.Running">
+            <summary>
+            Task is currently running
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskState.Completed">
+            <summary>
+            Task has completed
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskState.Pending">
+            <summary>
+            Task is pending another execution
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.TaskState.Error">
+            <summary>
+            Task had an error
+            </summary>
         </member>
         <member name="T:PSFramework.Utility.DynamicContentDictionary">
             <summary>
@@ -4994,6 +5144,244 @@
             <param name="Name">The name of the scriptblock</param>
             <param name="ScriptBlock">The scriptblock</param>
         </member>
+        <member name="T:PSFramework.Utility.Size">
+            <summary>
+            Class that reports File size.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Byte">
+            <summary>
+            Number of bytes contained in whatever object uses this object as a property
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Kilobyte">
+            <summary>
+            Kilobyte representation of the bytes
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Megabyte">
+            <summary>
+            Megabyte representation of the bytes
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Gigabyte">
+            <summary>
+            Gigabyte representation of the bytes
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Terabyte">
+            <summary>
+            Terabyte representation of the bytes
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Digits">
+            <summary>
+            Number if digits behind the dot.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Size.Style">
+            <summary>
+            How the size object should be displayed.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Size.ToString">
+            <summary>
+            Shows the default string representation of size
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.Equals(System.Object)">
+            <summary>
+            Simple equality test
+            </summary>
+            <param name="obj">The object to test it against</param>
+            <returns>True if equal, false elsewise</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.GetHashCode">
+            <inheritdoc cref="M:System.Int64.GetHashCode"/>
+            <remarks>The hashcode of the underlying size</remarks>
+        </member>
+        <member name="M:PSFramework.Utility.Size.#ctor">
+            <summary>
+            Creates an empty size.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Size.#ctor(System.Int64)">
+            <summary>
+            Creates a size with some content
+            </summary>
+            <param name="Byte">The length in bytes to set the size to</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.CompareTo(PSFramework.Utility.Size)">
+            <inheritdoc cref="M:System.IComparable`1.CompareTo(`0)"/>
+            <remarks>For sorting</remarks>
+        </member>
+        <member name="M:PSFramework.Utility.Size.CompareTo(System.Object)">
+            <inheritdoc cref="M:System.IComparable.CompareTo(System.Object)"/>
+            <remarks>For sorting</remarks>
+            <exception cref="T:System.ArgumentException">If you compare with something invalid.</exception>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Addition(PSFramework.Utility.Size,PSFramework.Utility.Size)">
+            <summary>
+            Adds two sizes
+            </summary>
+            <param name="a">The first size to add</param>
+            <param name="b">The second size to add</param>
+            <returns>The sum of both sizes</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Subtraction(PSFramework.Utility.Size,PSFramework.Utility.Size)">
+            <summary>
+            Substracts two sizes
+            </summary>
+            <param name="a">The first size to substract</param>
+            <param name="b">The second size to substract</param>
+            <returns>The difference between both sizes</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Multiply(PSFramework.Utility.Size,System.Double)">
+            <summary>
+            Multiplies two sizes with each other
+            </summary>
+            <param name="a">The size to multiply</param>
+            <param name="b">The size to multiply with</param>
+            <returns>A multiplied size.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Division(PSFramework.Utility.Size,System.Double)">
+            <summary>
+            Divides one size by another. 
+            </summary>
+            <param name="a">The size to divide</param>
+            <param name="b">The size to divide with</param>
+            <returns>Divided size (note: Cut off)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Multiply(PSFramework.Utility.Size,PSFramework.Utility.Size)">
+            <summary>
+            Multiplies two sizes with each other
+            </summary>
+            <param name="a">The size to multiply</param>
+            <param name="b">The size to multiply with</param>
+            <returns>A multiplied size.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Division(PSFramework.Utility.Size,PSFramework.Utility.Size)">
+            <summary>
+            Divides one size by another.
+            </summary>
+            <param name="a">The size to divide</param>
+            <param name="b">The size to divide with</param>
+            <returns>Divided size (note: Cut off)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(System.Int32)~PSFramework.Utility.Size">
+            <summary>
+            Implicitly converts int to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(System.Decimal)~PSFramework.Utility.Size">
+            <summary>
+            Implicitly converts int to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(PSFramework.Utility.Size)~System.Int32">
+            <summary>
+            Implicitly converts size to int
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(System.Int64)~PSFramework.Utility.Size">
+            <summary>
+            Implicitly converts long to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(PSFramework.Utility.Size)~System.Int64">
+            <summary>
+            Implicitly converts size to long
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(System.String)~PSFramework.Utility.Size">
+            <summary>
+            Implicitly converts string to size
+            </summary>
+            <param name="a">The string to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(System.Double)~PSFramework.Utility.Size">
+            <summary>
+            Implicitly converts double to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Size.op_Implicit(PSFramework.Utility.Size)~System.Double">
+            <summary>
+            Implicitly converts size to double
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
+        <member name="T:PSFramework.Utility.SizeStyle">
+            <summary>
+            How size objects should be displayed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Dynamic">
+            <summary>
+            The size object is styled dependend on the number stored within.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Plain">
+            <summary>
+            The size object is shown as a plain number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Byte">
+            <summary>
+            The size object is styled as a byte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.B">
+            <summary>
+            The size object is styled as a byte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Kilobyte">
+            <summary>
+            The size object is styled as a kilobyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.KB">
+            <summary>
+            The size object is styled as a kilobyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Megabyte">
+            <summary>
+            The size object is styled as a megabyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.MB">
+            <summary>
+            The size object is styled as a megabyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Gigabyte">
+            <summary>
+            The size object is styled as a Gigabyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.GB">
+            <summary>
+            The size object is styled as a Gigabyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.Terabyte">
+            <summary>
+            The size object is styled as a Terabyte number
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.SizeStyle.TB">
+            <summary>
+            The size object is styled as a Terabyte number
+            </summary>
+        </member>
         <member name="T:PSFramework.Utility.SupportData">
             <summary>
             List of data items New-PSFSupportPackage will export
@@ -5102,6 +5490,16 @@
         <member name="F:PSFramework.Utility.UtilityHost.PrimaryRunspace">
             <summary>
             The ID for the primary (or front end) Runspace. Used for stuff that should only happen on the user-runspace.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.SizeDigits">
+            <summary>
+            The number of digits a size object shows by default
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.SizeStyle">
+            <summary>
+            The way size objects are usually displayed
             </summary>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.IsLocalhost(System.String)">
