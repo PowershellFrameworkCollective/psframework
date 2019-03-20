@@ -1,4 +1,4 @@
-Register-PSFConfigValidation -Name "sizestyle" -ScriptBlock {
+﻿Register-PSFConfigValidation -Name "sizestyle" -ScriptBlock {
     param (
         $Value
     )
