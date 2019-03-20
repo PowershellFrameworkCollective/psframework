@@ -16,9 +16,20 @@
 			$tasksDone = @()
 			while ($task = [PSFramework.TaskEngine.TaskHost]::GetNextTask($tasksDone))
 			{
-				try { ([ScriptBlock]::Create($task.ScriptBlock.ToString())).Invoke() }
-				catch { Write-PSFMessage -EnableException $false -Level Warning -Message "[Maintenance] Task '$($task.Name)' failed to execute: $_" -ErrorRecord $_ -FunctionName "task:TaskEngine" -Target $task }
+				$task.State = 'Running'
+				try
+				{
+					([ScriptBlock]::Create($task.ScriptBlock.ToString())).Invoke()
+					$task.State = 'Pending'
+				}
+				catch
+				{
+					$task.State = 'Error'
+					$task.LastError = $_
+					Write-PSFMessage -EnableException $false -Level Warning -Message "[Maintenance] Task '$($task.Name)' failed to execute" -ErrorRecord $_ -FunctionName "task:TaskEngine" -Target $task -ModuleName PSFramework
+				}
 				$task.LastExecution = Get-Date
+				if (-not $task.Pending -and ($task.Status -eq "Pending")) { $task.Status = 'Completed' }
 				$tasksDone += $task.Name
 			}
 			

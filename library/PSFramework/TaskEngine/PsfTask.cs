@@ -53,6 +53,26 @@ namespace PSFramework.TaskEngine
         public DateTime LastExecution;
 
         /// <summary>
+        /// When is the task due next.
+        /// </summary>
+        public DateTime NextExecution
+        {
+            get
+            {
+                if (!Pending)
+                    return DateTime.MaxValue;
+                if (Registered > LastExecution)
+                    return Registered.Add(Delay);
+                return LastExecution.Add(Interval);
+            }
+        }
+
+        /// <summary>
+        /// The time the last execution took
+        /// </summary>
+        public TimeSpan LastDuration;
+
+        /// <summary>
         /// How important is this task?
         /// </summary>
         public Priority Priority;
@@ -98,5 +118,15 @@ namespace PSFramework.TaskEngine
                 return true;
             }
         }
+
+        /// <summary>
+        /// The last error the task had.
+        /// </summary>
+        public ErrorRecord LastError;
+
+        /// <summary>
+        /// The current state of the task.
+        /// </summary>
+        public TaskState State = TaskState.New;
     }
 }

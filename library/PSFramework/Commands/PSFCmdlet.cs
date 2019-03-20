@@ -43,6 +43,35 @@ Write-PSFMessage -Message $Message -Level $Level -FunctionName $FunctionName -Mo
         private static ScriptBlock _MessageScript;
 
         /// <summary>
+        /// Access a scriptblock that can be used to write a message
+        /// </summary>
+        internal static ScriptBlock LocalizedMessageScript
+        {
+            get
+            {
+                if (_LocalizedMessageScript == null)
+                {
+                    _LocalizedMessageScript = ScriptBlock.Create(@"
+param (
+    $String,
+    $StringValues,
+    $Level,
+    $FunctionName,
+    $ModuleName,
+    $File,
+    $Line,
+    $Tag,
+    $Target
+)
+Write-PSFMessage -String $String -StringValues $StringValues -Level $Level -FunctionName $FunctionName -ModuleName $ModuleName -Tag $Tag -File $File -Line $Line -Target $Target
+");
+                }
+                return _LocalizedMessageScript;
+            }
+        }
+        private static ScriptBlock _LocalizedMessageScript;
+
+        /// <summary>
         /// Invokes a string of text-based scriptcode
         /// </summary>
         /// <param name="ScriptCode">The script code to execute</param>
@@ -95,6 +124,24 @@ Write-PSFMessage -Message $Message -Level $Level -FunctionName $FunctionName -Mo
         {
             object[] arguments = new object[] { Message, Level, FunctionName, ModuleName, File, Line, Tag, Target };
             Invoke(MessageScript, false, null, null, null, arguments);
+        }
+
+        /// <summary>
+        /// Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
+        /// </summary>
+        /// <param name="String">The localized string to write</param>
+        /// <param name="StringValues">The values to format into the localized string</param>
+        /// <param name="Level">The level to write it at</param>
+        /// <param name="FunctionName">The name of the function / cmdlet to assume</param>
+        /// <param name="ModuleName">The name of the module to assume</param>
+        /// <param name="File">The file this message was written from</param>
+        /// <param name="Line">The line in the file this message was written from</param>
+        /// <param name="Tag">Tags to attach to this message</param>
+        /// <param name="Target">A target object to specify</param>
+        public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target)
+        {
+            object[] arguments = new object[] { String, StringValues, Level, FunctionName, ModuleName, File, Line, Tag, Target };
+            Invoke(LocalizedMessageScript, false, null, null, null, arguments);
         }
     }
 }
