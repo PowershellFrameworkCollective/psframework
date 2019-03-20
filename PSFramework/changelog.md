@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 1.0.12 : 2019-03-20
+ - Fix: TaskEngineCache would throw null exception on any access.
+
 ## 1.0.11 : 2019-03-20
  - New: Convenience type: `[PSFSize]` will display size numbers in a human friendly way without losing mathematical precision or usefulness as number.
  - Upd: Write-PSFMessage : `-StringValues` parameter has now an alias called `-Format` and can be used together with `-Message` parameter.
