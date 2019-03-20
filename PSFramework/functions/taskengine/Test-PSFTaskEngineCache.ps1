@@ -36,10 +36,5 @@
 		$Name
 	)
 	
-	$tempModule = $Module.ToLower()
-	$tempName = $Name.ToLower()
-	
-	if (-not ([PSFramework.TaskEngine.TaskHost]::Cache.ContainsKey($tempModule))) { return $false }
-	if (-not ([PSFramework.TaskEngine.TaskHost]::Cache[$tempModule].ContainsKey($tempName))) { return $false }
-	return $true
+	[PSFramework.TaskEngine.TaskHost]::TestCacheItem($Module, $Name)
 }

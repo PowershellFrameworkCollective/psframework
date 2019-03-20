@@ -49,7 +49,8 @@ namespace PSFramework.Commands
         /// <summary>
         /// Values to format into the localized string referred to in String.
         /// </summary>
-        [Parameter(ParameterSetName = "String")]
+        [Parameter()]
+        [Alias("Format")]
         public object[] StringValues = new object[10];
 
         /// <summary>
@@ -243,7 +244,9 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             get
             {
                 if (!String.IsNullOrEmpty(String))
-                    return String.Format(Localization.LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)), StringValues);
+                    return String.Format(Localization.LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String)), StringValues);
+                if (MyInvocation.BoundParameters.ContainsKey("StringValues"))
+                    return String.Format(Message, StringValues);
                 return Message;
             }
         }

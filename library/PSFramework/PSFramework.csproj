@@ -134,9 +134,11 @@
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
     <Compile Include="TabExpansion\TeppScriptMode.cs" />
+    <Compile Include="TaskEngine\CacheItem.cs" />
     <Compile Include="TaskEngine\Priority.cs" />
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
+    <Compile Include="TaskEngine\TaskState.cs" />
     <Compile Include="Utility\DynamicContentDictionary.cs" />
     <Compile Include="Utility\DynamicContentList.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />
@@ -146,6 +148,8 @@
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />
+    <Compile Include="Utility\Size.cs" />
+    <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />

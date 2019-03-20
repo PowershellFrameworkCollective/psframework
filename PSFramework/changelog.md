@@ -1,4 +1,15 @@
 ﻿# CHANGELOG
+## 1.0.11 : 2019-03-20
+ - New: Convenience type: `[PSFSize]` will display size numbers in a human friendly way without losing mathematical precision or usefulness as number.
+ - Upd: Write-PSFMessage : `-StringValues` parameter has now an alias called `-Format` and can be used together with `-Message` parameter.
+ - Upd: Get-PSFTaskEngineCache : Interna rework to utilize expiration of cached data and automatic data refresh.
+ - Upd: Set-PSFTaskEngineCache : Added `-Lifetime`, `-Collector` and `-CollectorArgument` parameters to facilitate cache expiration and automatic data refresh.
+ - Upd: Test-PSFTaskEngineCache : Interna rework.
+ - Upd: Task Engine : Including state information, estimated next execution time and last error.
+ - Upd: Test-PSFParameterBinding now supports the `-Mode` parameter, allowing to differentiate between explicitly bound parameters or scriptblocks that will be bound by pipeline input.
+ - Upd: PSFCmdlet class for PSFramework implementing Cmdlets now offers a `WriteLocalizedMessage()` method to utilize the localization feature when writing messages.
+ - Fix: Write-PSFMessage would not localize correctly
+
 ## 1.0.2 : 2019-03-11
  - Upd: ConvertTo-PSFHashtable now supports `-Include` & `-IncludeEmpty` parameter
  - Fix: Broken dynamic parameters for logging providers (#287)

@@ -23,6 +23,16 @@ namespace PSFramework.Utility
         public static Guid PrimaryRunspace;
 
         /// <summary>
+        /// The number of digits a size object shows by default
+        /// </summary>
+        public static int SizeDigits = 2;
+
+        /// <summary>
+        /// The way size objects are usually displayed
+        /// </summary>
+        public static SizeStyle SizeStyle = SizeStyle.Dynamic;
+
+        /// <summary>
         /// Tests whether a given string is the local host.
         /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!
         /// </summary>
