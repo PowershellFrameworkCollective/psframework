@@ -47,7 +47,7 @@ namespace PSFramework.TaskEngine
             }
         }
         private object _Value;
-        private object _ValueLock;
+        private object _ValueLock = 42;
         private bool _EverSet = false;
 
         /// <summary>

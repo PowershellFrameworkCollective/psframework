@@ -99,7 +99,7 @@ namespace PSFramework.TaskEngine
                 return Cache[Module][Name];
             }
         }
-        private static object newCacheLock;
+        private static object newCacheLock = 24;
 
         /// <summary>
         /// Return whether a given cache item has been created already.
