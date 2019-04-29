@@ -238,17 +238,16 @@
 		Target				     = $Target
 		Tag					     = $Tag
 		ModuleName			     = $ModuleName
-		OverrideExceptionMessage = $true
 		File					 = $File
 		Line					 = $Line
 	}
+	if ($OverrideExceptionMessage) { $paramWritePSFMessage['OverrideExceptionMessage'] = $true }
 	if ($Message) { $paramWritePSFMessage["Message"] = $Message }
 	else
 	{
 		$paramWritePSFMessage["String"] = $String
 		$paramWritePSFMessage["StringValues"] = $StringValues
 	}
-	
 	
 	if ($ErrorRecord -or $Exception)
 	{
