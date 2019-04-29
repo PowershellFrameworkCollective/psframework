@@ -42,7 +42,7 @@
 		$string1 = 'This is going to be <c="red">bloody red</c> text! And this is <c="green">green stuff</c> for extra color'
 		$string2 = '<c="red">bloody red</c> text! And this is <c="green">green stuff</c> for extra color'
 		$string3 = 'This is going to be <c="red">bloody red</c> text! And this is <c="green">green stuff</c>'
-		$string1, $string2, $string3 | Write-HostColor -DefaultColor "Magenta"
+		$string1, $string2, $string3 | Write-PSFHostColor -DefaultColor "Magenta"
 		
 		Will print all three lines, respecting the color-codes, but use the color "Magenta" as default color.
 	
