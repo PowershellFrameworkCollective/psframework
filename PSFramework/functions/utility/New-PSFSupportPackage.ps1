@@ -196,7 +196,7 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 			Write-PSFMessage -Level Important -Message "Collecting list of loaded modules (Get-Module)"
 			$hash["Modules"] = Get-Module
 		}
-		if (($Include -band 512) -and -not ($Exclude -band 512))
+		if ((($Include -band 512) -and -not ($Exclude -band 512)) -and (Get-Command -Name Get-PSSnapIn -ErrorAction SilentlyContinue))
 		{
 			Write-PSFMessage -Level Important -Message "Collecting list of loaded snapins (Get-PSSnapin)"
 			$hash["SnapIns"] = Get-PSSnapin
