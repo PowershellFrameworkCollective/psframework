@@ -1,4 +1,9 @@
 ﻿# CHANGELOG
+##
+ - Upd: Write-PSFMessageProxy adding parameters to better support all common redirection scenarios.
+ - Fix: New-PSFSupportPackage no longer tries to export pssnappins on PowerShell Core
+ - Fix: Importing PSFramework within a JEA Endpoint throws exceptions
+
 ## 1.0.12 : 2019-03-20
  - Fix: TaskEngineCache would throw null exception on any access.
 
