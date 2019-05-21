@@ -26,6 +26,7 @@
 	
 		Imports the strings stored in strings.psd1 for the module MyModule as 'en-US' language strings.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression ", "")]
 	[PSFramework.PSFCore.NoJeaCommand()]
 	[CmdletBinding()]
 	param (

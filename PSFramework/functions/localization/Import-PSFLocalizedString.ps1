@@ -30,6 +30,7 @@
 		This command is not safe to expose in a JEA endpoint.
 		In its need to maintain compatibility it allows for a path for arbitrary code execution.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression ", "")]
 	[PSFramework.PSFCore.NoJeaCommand()]
 	[CmdletBinding()]
 	param (
