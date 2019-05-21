@@ -2374,6 +2374,11 @@
             Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.FileSystemSerializationDepth">
+            <summary>
+            The depth to which the target object should serialized.
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">
             <summary>
             The outbound queue for errors. These will be processed and written to xml

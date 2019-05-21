@@ -38,6 +38,10 @@
 		Configurations that have been imported will be flagged as deletable.
 		This allows to purge them at a later time using Remove-PSFConfig.
 	
+	.PARAMETER PassThru
+		Return configuration settings that have been imported.
+		By default, this command will not produce any output.
+	
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
@@ -93,6 +97,9 @@
 		$AllowDelete,
 		
 		[switch]
+		$PassThru,
+		
+		[switch]
 		$EnableException
 	)
 	
@@ -107,7 +114,8 @@
 			AllowDelete   = $AllowDelete.ToBool()
 			EnableException = $EnableException.ToBool()
 			Cmdlet	      = $PSCmdlet
-			Path = (Get-Location).Path
+			Path		  = (Get-Location).Path
+			PassThru      = $PassThru.ToBool()
 		}
 		
 		$schemaScript = [PSFramework.Configuration.ConfigurationHost]::Schemata[$Schema]
@@ -134,8 +142,8 @@
 			
 			foreach ($value in $data.Values)
 			{
-				if (-not $value.KeepPersisted) { Set-PSFConfig -FullName $value.FullName -Value $value.Value -EnableException:$EnableException}
-				else { Set-PSFConfig -FullName $value.FullName -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($value.Value, $value.Type)) -EnableException:$EnableException }
+				if (-not $value.KeepPersisted) { Set-PSFConfig -FullName $value.FullName -Value $value.Value -EnableException:$EnableException -PassThru:$PassThru }
+				else { Set-PSFConfig -FullName $value.FullName -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($value.Value, $value.Type)) -EnableException:$EnableException -PassThru:$PassThru }
 			}
 		}
 		#endregion ModuleName

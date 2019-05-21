@@ -17,6 +17,7 @@
 	$script:EnableException = $Settings["EnableException"]
 	$script:cmdlet = $Settings["Cmdlet"]
 	Set-Location -Path $Settings["Path"]
+	$PassThru = $Settings["PassThru"]
 	#endregion Converting parameters
 	
 	#region Utility Function
@@ -177,7 +178,7 @@
 					continue
 				}
 				
-				Set-PSFConfig -FullName $configItem.FullName -Value $configItem.Value -AllowDelete:$AllowDelete
+				Set-PSFConfig -FullName $configItem.FullName -Value $configItem.Value -AllowDelete:$AllowDelete -PassThru:$PassThru
 			}
 		}
 		default

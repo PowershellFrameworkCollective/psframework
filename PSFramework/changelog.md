@@ -1,6 +1,8 @@
 ﻿# CHANGELOG
 ##
+ - Upd: Import-PSFConfig adding -PassThru parameter.
  - Upd: Write-PSFMessageProxy adding parameters to better support all common redirection scenarios.
+ - Upd: FileSystem Logging Provider now supports option to serialize target objects
  - Fix: New-PSFSupportPackage no longer tries to export pssnappins on PowerShell Core
  - Fix: Importing PSFramework within a JEA Endpoint throws exceptions
 
