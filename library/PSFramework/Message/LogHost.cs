@@ -75,6 +75,11 @@ namespace PSFramework.Message
         /// Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
         /// </summary>
         public static bool FileSystemModernLog = false;
+
+        /// <summary>
+        /// The depth to which the target object should serialized.
+        /// </summary>
+        public static int FileSystemSerializationDepth = -1;
         #endregion Defines
 
         #region Queues

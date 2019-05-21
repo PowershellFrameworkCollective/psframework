@@ -14,6 +14,7 @@
 	$AllowDelete = $Settings["AllowDelete"]
 	$EnableException = $Settings["EnableException"]
 	Set-Location -Path $Settings["Path"]
+	$PassThru = $Settings["PassThru"]
 	#endregion Converting parameters
 	
 	#region Utility Function
@@ -193,8 +194,8 @@
 		{
 			try
 			{
-				if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException -AllowDelete:$AllowDelete }
-				else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type -AllowDelete:$AllowDelete }
+				if (-not $element.KeepPersisted) { Set-PSFConfig -FullName $element.FullName -Value $element.Value -EnableException -AllowDelete:$AllowDelete -PassThru:$PassThru }
+				else { Set-PSFConfig -FullName $element.FullName -PersistedValue $element.Value -PersistedType $element.Type -AllowDelete:$AllowDelete -PassThru:$PassThru }
 			}
 			catch
 			{

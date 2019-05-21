@@ -78,6 +78,17 @@ $begin_event = {
 		}
 	}
 	#endregion Helper Functions
+	
+	$filesystem_SelectTargetObject = @{
+		Name = 'TargetObject'
+		Expression = {
+			if ($null -eq $_.TargetObject) { return }
+			if ([PSFramework.Message.LogHost]::FileSystemSerializationDepth -lt 0) { return $_.TargetObject }
+			if ([PSFramework.Message.LogHost]::FileSystemSerializationDepth -eq 0) { return ($_.TargetObject | ConvertTo-PSFClixml) }
+			$_.TargetObject | ConvertTo-PSFClixml -Depth ([PSFramework.Message.LogHost]::FileSystemSerializationDepth)
+		}
+	}
+	
 }
 
 # Action that is performed at the beginning of each logging cycle
@@ -120,11 +131,11 @@ $message_Event = {
 		{
 			if (-not (Test-Path $filesystem_CurrentFile))
 			{
-				$Message | Select-PSFObject ComputerName, Username, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, TargetObject, Runspace, @{ n = "Callstack"; e = { $_.CallStack.ToString().Split("`n") -join " þ "} } | Export-Csv -Path $filesystem_CurrentFile -NoTypeInformation
+				$Message | Select-PSFObject ComputerName, Username, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, $filesystem_SelectTargetObject, Runspace, @{ n = "Callstack"; e = { $_.CallStack.ToString().Split("`n") -join " þ "} } | Export-Csv -Path $filesystem_CurrentFile -NoTypeInformation
 			}
-			else { Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-PSFObject ComputerName, Username, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, TargetObject, Runspace, @{ n = "Callstack"; e = { $_.CallStack.ToString().Split("`n") -join " þ " } }) -NoTypeInformation)[1] }
+			else { Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-PSFObject ComputerName, Username, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, $filesystem_SelectTargetObject, Runspace, @{ n = "Callstack"; e = { $_.CallStack.ToString().Split("`n") -join " þ " } }) -NoTypeInformation)[1] }
 		}
-		else { Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-PSFObject ComputerName, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, TargetObject, Runspace) -NoTypeInformation)[1] }
+		else { Add-Content -Path $filesystem_CurrentFile -Value (ConvertTo-Csv ($Message | Select-PSFObject ComputerName, Timestamp, Level, 'LogMessage as Message', Type, FunctionName, ModuleName, File, Line, @{ n = "Tags"; e = { $_.Tags -join "," } }, $filesystem_SelectTargetObject, Runspace) -NoTypeInformation)[1] }
 	}
 }
 
@@ -219,6 +230,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.ErrorLogFileEnabled' -Value $true -Initialize -Validation "bool" -Handler { [PSFramework.Message.LogHost]::ErrorLogFileEnabled = $args[0] } -Description "Governs, whether log files for errors are written. This setting is on a per-Process basis. Runspaces share, jobs or other consoles counted separately."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.ModernLog' -Value $false -Initialize -Validation "bool" -Handler { [PSFramework.Message.LogHost]::FileSystemModernLog = $args[0] } -Description "Enables the modern, more powereful version of the filesystem log, including headers and extra columns"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.LogPath' -Value $script:path_Logging -Initialize -Validation "string" -Handler { [PSFramework.Message.LogHost]::LoggingPath = $args[0] } -Description "The path where the PSFramework writes all its logs and debugging information."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.FileSystem.TargetSerializationDepth' -Value -1 -Initialize -Validation "integer" -Handler { [PSFramework.Message.LogHost]::FileSystemSerializationDepth = $args[0] } -Description "Whether the target object should be stored as a serialized object. 0 or less will see it logged as string, 1 or greater will see it logged as compressed CLIXML."
 	
 	Set-PSFConfig -Module LoggingProvider -Name 'FileSystem.Enabled' -Value $true -Initialize -Validation "bool" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['filesystem']) { [PSFramework.Logging.ProviderHost]::Providers['filesystem'].Enabled = $args[0] } } -Description "Whether the logging provider should be enabled on registration"
 	Set-PSFConfig -Module LoggingProvider -Name 'FileSystem.AutoInstall' -Value $false -Initialize -Validation "bool" -Handler { } -Description "Whether the logging provider should be installed on registration"

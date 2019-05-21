@@ -120,6 +120,8 @@
     <Compile Include="Parameter\SelectScriptPropertyParameter.cs" />
     <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSFCore\NoJeaCommandAttribute.cs" />
+    <Compile Include="PSFCore\NoJeaParameterAttribute.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="Extension\ScriptBlockExt.cs" />
