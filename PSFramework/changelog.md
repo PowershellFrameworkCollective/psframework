@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-##
+## 1.0.19 : 2019-05-21
  - Upd: Import-PSFConfig adding -PassThru parameter.
  - Upd: Write-PSFMessageProxy adding parameters to better support all common redirection scenarios.
  - Upd: FileSystem Logging Provider now supports option to serialize target objects
