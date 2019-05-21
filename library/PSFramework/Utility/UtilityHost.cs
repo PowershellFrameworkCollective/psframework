@@ -208,12 +208,14 @@ namespace PSFramework.Utility
         public static string CompressString(string String)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(String);
-            MemoryStream outputStream = new MemoryStream();
-            GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress);
-            gZipStream.Write(bytes, 0, bytes.Length);
-            gZipStream.Close();
-            outputStream.Close();
-            return Convert.ToBase64String(outputStream.ToArray());
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                gZipStream.Write(bytes, 0, bytes.Length);
+                gZipStream.Close();
+                outputStream.Close();
+                return Convert.ToBase64String(outputStream.ToArray());
+            }
         }
 
         /// <summary>
@@ -223,15 +225,17 @@ namespace PSFramework.Utility
         /// <returns>Returns an expanded string.</returns>
         public static string ExpandString(string CompressedString)
         {
-            MemoryStream inputStream = new MemoryStream(Convert.FromBase64String(CompressedString));
-            MemoryStream outputStream = new MemoryStream();
-            GZipStream converter = new GZipStream(inputStream, CompressionMode.Decompress);
-            converter.CopyTo(outputStream);
-            converter.Close();
-            inputStream.Close();
-            string result = Encoding.UTF8.GetString(outputStream.ToArray());
-            outputStream.Close();
-            return result;
+            using (MemoryStream inputStream = new MemoryStream(Convert.FromBase64String(CompressedString)))
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream converter = new GZipStream(inputStream, CompressionMode.Decompress))
+            {
+                converter.CopyTo(outputStream);
+                converter.Close();
+                inputStream.Close();
+                string result = Encoding.UTF8.GetString(outputStream.ToArray());
+                outputStream.Close();
+                return result;
+            }
         }
 
         /// <summary>

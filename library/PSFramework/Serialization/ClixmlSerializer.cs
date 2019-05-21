@@ -19,12 +19,14 @@ namespace PSFramework.Serialization
         public static byte[] ToByteCompressed(object Item)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(PSSerializer.Serialize(Item));
-            MemoryStream outputStream = new MemoryStream();
-            GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress);
-            gZipStream.Write(bytes, 0, bytes.Length);
-            gZipStream.Close();
-            outputStream.Close();
-            return outputStream.ToArray();
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                gZipStream.Write(bytes, 0, bytes.Length);
+                gZipStream.Close();
+                outputStream.Close();
+                return outputStream.ToArray();
+            }
         }
 
         /// <summary>
@@ -36,12 +38,14 @@ namespace PSFramework.Serialization
         public static byte[] ToByteCompressed(object Item, int Depth)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(PSSerializer.Serialize(Item, Depth));
-            MemoryStream outputStream = new MemoryStream();
-            GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress);
-            gZipStream.Write(bytes, 0, bytes.Length);
-            gZipStream.Close();
-            outputStream.Close();
-            return outputStream.ToArray();
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                gZipStream.Write(bytes, 0, bytes.Length);
+                gZipStream.Close();
+                outputStream.Close();
+                return outputStream.ToArray();
+            }
         }
 
         /// <summary>
@@ -116,15 +120,17 @@ namespace PSFramework.Serialization
         /// <returns>The deserialized object</returns>
         public static object FromByteCompressed(byte[] Bytes)
         {
-            MemoryStream inputStream = new MemoryStream(Bytes);
-            MemoryStream outputStream = new MemoryStream();
-            GZipStream converter = new GZipStream(inputStream, CompressionMode.Decompress);
-            converter.CopyTo(outputStream);
-            converter.Close();
-            inputStream.Close();
-            string result = Encoding.UTF8.GetString(outputStream.ToArray());
-            outputStream.Close();
-            return PSSerializer.Deserialize(result);
+            using (MemoryStream inputStream = new MemoryStream(Bytes))
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream converter = new GZipStream(inputStream, CompressionMode.Decompress))
+            {
+                converter.CopyTo(outputStream);
+                converter.Close();
+                inputStream.Close();
+                string result = Encoding.UTF8.GetString(outputStream.ToArray());
+                outputStream.Close();
+                return PSSerializer.Deserialize(result);
+            }
         }
 
         /// <summary>

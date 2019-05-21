@@ -5,6 +5,7 @@
  - Upd: FileSystem Logging Provider now supports option to serialize target objects
  - Fix: New-PSFSupportPackage no longer tries to export pssnappins on PowerShell Core
  - Fix: Importing PSFramework within a JEA Endpoint throws exceptions
+ - Fix: Closed Memory Leak in Serialization component
 
 ## 1.0.12 : 2019-03-20
  - Fix: TaskEngineCache would throw null exception on any access.
