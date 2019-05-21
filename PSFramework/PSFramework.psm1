@@ -1,5 +1,13 @@
 ﻿$script:ModuleRoot = $PSScriptRoot
-$script:ModuleVersion = (Import-PowerShellDataFile -Path "$($script:ModuleRoot)\PSFramework.psd1").ModuleVersion
+if ($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage')
+{
+	# This is considered safe, as you should not be using unsafe localization resources in a constrained endpoint
+	$script:ModuleVersion = (Invoke-Expression (Get-Content -Path "$($script:ModuleRoot)\PSFramework.psd1" -Raw)).ModuleVersion
+}
+else
+{
+	$script:ModuleVersion = (Import-PowerShellDataFile -Path "$($script:ModuleRoot)\PSFramework.psd1").ModuleVersion
+}
 
 # Detect whether at some level dotsourcing was enforced
 $script:doDotSource = $false

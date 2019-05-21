@@ -2374,6 +2374,11 @@
             Whether the filesystem logging provider uses the modern logging style with CSV headers and extra columns
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.FileSystemSerializationDepth">
+            <summary>
+            The depth to which the target object should serialized.
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">
             <summary>
             The outbound queue for errors. These will be processed and written to xml
@@ -3982,6 +3987,16 @@
             </summary>
             <param name="Value">The string to interpret</param>
             <returns>The interpreted timespan value</returns>
+        </member>
+        <member name="T:PSFramework.PSFCore.NoJeaCommandAttribute">
+            <summary>
+            Decorator attribute declaring a command in its entirety unsafe for making publicly available in JEA
+            </summary>
+        </member>
+        <member name="T:PSFramework.PSFCore.NoJeaParameterAttribute">
+            <summary>
+            The thus tagged parameter is not safe to publish with JEA
+            </summary>
         </member>
         <member name="T:PSFramework.PSFCore.PSFCoreHost">
             <summary>

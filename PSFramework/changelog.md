@@ -1,4 +1,12 @@
 ﻿# CHANGELOG
+##
+ - Upd: Import-PSFConfig adding -PassThru parameter.
+ - Upd: Write-PSFMessageProxy adding parameters to better support all common redirection scenarios.
+ - Upd: FileSystem Logging Provider now supports option to serialize target objects
+ - Fix: New-PSFSupportPackage no longer tries to export pssnappins on PowerShell Core
+ - Fix: Importing PSFramework within a JEA Endpoint throws exceptions
+ - Fix: Closed Memory Leak in Serialization component
+
 ## 1.0.12 : 2019-03-20
  - Fix: TaskEngineCache would throw null exception on any access.
 

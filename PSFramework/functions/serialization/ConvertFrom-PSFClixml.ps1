@@ -26,8 +26,6 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		
 		$byteList = New-Object System.Collections.ArrayList
 		
 		function Convert-Item
