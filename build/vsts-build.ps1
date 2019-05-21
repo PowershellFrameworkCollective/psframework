@@ -10,9 +10,6 @@ param (
 	$WorkingDirectory = $env:SYSTEM_DEFAULTWORKINGDIRECTORY
 )
 
-Import-Module PackageManagement -RequiredVersion 1.0.0.1
-Import-Module PowerShellGet -RequiredVersion 1.0.0.1
-
 # Prepare publish folder
 Write-Host "Creating and populating publishing directory"
 $publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory
