@@ -83,7 +83,8 @@ $begin_event = {
 		Name = 'TargetObject'
 		Expression = {
 			if ($null -eq $_.TargetObject) { return }
-			if ([PSFramework.Message.LogHost]::FileSystemSerializationDepth -le 0) { return $_.TargetObject }
+			if ([PSFramework.Message.LogHost]::FileSystemSerializationDepth -lt 0) { return $_.TargetObject }
+			if ([PSFramework.Message.LogHost]::FileSystemSerializationDepth -eq 0) { return ($_.TargetObject | ConvertTo-PSFClixml) }
 			$_.TargetObject | ConvertTo-PSFClixml -Depth ([PSFramework.Message.LogHost]::FileSystemSerializationDepth)
 		}
 	}

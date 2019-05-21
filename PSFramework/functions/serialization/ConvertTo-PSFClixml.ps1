@@ -44,8 +44,6 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		
 		$data = @()
 	}
 	process
@@ -56,7 +54,6 @@
 	{
 		try
 		{
-			Write-PSFMessage -Level Verbose -Message "Writing data to $style"
 			if ($Style -like 'Byte')
 			{
 				if ($NoCompression)
