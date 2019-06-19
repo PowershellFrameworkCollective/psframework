@@ -40,7 +40,6 @@
 		'ConvertFrom-PSFArray',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
-		'ConvertTo-PSFHashtable',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
@@ -120,6 +119,7 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
+		'ConvertTo-PSFHashtable',
 		'Invoke-PSFProtectedCommand',
 		'Remove-PSFNull',
 		'Select-PSFObject',

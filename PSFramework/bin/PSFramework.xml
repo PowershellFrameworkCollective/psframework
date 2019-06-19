@@ -4,6 +4,42 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
+            <summary>
+            Implements the ConvertTo-PSFHashtable command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Include">
+            <summary>
+            The properties to include explicitly
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Exclude">
+            <summary>
+            Any properties to exclude explicitly
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.IncludeEmpty">
+            <summary>
+            Enables adding empty keys for explicitly included keys that were not found on the input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Inherit">
+            <summary>
+            Specifically designed for use in a command when passing through parameters with default values.
+            Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.InputObject">
+            <summary>
+            The actual items to convert
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.ProcessRecord">
+            <summary>
+            Implements the basic processing logic to convert objects to hashtables
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.InvokePSFProtectedCommand">
             <summary>
             A wrapper that will execute the specified scriptblock in a safe manner
