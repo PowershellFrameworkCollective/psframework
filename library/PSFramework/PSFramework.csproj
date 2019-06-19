@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ConvertToPSFHashtableCommand.cs" />
     <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
     <Compile Include="Commands\PSFCmdlet.cs" />
     <Compile Include="Commands\RemovePSFNullCommand.cs" />

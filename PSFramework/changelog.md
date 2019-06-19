@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+##
+ - Upd: ConvertTo-PSFHashtable : Reimplemented as Cmdlet for better performance
+ - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
+
 ## 1.0.19 : 2019-05-21
  - Upd: Import-PSFConfig adding -PassThru parameter.
  - Upd: Write-PSFMessageProxy adding parameters to better support all common redirection scenarios.
