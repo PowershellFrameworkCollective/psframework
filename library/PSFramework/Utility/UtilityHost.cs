@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using PSFramework.Localization;
+
 namespace PSFramework.Utility
 {
     /// <summary>
@@ -268,24 +270,83 @@ namespace PSFramework.Utility
         public static void RemovePowerShellAlias(string Name, bool Force)
         {
             object context = GetExecutionContextFromTLS();
-            PropertyInfo contextProperty = context.GetType().GetProperty("TopLevelSessionState", BindingFlags.Instance | BindingFlags.NonPublic);
-            object topLevelState = contextProperty.GetValue(context);
-            PropertyInfo topLevelStateProperty = topLevelState.GetType().GetProperty("GlobalScope", BindingFlags.Instance | BindingFlags.NonPublic);
-            object globalScope = topLevelStateProperty.GetValue(topLevelState);
-            FieldInfo aliasesField = globalScope.GetType().GetField("_alias", BindingFlags.Instance | BindingFlags.NonPublic);
-            Dictionary<string, AliasInfo> aliases = (Dictionary<string, AliasInfo>)aliasesField.GetValue(globalScope);
+            object topLevelState = GetPrivateProperty("TopLevelSessionState", context);
+            object globalScope = GetPrivateProperty("GlobalScope", topLevelState);
+            Dictionary<string, AliasInfo> aliases = (Dictionary<string, AliasInfo>)GetPrivateField("_alias", globalScope);
 
             if (!aliases.ContainsKey(Name))
-                throw new ItemNotFoundException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasNotFound"), Name));
+                throw new ItemNotFoundException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasNotFound"), Name));
 
             AliasInfo alias = aliases[Name];
 
             if ((alias.Options & ScopedItemOptions.Constant) != 0)
-                throw new InvalidOperationException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasProtected"), Name));
+                throw new InvalidOperationException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasProtected"), Name));
             if (!Force && ((alias.Options & ScopedItemOptions.ReadOnly) != 0))
-                throw new InvalidOperationException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly_UtilityHost_AliasReadOnly"), Name));
+                throw new InvalidOperationException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasReadOnly"), Name));
             
             aliases.Remove(Name);
+        }
+
+        /// <summary>
+        /// Returns the value of a private property on an object
+        /// </summary>
+        /// <param name="Name">The name of the property</param>
+        /// <param name="Instance">The object from which to read the property from</param>
+        /// <returns>The value of the property content (may be null)</returns>
+        public static object GetPrivateProperty(string Name, object Instance)
+        {
+            if (Instance == null)
+                return null;
+
+            PropertyInfo property = Instance.GetType().GetProperty(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (property == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound", Name)), "Name");
+            return property.GetValue(Instance);
+        }
+
+        /// <summary>
+        /// Returns the value of a private static property on a type
+        /// </summary>
+        /// <param name="StaticType">The type to pick from</param>
+        /// <param name="Name">The name of the property to retrieve</param>
+        /// <returns>The value of the property content (may be null)</returns>
+        public static object GetPrivateStaticProperty(Type StaticType, string Name)
+        {
+            PropertyInfo property = StaticType.GetProperty(Name, BindingFlags.Static | BindingFlags.NonPublic);
+            if (property == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound", Name)), "Name");
+            return property.GetValue(null, BindingFlags.NonPublic | BindingFlags.Static, null, null, System.Globalization.CultureInfo.CurrentCulture);
+        }
+
+        /// <summary>
+        /// Returns the value of a private field on an object
+        /// </summary>
+        /// <param name="Name">The name of the field</param>
+        /// <param name="Instance">The object from which to read the field from</param>
+        /// <returns>The value of the field content (may be null)</returns>
+        public static object GetPrivateField(string Name, object Instance)
+        {
+            if (Instance == null)
+                return null;
+
+            FieldInfo property = Instance.GetType().GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (property == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateFieldNotFound", Name)), "Name");
+            return property.GetValue(Instance);
+        }
+
+        /// <summary>
+        /// Returns a static private method of a type
+        /// </summary>
+        /// <param name="StaticType">The type to search in</param>
+        /// <param name="Name">The name of the method to retrieve</param>
+        /// <returns>The method object requested</returns>
+        public static MethodInfo GetPrivateStaticMethod(Type StaticType, string Name)
+        {
+            MethodInfo method = StaticType.GetMethod(Name, BindingFlags.Static | BindingFlags.NonPublic);
+            if (method == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateMethodNotFound", Name)), "Name");
+            return method;
         }
 
         /// <summary>

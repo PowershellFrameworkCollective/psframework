@@ -158,6 +158,7 @@
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
     <Compile Include="Validation\PsfValidateScriptAttribute.cs" />
     <Compile Include="Validation\PsfValidateSetAttribute.cs" />
+    <Compile Include="Validation\PsfValidateTrustedDataAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

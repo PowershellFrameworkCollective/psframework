@@ -5612,6 +5612,38 @@
             <param name="Name">The name of the laias to kill</param>
             <param name="Force">Whether to remove ReadOnly items</param>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateProperty(System.String,System.Object)">
+            <summary>
+            Returns the value of a private property on an object
+            </summary>
+            <param name="Name">The name of the property</param>
+            <param name="Instance">The object from which to read the property from</param>
+            <returns>The value of the property content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticProperty(System.Type,System.String)">
+            <summary>
+            Returns the value of a private static property on a type
+            </summary>
+            <param name="StaticType">The type to pick from</param>
+            <param name="Name">The name of the property to retrieve</param>
+            <returns>The value of the property content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateField(System.String,System.Object)">
+            <summary>
+            Returns the value of a private field on an object
+            </summary>
+            <param name="Name">The name of the field</param>
+            <param name="Instance">The object from which to read the field from</param>
+            <returns>The value of the field content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticMethod(System.Type,System.String)">
+            <summary>
+            Returns a static private method of a type
+            </summary>
+            <param name="StaticType">The type to search in</param>
+            <param name="Name">The name of the method to retrieve</param>
+            <returns>The method object requested</returns>
+        </member>
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
@@ -5770,6 +5802,24 @@
             Returns the values provided by the options specified.
             </summary>
             <returns>The legal values you may provide.</returns>
+        </member>
+        <member name="T:PSFramework.Validation.PsfValidateTrustedDataAttribute">
+            <summary>
+            Validation attribute that works equivalent to the ValidateTrustedDataAttribute, but can be used on PS3+ (for no effect on those).
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateTrustedDataAttribute.Validate(System.Object,System.Management.Automation.EngineIntrinsics)">
+            <summary>
+            Validates that the parameter argument is not untrusted
+            </summary>
+            <param name="arguments">Object to validate</param>
+            <param name="engineIntrinsics">
+            The engine APIs for the context under which the validation is being
+            evaluated.
+            </param>
+            <exception cref="T:System.Management.Automation.ValidationMetadataException">
+            if the argument is untrusted.
+            </exception>
         </member>
     </members>
 </doc>
