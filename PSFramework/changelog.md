@@ -2,6 +2,8 @@
 ##
  - Upd: ConvertTo-PSFHashtable : Reimplemented as Cmdlet for better performance
  - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
+ - Fix: Write-PSFMessage fails with error on localized string when specifying an error record
+ - Fix: Write-PSFMessage fails with error when specifying $null for format values
 
 ## 1.0.19 : 2019-05-21
  - Upd: Import-PSFConfig adding -PassThru parameter.

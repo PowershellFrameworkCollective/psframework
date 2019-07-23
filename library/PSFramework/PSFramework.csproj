@@ -103,8 +103,11 @@
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
     <Compile Include="Meta\CallerInfo.cs" />
+    <None Include="Meta\GetSafeValueVisitor.cs" />
+    <None Include="Meta\IsSafeValueVisitor.cs" />
     <Compile Include="Meta\PipelineCommand.cs" />
     <Compile Include="Meta\Pipeline.cs" />
+    <Compile Include="Meta\PSTraceSource.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
