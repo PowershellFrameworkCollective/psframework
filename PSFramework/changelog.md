@@ -1,7 +1,9 @@
 ﻿# CHANGELOG
 ##
+ - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
  - Upd: ConvertTo-PSFHashtable : Reimplemented as Cmdlet for better performance
  - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
+ - Upd: Select-PSFObject : Parameter `-Property` now validates for trusted data
  - Fix: Write-PSFMessage fails with error on localized string when specifying an error record
  - Fix: Write-PSFMessage fails with error when specifying $null for format values
 
