@@ -117,7 +117,7 @@
 		{
 			$task.Registered = Get-Date
 			$task.LastExecution = New-Object System.DateTime(0)
-			$task.Status = 'Pending'
+			$task.State = 'Pending'
 		}
 	}
 	#endregion Case: Task already registered

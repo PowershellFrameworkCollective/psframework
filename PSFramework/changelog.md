@@ -6,7 +6,8 @@
  - Upd: Select-PSFObject : Parameter `-Property` now validates for trusted data
  - Fix: Write-PSFMessage fails with error on localized string when specifying an error record
  - Fix: Write-PSFMessage fails with error when specifying $null for format values
- - FIx: Remove-PSFConfig fails to log deleted configuration name
+ - Fix: Remove-PSFConfig fails to log deleted configuration name
+ - Fix: Register-PSFTaskEngineTask fails to reset correctly
 
 ## 1.0.19 : 2019-05-21
  - Upd: Import-PSFConfig adding -PassThru parameter.
