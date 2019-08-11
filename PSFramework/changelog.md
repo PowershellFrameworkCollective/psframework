@@ -7,6 +7,7 @@
  - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
  - Upd: Select-PSFObject : Parameter `-Property` now validates for trusted data
  - Upd: Tab Completion: PSFramework-Input-ObjectProperty - will now properly unroll arrays to provide completion for the first value in one.
+ - Upd: Register-PSFTeppScriptblock : Changed some internal behavior
  - Fix: Write-PSFMessage fails with error on localized string when specifying an error record
  - Fix: Write-PSFMessage fails with error when specifying $null for format values
  - Fix: Remove-PSFConfig fails to log deleted configuration name

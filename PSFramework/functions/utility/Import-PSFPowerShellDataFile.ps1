@@ -24,6 +24,7 @@
 	
 		Safely loads the data stored in data.psd1
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "")]
 	[CmdletBinding()]
 	Param (
 		[Parameter(ParameterSetName = 'ByPath')]
