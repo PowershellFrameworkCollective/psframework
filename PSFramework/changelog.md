@@ -2,9 +2,11 @@
 ##
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
  - New: Command Import-PSFPowerShellDataFile - wraps around Import-PowerShellDataFile and makes it available on PSv3+
+ - Upd: Parameter Class: Computer : Add support for output of Get-ADDomainController
  - Upd: ConvertTo-PSFHashtable : Reimplemented as Cmdlet for better performance
  - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
  - Upd: Select-PSFObject : Parameter `-Property` now validates for trusted data
+ - Upd: Tab Completion: PSFramework-Input-ObjectProperty - will now properly unroll arrays to provide completion for the first value in one.
  - Fix: Write-PSFMessage fails with error on localized string when specifying an error record
  - Fix: Write-PSFMessage fails with error when specifying $null for format values
  - Fix: Remove-PSFConfig fails to log deleted configuration name
