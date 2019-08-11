@@ -2,6 +2,7 @@
 # In the order they are loaded during preimport
 
 internal\scripts\cmdlets.ps1
+bin\type-aliases.ps1
 internal\scripts\strings.ps1
 internal\configurationschemata\*.ps1
 internal\configurationvalidation\*.ps1
@@ -12,7 +13,6 @@ internal\scripts\async-logging2.ps1
 internal\tepp\scripts\*.ps1
 internal\tepp\tepp-assignment.ps1
 internal\parameters\*.ps1
-bin\type-aliases.ps1
 bin\type-extensions.ps1
 internal\scripts\taskEngine.ps1
 internal\scripts\removalEvent.ps1

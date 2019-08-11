@@ -1,4 +1,7 @@
 ﻿# CHANGELOG
+## 1.0.33 : 2019-08-11
+- Fix: Build order update fixes unknown attribute error
+
 ## 1.0.32 : 2019-08-11
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
  - New: Command Import-PSFPowerShellDataFile - wraps around Import-PowerShellDataFile and makes it available on PSv3+
