@@ -62,8 +62,7 @@
 			- Sets it to execute every 5 minutes
 			- Sets it to wait for 1 minute after registration before starting the first execution
 			- Sets it to priority "Critical", ensuring it takes precedence over most other tasks.
-	#>
-	
+	#>	
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTaskEngineTask')]
 	Param (
 		[Parameter(Mandatory = $true)]

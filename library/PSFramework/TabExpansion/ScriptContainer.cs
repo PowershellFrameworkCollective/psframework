@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -72,14 +73,49 @@ namespace PSFramework.TabExpansion
 
             List<string> results = new List<string>();
 
-            IEnumerable<CallStackFrame> _callStack = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetCallStack();
             CallStackFrame callerFrame = null;
-            if (_callStack.Count() > 0)
-                callerFrame = _callStack.First();
+            InvocationInfo info = null;
+            try
+            {
+                object CurrentCommandProcessor = UtilityHost.GetPrivateProperty("CurrentCommandProcessor", UtilityHost.GetExecutionContextFromTLS());
+                object CommandObject = UtilityHost.GetPrivateProperty("Command", CurrentCommandProcessor);
+                info = UtilityHost.GetPublicProperty("MyInvocation", CommandObject) as InvocationInfo;
+            }
+            catch (Exception e)
+            {
+                if (PSFCore.PSFCoreHost.DebugMode)
+                    PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Error accessing Current Command Processor", Name), e);
+            }
 
-            ScriptBlock scriptBlock = ScriptBlock.Create(ScriptBlock.ToString());
-            foreach (PSObject item in scriptBlock.Invoke(callerFrame.InvocationInfo.MyCommand.Name, "", "", null, callerFrame.InvocationInfo.BoundParameters))
-                results.Add((string)item.Properties["CompletionText"].Value);
+            if (info == null)
+            {
+                IEnumerable<CallStackFrame> _callStack = Utility.UtilityHost.Callstack;
+
+                object errorItem = null;
+                try
+                {
+                    if (_callStack.Count() > 0)
+                        callerFrame = _callStack.Where(frame => frame.InvocationInfo != null && frame.InvocationInfo.MyCommand != null).First();
+                }
+                catch (Exception e) { errorItem = e; }
+                if (PSFCore.PSFCoreHost.DebugMode)
+                {
+                    PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Callframe selected", Name), callerFrame);
+                    PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Script Callstack", Name), new Message.CallStack(Utility.UtilityHost.Callstack));
+                    if (errorItem != null)
+                        PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Error when selecting Callframe", Name), errorItem);
+                }
+            }
+            if (info == null && callerFrame != null)
+                info = callerFrame.InvocationInfo;
+
+            // ScriptBlock scriptBlock = ScriptBlock.Create(ScriptBlock.ToString());
+            if (info != null)
+                foreach (PSObject item in ScriptBlock.Invoke(info.MyCommand.Name, "", "", null, info.BoundParameters))
+                    results.Add((string)item.Properties["CompletionText"].Value);
+            else
+                foreach (PSObject item in ScriptBlock.Invoke("<ScriptBlock>", "", "", null, new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)))
+                    results.Add((string)item.Properties["CompletionText"].Value);
 
             return results.ToArray();
         }

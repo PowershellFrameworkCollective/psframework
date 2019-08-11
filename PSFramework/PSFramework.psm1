@@ -1,5 +1,5 @@
 ﻿$script:ModuleRoot = $PSScriptRoot
-if ($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage')
+if (($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
 {
 	# This is considered safe, as you should not be using unsafe localization resources in a constrained endpoint
 	$script:ModuleVersion = (Invoke-Expression (Get-Content -Path "$($script:ModuleRoot)\PSFramework.psd1" -Raw)).ModuleVersion

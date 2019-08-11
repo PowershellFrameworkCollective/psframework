@@ -1,6 +1,7 @@
 ﻿# CHANGELOG
 ##
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
+ - New: Command Import-PSFPowerShellDataFile - wraps around Import-PowerShellDataFile and makes it available on PSv3+
  - Upd: ConvertTo-PSFHashtable : Reimplemented as Cmdlet for better performance
  - Upd: ConvertTo-PSFHashtable : Adding -Inherit parameter, causing the command to pick up missing includes from variables.
  - Upd: Select-PSFObject : Parameter `-Property` now validates for trusted data
@@ -8,6 +9,7 @@
  - Fix: Write-PSFMessage fails with error when specifying $null for format values
  - Fix: Remove-PSFConfig fails to log deleted configuration name
  - Fix: Register-PSFTaskEngineTask fails to reset correctly
+ - Fix: PsfValidateSet fails unexpectedly under certain circumstances
 
 ## 1.0.19 : 2019-05-21
  - Upd: Import-PSFConfig adding -PassThru parameter.

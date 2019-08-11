@@ -33,7 +33,7 @@ namespace PSFramework.Utility
         /// The way size objects are usually displayed
         /// </summary>
         public static SizeStyle SizeStyle = SizeStyle.Dynamic;
-
+        
         /// <summary>
         /// Tests whether a given string is the local host.
         /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!
@@ -300,7 +300,24 @@ namespace PSFramework.Utility
 
             PropertyInfo property = Instance.GetType().GetProperty(Name, BindingFlags.Instance | BindingFlags.NonPublic);
             if (property == null)
-                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound", Name)), "Name");
+                throw new ArgumentException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound"), Name), "Name");
+            return property.GetValue(Instance);
+        }
+
+        /// <summary>
+        /// Returns the value of a public property on an object
+        /// </summary>
+        /// <param name="Name">The name of the property</param>
+        /// <param name="Instance">The object from which to read the property from</param>
+        /// <returns>The value of the property content (may be null)</returns>
+        public static object GetPublicProperty(string Name, object Instance)
+        {
+            if (Instance == null)
+                return null;
+
+            PropertyInfo property = Instance.GetType().GetProperty(Name, BindingFlags.Instance | BindingFlags.Public);
+            if (property == null)
+                throw new ArgumentException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound"), Name), "Name");
             return property.GetValue(Instance);
         }
 
