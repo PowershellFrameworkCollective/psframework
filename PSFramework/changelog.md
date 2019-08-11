@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-##
+## 1.0.32 : 2019-08-11
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
  - New: Command Import-PSFPowerShellDataFile - wraps around Import-PowerShellDataFile and makes it available on PSv3+
  - Upd: Parameter Class: Computer : Add support for output of Get-ADDomainController
