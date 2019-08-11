@@ -24,7 +24,7 @@
 					}
 					'VariableExpressionAst'
 					{
-						$members = Get-Variable -Name $InputObject.Expression.VariablePath.UserPath -ValueOnly -ErrorAction Ignore | Select-Object -First 1 | Get-Member -MemberType Properties
+						$members = Get-Variable -Name $InputObject.Expression.VariablePath.UserPath -ValueOnly -ErrorAction Ignore | Write-Output | Select-Object -First 1 | Get-Member -MemberType Properties
 						foreach ($member in $members)
 						{
 							try

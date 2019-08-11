@@ -1,6 +1,9 @@
 ﻿# Load the cmdlets
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\cmdlets.ps1"
 
+# Import the aliases for PSFramework types
+. Import-ModuleFile -Path "$($script:ModuleRoot)\bin\type-aliases.ps1"
+
 # Load the strings
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\strings.ps1"
 
@@ -42,9 +45,6 @@ foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\parameter
 {
 	. Import-ModuleFile -Path $file.FullName
 }
-
-# Import the aliases for PSFramework types
-. Import-ModuleFile -Path "$($script:ModuleRoot)\bin\type-aliases.ps1"
 
 # Import the type extensions used for special types that need to be dynamically calculated
 . Import-ModuleFile -Path "$($script:ModuleRoot)\bin\type-extensions.ps1"

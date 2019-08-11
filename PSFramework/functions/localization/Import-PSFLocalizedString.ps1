@@ -30,7 +30,6 @@
 		This command is not safe to expose in a JEA endpoint.
 		In its need to maintain compatibility it allows for a path for arbitrary code execution.
 #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "")]
 	[PSFramework.PSFCore.NoJeaCommand()]
 	[CmdletBinding()]
 	param (
@@ -42,7 +41,7 @@
 		[string]
 		$Module,
 		
-		#[PsfValidateSet(TabCompletion = 'PSFramework-LanguageNames')]
+		[PsfValidateSet(TabCompletion = 'PSFramework-LanguageNames', NoResults = 'Continue')]
 		[string]
 		$Language = 'en-US'
 	)
@@ -56,17 +55,7 @@
 	{
 		foreach ($pathItem in $resolvedPath)
 		{
-			# If launched in JEA Endpoint, Import-PowerShellDataFile is unavailable due to a bug
-			# It is important to check the initial sessionstate, as the module's current state will be 'FullLanguage' instead.
-			if ($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage')
-			{
-				# This is considered safe, as you should not be using unsafe localization resources in a constrained endpoint
-				$data = Invoke-Expression (Get-Content -Path $pathItem -Raw)
-			}
-			else
-			{
-				$data = Import-PowerShellDataFile -Path $pathItem
-			}
+			$data = Import-PSFPowerShellDataFile -Path $pathItem
 			foreach ($key in $data.Keys)
 			{
 				[PSFramework.Localization.LocalizationHost]::Write($Module, $key, $Language, $data[$key])

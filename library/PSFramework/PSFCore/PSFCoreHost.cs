@@ -57,5 +57,56 @@ namespace PSFramework.PSFCore
 
             _Initialized = false;
         }
+
+        #region Debug Mode
+        /// <summary>
+        /// The master switch to enable debug mode.
+        /// </summary>
+        public static bool DebugMode
+        {
+            get { return _DebugMode; }
+            set
+            {
+                DebugData dummy;
+                _DebugMode = value;
+                if (!value)
+                    while (!DebugData.IsEmpty)
+                        DebugData.TryDequeue(out dummy);
+            }
+        }
+        private static bool _DebugMode = false;
+
+        /// <summary>
+        /// The total capacity of the debug queue
+        /// </summary>
+        public static int DebugQueueSize
+        {
+            get { return _DebugQueueSize; }
+            set
+            {
+                _DebugQueueSize = value;
+                DebugData.Size = value;
+            }
+        }
+        private static int _DebugQueueSize = 256;
+
+        /// <summary>
+        /// Write a debug message
+        /// </summary>
+        /// <param name="Label">The label to apply to the data</param>
+        /// <param name="Data">The data to write</param>
+        public static void WriteDebug(string Label, object Data)
+        {
+            if (!DebugMode)
+                return;
+
+            DebugData.Enqueue(new DebugData(Label, Data));
+        }
+
+        /// <summary>
+        /// The data storage containing the debug messages.
+        /// </summary>
+        public static readonly Utility.LimitedConcurrentQueue<DebugData> DebugData = new Utility.LimitedConcurrentQueue<DebugData>(DebugQueueSize);
+        #endregion Debug Mode
     }
 }

@@ -71,22 +71,24 @@
 		$CacheDuration = 0
 	)
 	
-	$scp = New-Object PSFramework.TabExpansion.ScriptContainer
-	$scp.Name = $Name.ToLower()
-	$scp.LastDuration = New-TimeSpan -Seconds -1
-	$scp.LastResultsValidity = $CacheDuration
-	
-	if ($Mode -like "Auto")
+	process
 	{
-		$ast = [System.Management.Automation.Language.Parser]::ParseInput($ScriptBlock, [ref]$null, [ref]$null)
-		$simple = $null -eq $ast.ParamBlock
-	}
-	elseif ($Mode -like "Simple") { $simple = $true }
-	else { $simple = $false }
-	
-	if ($simple)
-	{
-		$scr = [scriptblock]::Create(@'
+		$scp = New-Object PSFramework.TabExpansion.ScriptContainer
+		$scp.Name = $Name.ToLower()
+		$scp.LastDuration = New-TimeSpan -Seconds -1
+		$scp.LastResultsValidity = $CacheDuration
+		
+		if ($Mode -like "Auto")
+		{
+			$ast = [System.Management.Automation.Language.Parser]::ParseInput($ScriptBlock, [ref]$null, [ref]$null)
+			$simple = $null -eq $ast.ParamBlock
+		}
+		elseif ($Mode -like "Simple") { $simple = $true }
+		else { $simple = $false }
+		
+		if ($simple)
+		{
+			$scr = [scriptblock]::Create(@'
 	param (
 		$commandName,
 		
@@ -105,7 +107,7 @@
 	{
 		$scriptContainer.LastExecution = $start
 			
-		$innerScript = [ScriptBlock]::Create(($scriptContainer.InnerScriptBlock))
+		$innerScript = $scriptContainer.InnerScriptBlock
 		# Use Write-Output to enumerate arrays properly, avoids trouble with persisting cached results
 		try { $items = $innerScript.Invoke() | Write-Output }
 		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
@@ -125,13 +127,14 @@
 			New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
 		}
 	}
-'@.Replace("<name>", $Name.ToLower()))
-		$scp.ScriptBlock = $scr
-		$scp.InnerScriptBlock = $ScriptBlock
+'@.Replace("<name>", $Name))
+			$scp.ScriptBlock = $scr
+			$scp.InnerScriptBlock = $ScriptBlock
+		}
+		else
+		{
+			$scp.ScriptBlock = $ScriptBlock
+		}
+		[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name] = $scp
 	}
-	else
-	{
-		$scp.ScriptBlock = $ScriptBlock
-	}
-	[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name.ToLower()] = $scp
 }

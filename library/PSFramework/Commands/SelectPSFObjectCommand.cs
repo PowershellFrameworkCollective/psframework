@@ -26,6 +26,7 @@ namespace PSFramework.Commands
         /// The properties to select. Supports fancy DSL
         /// </summary>
         [PSFCore.NoJeaParameter()]
+        [Validation.PsfValidateTrustedData()]
         [Parameter(ParameterSetName = "DefaultParameter", Position = 0)]
         [Parameter(ParameterSetName = "SkipLastParameter", Position = 0)]
         public SelectParameter[] Property = new SelectParameter[0];

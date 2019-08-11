@@ -229,7 +229,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 if (OverrideExceptionMessage.ToBool())
                     return _ResolvedMessage;
 
-                if (Regex.IsMatch(Message, Regex.Escape(ErrorRecord[0].Exception.Message)))
+                if (Regex.IsMatch(_ResolvedMessage, Regex.Escape(ErrorRecord[0].Exception.Message)))
                     return _ResolvedMessage;
 
                 return String.Format("{0} | {1}", _ResolvedMessage, ErrorRecord[0].Exception.Message);
@@ -326,6 +326,10 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
         protected override void BeginProcessing()
         {
             _timestamp = DateTime.Now;
+
+            // Prevent accidental nulling of parameter
+            if (StringValues == null)
+                StringValues = new object[10];
 
             #region Resolving Meta Information
             _callStack = Utility.UtilityHost.Callstack;

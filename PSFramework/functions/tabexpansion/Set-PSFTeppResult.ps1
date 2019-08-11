@@ -40,20 +40,12 @@
 		$Value
 	)
 	
-	begin
-	{
-		
-	}
 	process
 	{
 		if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $TabCompletion -Action "Setting the cache")
 		{
-			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion.ToLower()].LastResult = $Value
-			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion.ToLower()].LastExecution = ([System.DateTime]::Now)
+			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion].LastResult = $Value
+			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion].LastExecution = ([System.DateTime]::Now)
 		}
-	}
-	end
-	{
-	
 	}
 }

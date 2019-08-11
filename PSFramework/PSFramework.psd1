@@ -65,6 +65,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Import-PSFLocalizedString',
+		'Import-PSFPowerShellDataFile',
 		'Install-PSFLoggingProvider',
 		'Invoke-PSFCommand',
 		'Join-PSFPath',
