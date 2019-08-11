@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Extension;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace PSFramework.Validation
         /// Name of the Tab Completion scriptblock to use for validate set.
         /// </summary>
         public string TabCompletion;
+
+        /// <summary>
+        /// The action to take when no results are being returned.
+        /// </summary>
+        public NoResultsActionPreference NoResults = NoResultsActionPreference.Error;
 
         /// <summary>
         /// Custom error message to display
@@ -64,6 +70,8 @@ namespace PSFramework.Validation
             List<string> legalValues = new List<string>();
             foreach (string value in GetValues())
                 legalValues.Add(value.Trim("'".ToCharArray()));
+            if (legalValues.Count == 0 && NoResults == NoResultsActionPreference.Continue)
+                return;
 
             if (legalValues.Any(e => String.Equals(e, element.ToString(), StringComparison.OrdinalIgnoreCase)))
                 return;

@@ -15,7 +15,7 @@ namespace PSFramework.TabExpansion
         /// <summary>
         /// Field containing the scripts that were registered.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptContainer> Scripts = new ConcurrentDictionary<string, ScriptContainer>();
+        public static ConcurrentDictionary<string, ScriptContainer> Scripts = new ConcurrentDictionary<string, ScriptContainer>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
@@ -46,7 +46,7 @@ namespace PSFramework.TabExpansion
         /// - TypeKnown (Boolean, whether the type is known)
         /// Used by the Tab Completion: PSFramework-Input-ObjectProperty
         /// </summary>
-        public static ConcurrentDictionary<string, object[]> InputCompletionTypeData = new ConcurrentDictionary<string, object[]>();
+        public static ConcurrentDictionary<string, object[]> InputCompletionTypeData = new ConcurrentDictionary<string, object[]>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Dictionary containing a list of hashtables to explicitly add properties when completing for specific commands
@@ -56,7 +56,7 @@ namespace PSFramework.TabExpansion
         /// - TypeKnown (Boolean, whether the type is known)
         /// Used by the Tab Completion: PSFramework-Input-ObjectProperty
         /// </summary>
-        public static ConcurrentDictionary<string, object[]> InputCompletionCommandData = new ConcurrentDictionary<string, object[]>();
+        public static ConcurrentDictionary<string, object[]> InputCompletionCommandData = new ConcurrentDictionary<string, object[]>(StringComparer.InvariantCultureIgnoreCase);
         #endregion Resources for individual tab completions
     }
 }

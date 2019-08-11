@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ConvertToPSFHashtableCommand.cs" />
     <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
     <Compile Include="Commands\PSFCmdlet.cs" />
     <Compile Include="Commands\RemovePSFNullCommand.cs" />
@@ -102,8 +103,11 @@
     <Compile Include="Message\TransformList.cs" />
     <Compile Include="Message\TransformType.cs" />
     <Compile Include="Meta\CallerInfo.cs" />
+    <None Include="Meta\GetSafeValueVisitor.cs" />
+    <None Include="Meta\IsSafeValueVisitor.cs" />
     <Compile Include="Meta\PipelineCommand.cs" />
     <Compile Include="Meta\Pipeline.cs" />
+    <Compile Include="Meta\PSTraceSource.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Parameter\SelectScriptPropertyParameter.cs" />
     <Compile Include="Parameter\TimeSpanParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSFCore\DebugData.cs" />
     <Compile Include="PSFCore\NoJeaCommandAttribute.cs" />
     <Compile Include="PSFCore\NoJeaParameterAttribute.cs" />
     <Compile Include="PSFCore\PSFCoreHost.cs" />
@@ -154,9 +159,11 @@
     <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
+    <Compile Include="Validation\NoResultsAction.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
     <Compile Include="Validation\PsfValidateScriptAttribute.cs" />
     <Compile Include="Validation\PsfValidateSetAttribute.cs" />
+    <Compile Include="Validation\PsfValidateTrustedDataAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

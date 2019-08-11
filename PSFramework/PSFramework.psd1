@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.0.19'
+	ModuleVersion = '1.0.32'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -40,7 +40,6 @@
 		'ConvertFrom-PSFArray',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
-		'ConvertTo-PSFHashtable',
 		'Disable-PSFTaskEngineTask',
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
@@ -66,6 +65,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Import-PSFLocalizedString',
+		'Import-PSFPowerShellDataFile',
 		'Install-PSFLoggingProvider',
 		'Invoke-PSFCommand',
 		'Join-PSFPath',
@@ -120,6 +120,7 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
+		'ConvertTo-PSFHashtable',
 		'Invoke-PSFProtectedCommand',
 		'Remove-PSFNull',
 		'Select-PSFObject',

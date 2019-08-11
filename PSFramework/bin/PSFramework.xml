@@ -4,6 +4,42 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
+            <summary>
+            Implements the ConvertTo-PSFHashtable command
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Include">
+            <summary>
+            The properties to include explicitly
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Exclude">
+            <summary>
+            Any properties to exclude explicitly
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.IncludeEmpty">
+            <summary>
+            Enables adding empty keys for explicitly included keys that were not found on the input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Inherit">
+            <summary>
+            Specifically designed for use in a command when passing through parameters with default values.
+            Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.InputObject">
+            <summary>
+            The actual items to convert
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.ProcessRecord">
+            <summary>
+            Implements the basic processing logic to convert objects to hashtables
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.InvokePSFProtectedCommand">
             <summary>
             A wrapper that will execute the specified scriptblock in a safe manner
@@ -3988,6 +4024,38 @@
             <param name="Value">The string to interpret</param>
             <returns>The interpreted timespan value</returns>
         </member>
+        <member name="T:PSFramework.PSFCore.DebugData">
+            <summary>
+            Debug data container
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.DebugData.Timestamp">
+            <summary>
+            TImestamp the data was created at
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.DebugData.Label">
+            <summary>
+            Label for the data written
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.DebugData.Data">
+            <summary>
+            Data submitted by the writer
+            </summary>
+        </member>
+        <member name="F:PSFramework.PSFCore.DebugData.ScriptCallstack">
+            <summary>
+            Callstack at the moment of the call
+            </summary>
+        </member>
+        <member name="M:PSFramework.PSFCore.DebugData.#ctor(System.String,System.Object)">
+            <summary>
+            Create debug information for troubleshooting purposes
+            </summary>
+            <param name="Data">The data to write</param>
+            <param name="Label">A label to store with the data to better track its origin</param>
+        </member>
         <member name="T:PSFramework.PSFCore.NoJeaCommandAttribute">
             <summary>
             Decorator attribute declaring a command in its entirety unsafe for making publicly available in JEA
@@ -4023,6 +4091,28 @@
             <summary>
             Reverses the initialization of the PSFramework library.
             Should be called when destroying the main runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.DebugMode">
+            <summary>
+            The master switch to enable debug mode.
+            </summary>
+        </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.DebugQueueSize">
+            <summary>
+            The total capacity of the debug queue
+            </summary>
+        </member>
+        <member name="M:PSFramework.PSFCore.PSFCoreHost.WriteDebug(System.String,System.Object)">
+            <summary>
+            Write a debug message
+            </summary>
+            <param name="Label">The label to apply to the data</param>
+            <param name="Data">The data to write</param>
+        </member>
+        <member name="F:PSFramework.PSFCore.PSFCoreHost.DebugData">
+            <summary>
+            The data storage containing the debug messages.
             </summary>
         </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
@@ -5576,6 +5666,46 @@
             <param name="Name">The name of the laias to kill</param>
             <param name="Force">Whether to remove ReadOnly items</param>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateProperty(System.String,System.Object)">
+            <summary>
+            Returns the value of a private property on an object
+            </summary>
+            <param name="Name">The name of the property</param>
+            <param name="Instance">The object from which to read the property from</param>
+            <returns>The value of the property content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPublicProperty(System.String,System.Object)">
+            <summary>
+            Returns the value of a public property on an object
+            </summary>
+            <param name="Name">The name of the property</param>
+            <param name="Instance">The object from which to read the property from</param>
+            <returns>The value of the property content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticProperty(System.Type,System.String)">
+            <summary>
+            Returns the value of a private static property on a type
+            </summary>
+            <param name="StaticType">The type to pick from</param>
+            <param name="Name">The name of the property to retrieve</param>
+            <returns>The value of the property content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateField(System.String,System.Object)">
+            <summary>
+            Returns the value of a private field on an object
+            </summary>
+            <param name="Name">The name of the field</param>
+            <param name="Instance">The object from which to read the field from</param>
+            <returns>The value of the field content (may be null)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticMethod(System.Type,System.String)">
+            <summary>
+            Returns a static private method of a type
+            </summary>
+            <param name="StaticType">The type to search in</param>
+            <param name="Name">The name of the method to retrieve</param>
+            <returns>The method object requested</returns>
+        </member>
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
@@ -5594,6 +5724,21 @@
         <member name="F:PSFramework.Utility.UtilityHost.ScriptBlocks">
             <summary>
             Stored scriptblocks that can be retrieved on demand anywhere within the process
+            </summary>
+        </member>
+        <member name="T:PSFramework.Validation.NoResultsActionPreference">
+            <summary>
+            The preference on how to deal with no legal values being returned. Used by PsfValidateSet
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.NoResultsActionPreference.Continue">
+            <summary>
+            Allow to continue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.NoResultsActionPreference.Error">
+            <summary>
+            Fail in fire and blood
             </summary>
         </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
@@ -5707,6 +5852,11 @@
             Name of the Tab Completion scriptblock to use for validate set.
             </summary>
         </member>
+        <member name="F:PSFramework.Validation.PsfValidateSetAttribute.NoResults">
+            <summary>
+            The action to take when no results are being returned.
+            </summary>
+        </member>
         <member name="P:PSFramework.Validation.PsfValidateSetAttribute.ErrorMessage">
             <summary>
             Custom error message to display
@@ -5734,6 +5884,24 @@
             Returns the values provided by the options specified.
             </summary>
             <returns>The legal values you may provide.</returns>
+        </member>
+        <member name="T:PSFramework.Validation.PsfValidateTrustedDataAttribute">
+            <summary>
+            Validation attribute that works equivalent to the ValidateTrustedDataAttribute, but can be used on PS3+ (for no effect on those).
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateTrustedDataAttribute.Validate(System.Object,System.Management.Automation.EngineIntrinsics)">
+            <summary>
+            Validates that the parameter argument is not untrusted
+            </summary>
+            <param name="arguments">Object to validate</param>
+            <param name="engineIntrinsics">
+            The engine APIs for the context under which the validation is being
+            evaluated.
+            </param>
+            <exception cref="T:System.Management.Automation.ValidationMetadataException">
+            if the argument is untrusted.
+            </exception>
         </member>
     </members>
 </doc>
