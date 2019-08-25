@@ -1,4 +1,8 @@
 ﻿# CHANGELOG
+## 1.0.35 : 2019-08-26
+- Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them
+- Fix: Tab Completion scriptblocks are again aware of $fakeBoundParameter and other automatic variables
+
 ## 1.0.33 : 2019-08-11
 - Fix: Build order update fixes unknown attribute error
 

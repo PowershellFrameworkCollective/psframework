@@ -5674,6 +5674,14 @@
             <param name="Instance">The object from which to read the property from</param>
             <returns>The value of the property content (may be null)</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.SetPrivateProperty(System.String,System.Object,System.Object)">
+            <summary>
+            Updates the value of a private property
+            </summary>
+            <param name="Name">The name of the property to update</param>
+            <param name="Instance">The object that contains the property to update</param>
+            <param name="Value">The value to apply</param>
+        </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetPublicProperty(System.String,System.Object)">
             <summary>
             Returns the value of a public property on an object
@@ -5725,6 +5733,13 @@
             <summary>
             Stored scriptblocks that can be retrieved on demand anywhere within the process
             </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.ImportScriptBlock(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Imports a scriptblock into the current sessionstate, without affecting its language mode.
+            Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
+            </summary>
+            <param name="ScriptBlock">The code to localize</param>
         </member>
         <member name="T:PSFramework.Validation.NoResultsActionPreference">
             <summary>
