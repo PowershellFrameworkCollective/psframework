@@ -108,6 +108,7 @@
 		$scriptContainer.LastExecution = $start
 			
 		$innerScript = $scriptContainer.InnerScriptBlock
+		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($innerScript)
 		# Use Write-Output to enumerate arrays properly, avoids trouble with persisting cached results
 		try { $items = $innerScript.Invoke() | Write-Output }
 		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }

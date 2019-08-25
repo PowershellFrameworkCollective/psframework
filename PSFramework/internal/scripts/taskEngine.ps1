@@ -19,7 +19,8 @@
 				$task.State = 'Running'
 				try
 				{
-					([ScriptBlock]::Create($task.ScriptBlock.ToString())).Invoke()
+					[PSFramework.Utility.UtilityHost]::ImportScriptBlock($task.ScriptBlock)
+					$task.ScriptBlock.Invoke()
 					$task.State = 'Pending'
 				}
 				catch
