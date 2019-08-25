@@ -305,6 +305,24 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Updates the value of a private property
+        /// </summary>
+        /// <param name="Name">The name of the property to update</param>
+        /// <param name="Instance">The object that contains the property to update</param>
+        /// <param name="Value">The value to apply</param>
+        public static void SetPrivateProperty(string Name, object Instance, object Value)
+        {
+            if (Instance == null)
+                return;
+
+            PropertyInfo property = Instance.GetType().GetProperty(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (property == null)
+                throw new ArgumentException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound"), Name), "Name");
+
+            property.SetValue(Instance, Value);
+        }
+
+        /// <summary>
         /// Returns the value of a public property on an object
         /// </summary>
         /// <param name="Name">The name of the property</param>
@@ -408,5 +426,17 @@ namespace PSFramework.Utility
         /// Stored scriptblocks that can be retrieved on demand anywhere within the process
         /// </summary>
         public static ConcurrentDictionary<string, ScriptBlockItem> ScriptBlocks = new ConcurrentDictionary<string, ScriptBlockItem>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Imports a scriptblock into the current sessionstate, without affecting its language mode.
+        /// Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
+        /// </summary>
+        /// <param name="ScriptBlock">The code to localize</param>
+        public static void ImportScriptBlock(ScriptBlock ScriptBlock)
+        {
+            object context = GetExecutionContextFromTLS();
+            object internalSessionState = GetPrivateProperty("Internal", GetPrivateProperty("SessionState", context));
+            SetPrivateProperty("SessionStateInternal", ScriptBlock, internalSessionState);
+        }
     }
 }
