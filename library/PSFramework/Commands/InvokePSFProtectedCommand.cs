@@ -132,7 +132,9 @@ namespace PSFramework.Commands
 
             try
             {
-                WriteObject(PSCmdlet.InvokeCommand.InvokeScript(false, ScriptBlock, null, null));
+                object result = PSCmdlet.InvokeCommand.InvokeScript(false, ScriptBlock, null, null);
+                if (result != null)
+                    WriteObject(result);
             }
             catch (Exception e)
             {
