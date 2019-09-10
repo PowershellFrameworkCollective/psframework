@@ -5587,6 +5587,31 @@
             Operating System, CPU &amp; RAM
             </summary>
         </member>
+        <member name="T:PSFramework.Utility.TypeTransformationAttribute">
+            <summary>
+            Tries to convert input type into the target type, using PowerShell type coercion.
+            Implemented to have a bool parameter accept a switch value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.TypeTransformationAttribute.TargetType">
+            <summary>
+            The type to convert to
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.TypeTransformationAttribute.Transform(System.Management.Automation.EngineIntrinsics,System.Object)">
+            <summary>
+            Converts input to output
+            </summary>
+            <param name="engineIntrinsics"></param>
+            <param name="inputData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Utility.TypeTransformationAttribute.#ctor(System.Type)">
+            <summary>
+            Creates the basic attribute specifying the target type
+            </summary>
+            <param name="TargetType">The type to convert to</param>
+        </member>
         <member name="T:PSFramework.Utility.UtilityHost">
             <summary>
             Contains static resources of various kinds. Primarily for internal consumption.

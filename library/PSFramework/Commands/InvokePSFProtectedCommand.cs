@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -49,6 +50,7 @@ namespace PSFramework.Commands
         /// Will be picked up automatically if not specified.
         /// </summary>
         [Parameter()]
+        [TypeTransformation(typeof(Boolean))]
         public bool EnableException;
 
         /// <summary>
@@ -104,6 +106,8 @@ namespace PSFramework.Commands
         {
             if (PSCmdlet == null)
                 PSCmdlet = (PSCmdlet)GetVariableValue("PSCmdlet");
+            if (PSCmdlet == null)
+                PSCmdlet = this;
 
             _Caller = new Meta.CallerInfo(GetCaller());
 
@@ -117,6 +121,7 @@ namespace PSFramework.Commands
         protected override void ProcessRecord()
         {
             bool test = PSCmdlet.ShouldProcess(LanguagePrimitives.ConvertTo<string>(Target), _Message);
+
             if (test)
                 WriteMessage(Localization.LocalizationHost.ReadLog("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Confirmed", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, null, Target);
             else
