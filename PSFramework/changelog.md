@@ -1,10 +1,14 @@
 ﻿# CHANGELOG
+##
+ - New: Command Get-PSFPath : Returns configured paths.
+ - New: Command Set-PSFPath : Configures a path under a specified name.
+
 ## 1.0.35 : 2019-08-26
-- Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them
-- Fix: Tab Completion scriptblocks are again aware of $fakeBoundParameter and other automatic variables
+ - Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them
+ - Fix: Tab Completion scriptblocks are again aware of $fakeBoundParameter and other automatic variables
 
 ## 1.0.33 : 2019-08-11
-- Fix: Build order update fixes unknown attribute error
+ - Fix: Build order update fixes unknown attribute error
 
 ## 1.0.32 : 2019-08-11
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)
