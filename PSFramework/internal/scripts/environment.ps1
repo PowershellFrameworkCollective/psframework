@@ -10,16 +10,21 @@ if ($PSVersionTable.PSVersion.Major -ge 6) { $psVersionName = "PowerShell" }
 if ($IsLinux -or $IsMacOs)
 {
 	# Defaults to $Env:XDG_CONFIG_HOME on Linux or MacOS ($HOME/.config/)
-	$fileUserLocal = $Env:XDG_CONFIG_HOME
-	if (-not $fileUserLocal) { $fileUserLocal = Join-Path $HOME .config/ }
+	$script:path_LocalAppData = $Env:XDG_CONFIG_HOME
+	if (-not $script:path_LocalAppData) { $script:path_LocalAppData = Join-Path $HOME .config/ }
 	
-	$script:path_FileUserLocal = Join-Path (Join-Path $fileUserLocal $psVersionName) "PSFramework/"
+	$script:path_FileUserLocal = Join-Path (Join-Path $script:path_LocalAppData $psVersionName) "PSFramework/"
 }
 else
 {
 	# Defaults to $Env:LocalAppData on Windows
 	$script:path_FileUserLocal = Join-Path $Env:LocalAppData "$psVersionName\PSFramework\Config"
-	if (-not $script:path_FileUserLocal) { $script:path_FileUserLocal = Join-Path ([Environment]::GetFolderPath("LocalApplicationData")) "$psVersionName\PSFramework\Config" }
+	$script:path_LocalAppData = $Env:LocalAppData
+	if (-not $script:path_FileUserLocal)
+	{
+		$script:path_FileUserLocal = Join-Path ([Environment]::GetFolderPath("LocalApplicationData")) "$psVersionName\PSFramework\Config"
+		$script:path_LocalAppData = [Environment]::GetFolderPath("LocalApplicationData")
+	}
 }
 #endregion User Local
 
@@ -27,16 +32,21 @@ else
 if ($IsLinux -or $IsMacOs)
 {
 	# Defaults to the first value in $Env:XDG_CONFIG_DIRS on Linux or MacOS (or $HOME/.local/share/)
-	$fileUserShared = @($Env:XDG_CONFIG_DIRS -split ([IO.Path]::PathSeparator))[0]
-	if (-not $fileUserShared) { $fileUserShared = Join-Path $HOME .local/share/ }
+	$script:path_AppData = @($Env:XDG_CONFIG_DIRS -split ([IO.Path]::PathSeparator))[0]
+	if (-not $script:path_AppData) { $script:path_AppData = Join-Path $HOME .local/share/ }
 	
-	$script:path_FileUserShared = Join-Path (Join-Path $fileUserShared $psVersionName) "PSFramework/"
+	$script:path_FileUserShared = Join-Path (Join-Path $script:path_AppData $psVersionName) "PSFramework/"
 }
 else
 {
 	# Defaults to $Env:AppData on Windows
 	$script:path_FileUserShared = Join-Path $Env:AppData "$psVersionName\PSFramework\Config"
-	if (-not $Env:AppData) { $script:path_FileUserShared = Join-Path ([Environment]::GetFolderPath("ApplicationData")) "$psVersionName\PSFramework\Config" }
+	$script:path_AppData = $env:APPDATA
+	if (-not $Env:AppData)
+	{
+		$script:path_AppData = [Environment]::GetFolderPath("ApplicationData")
+		$script:path_FileUserShared = Join-Path ([Environment]::GetFolderPath("ApplicationData")) "$psVersionName\PSFramework\Config"
+	}
 }
 #endregion User Shared
 
@@ -45,15 +55,20 @@ if ($IsLinux -or $IsMacOs)
 {
 	# Defaults to /etc/xdg elsewhere
 	$XdgConfigDirs = $Env:XDG_CONFIG_DIRS -split ([IO.Path]::PathSeparator) | Where-Object { $_ -and (Test-Path $_) }
-	if ($XdgConfigDirs.Count -gt 1) { $basePath = $XdgConfigDirs[1] }
-	else { $basePath = "/etc/xdg/" }
-	$script:path_FileSystem = Join-Path $basePath "$psVersionName/PSFramework/"
+	if ($XdgConfigDirs.Count -gt 1) { $script:path_ProgramData = $XdgConfigDirs[1] }
+	else { $script:path_ProgramData = "/etc/xdg/" }
+	$script:path_FileSystem = Join-Path $script:path_ProgramData "$psVersionName/PSFramework/"
 }
 else
 {
 	# Defaults to $Env:ProgramData on Windows
 	$script:path_FileSystem = Join-Path $Env:ProgramData "$psVersionName\PSFramework\Config"
-	if (-not $script:path_FileSystem) { $script:path_FileSystem = Join-Path ([Environment]::GetFolderPath("CommonApplicationData")) "$psVersionName\PSFramework\Config" }
+	$script:path_ProgramData = $env:ProgramData
+	if (-not $script:path_FileSystem)
+	{
+		$script:path_ProgramData = [Environment]::GetFolderPath("CommonApplicationData")
+		$script:path_FileSystem = Join-Path ([Environment]::GetFolderPath("CommonApplicationData")) "$psVersionName\PSFramework\Config"
+	}
 }
 #endregion System
 
