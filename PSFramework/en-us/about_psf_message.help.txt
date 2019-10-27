@@ -46,7 +46,7 @@ LONG DESCRIPTION
 	
 	  Write-PSFMessage
 	
-	By the simple act of using this function, not only do you write the message
+	By the simple act of using this command, not only do you write the message
 	to the channels chosen, but also add them to the logging system. That system
 	will not only create log files, but also take care to clean up old or too
 	large files.
@@ -107,9 +107,9 @@ LONG DESCRIPTION
 	  Critical (1), Important / Output / Host (2), Significant (3),
 	  VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8),
 	  InternalComment (9), Warning (666)
-	  Debugging information is only really useful to automated debugger systems.
-	  For example when running a powershell script from within a compiled
-	  application, as is common to many monitoring solutions.
+	  Debug-only message (level range 7-9 by default) are generally designed to
+	  provide debugging information to the developer and are of lesser interest
+	  to regular users.
 	
 	Warning:
 	  Warning (666)
