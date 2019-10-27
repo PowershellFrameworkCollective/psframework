@@ -30,6 +30,7 @@
 	
 		Configures C:\temp as the current temp path. (does not override $env:temp !)
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Default')]
 	param (
 		[Parameter(Mandatory = $true)]
