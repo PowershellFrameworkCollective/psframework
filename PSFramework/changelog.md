@@ -2,6 +2,15 @@
 ##
  - New: Command Get-PSFPath : Returns configured paths.
  - New: Command Set-PSFPath : Configures a path under a specified name.
+ - New: ATA : TypeTransformationAttribute - transforms input into the target type using powershell type coercion. Use to override language primitive overrides, especially to allow binding switch parameters to bool parameters of commands defined in C#
+ - Upd: Invoke-PSFProtectedCommand - now accepts switch parameters on -EnableException
+ - Upd: Invoke-PSFProtectedCommand - now accepts ContinueLabel parameter
+ - Upd: Invoke-PSFProtectedCommand - now explicitly confirms successful execution
+ - Upd: Invoke-PSFProtectedCommand - now supports retry attempts, using `-RetryCount`, `-RetryWait` and `-RetryErrorType` parameters
+ - Upd: Export-PSFClixml - add `-PassThru` parameter
+ - Upd: Get-PSFTaskEngineCache - collector can no longer be executed in parallel
+ - Fix: Get-PSFTaskEngineCache - collector script no longer bound by runspace affinity.
+ - Fix: Import - concurrency issue, parameterclass mappings used to be subject to concurrent access issues.
 
 ## 1.0.35 : 2019-08-26
  - Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them

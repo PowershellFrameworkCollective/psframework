@@ -87,6 +87,31 @@
             Triggers the calling of 'continue' in case of error
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.ContinueLabel">
+            <summary>
+            The label in which to continue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.Tag">
+            <summary>
+            Tags to add to the messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryCount">
+            <summary>
+            How many times shall an attempt be made to try again when execution fails?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryWait">
+            <summary>
+            How long to wait inbetween retries?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryErrorType">
+            <summary>
+            Only retry on errors of the following types
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
             <summary>
             Information on the calling command, including name, module, file and line.
@@ -100,6 +125,11 @@
         <member name="P:PSFramework.Commands.InvokePSFProtectedCommand._ErrorMessage">
             <summary>
             Error message to post when execution fails
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._ErrorScript">
+            <summary>
+            script used to write horrible errors on screen
             </summary>
         </member>
         <member name="M:PSFramework.Commands.InvokePSFProtectedCommand.BeginProcessing">
@@ -1639,6 +1669,23 @@
             Reads a localized string from the list of available strings
             </summary>
             <param name="FullName">The name of the string to request. Include the modulename</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Read(System.String,System.Object[])">
+            <summary>
+            Reads a localized string from the list of available strings
+            </summary>
+            <param name="FullName">The name of the string to request. Include the modulename</param>
+            <param name="StringValues">The values to format into the string</param>
+            <returns>The localized string requested. Empty string if nothing.</returns>
+        </member>
+        <member name="M:PSFramework.Localization.LocalizationHost.Read(System.String,System.String,System.Object[])">
+            <summary>
+            Reads a localized string from the list of available strings
+            </summary>
+            <param name="ModuleName">The name of the module the string belongs to.</param>
+            <param name="Name">The individual name of the setting.</param>
+            <param name="StringValues">The values to format into the string</param>
             <returns>The localized string requested. Empty string if nothing.</returns>
         </member>
         <member name="M:PSFramework.Localization.LocalizationHost.ReadLog(System.String)">
@@ -4666,6 +4713,12 @@
             </summary>
             <param name="Module">The module the item belongs to</param>
             <param name="Name">The name of the item.</param>
+        </member>
+        <member name="M:PSFramework.TaskEngine.CacheItem.GetValue">
+            <summary>
+            Obtain value for cached item. Run collector script if necessary, prevent parallel collector execution.
+            </summary>
+            <returns>The cached values</returns>
         </member>
         <member name="T:PSFramework.TaskEngine.Priority">
             <summary>
