@@ -31,6 +31,7 @@
 	
 		Returns the callback script named 'MyModule.Configuration'
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[OutputType([PSFramework.FlowControl.Callback])]
 	[CmdletBinding()]
 	param (

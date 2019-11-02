@@ -29,6 +29,7 @@
         - $true if both sets contains the same objects in the same order
         - $false if they do not
     #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, Position = 0)]
