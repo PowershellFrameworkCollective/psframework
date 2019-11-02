@@ -1,5 +1,5 @@
 ---
-external help file: PSFramework-help.xml
+external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version:
 schema: 2.0.0
@@ -13,8 +13,8 @@ Converts an object into a hashtable.
 ## SYNTAX
 
 ```
-ConvertTo-PSFHashtable [[-Exclude] <String[]>] [[-Include] <String[]>] [-IncludeEmpty]
- [-Inherit] [[-InputObject] <Object>] [<CommonParameters>]
+ConvertTo-PSFHashtable [-Include <String[]>] [-Exclude <String[]>] [-IncludeEmpty] [-Inherit]
+ [-InputObject <PSObject[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,7 +55,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -71,7 +71,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -115,20 +115,19 @@ Accept wildcard characters: False
 The object(s) to convert
 
 ```yaml
-Type: Object
+Type: PSObject[]
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

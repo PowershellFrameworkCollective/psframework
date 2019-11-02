@@ -94,11 +94,6 @@
 		$Errors
 	)
 	
-	begin
-	{
-		
-	}
-	
 	process
 	{
 		if ($Errors) { $messages = [PSFramework.Message.LogHost]::GetErrors() | Where-Object { ($_.FunctionName -like $FunctionName) -and ($_.ModuleName -like $ModuleName) } }
@@ -122,10 +117,15 @@
 		if (Test-PSFParameterBinding -ParameterName Last)
 		{
 			$history = Get-History | Where-Object CommandLine -NotLike "Get-PSFMessage*" | Select-Object -Last $Last -Skip $Skip
-			$start = $history[0].StartExecutionTime
-			$end = $history[-1].EndExecutionTime
-			
-			$messages = $messages | Where-Object { ($_.Timestamp -gt $start) -and ($_.Timestamp -lt $end) -and ($_.Runspace -eq ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId))}
+			if ($history)
+			{
+				$start = $history[0].StartExecutionTime
+				$end = $history[-1].EndExecutionTime
+				
+				$messages = $messages | Where-Object {
+					($_.Timestamp -ge $start) -and ($_.Timestamp -le $end) -and ($_.Runspace -eq ([System.Management.Automation.Runspaces.Runspace]::DefaultRunspace.InstanceId))
+				}
+			}
 		}
 		
 		if (Test-PSFParameterBinding -ParameterName Level)
@@ -134,10 +134,5 @@
 		}
 		
 		return $messages
-	}
-	
-	end
-	{
-		
 	}
 }

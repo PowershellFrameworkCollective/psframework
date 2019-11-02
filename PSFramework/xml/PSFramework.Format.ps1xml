@@ -71,7 +71,7 @@
 			</TableControl>
 		</View>
 		
-		        <!-- PSFramework.Feature.FeatureItem -->
+		<!-- PSFramework.Feature.FeatureItem -->
         <View>
             <Name>PSFramework.Feature.FeatureItem</Name>
             <ViewSelectedBy>
@@ -112,6 +112,54 @@
             </TableControl>
         </View>
 
+        <!-- PSFramework.FlowControl.Callback -->
+        <View>
+            <Name>PSFramework.FlowControl.Callback</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.FlowControl.Callback</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader>
+                        <Label>Runspace</Label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ModuleName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CommandName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+
+  if (-not $_.Runspace) { return "[All Runspaces]" }
+  $object = $_
+  $runspace = [PSFramework.Utility.UtilityHost]::GetRunspaces() | Where-Object InstanceID -eq $object.Runspace
+  if ($runspace) {
+    if ($runspace.Name) { return $runspace.Name }
+    return "Runspace $($runspace.Id)"
+  }
+  "[Unknown Runspace]"
+
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+		
 		<!-- PSFramework.License.License -->
 		<View>
 			<Name>PSFramework.License.License</Name>

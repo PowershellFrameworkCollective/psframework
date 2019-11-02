@@ -80,6 +80,11 @@ namespace PSFramework.Message
         /// The depth to which the target object should serialized.
         /// </summary>
         public static int FileSystemSerializationDepth = -1;
+
+        /// <summary>
+        /// The time pattern used when writing logfiles using the filesystem provider
+        /// </summary>
+        public static string TimeFormat = String.Format("{0} {1}", System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern);
         #endregion Defines
 
         #region Queues

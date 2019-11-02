@@ -317,8 +317,8 @@
 		else
 		{
 			# Make sure the function knows it should be stopping
-			if ($StepsUpward -le 0) { $psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode()) }
-			else { $psframework_killqueue.Enqueue((Get-PSCallStack)[($StepsUpward + 1)].InvocationInfo.GetHashCode()) }
+			if ($StepsUpward -eq 0) { $psframework_killqueue.Enqueue($callStack.InvocationInfo.GetHashCode()) }
+			elseif ($StepsUpward -gt 0) { $psframework_killqueue.Enqueue((Get-PSCallStack)[($StepsUpward + 1)].InvocationInfo.GetHashCode()) }
 			return
 		}
 	}

@@ -51,10 +51,6 @@
 		$EnableException
 	)
 	
-	begin
-	{
-		
-	}
 	process
 	{
 		try
@@ -89,9 +85,5 @@
 			Stop-PSFFunction -Message "Failed to update property mapping for $ParameterClass : $Typename. This is likely happening on some Linux distributions due to an underlying .NET issue and means the parameter class cannot be used." -EnableException $EnableException -Tag 'fail', '.NET' -ErrorRecord $_
 			return
 		}
-	}
-	end
-	{
-	
 	}
 }

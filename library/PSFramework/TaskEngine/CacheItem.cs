@@ -95,5 +95,30 @@ namespace PSFramework.TaskEngine
             this.Module = Module;
             this.Name = Name;
         }
+
+        /// <summary>
+        /// Obtain value for cached item. Run collector script if necessary, prevent parallel collector execution.
+        /// </summary>
+        /// <returns>The cached values</returns>
+        public object GetValue()
+        {
+            lock (_GetValueLock)
+            {
+                if (!Expired)
+                    return Value;
+                _Value = null;
+                if (Collector != null)
+                {
+                    Utility.UtilityHost.ImportScriptBlock(Collector);
+                    var result = Collector.Invoke(CollectorArgument);
+                    if (result.Count > 0)
+                        Value = result.ToArray();
+                    else
+                        Value = null;
+                }
+                return Value;
+            }
+        }
+        private object _GetValueLock = 42;
     }
 }

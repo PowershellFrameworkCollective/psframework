@@ -113,33 +113,39 @@ $begin_event = {
 	}
 	
 	$logfile_includeheader = Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.IncludeHeader'
-	$logfile_headers = Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.Headers'
+	$logfile_headers = Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.Headers' | ForEach-Object {
+		switch ($_)
+		{
+			'Tags'
+			{
+				@{
+					Name	   = 'Tags'
+					Expression = { $_.Tags -join "," }
+				}
+			}
+			'Message'
+			{
+				@{
+					Name	   = 'Message'
+					Expression = { $_.LogMessage }
+				}
+			}
+			'Timestamp'
+			{
+				@{
+					Name	   = 'Timestamp'
+					Expression																					   = {
+						if ((Get-PSFConfig -FullName 'PSFramework.Logging.LogFile.TimeFormat').Unchanged) { $_.Timestamp }
+						else { $_.Timestamp.ToString((Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.TimeFormat')) }
+					}
+				}
+			}
+			default { $_ }
+		}
+	}
 	$logfile_filetype = Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.FileType'
 	$logfile_CsvDelimiter = Get-PSFConfigValue -FullName 'PSFramework.Logging.LogFile.CsvDelimiter'
 	
-	if ($logfile_headers -contains 'Tags')
-	{
-		$logfile_headers = $logfile_headers | ForEach-Object {
-			switch ($_)
-			{
-				'Tags'
-				{
-					@{
-						Name	   = 'Tags'
-						Expression = { $_.Tags -join "," }
-					}
-				}
-				'Message'
-				{
-					@{
-						Name	   = 'Message'
-						Expression = { $_.LogMessage }
-					}
-				}
-				default { $_ }
-			}
-		}
-	}
 	
 	$logfile_paramWriteLogFileMessage = @{
 		IncludeHeader    = $logfile_includeheader
@@ -244,6 +250,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Headers' -Value @('ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username') -Initialize -Validation stringarray -Handler { } -Description "The properties to export, in the order to select them."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Handler { } -Description "In what format to write the logfile. Supported styles: CSV, XML, Html or Json. Html, XML and Json will be written as fragments."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value "," -Initialize -Validation string -Handler { } -Description "The delimiter to use when writing to csv."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Handler { } -Description "The format used for timestamps in the logfile"
 	
 	Set-PSFConfig -Module LoggingProvider -Name 'LogFile.Enabled' -Value $false -Initialize -Validation "bool" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['logfile']) { [PSFramework.Logging.ProviderHost]::Providers['logfile'].Enabled = $args[0] } } -Description "Whether the logging provider should be enabled on registration"
 	Set-PSFConfig -Module LoggingProvider -Name 'LogFile.AutoInstall' -Value $false -Initialize -Validation "bool" -Handler { } -Description "Whether the logging provider should be installed on registration"

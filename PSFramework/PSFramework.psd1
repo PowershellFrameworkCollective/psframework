@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.0.35'
+	ModuleVersion = '1.1.59'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -37,6 +37,7 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'Compare-PSFArray',
 		'ConvertFrom-PSFArray',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
@@ -44,6 +45,7 @@
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
 		'Export-PSFConfig',
+		'Get-PSFCallback',
 		'Get-PSFConfig',
 		'Get-PSFConfigValue',
 		'Get-PSFDynamicContentObject',
@@ -53,6 +55,7 @@
 		'Get-PSFLocalizedString',
 		'Get-PSFLoggingProvider',
 		'Get-PSFMessageLevelModifier',
+		'Get-PSFPath',
 		'Get-PSFPipeline',
 		'Get-PSFResultCache',
 		'Get-PSFRunspace',
@@ -73,6 +76,7 @@
 		'New-PSFMessageLevelModifier',
 		'New-PSFSessionContainer',
 		'New-PSFSupportPackage',
+		'Register-PSFCallback',
 		'Register-PSFConfig',
 		'Register-PSFConfigSchema',
 		'Register-PSFConfigValidation',
@@ -98,6 +102,7 @@
 		'Set-PSFDynamicContentObject',
 		'Set-PSFFeature',
 		'Set-PSFLoggingProvider',
+		'Set-PSFPath',
 		'Set-PSFResultCache',
 		'Set-PSFScriptblock',
 		'Set-PSFTaskEngineCache',
@@ -112,6 +117,7 @@
 		'Test-PSFPowerShell',
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
+		'Unregister-PSFCallback',
 		'Unregister-PSFConfig',
 		'Wait-PSFMessage',
 		'Write-PSFHostColor',
@@ -121,6 +127,7 @@
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
 		'ConvertTo-PSFHashtable',
+		'Invoke-PSFCallback',
 		'Invoke-PSFProtectedCommand',
 		'Remove-PSFNull',
 		'Select-PSFObject',

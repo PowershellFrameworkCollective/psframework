@@ -1,10 +1,36 @@
 ﻿# CHANGELOG
+## 1.1.59 : 2019-11-02
+ - New: Command Get-PSFPath : Returns configured paths.
+ - New: Command Set-PSFPath : Configures a path under a specified name.
+ - New: Command Compare-PSFArray : Compares two arrays with each other.
+ - New: Command Get-PSFCallback : Returns registered callback scripts.
+ - New: Command Invoke-PSFCallback : Executes registered callback scripts.
+ - New: Command Register-PSFCallback : Registers a callback script.
+ - New: Command Unregister-PSFCallback : Removes a registered callback script.
+ - New: ATA : TypeTransformationAttribute - transforms input into the target type using powershell type coercion. Use to override language primitive overrides, especially to allow binding switch parameters to bool parameters of commands defined in C#
+ - Upd: Invoke-PSFProtectedCommand - now accepts switch parameters on -EnableException
+ - Upd: Invoke-PSFProtectedCommand - now accepts ContinueLabel parameter
+ - Upd: Invoke-PSFProtectedCommand - now explicitly confirms successful execution
+ - Upd: Invoke-PSFProtectedCommand - now supports retry attempts, using `-RetryCount`, `-RetryWait` and `-RetryErrorType` parameters
+ - Upd: Export-PSFClixml - add `-PassThru` parameter
+ - Upd: Get-PSFTaskEngineCache - collector can no longer be executed in parallel
+ - Upd: Logging Provider: logfile - now supports custom time formats in the logfiles
+ - Upd: Logging Provider: filesystem - now supports custom time formats in the logfiles
+ - Upd: PSFCmdlet - new Invoke() overload supporting scriptblocks as string input
+ - Upd: PSFCmdlet - new StopCommand() method to integrate into flowcontrol
+ - Upd: PSFCmdlet - new StopLocalizedCommand() method to integrate into flowcontrol
+ - Upd: PSFCmdlet - new GetCaller() overload supporting going up a specified number of steps the callstack
+ - Upd: PSFCmdlet - new GetCallerInfo() method to obtain optimized/parsed caller information
+ - Upd: PSFCmdlet - new InvokeCallback() method to integrate cmdlets into the callback component
+ - Fix: Get-PSFTaskEngineCache - collector script no longer bound by runspace affinity.
+ - Fix: Import - concurrency issue, parameterclass mappings used to be subject to concurrent access issues.
+
 ## 1.0.35 : 2019-08-26
-- Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them
-- Fix: Tab Completion scriptblocks are again aware of $fakeBoundParameter and other automatic variables
+ - Upd: Removed runspace affinity of invoked scriptblocks of taskengine, rather than recreating them
+ - Fix: Tab Completion scriptblocks are again aware of $fakeBoundParameter and other automatic variables
 
 ## 1.0.33 : 2019-08-11
-- Fix: Build order update fixes unknown attribute error
+ - Fix: Build order update fixes unknown attribute error
 
 ## 1.0.32 : 2019-08-11
  - New: Validation Attribute: PsfValidateTrustedData - equivalent to ValidateTrustedData, but exists on PS3+ (no effect before 5+)

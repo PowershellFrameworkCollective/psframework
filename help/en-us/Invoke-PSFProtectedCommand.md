@@ -14,15 +14,18 @@ Combines should process, try/catch error handling and logging in one package.
 
 ### Message
 ```
-Invoke-PSFProtectedCommand [-ScriptBlock] <ScriptBlock> [-Action] <String> [[-Target] <Object>]
- [[-EnableException] <Boolean>] [[-PSCmdlet] <PSCmdlet>] [-Continue] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target <Object>]
+ [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>] [-Tag <String[]>]
+ [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ### String
 ```
-Invoke-PSFProtectedCommand [-ScriptBlock] <ScriptBlock> [-ActionString] <String>
- [[-ActionStringValues] <Object[]>] [[-Target] <Object>] [[-EnableException] <Boolean>]
- [[-PSCmdlet] <PSCmdlet>] [-Continue] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -ActionString <String> [-ActionStringValues <Object[]>]
+ [-Target <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>]
+ [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -219,9 +222,88 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ContinueLabel
+When used together with -Continue, this allows you to pick the loop to continue with.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RetryCount
+How many times the command should attempt to try an action again, before giving up.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RetryErrorType
+When using -RetryCount to attempt a failed action again, this is a bit unspecific.
+Often we want to retry to deal with specific scenarios ... with specific errors.
+Using this parameter, it becomes possible to specify just what exception types can only trigger a retry attempt.
+
+Note: Exceptions of type ActionPreferenceStopException will be unwrapped to the original exception BEFORE performing the comparison.
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RetryWait
+The interval the command will wait between failed attempts.
+Defaults to 5 seconds.
+
+```yaml
+Type: TimeSpanParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Tag
+What tags - if any - to include in all messages.
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
