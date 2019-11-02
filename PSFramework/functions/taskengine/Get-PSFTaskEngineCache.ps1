@@ -36,20 +36,12 @@
 		$Name
 	)
 	
-	$cacheItem = [PSFramework.TaskEngine.TaskHost]::GetCacheItem($Module, $Name)
-	if (-not $cacheItem) { return }
-	
-	if (-not $cacheItem.Expired) { return $cacheItem.Value }
-	
-	#region Expired Data
-	# Accessing an expired cache item value will clear remaining data
-	$null = $cacheItem.Value
-	
-	if ($cacheItem.Collector)
+	process
 	{
-		try { $cacheItem.Value = $cacheItem.Collector.Invoke($cacheItem.CollectorArgument) }
-		catch { throw }
-		$cacheItem.Value
+		$cacheItem = [PSFramework.TaskEngine.TaskHost]::GetCacheItem($Module, $Name)
+		if (-not $cacheItem) { return }
+		
+		$value = $cacheItem.GetValue()
+		if ($null -ne $value) { $value }
 	}
-	#endregion Expired Data
 }

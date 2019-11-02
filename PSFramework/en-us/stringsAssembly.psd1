@@ -1,4 +1,7 @@
 ﻿@{
+	# Commands
+	'Assembly.Callback.Failed'									   = 'Error when executing callback {0}'
+	
 	# Computer Management
 	'Assembly.ComputerManagement.SessionContainer.NoPSSessionKey'  = 'Session Container for "{0}" does not contain a PSSession connection.'
 	'Assembly.ComputerManagement.SessionContainer.NoCimSessionKey' = 'Session Container for "{0}" does not contain a CimSession connection.'

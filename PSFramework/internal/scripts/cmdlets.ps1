@@ -8,6 +8,7 @@ $commonParam = @{
 }
 
 Import-PSFCmdlet @commonParam -Name ConvertTo-PSFHashtable -Type ([PSFramework.Commands.ConvertToPSFHashtableCommand])
+Import-PSFCmdlet @commonParam -Name Invoke-PSFCallback -Type ([PSFramework.Commands.InvokePSFCallbackCommand])
 Import-PSFCmdlet @commonParam -Name Invoke-PSFProtectedCommand -Type ([PSFramework.Commands.InvokePSFProtectedCommand])
 Import-PSFCmdlet @commonParam -Name Remove-PSFNull -Type ([PSFramework.Commands.RemovePSFNullCommand])
 Import-PSFCmdlet @commonParam -Name Select-PSFObject -Type ([PSFramework.Commands.SelectPSFObjectCommand])

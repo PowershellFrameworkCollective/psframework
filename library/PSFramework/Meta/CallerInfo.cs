@@ -38,6 +38,9 @@ namespace PSFramework.Meta
         /// <param name="Frame">The frame to parse</param>
         public CallerInfo(CallStackFrame Frame)
         {
+            if (Frame == null)
+                return;
+
             if (Frame.InvocationInfo == null)
                 CallerFunction = Frame.FunctionName;
             else if (Frame.InvocationInfo.MyCommand == null)

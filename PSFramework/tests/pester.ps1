@@ -27,6 +27,13 @@ $totalRun = 0
 
 $testresults = @()
 
+#region Load Extensions
+foreach ($file in (Get-ChildItem "$PSScriptRoot\extensions" -Filter "*.ps1"))
+{
+	. $file.FullName
+}
+#endregion Load Extensions
+
 #region Run General Tests
 if ($TestGeneral)
 {

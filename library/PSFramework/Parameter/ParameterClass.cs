@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace PSFramework.Parameter
         /// Contains the list of property mappings.
         /// Types can be registered to it, allowing the parameter class to blindly interpret unknown types
         /// </summary>
-        internal static Dictionary<string, List<string>> _PropertyMapping = new Dictionary<string, List<string>>();
+        internal static ConcurrentDictionary<string, List<string>> _PropertyMapping = new ConcurrentDictionary<string, List<string>>();
 
         /// <summary>
         /// Assigns a property mapping for a given type, allowing the parameter class to handle unknown types

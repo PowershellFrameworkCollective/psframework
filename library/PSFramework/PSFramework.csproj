@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
+    <Compile Include="FlowControl\CallbackException.cs" />
     <Compile Include="Commands\ConvertToPSFHashtableCommand.cs" />
     <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
     <Compile Include="Commands\PSFCmdlet.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="Configuration\ConfigurationValueType.cs" />
     <Compile Include="Feature\FeatureHost.cs" />
     <Compile Include="Feature\FeatureItem.cs" />
+    <Compile Include="FlowControl\Callback.cs" />
+    <Compile Include="FlowControl\CallbackHost.cs" />
     <Compile Include="FlowControl\OperatingSystem.cs" />
     <Compile Include="FlowControl\PSEdition.cs" />
     <Compile Include="License\License.cs" />
@@ -158,6 +162,7 @@
     <Compile Include="Utility\Size.cs" />
     <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
+    <Compile Include="Utility\TypeTransformationAttribute.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\NoResultsAction.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />

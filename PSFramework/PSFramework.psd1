@@ -37,6 +37,7 @@
 	# Functions to export from this module
 	FunctionsToExport = @(
 		'Clear-PSFResultCache',
+		'Compare-PSFArray',
 		'ConvertFrom-PSFArray',
 		'ConvertFrom-PSFClixml',
 		'ConvertTo-PSFClixml',
@@ -44,6 +45,7 @@
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
 		'Export-PSFConfig',
+		'Get-PSFCallback',
 		'Get-PSFConfig',
 		'Get-PSFConfigValue',
 		'Get-PSFDynamicContentObject',
@@ -74,6 +76,7 @@
 		'New-PSFMessageLevelModifier',
 		'New-PSFSessionContainer',
 		'New-PSFSupportPackage',
+		'Register-PSFCallback',
 		'Register-PSFConfig',
 		'Register-PSFConfigSchema',
 		'Register-PSFConfigValidation',
@@ -114,6 +117,7 @@
 		'Test-PSFPowerShell',
 		'Test-PSFTaskEngineCache',
 		'Test-PSFTaskEngineTask',
+		'Unregister-PSFCallback',
 		'Unregister-PSFConfig',
 		'Wait-PSFMessage',
 		'Write-PSFHostColor',
@@ -123,6 +127,7 @@
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
 		'ConvertTo-PSFHashtable',
+		'Invoke-PSFCallback',
 		'Invoke-PSFProtectedCommand',
 		'Remove-PSFNull',
 		'Select-PSFObject',
