@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-##
+## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.
  - New: Command Set-PSFPath : Configures a path under a specified name.
  - New: Command Compare-PSFArray : Compares two arrays with each other.
