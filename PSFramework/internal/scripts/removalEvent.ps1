@@ -10,6 +10,8 @@ $PSF_OnRemoveScript = {
 	
 	# Properly disconnect all remote sessions still held open
 	$psframework_pssessions.Values | Remove-PSSession
+	# Remove all Runspace-specific callbacks
+	[PSFramework.FlowControl.CallbackHost]::RemoveRunspaceOwned()
 }
 $ExecutionContext.SessionState.Module.OnRemove += $PSF_OnRemoveScript
 Register-EngineEvent -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -Action $PSF_OnRemoveScript

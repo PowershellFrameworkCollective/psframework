@@ -4,6 +4,54 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.InvokePSFCallbackCommand">
+            <summary>
+            Command executing callbacks in functions
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFCallbackCommand.Data">
+            <summary>
+            Data to pass to the callback scriptblocks
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFCallbackCommand.EnableException">
+            <summary>
+            Whether to trigger a terminating exception in case the scriptblock errors out.
+            Will be picked up automatically if not specified.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFCallbackCommand.PSCmdlet">
+            <summary>
+            The cmdlet object to use for triggering terminating errors.
+            Will be picked up automatically if not specified.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFCallbackCommand._Caller">
+            <summary>
+            Information on the calling command, including name, module, file and line.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFCallbackCommand._ErrorScript">
+            <summary>
+            script used to write horrible errors on screen
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.InvokePSFCallbackCommand.BeginProcessing">
+            <summary>
+            Prepare runtime information, such as calling command or cmdlet object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.InvokePSFCallbackCommand.ProcessRecord">
+            <summary>
+            Invoke callbacks
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.InvokePSFCallbackCommand.Terminate(PSFramework.FlowControl.CallbackException)">
+            <summary>
+            Kill command with maximum prejudice
+            </summary>
+            <param name="error">The error to terminate with</param>
+        </member>
         <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
             <summary>
             Implements the ConvertTo-PSFHashtable command
@@ -147,12 +195,12 @@
             Base class for all PSFramework Cmdlets, offering some shared tooling
             </summary>
         </member>
-        <member name="P:PSFramework.Commands.PSFCmdlet.MessageScript">
+        <member name="F:PSFramework.Commands.PSFCmdlet.MessageScript">
             <summary>
             Access a scriptblock that can be used to write a message
             </summary>
         </member>
-        <member name="P:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
+        <member name="F:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
             <summary>
             Access a scriptblock that can be used to write a message
             </summary>
@@ -176,11 +224,31 @@
             <param name="Args">The value to make available as $args</param>
             <returns>Whatever output this scriptblock generates</returns>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.GetCaller">
+        <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String,System.Boolean,System.Object,System.Object,System.Object,System.Object[])">
+            <summary>
+            Do a rich invocation of the specified scriptblock
+            </summary>
+            <param name="ScriptCode">The scriptblock to execute</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.GetCaller(System.Int32)">
             <summary>
             Returns the caller CallStackFrame item
             </summary>
+            <param name="Level">How many levels to peek into the callstack</param>
             <returns>Returns the caller CallStackFrame item</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.GetCallerInfo(System.Int32)">
+            <summary>
+            Returns the caller information the specified levels upstack
+            </summary>
+            <param name="Level">How many levels to peek into the callstack</param>
+            <returns>The caller information of the specified level</returns>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object)">
             <summary>
@@ -208,6 +276,47 @@
             <param name="Line">The line in the file this message was written from</param>
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.StopCommand(System.String,System.Exception,System.Object,System.String,System.String,System.String,System.Int32,System.String[],System.Boolean)">
+            <summary>
+            Stops the current command. Sets the stopping flag for non-terminal interruption.
+            </summary>
+            <param name="Message">The message to write as an error</param>
+            <param name="Error">An exception object to include in the message system</param>
+            <param name="Target">A target object to specify</param>
+            <param name="FunctionName">The name of the function / cmdlet to assume</param>
+            <param name="ModuleName">The name of the module to assume</param>
+            <param name="File">The file this message was written from</param>
+            <param name="Line">The line in the file this message was written from</param>
+            <param name="Tag">Tags to attach to this message</param>
+            <param name="EnableException">Whether the command should terminate in fire and death and terminating exceptions</param>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.StopLocalizedCommand(System.String,System.Object[],System.Exception,System.Object,System.String,System.String,System.String,System.Int32,System.String[],System.Boolean)">
+            <summary>
+            Stops the current command. Sets the stopping flag for non-terminal interruption.
+            </summary>
+            <param name="String">The localized string to write</param>
+            <param name="StringValues">The values to format into the localized string</param>
+            <param name="Error">An exception object to include in the message system</param>
+            <param name="Target">A target object to specify</param>
+            <param name="FunctionName">The name of the function / cmdlet to assume</param>
+            <param name="ModuleName">The name of the module to assume</param>
+            <param name="File">The file this message was written from</param>
+            <param name="Line">The line in the file this message was written from</param>
+            <param name="Tag">Tags to attach to this message</param>
+            <param name="EnableException">Whether the command should terminate in fire and death and terminating exceptions</param>
+        </member>
+        <member name="F:PSFramework.Commands.PSFCmdlet.IsStopping">
+            <summary>
+            Whether the command has been set to terminate by StopCommand. Use when supporting EnableException
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.InvokeCallback(System.Object,System.Boolean)">
+            <summary>
+            Invokes all applicable callback scripts.
+            </summary>
+            <param name="Data">Data to send to the callback scriptblocks</param>
+            <param name="EnableException">Whether a failed callback scriptblock fails this command in fire and terminating exception.</param>
         </member>
         <member name="T:PSFramework.Commands.RemovePSFNullCommand">
             <summary>
@@ -865,6 +974,163 @@
             </summary>
             <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
         </member>
+        <member name="T:PSFramework.FlowControl.CallbackException">
+            <summary>
+            A custom exception, including the callback that failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.CallbackException.Callback">
+            <summary>
+            The callback that failed
+            </summary>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackException.#ctor(PSFramework.FlowControl.Callback,System.Exception)">
+            <summary>
+            Creates a new callback exception, including the Callback that failed
+            </summary>
+            <param name="Callback">The callback that failed</param>
+            <param name="InnerException">The exception it failed with</param>
+        </member>
+        <member name="T:PSFramework.FlowControl.Callback">
+            <summary>
+            Data structure representing a registered callback scriptblock
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.Name">
+            <summary>
+            The name of the callback script. Used to build the unique ID to prevent accidental duplication
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.ModuleName">
+            <summary>
+            Name of the module the callback applies to. Only when invoked from within this module will it trigger
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.CommandName">
+            <summary>
+            Name of the command the callback applies to. Only when invoked from a command with a similar name will it trigger
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.Runspace">
+            <summary>
+            The runspace the callback belongs to. If this is set, only when invoked from that runspace will it trigger.
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.BreakAffinity">
+            <summary>
+            Whether the scriptblock's runspace affinity should be broken. Setting this to true will execute the scriptblock in the runspace that triggered it, rather than the one that defined it.
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.Callback.ScriptBlock">
+            <summary>
+            The actual callback scriptcode
+            </summary>
+        </member>
+        <member name="P:PSFramework.FlowControl.Callback.Identity">
+            <summary>
+            The full identity of the callback. Used for internal callback management.
+            </summary>
+        </member>
+        <member name="M:PSFramework.FlowControl.Callback.Applies(System.String,System.String)">
+            <summary>
+            Whether the callback applies to the current command.
+            </summary>
+            <param name="ModuleName">Module the current command is part of</param>
+            <param name="CommandName">Command that is currently executing</param>
+            <returns>True if it applies, otherwise False</returns>
+        </member>
+        <member name="M:PSFramework.FlowControl.Callback.Invoke(PSFramework.Meta.CallerInfo,System.Management.Automation.PSCmdlet,System.Object)">
+            <summary>
+            Invokes the callback scriptblock as configured.
+            </summary>
+            <param name="Caller">The object containing the information pertaining to the calling command.</param>
+            <param name="Invoker">The meta object representing the invoking command.</param>
+            <param name="Data">Extra data that was passed to the event</param>
+        </member>
+        <member name="M:PSFramework.FlowControl.Callback.ToString">
+            <summary>
+            Returns the string representation of the callback
+            </summary>
+            <returns>The string representation of the callback</returns>
+        </member>
+        <member name="T:PSFramework.FlowControl.CallbackHost">
+            <summary>
+            Host class providing statics needed to operate the callback feature.
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.CallbackHost.Callbacks">
+            <summary>
+            Grand dictionary of callbacks
+            </summary>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackHost.Add(PSFramework.FlowControl.Callback)">
+            <summary>
+            Adds a callback item to the list of registered callbacks
+            </summary>
+            <param name="Callback">The callback to add</param>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackHost.Get(System.String,System.Boolean)">
+            <summary>
+            Returns a list of callbacks
+            </summary>
+            <param name="Name">The name to filter by</param>
+            <param name="All">Whether also callbacks from other runspaces should be included</param>
+            <returns>The list of matching callbacks</returns>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackHost.Remove(PSFramework.FlowControl.Callback)">
+            <summary>
+            Removes a given callback from the list of registered callbacks
+            </summary>
+            <param name="Callback">The callback object to remove</param>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackHost.RemoveRunspaceOwned">
+            <summary>
+            Removes all callbacks specific to the current runspace. Use this during the shutdown sequence of a runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.FlowControl.CallbackHost.Invoke(PSFramework.Meta.CallerInfo,System.Management.Automation.PSCmdlet,System.Object)">
+            <summary>
+            Invokes the callback scriptblocks that apply to the current scenario
+            </summary>
+            <param name="Caller">The object containing the information pertaining to the command calling the command invoking the callback.</param>
+            <param name="Invoker">The meta object representing the invoking command.</param>
+            <param name="Data">Extra data that was passed to the event</param>
+        </member>
+        <member name="T:PSFramework.FlowControl.OperatingSystem">
+            <summary>
+            The various operating systems PowerShell can run on
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Windows">
+            <summary>
+            Common windows OS
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.Linux">
+            <summary>
+            Any Linux distribution
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.OperatingSystem.MacOS">
+            <summary>
+            Any Mac Operating System
+            </summary>
+        </member>
+        <member name="T:PSFramework.FlowControl.PSEdition">
+            <summary>
+            The powershell edition
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Desktop">
+            <summary>
+            The desktop edition of PowerShell - all editions 5.1 or below
+            </summary>
+        </member>
+        <member name="F:PSFramework.FlowControl.PSEdition.Core">
+            <summary>
+            .NET core based editions of PowerShell
+            </summary>
+        </member>
         <member name="T:PSFramework.ComputerManagement.ComputerManagementHost">
             <summary>
             Host class containing static iresources for the computer management component
@@ -1424,41 +1690,6 @@
             <param name="Global"></param>
             <param name="ModuleSpecific"></param>
             <param name="Description"></param>
-        </member>
-        <member name="T:PSFramework.FlowControl.OperatingSystem">
-            <summary>
-            The various operating systems PowerShell can run on
-            </summary>
-        </member>
-        <member name="F:PSFramework.FlowControl.OperatingSystem.Windows">
-            <summary>
-            Common windows OS
-            </summary>
-        </member>
-        <member name="F:PSFramework.FlowControl.OperatingSystem.Linux">
-            <summary>
-            Any Linux distribution
-            </summary>
-        </member>
-        <member name="F:PSFramework.FlowControl.OperatingSystem.MacOS">
-            <summary>
-            Any Mac Operating System
-            </summary>
-        </member>
-        <member name="T:PSFramework.FlowControl.PSEdition">
-            <summary>
-            The powershell edition
-            </summary>
-        </member>
-        <member name="F:PSFramework.FlowControl.PSEdition.Desktop">
-            <summary>
-            The desktop edition of PowerShell - all editions 5.1 or below
-            </summary>
-        </member>
-        <member name="F:PSFramework.FlowControl.PSEdition.Core">
-            <summary>
-            .NET core based editions of PowerShell
-            </summary>
         </member>
         <member name="T:PSFramework.License.License">
             <summary>
@@ -2460,6 +2691,11 @@
         <member name="F:PSFramework.Message.LogHost.FileSystemSerializationDepth">
             <summary>
             The depth to which the target object should serialized.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.TimeFormat">
+            <summary>
+            The time pattern used when writing logfiles using the filesystem provider
             </summary>
         </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">

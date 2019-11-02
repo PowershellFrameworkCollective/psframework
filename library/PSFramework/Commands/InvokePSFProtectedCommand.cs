@@ -228,11 +228,20 @@ return
                         tempError = ((ActionPreferenceStopException)tempError).ErrorRecord.Exception;
 
                     if (RetryCount == 0)
+                    {
                         Terminate(tempError);
+                        return;
+                    }
                     if (RetryErrorType.Length > 0 && !RetryErrorType.Contains(tempError.GetType().FullName, StringComparer.InvariantCultureIgnoreCase))
+                    {
                         Terminate(tempError);
+                        return;
+                    }
                     if (countAttempted > RetryCount)
+                    {
                         Terminate(tempError);
+                        return;
+                    }
                 }
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Retry", new object[] { countAttempted, (RetryCount + 1), _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
                 Thread.Sleep(RetryWait);

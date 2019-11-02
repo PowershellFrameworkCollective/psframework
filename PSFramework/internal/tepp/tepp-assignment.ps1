@@ -30,6 +30,11 @@ Register-PSFTeppArgumentCompleter -Command Set-PSFFeature -Parameter Name -Name 
 Register-PSFTeppArgumentCompleter -Command Test-PSFFeature -Parameter Name -Name 'PSFramework.Feature.Name'
 #endregion Features
 
+#region Flow Control
+Register-PSFTeppArgumentCompleter -Command Get-PSFCallback -Parameter Name -Name 'PSFramework.Callback.Name'
+Register-PSFTeppArgumentCompleter -Command Unregister-PSFCallback -Parameter Name -Name 'PSFramework.Callback.Name'
+#endregion Flow Control
+
 #region License
 Register-PSFTeppArgumentCompleter -Command Get-PSFLicense -Parameter Filter -Name 'PSFramework-license-name'
 #endregion License
