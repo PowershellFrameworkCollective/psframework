@@ -162,7 +162,7 @@
 			Tags = @('scripting', 'infrastructure', 'logging', 'configuration', 'PSEdition_Core', 'PSEdition_Desktop', 'Linux', 'Mac')
 			
 			# A URL to the license for this module.
-			LicenseUri = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/LICENSE.md'
+			LicenseUri = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/LICENSE'
 			
 			# A URL to the main website for this project.
 			ProjectUri = 'http://psframework.org'
