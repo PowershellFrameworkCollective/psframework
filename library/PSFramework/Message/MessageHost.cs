@@ -82,6 +82,11 @@ namespace PSFramework.Message
         public static bool EnableMessageTimestamp = true;
 
         /// <summary>
+        /// Include message prefix in verbose message output
+        /// </summary>
+        public static bool EnableMessagePrefix = false;
+
+        /// <summary>
         /// Include the message display command in the verbose message output
         /// </summary>
         public static bool EnableMessageDisplayCommand = true;
@@ -90,6 +95,33 @@ namespace PSFramework.Message
         /// Include the entire callstack in the verbose message output
         /// </summary>
         public static bool EnableMessageBreadcrumbs = false;
+
+        /// <summary>
+        /// Define the message prefix value for the critical level
+        /// </summary>
+        public static string PrefixValueCritical = "##vso[task.logissue type=error;]";
+
+        /// <summary>
+        /// Define the message prefix value for the warning level
+        /// </summary>
+        public static string PrefixValueWarning = "##vso[task.logissue type=warning;]";
+
+        /// <summary>
+        /// Define the message prefix value for the verbose level
+        /// </summary>
+        public static string PrefixValueVerbose = "##[debug]";
+
+        /// <summary>
+        /// Define the message prefix value for the host level
+        /// </summary>
+        public static string PrefixValueHost = "";
+
+        /// <summary>
+        /// Define the message prefix value for the important level
+        /// </summary>
+        public static string PrefixValueSignificant = "##[section]";
+            
+
         #endregion Defines
 
         #region Transformations
