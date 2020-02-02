@@ -2,6 +2,334 @@
 <helpItems schema="maml" xmlns="http://msh">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>ConvertTo-PSFHashtable</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>PSFHashtable</command:noun>
+      <maml:description>
+        <maml:para>Converts an object into a hashtable.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Converts an object into a hashtable.</maml:para>
+      <maml:para>- Use -Exclude to selectively blacklist properties / keys</maml:para>
+      <maml:para>- Use -Include to selectively whitelist properties / keys</maml:para>
+      <maml:para>- Use -Inherit to inherit values from variables when missing keys explicitly included in -Include</maml:para>
+      <maml:para></maml:para>
+      <maml:para>Optimized to selectively convert $PSBoundParameters for passing through parameters to internal command calls.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>ConvertTo-PSFHashtable</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Exclude</maml:name>
+          <maml:Description>
+            <maml:para>The propertynames to exclude. Must be full property-names, no wildcard/regex matching.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Include</maml:name>
+          <maml:Description>
+            <maml:para>The propertynames to include. Must be full property-names, no wildcard/regex matching.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeEmpty</maml:name>
+          <maml:Description>
+            <maml:para>By default, only properties on the input object are included. In order to force all properties defiend in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Inherit</maml:name>
+          <maml:Description>
+            <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explictly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+          <maml:name>InputObject</maml:name>
+          <maml:Description>
+            <maml:para>The object(s) to convert</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+          <dev:type>
+            <maml:name>PSObject[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Exclude</maml:name>
+        <maml:Description>
+          <maml:para>The propertynames to exclude. Must be full property-names, no wildcard/regex matching.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Include</maml:name>
+        <maml:Description>
+          <maml:para>The propertynames to include. Must be full property-names, no wildcard/regex matching.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludeEmpty</maml:name>
+        <maml:Description>
+          <maml:para>By default, only properties on the input object are included. In order to force all properties defiend in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Inherit</maml:name>
+        <maml:Description>
+          <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explictly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+        <maml:name>InputObject</maml:name>
+        <maml:Description>
+          <maml:para>The object(s) to convert</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">PSObject[]</command:parameterValue>
+        <dev:type>
+          <maml:name>PSObject[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Collections.Hashtable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- BEISPIEL 1 --------------------------</maml:title>
+        <dev:code>Get-ChildItem | ConvertTo-PSFHashtable</dev:code>
+        <dev:remarks>
+          <maml:para>Scans all items in the current path and converts those objects into hashtables.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- BEISPIEL 2 --------------------------</maml:title>
+        <dev:code>$parameters = $PSBoundParameters | ConvertTo-PSFHashtable -Include ComputerName, Credential, Target -Inherit</dev:code>
+        <dev:remarks>
+          <maml:para>Clones the bound parameters into a new hashtable that can now be used for splatting- Only parameters explicitly specified or with default values will be included.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Invoke-PSFCallback</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>PSFCallback</command:noun>
+      <maml:description>
+        <maml:para>Invokes all registered callback scripts applicable to the calling command.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Invokes all registered callback scripts applicable to the calling command.</maml:para>
+      <maml:para>Use Register-PSFCallback to register scriptblocks that get applied.</maml:para>
+      <maml:para>By calling Invoke-PSFCallback - which will not do anything unless somebody registers callback scriptblocks - a module can provide extensions points to which other modules can attach, without the implementing module needing to know those external modules.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-PSFCallback</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Data</maml:name>
+          <maml:Description>
+            <maml:para>Additional data to provide to the callback scriptblock.</maml:para>
+            <maml:para>This can be useful to implement input-driven workflows. For example, it would allow a callback scriptblock to load configuration, based on the server being processed.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>EnableException</maml:name>
+          <maml:Description>
+            <maml:para>Enables - if $true - terminating exceptions when a single callback scriptblock fails. The terminating exception is thrown in the context of the calling command, not Invoke-PSFCallback, so it is unneccessary - and impossible - to handle within a try/catch block.</maml:para>
+            <maml:para>If set to $false (default), failure flags the calling command for failure, as detected by Test-PSFFunctionInterrupt. In that case, Invoke-PSFCallback will log the error, but not directly terminate the calling command.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PSCmdlet</maml:name>
+          <maml:Description>
+            <maml:para>The $PSCmdlet object of the calling command. If this value is not provided, it will autoamtically be picked up. Providing it improves performance slightly, as it removes the need to look it up.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCmdlet</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Data</maml:name>
+        <maml:Description>
+          <maml:para>Additional data to provide to the callback scriptblock.</maml:para>
+          <maml:para>This can be useful to implement input-driven workflows. For example, it would allow a callback scriptblock to load configuration, based on the server being processed.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>EnableException</maml:name>
+        <maml:Description>
+          <maml:para>Enables - if $true - terminating exceptions when a single callback scriptblock fails. The terminating exception is thrown in the context of the calling command, not Invoke-PSFCallback, so it is unneccessary - and impossible - to handle within a try/catch block.</maml:para>
+          <maml:para>If set to $false (default), failure flags the calling command for failure, as detected by Test-PSFFunctionInterrupt. In that case, Invoke-PSFCallback will log the error, but not directly terminate the calling command.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PSCmdlet</maml:name>
+        <maml:Description>
+          <maml:para>The $PSCmdlet object of the calling command. If this value is not provided, it will autoamtically be picked up. Providing it improves performance slightly, as it removes the need to look it up.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCmdlet</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Object</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------------- Example 1 : Basic Invocation -----------------</maml:title>
+        <dev:code>PS C:\&gt; Invoke-PSFCallback</dev:code>
+        <dev:remarks>
+          <maml:para>Simply by calling the command, any registered scriptblocks that apply to your command get triggered.</maml:para>
+          <maml:para>_</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------- Example 2 : Providing Information --------------</maml:title>
+        <dev:code>PS C:\&gt; Invoke-PSFCallback -Data $Server</dev:code>
+        <dev:remarks>
+          <maml:para>Executes all applicable, registered callback scriptblocks.</maml:para>
+          <maml:para>Provides the information stored in $Server to the scriptblock(s) being this executed.</maml:para>
+          <maml:para>_</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>--------------- Example 3 : The full invocation ---------------</maml:title>
+        <dev:code>PS C:\&gt; Invoke-PSFCallback -Data $Server -EnableException $true -PSCmdlet $PSCmdlet</dev:code>
+        <dev:remarks>
+          <maml:para>Executes all applicable, registered callback scriptblocks.</maml:para>
+          <maml:para>Provides the information stored in $Server to the scriptblock(s) being this executed.</maml:para>
+          <maml:para>If any of the executed callback scriptblocks fails with a terminating exception, the command calling Invoke-PSFCallback also fails in a terminating exception (no try/catch necessary).</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>Invoke-PSFProtectedCommand</command:name>
       <command:verb>Invoke</command:verb>
       <command:noun>PSFProtectedCommand</command:noun>
@@ -113,6 +441,67 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContinueLabel</maml:name>
+          <maml:Description>
+            <maml:para>When used together with -Continue, this allows you to pick the loop to continue with.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryCount</maml:name>
+          <maml:Description>
+            <maml:para>How many times the command should attempt to try an action again, before giving up.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryErrorType</maml:name>
+          <maml:Description>
+            <maml:para>When using -RetryCount to attempt a failed action again, this is a bit unspecific. Often we want to retry to deal with specific scenarios ... with specific errors. Using this parameter, it becomes possible to specify just what exception types can only trigger a retry attempt.</maml:para>
+            <maml:para>Note: Exceptions of type ActionPreferenceStopException will be unwrapped to the original exception BEFORE performing the comparison.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryWait</maml:name>
+          <maml:Description>
+            <maml:para>The interval the command will wait between failed attempts. Defaults to 5 seconds.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">TimeSpanParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpanParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Tag</maml:name>
+          <maml:Description>
+            <maml:para>What tags - if any - to include in all messages.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Invoke-PSFProtectedCommand</maml:name>
@@ -220,6 +609,67 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContinueLabel</maml:name>
+          <maml:Description>
+            <maml:para>When used together with -Continue, this allows you to pick the loop to continue with.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryCount</maml:name>
+          <maml:Description>
+            <maml:para>How many times the command should attempt to try an action again, before giving up.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryErrorType</maml:name>
+          <maml:Description>
+            <maml:para>When using -RetryCount to attempt a failed action again, this is a bit unspecific. Often we want to retry to deal with specific scenarios ... with specific errors. Using this parameter, it becomes possible to specify just what exception types can only trigger a retry attempt.</maml:para>
+            <maml:para>Note: Exceptions of type ActionPreferenceStopException will be unwrapped to the original exception BEFORE performing the comparison.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryWait</maml:name>
+          <maml:Description>
+            <maml:para>The interval the command will wait between failed attempts. Defaults to 5 seconds.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">TimeSpanParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpanParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Tag</maml:name>
+          <maml:Description>
+            <maml:para>What tags - if any - to include in all messages.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -343,6 +793,67 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContinueLabel</maml:name>
+        <maml:Description>
+          <maml:para>When used together with -Continue, this allows you to pick the loop to continue with.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryCount</maml:name>
+        <maml:Description>
+          <maml:para>How many times the command should attempt to try an action again, before giving up.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryErrorType</maml:name>
+        <maml:Description>
+          <maml:para>When using -RetryCount to attempt a failed action again, this is a bit unspecific. Often we want to retry to deal with specific scenarios ... with specific errors. Using this parameter, it becomes possible to specify just what exception types can only trigger a retry attempt.</maml:para>
+          <maml:para>Note: Exceptions of type ActionPreferenceStopException will be unwrapped to the original exception BEFORE performing the comparison.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryWait</maml:name>
+        <maml:Description>
+          <maml:para>The interval the command will wait between failed attempts. Defaults to 5 seconds.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">TimeSpanParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>TimeSpanParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Tag</maml:name>
+        <maml:Description>
+          <maml:para>What tags - if any - to include in all messages.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -2625,6 +3136,18 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Format">
+          <maml:name>StringValues</maml:name>
+          <maml:Description>
+            <maml:para>The values to format into the localized string defined. For more details on the PSFramework localization feature, see the help on Import-PSFLocalizedString.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Write-PSFMessage</maml:name>
@@ -2799,7 +3322,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Format">
           <maml:name>StringValues</maml:name>
           <maml:Description>
             <maml:para>The values to format into the localized string defined. For more details on the PSFramework localization feature, see the help on Import-PSFLocalizedString.</maml:para>
@@ -2999,7 +3522,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Format">
         <maml:name>StringValues</maml:name>
         <maml:Description>
           <maml:para>The values to format into the localized string defined. For more details on the PSFramework localization feature, see the help on Import-PSFLocalizedString.</maml:para>

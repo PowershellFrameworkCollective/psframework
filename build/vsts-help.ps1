@@ -1,0 +1,1 @@
+﻿New-ExternalHelp -Path "$PSScriptRoot\..\help\en-us\" -OutputPath "$PSScriptRoot\..\PSFramework\en-us\PSFramework.dll-Help.xml" -Force

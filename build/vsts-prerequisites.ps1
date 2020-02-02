@@ -6,3 +6,5 @@ Write-Host "Installing latest PackageManagement" -ForegroundColor Cyan
 Install-Module PackageManagement -Force -SkipPublisherCheck
 Write-Host "Installing latest PowerShellGet" -ForegroundColor Cyan
 Install-Module PowerShellGet -Force -SkipPublisherCheck
+Write-Host "Installing latest PlatyPS" -ForegroundColor Cyan
+Install-Module PlatyPS -Force -SkipPublisherCheck

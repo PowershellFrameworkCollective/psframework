@@ -67,6 +67,11 @@
             Any properties to exclude explicitly
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.CaseSensitive">
+            <summary>
+            Enables case sensitivity.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.IncludeEmpty">
             <summary>
             Enables adding empty keys for explicitly included keys that were not found on the input
@@ -800,6 +805,12 @@
             <summary>
             Add the object the message is all about, in order to simplify debugging / troubleshooting.
             For example, when calling this from a function targeting a remote computer, the computername could be specified here, allowing all messages to easily be correlated to the object processed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.NoNewLine">
+            <summary>
+            Skip adding a new line after writing the message to screen.
+            It is still logged as a single message though.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.EnableException">
@@ -2980,6 +2991,11 @@
             Include message timestamps in verbose message output
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessagePrefix">
+            <summary>
+            Include message prefix in verbose message output
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.EnableMessageDisplayCommand">
             <summary>
             Include the message display command in the verbose message output
@@ -2988,6 +3004,31 @@
         <member name="F:PSFramework.Message.MessageHost.EnableMessageBreadcrumbs">
             <summary>
             Include the entire callstack in the verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.PrefixValueError">
+            <summary>
+            Define the message prefix value for the critical level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.PrefixValueWarning">
+            <summary>
+            Define the message prefix value for the warning level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.PrefixValueVerbose">
+            <summary>
+            Define the message prefix value for the verbose level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.PrefixValueHost">
+            <summary>
+            Define the message prefix value for the host level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.PrefixValueSignificant">
+            <summary>
+            Define the message prefix value for the important level
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">
@@ -4787,6 +4828,43 @@
             <param name="psObject">The object to dissect</param>
             <returns>A memory stream.</returns>
         </member>
+        <member name="T:PSFramework.TabExpansion.CompletionResultComparer">
+            <summary>
+            Compares two completion results
+            </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.CompletionResultComparer.Compare(System.Management.Automation.CompletionResult,System.Management.Automation.CompletionResult)">
+            <summary>
+            Compares two completion results
+            </summary>
+            <param name="Completer1">Completer to compare</param>
+            <param name="Completer2">Completer to compare</param>
+            <returns>-1, 0 or 1</returns>
+        </member>
+        <member name="T:PSFramework.TabExpansion.PsfArgumentCompleterAttribute">
+            <summary>
+            Allows integrating PSFramework tab expansion by attribute, rather than command.
+            </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.String)">
+            <summary>
+            Create an argument completer offering but the name of the registered completion
+            </summary>
+            <param name="Completion">The completion scriptblock to use to provide completion information</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create an argument completer offering a scriptblock that is supposed to produce completion data.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.Management.Automation.ScriptBlock,System.String)">
+            <summary>
+            Create an argument completer offering a scriptblock that is supposed to produce completion data.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+            <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+        </member>
         <member name="T:PSFramework.TabExpansion.ScriptContainer">
             <summary>
             Regular container to store scripts in, that are used in TEPP
@@ -4857,6 +4935,25 @@
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
             </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Registers a new completion scriptblock
+            </summary>
+            <param name="Name">The name of the completion scriptblock</param>
+            <param name="ScriptBlock">The scriptblock that will provide completion data</param>
+            <param name="Mode">What completion mode to use</param>
+            <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean)">
+            <summary>
+            Registers a new completion scriptblock
+            </summary>
+            <param name="Name">The name of the completion scriptblock</param>
+            <param name="ScriptBlock">The scriptblock that will provide completion data</param>
+            <param name="Mode">What completion mode to use</param>
+            <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
+            <param name="PassThru">Parameter is ignored. Needed to have a second signature that returns the script container.</param>
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
             <summary>

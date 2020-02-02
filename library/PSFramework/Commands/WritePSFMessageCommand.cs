@@ -127,6 +127,13 @@ namespace PSFramework.Commands
         public object Target;
 
         /// <summary>
+        /// Skip adding a new line after writing the message to screen.
+        /// It is still logged as a single message though.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter NoNewLine;
+
+        /// <summary>
         /// This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		/// This is less user friendly, but allows catching exceptions in calling scripts.
         /// </summary>
@@ -195,10 +202,10 @@ namespace PSFramework.Commands
         /// Scriptblock that writes the host messages
         /// </summary>
         private static string _writeHostScript = @"
-param ( $___psframework__string )
+param ( $___psframework__string, $NoNewLine )
 
-if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore }
-else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore }
+if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
+else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
 ";
 
         /// <summary>
@@ -490,7 +497,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
-                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
+                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
                             channels = channels | LogEntryType.Information;
 
                             Configuration.Config cfg = new Configuration.Config();
@@ -506,7 +513,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     else
                     {
                         //InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
-                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
+                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
                         channels = channels | LogEntryType.Information;
                     }
                 }
@@ -689,20 +696,20 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             {
                 switch (Level)
                 {
-                    case MessageLevel.Critical:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueCritical, _message);
-                        break;
                     case MessageLevel.Host:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
                         break;
-                    case MessageLevel.Significant:
+                    case MessageLevel.Significant | MessageLevel.Critical:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
                         break;
-                    case MessageLevel.Verbose:
+                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
                         break;
                     case MessageLevel.Warning:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
+                        if (Tag != null && Tag.Contains("error", StringComparer.InvariantCultureIgnoreCase))
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
+                        else
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
                         break;
                     default:
                         break;
@@ -755,20 +762,20 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             {
                 switch (Level)
                 {
-                    case MessageLevel.Critical:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueCritical, _messageColor);
-                        break;
                     case MessageLevel.Host:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueHost, _messageColor);
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
                         break;
-                    case MessageLevel.Significant:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _messageColor);
+                    case MessageLevel.Significant | MessageLevel.Critical:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
                         break;
-                    case MessageLevel.Verbose:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _messageColor);
+                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
                         break;
                     case MessageLevel.Warning:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _messageColor);
+                        if (Tag != null && Tag.Contains("error", StringComparer.InvariantCultureIgnoreCase))
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
+                        else
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
                         break;
                     default:
                         break;

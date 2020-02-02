@@ -1,5 +1,6 @@
 ﻿# Define our type aliases
 $TypeAliasTable = @{
+	PsfArgumentCompleter = "PSFramework.TabExpansion.PsfArgumentCompleterAttribute"
 	PSFComputer		     = "PSFramework.Parameter.ComputerParameter"
 	PSFComputerParameter = "PSFramework.Parameter.ComputerParameter"
 	PSFDateTime		     = "PSFramework.Parameter.DateTimeParameter"

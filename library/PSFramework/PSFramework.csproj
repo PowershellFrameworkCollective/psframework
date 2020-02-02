@@ -142,6 +142,8 @@
     <Compile Include="Serialization\ClixmlDataStyle.cs" />
     <Compile Include="Serialization\ClixmlSerializer.cs" />
     <Compile Include="Serialization\SerializationTypeConverter.cs" />
+    <Compile Include="TabExpansion\CompletionResultComparer.cs" />
+    <Compile Include="TabExpansion\PsfArgumentCompleterAttribute.cs" />
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
     <Compile Include="TabExpansion\TeppScriptMode.cs" />

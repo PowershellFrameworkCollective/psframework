@@ -99,7 +99,7 @@ namespace PSFramework.Message
         /// <summary>
         /// Define the message prefix value for the critical level
         /// </summary>
-        public static string PrefixValueCritical = "##vso[task.logissue type=error;]";
+        public static string PrefixValueError = "##vso[task.logissue type=error;]";
 
         /// <summary>
         /// Define the message prefix value for the warning level
