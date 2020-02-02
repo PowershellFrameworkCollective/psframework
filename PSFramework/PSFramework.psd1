@@ -45,6 +45,7 @@
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
 		'Export-PSFConfig',
+		'Export-PSFModuleClass',
 		'Get-PSFCallback',
 		'Get-PSFConfig',
 		'Get-PSFConfigValue',

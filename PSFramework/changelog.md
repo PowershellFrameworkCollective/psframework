@@ -1,6 +1,7 @@
 ﻿# CHANGELOG
 ## ???
 
+- New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)

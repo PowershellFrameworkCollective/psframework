@@ -20,9 +20,5 @@
 	
 	# Validation
 	'Assembly.Validation.Generic.ArgumentIsEmpty'				   = 'Could not validate input, no data was provided!'
-	'Assembly.Validation.Enum.NotAnEnumType'					   = 'The specified type is not an enumerated type: {0}!'
-	'Assembly.Validation.Enum.FailedParse'						   = 'Unable to parse "{0}" as legal values of {1}!'
 	'Assembly.Validation.UntrustedData'						       = 'This data has been flagged as untrustworthy: {0}!'
-	'Assembly.Validation.Enum.NotAnEnum'						   = 'The specified value {0} is not an enumerated type!'
-	'Assembly.Validation.Enum.NotInLegal'						   = 'The specified value {0} is not part of the legal values ({1})!'
 }
