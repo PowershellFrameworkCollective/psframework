@@ -56,7 +56,7 @@ namespace PSFramework.Validation
         protected override void ValidateElement(object element)
         {
             if (element == null)
-                throw new ValidationMetadataException("Argument Is Empty");
+                throw new ValidationMetadataException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.Generic.ArgumentIsEmpty", null)));
 
             string objectString = element.ToString();
             Regex regex = null;

@@ -47,7 +47,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>IncludeEmpty</maml:name>
           <maml:Description>
-            <maml:para>By default, only properties on the input object are included. In order to force all properties defiend in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
+            <maml:para>By default, only properties on the input object are included. In order to force all properties defined in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -58,7 +58,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Inherit</maml:name>
           <maml:Description>
-            <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explictly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
+            <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explicitly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -77,6 +77,17 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CaseSensitive</maml:name>
+          <maml:Description>
+            <maml:para>Make Include and Exclude name-filtering case sensitive.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -108,7 +119,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>IncludeEmpty</maml:name>
         <maml:Description>
-          <maml:para>By default, only properties on the input object are included. In order to force all properties defiend in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
+          <maml:para>By default, only properties on the input object are included. In order to force all properties defined in -Include to be included, specify this switch. Keys added through this have an empty ($null) value.</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -120,7 +131,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Inherit</maml:name>
         <maml:Description>
-          <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explictly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
+          <maml:para>By default, only properties on the input object are included. With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name. This is explicitly designed to allow inheriting default parameter values when cloning $PSBoundParameters.</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -141,6 +152,18 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CaseSensitive</maml:name>
+        <maml:Description>
+          <maml:para>Make Include and Exclude name-filtering case sensitive.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes />
     <command:returnValues>
@@ -160,14 +183,14 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>-------------------------- BEISPIEL 1 --------------------------</maml:title>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>Get-ChildItem | ConvertTo-PSFHashtable</dev:code>
         <dev:remarks>
           <maml:para>Scans all items in the current path and converts those objects into hashtables.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>-------------------------- BEISPIEL 2 --------------------------</maml:title>
+        <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>$parameters = $PSBoundParameters | ConvertTo-PSFHashtable -Include ComputerName, Credential, Target -Inherit</dev:code>
         <dev:remarks>
           <maml:para>Clones the bound parameters into a new hashtable that can now be used for splatting- Only parameters explicitly specified or with default values will be included.</maml:para>
@@ -1780,9 +1803,9 @@ PS C:\&gt; if (Test-PSFFunctionInterrupt) { return }</dev:code>
       </command:example>
       <command:example>
         <maml:title>------------------ Example 2: Converting type ------------------</maml:title>
-        <dev:code>Import-Csv .\file.csv | Select-PSFObject Name, "Length as Size to DbaSize"</dev:code>
+        <dev:code>Import-Csv .\file.csv | Select-PSFObject Name, "Length as Size to PSFSize"</dev:code>
         <dev:remarks>
-          <maml:para>Selects the properties Name and Length, renaming Length to Size and converting it to [DbaSize] (a userfriendly representation of size numbers contained in the dbatools module)</maml:para>
+          <maml:para>Selects the properties Name and Length, renaming Length to Size and converting it to [Example] (a userfriendly representation of size numbers without turning the data into string)</maml:para>
           <maml:para>_</maml:para>
         </dev:remarks>
       </command:example>
@@ -1913,7 +1936,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Default</maml:name>
           <maml:Description>
-            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.</maml:para>
+            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading user profiles.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -2077,7 +2100,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Default</maml:name>
           <maml:Description>
-            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.</maml:para>
+            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading user profiles.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -2289,7 +2312,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Default</maml:name>
           <maml:Description>
-            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.</maml:para>
+            <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading user profiles.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -2490,7 +2513,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Default</maml:name>
         <maml:Description>
-          <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.</maml:para>
+          <maml:para>Setting this parameter causes the system to treat this configuration as a default setting. If the configuration already exists, no changes will be performed. Useful in scenarios where for some reason it is not practical to automatically set defaults before loading user profiles.</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -3057,7 +3080,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ErrorRecord</maml:name>
           <maml:Description>
-            <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqued in the logging/debugging system.</maml:para>
+            <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqueued in the logging/debugging system.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">ErrorRecord[]</command:parameterValue>
           <dev:type>
@@ -3148,6 +3171,17 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoNewLine</maml:name>
+          <maml:Description>
+            <maml:para>Does not include a new line entry when writing a message to screen. Note: The message will still be logged as a single entry, even if you later add additional text.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Write-PSFMessage</maml:name>
@@ -3231,7 +3265,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ErrorRecord</maml:name>
           <maml:Description>
-            <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqued in the logging/debugging system.</maml:para>
+            <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqueued in the logging/debugging system.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">ErrorRecord[]</command:parameterValue>
           <dev:type>
@@ -3334,6 +3368,17 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoNewLine</maml:name>
+          <maml:Description>
+            <maml:para>Does not include a new line entry when writing a message to screen. Note: The message will still be logged as a single entry, even if you later add additional text.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -3429,7 +3474,7 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ErrorRecord</maml:name>
         <maml:Description>
-          <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqued in the logging/debugging system.</maml:para>
+          <maml:para>If an error record should be noted with the message, add the full record here. Especially designed for use with Warning-mode, it can legally be used in either mode. The error will be added to the $Error variable and enqueued in the logging/debugging system.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">ErrorRecord[]</command:parameterValue>
         <dev:type>
@@ -3533,6 +3578,18 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoNewLine</maml:name>
+        <maml:Description>
+          <maml:para>Does not include a new line entry when writing a message to screen. Note: The message will still be logged as a single entry, even if you later add additional text.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />

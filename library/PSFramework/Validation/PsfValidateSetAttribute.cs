@@ -64,7 +64,7 @@ namespace PSFramework.Validation
         {
             if (element == null)
             {
-                throw new ValidationMetadataException("ArgumentIsEmpty", null);
+                throw new ValidationMetadataException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.Generic.ArgumentIsEmpty", null)));
             }
 
             List<string> legalValues = new List<string>();

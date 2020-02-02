@@ -4,6 +4,7 @@
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
+- Upd: Write-PSFMessage - New parameter: `-NoNewLine` avoids adding a new line after writing to screen.
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
