@@ -9,6 +9,7 @@
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
+- Fix: Invoke-PSFProtectedCommand - fails with 'Variable was precompiled for performance reasons' in some situations.
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.

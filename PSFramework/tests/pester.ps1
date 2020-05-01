@@ -40,6 +40,9 @@ if ($TestGeneral)
 	Write-PSFMessage -Level Important -Message "Modules imported, proceeding with general tests"
 	foreach ($file in (Get-ChildItem "$PSScriptRoot\general" -Filter "*.Tests.ps1"))
 	{
+		if ($file.Name -notlike $Include) { continue }
+		if ($file.Name -like $Exclude) { continue }
+		
 		Write-PSFMessage -Level Significant -Message "  Executing <c='em'>$($file.Name)</c>"
 		$TestOuputFile = Join-Path "$PSScriptRoot\..\..\TestResults" "TEST-$($file.BaseName).xml"
 		$results = Invoke-Pester -Script $file.FullName -Show $Show -PassThru -OutputFile $TestOuputFile -OutputFormat NUnitXml

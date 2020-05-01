@@ -19,16 +19,16 @@ namespace PSFramework.Commands
         /// </summary>
         internal static string MessageScript = @"
 param (
-    $Message,
-    $Level,
-    $FunctionName,
-    $ModuleName,
-    $File,
-    $Line,
-    $Tag,
-    $Target
+	$____PSF____Message,
+	$____PSF____Level,
+	$____PSF____FunctionName,
+	$____PSF____ModuleName,
+	$____PSF____File,
+	$____PSF____Line,
+	$____PSF____Tag,
+	$____PSF____Target
 )
-Write-PSFMessage -Message $Message -Level $Level -FunctionName $FunctionName -ModuleName $ModuleName -Tag $Tag -File $File -Line $Line -Target $Target
+Write-PSFMessage -Message $____PSF____Message -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target
 ";
 
         /// <summary>
@@ -36,17 +36,17 @@ Write-PSFMessage -Message $Message -Level $Level -FunctionName $FunctionName -Mo
         /// </summary>
         internal static string LocalizedMessageScript = @"
 param (
-    $String,
-    $StringValues,
-    $Level,
-    $FunctionName,
-    $ModuleName,
-    $File,
-    $Line,
-    $Tag,
-    $Target
+	$____PSF____String,
+	$____PSF____StringValues,
+	$____PSF____Level,
+	$____PSF____FunctionName,
+	$____PSF____ModuleName,
+	$____PSF____File,
+	$____PSF____Line,
+	$____PSF____Tag,
+	$____PSF____Target
 )
-Write-PSFMessage -String $String -StringValues $StringValues -Level $Level -FunctionName $FunctionName -ModuleName $ModuleName -Tag $Tag -File $File -Line $Line -Target $Target
+Write-PSFMessage -String $____PSF____String -StringValues $____PSF____StringValues -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target
 ";
 
         internal static string StopFunctionScript = @"
