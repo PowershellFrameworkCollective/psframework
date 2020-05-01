@@ -525,6 +525,20 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryCondition</maml:name>
+          <maml:Description>
+            <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
+            <maml:para>- $_ : The exception (not error record) thrown</maml:para>
+            <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
+          <dev:type>
+            <maml:name>ScriptBlock</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Invoke-PSFProtectedCommand</maml:name>
@@ -690,6 +704,20 @@
           <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
             <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryCondition</maml:name>
+          <maml:Description>
+            <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
+            <maml:para>- $_ : The exception (not error record) thrown</maml:para>
+            <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
+          <dev:type>
+            <maml:name>ScriptBlock</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -874,6 +902,20 @@
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
           <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryCondition</maml:name>
+        <maml:Description>
+          <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
+          <maml:para>- $_ : The exception (not error record) thrown</maml:para>
+          <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
+        <dev:type>
+          <maml:name>ScriptBlock</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

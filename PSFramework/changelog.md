@@ -3,13 +3,14 @@
 
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter
+- Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retr validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
 - Upd: Write-PSFMessage - New parameter: `-NoNewLine` avoids adding a new line after writing to screen.
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
-- Fix: Invoke-PSFProtectedCommand - fails with 'Variable was precompiled for performance reasons' in some situations.
+- Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.

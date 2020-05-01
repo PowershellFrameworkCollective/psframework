@@ -165,6 +165,12 @@
             Only retry on errors of the following types
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryCondition">
+            <summary>
+            Only when this scriptblock returns $true will it try again.
+            The scriptblock receives argument: The exception object.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
             <summary>
             Information on the calling command, including name, module, file and line.

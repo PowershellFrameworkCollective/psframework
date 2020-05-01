@@ -97,6 +97,13 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public string[] RetryErrorType = new string[0];
+
+        /// <summary>
+        /// Only when this scriptblock returns $true will it try again.
+        /// The scriptblock receives argument: The exception object.
+        /// </summary>
+        [Parameter()]
+        public ScriptBlock RetryCondition;
         #endregion Parameters
 
         #region Private Fields
@@ -228,6 +235,11 @@ return
                         tempError = ((ActionPreferenceStopException)tempError).ErrorRecord.Exception;
 
                     if (RetryCount == 0)
+                    {
+                        Terminate(tempError);
+                        return;
+                    }
+                    if (RetryCondition != null && !LanguagePrimitives.IsTrue(Invoke(RetryCondition, true, tempError, tempError, null, new object[] { Target })))
                     {
                         Terminate(tempError);
                         return;
