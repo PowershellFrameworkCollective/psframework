@@ -48,10 +48,10 @@
 					$Name
 				)
 				
-				$rootPath = $Instance.ConfigurationRoot
-				if ($Instance.Name -and $Instance.Name -ne "Default")
+				$rootPath = $script:Instance.ConfigurationRoot
+				if ($script:Instance.Name -and $script:Instance.Name -ne "Default")
 				{
-					$rootPath += ".$($Instance.Name)"
+					$rootPath += ".$($script:Instance.Name)"
 				}
 				
 				Get-PSFConfigValue -FullName "$rootPath.$Name"

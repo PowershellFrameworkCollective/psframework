@@ -1,6 +1,7 @@
 ﻿# CHANGELOG
 ## ???
 
+- Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
 - New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
