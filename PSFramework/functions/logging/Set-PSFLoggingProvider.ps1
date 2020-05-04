@@ -49,10 +49,15 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFLoggingProvider')]
-	Param (
+	param (
+		[Parameter(Mandatory = $true)]
+		[ValidateNotNullOrEmpty()]
 		[Alias('Provider', 'ProviderName')]
 		[string]
 		$Name,
+		
+		[string]
+		$InstanceName,
 		
 		[bool]
 		$Enabled,
@@ -75,25 +80,51 @@
 	
 	dynamicparam
 	{
-		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
+		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
-			[scriptblock]::Create(([PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].ConfigurationParameters)).Invoke()
+			$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
+			[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.ConfigurationParameters, $true)
+			$results = $provider.ConfigurationParameters.Invoke() | Where-Object { $_ -is [System.Management.Automation.RuntimeDefinedParameterDictionary] }
+			if (-not $results) { $results = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary }
+			
+			#region Process V2 Properties
+			# Since V1 Providers do not have the property, this loop will never execute for them
+			foreach ($propertyName in $provider.InstanceProperties)
+			{
+				$parameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+				$parameterAttribute.ParameterSetName = '__AllParameterSets'
+				$attributesCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+				$attributesCollection.Add($parameterAttribute)
+				$RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter($propertyName, [object], $attributesCollection)
+				
+				$results.Add($propertyName, $RuntimeParam)
+			}
+			#endregion Process V2 Properties
+			
+			$results
 		}
 	}
 	
 	begin
 	{
-		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
+		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
-			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name
+			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.NotFound' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name
 			return
 		}
 		
-		[PSFramework.Logging.Provider]$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()]
-		
-		if ((-not $provider.Enabled) -and (-not ([scriptblock]::Create($provider.IsInstalledScript).Invoke())) -and $Enabled)
+		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
+		if ($InstanceName -and $provider.ProviderVersion -eq 'Version_1')
 		{
-			Stop-PSFFunction -Message "Provider $Name not installed! Run 'Install-PSFLoggingProvider' first" -EnableException $EnableException -Category InvalidOperation -Target $Name
+			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.V1NoInstance' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name
+			return
+		}
+		
+		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.IsInstalledScript, $true)
+		
+		if ((-not $provider.Enabled) -and (-not $provider.IsInstalledScript.Invoke()) -and $Enabled)
+		{
+			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.NotInstalled' -StringValues $Name -EnableException $EnableException -Category InvalidOperation -Target $Name
 			return
 		}
 	}
@@ -104,38 +135,50 @@
 		# Recreating the scriptblock this way ensures that it can properly inherit the variables in the current scope
 		[System.Management.Automation.ScriptBlock]::Create($provider.ConfigurationScript).Invoke()
 		
+		$instanceAffix = ''
+		if ($InstanceName -and ($InstanceName -ne "Default")) { $instanceAffix = "$InstanceName." }
+		
+		#region V2 Instance Properties
+		foreach ($propertyName in $provider.InstanceProperties)
+		{
+			if (Test-PSFParameterBinding -ParameterName $propertyName -Not) { continue }
+			
+			Set-PSFConfig -FullName "$($provider.ConfigurationRoot).$($instanceAffix)$($propertyName)" -Value $PSBoundParameters[$propertyName]
+		}
+		#endregion V2 Instance Properties
+		
 		#region Filter Configuration
 		if (Test-PSFParameterBinding -ParameterName "IncludeModules")
 		{
 			$provider.IncludeModules = $IncludeModules
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).IncludeModules" -Value $IncludeModules
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeModules" -Value $IncludeModules
 		}
 		if (Test-PSFParameterBinding -ParameterName "ExcludeModules")
 		{
 			$provider.ExcludeModules = $ExcludeModules
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).ExcludeModules" -Value $ExcludeModules
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeModules" -Value $ExcludeModules
 		}
 		
 		if (Test-PSFParameterBinding -ParameterName "IncludeTags")
 		{
 			$provider.IncludeTags = $IncludeTags
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).IncludeTags" -Value $IncludeTags
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeTags" -Value $IncludeTags
 		}
 		if (Test-PSFParameterBinding -ParameterName "ExcludeTags")
 		{
 			$provider.ExcludeTags = $ExcludeTags
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).ExcludeTags" -Value $ExcludeTags
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeTags" -Value $ExcludeTags
 		}
 		#endregion Filter Configuration
 		
 		if (Test-PSFParameterBinding -ParameterName "Enabled")
 		{
-			$provider.Enabled = $Enabled
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).Enabled" -Value $Enabled
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)Enabled" -Value $Enabled
+			if ($provider.ProviderVersion -eq 'Version_1') { $provider.Enabled = $Enabled }
+			elseif ($provider.Instances[$InstanceName])
+			{
+				$provider.Instances[$InstanceName].Enabled = $Enabled
+			}
 		}
-	}
-	end
-	{
-		if (Test-PSFFunctionInterrupt) { return }
 	}
 }

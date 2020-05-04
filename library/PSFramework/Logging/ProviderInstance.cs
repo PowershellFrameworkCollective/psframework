@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using PSFramework.Utility;
@@ -6,41 +7,77 @@ using PSFramework.Utility;
 namespace PSFramework.Logging
 {
     /// <summary>
-    /// Class containing all information/content needed for a logging provider
+    /// Active instance of a logging provider
     /// </summary>
-    public class Provider
+    public class ProviderInstance
     {
         #region Core metadata
         /// <summary>
-        /// Each logging provider has a name. Make sure it's unique
+        /// name of the instance
         /// </summary>
         public string Name;
 
         /// <summary>
-        /// Whether the logging provider is enabled. Only when this is set to true will the logging script execute its events.
+        /// The logging provider it is an instance of
+        /// </summary>
+        public ProviderV2 Provider;
+
+        /// <summary>
+        /// Whether the logging provider instance is enabled. Only when this is set to true will the logging script execute its events.
         /// </summary>
         public bool Enabled;
 
         /// <summary>
-        /// The provider has had its initial runtime configuration (what is stored in the BeginEvent) applied.
+        /// The provider instance has had its initial runtime configuration (what is stored in the BeginEvent) applied.
         /// </summary>
         public bool Initialized;
-
-        /// <summary>
-        /// Whether the provider must be installed, in order for it to be used.
-        /// </summary>
-        public bool InstallationOptional;
-
-        /// <summary>
-        /// The generation of the logging provider.
-        /// </summary>
-        public ProviderVersion ProviderVersion = ProviderVersion.Version_1;
         #endregion Core metadata
+
+        #region Constructor & Utils
+        /// <summary>
+        /// Creates a new instance of a logging provider
+        /// </summary>
+        /// <param name="Provider">The provider from which to create an instance.</param>
+        /// <param name="Name">The name of the instance to create.</param>
+        public ProviderInstance(ProviderV2 Provider, string Name)
+        {
+            this.Name = Name;
+            this.Provider = Provider;
+
+            ImportConfig();
+            ProviderHost.InitializeProviderInstance(this);
+        }
+
+        private void ImportConfig()
+        {
+            string configRoot = $"LoggingProvider.{Provider.Name}";
+            if (!String.IsNullOrEmpty(Name) && !String.Equals(Name, "Default", StringComparison.InvariantCultureIgnoreCase))
+                configRoot = configRoot + $".{Name}";
+
+            // Enabled
+            Enabled = LanguagePrimitives.IsTrue(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.Enabled"));
+
+            // Includes & Excludes
+            IncludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeModules"));
+            ExcludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeModules"));
+            IncludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeTags"));
+            ExcludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeTags"));
+        }
+
+        private List<string> ToStringList(object Entries)
+        {
+            if (Entries == null)
+                return new List<string>();
+
+            List<string> strings = new List<string>();
+            return LanguagePrimitives.ConvertTo(Entries, strings.GetType()) as List<string>;
+        }
+        #endregion Constructor & Utils
 
         #region Message filtering
         private List<string> _IncludeModules = new List<string>();
         /// <summary>
-        /// List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
+        /// List of modules to include in the logging. Only messages generated from these modules will be considered by the provider instance.
         /// </summary>
         public List<string> IncludeModules
         {
@@ -56,7 +93,7 @@ namespace PSFramework.Logging
 
         private List<string> _ExcludeModules = new List<string>();
         /// <summary>
-        /// List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
+        /// List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider instance.
         /// </summary>
         public List<string> ExcludeModules
         {
@@ -72,7 +109,7 @@ namespace PSFramework.Logging
 
         private List<string> _IncludeTags = new List<string>();
         /// <summary>
-        /// List of tags to include. Only messages with these tags will be considered by this provider.
+        /// List of tags to include. Only messages with these tags will be considered by this provider instance.
         /// </summary>
         public List<string> IncludeTags
         {
@@ -88,7 +125,7 @@ namespace PSFramework.Logging
 
         private List<string> _ExcludeTags = new List<string>();
         /// <summary>
-        /// List of tags to exclude. Messages with these tags will be ignored by this provider.
+        /// List of tags to exclude. Messages with these tags will be ignored by this provider instance.
         /// </summary>
         public List<string> ExcludeTags
         {
@@ -103,7 +140,7 @@ namespace PSFramework.Logging
         }
 
         /// <summary>
-        /// Tests whether a log entry applies to the provider
+        /// Tests whether a log entry applies to the provider instance
         /// </summary>
         /// <param name="Entry">The Entry to validate</param>
         /// <returns>Whether it applies</returns>
@@ -123,7 +160,7 @@ namespace PSFramework.Logging
                     return false;
             }
 
-            foreach(string module in ExcludeModules)
+            foreach (string module in ExcludeModules)
                 if (Entry.ModuleName.ToLower() == module.ToLower())
                     return false;
 
@@ -140,10 +177,10 @@ namespace PSFramework.Logging
         }
 
         /// <summary>
-        /// Tests whether an error record applies to the provider
+        /// Tests whether an error record applies to the provider instance
         /// </summary>
         /// <param name="Record">The error record to test</param>
-        /// <returns>Whether it applies to the provider</returns>
+        /// <returns>Whether it applies to the provider instance</returns>
         public bool MessageApplies(Message.PsfExceptionRecord Record)
         {
             if ((IncludeModules.Count == 0) && (ExcludeModules.Count == 0) && (IncludeTags.Count == 0) && (ExcludeTags.Count == 0))
@@ -177,89 +214,46 @@ namespace PSFramework.Logging
         }
         #endregion Message filtering
 
-        #region Scriptblocks Logging Execution
+        #region Instance Module
         /// <summary>
-        /// Event that is executed once per logging script execution, before logging occurs
+        /// The module containing the instance content
         /// </summary>
-        public ScriptBlock BeginEvent;
+        public PSModuleInfo Module;
+        /// <summary>
+        /// The function to use to execute in the begin phase
+        /// </summary>
+        public FunctionInfo BeginCommand;
+        /// <summary>
+        /// The function to use to execute the start phase
+        /// </summary>
+        public FunctionInfo StartCommand;
+        /// <summary>
+        /// The function to use to execute the message phase
+        /// </summary>
+        public FunctionInfo MessageCommand;
+        /// <summary>
+        /// The function to use to execute the error phase
+        /// </summary>
+        public FunctionInfo ErrorCommand;
+        /// <summary>
+        /// the function to use to execute the end phase
+        /// </summary>
+        public FunctionInfo EndCommand;
+        /// <summary>
+        /// The function to use to execute the final phase
+        /// </summary>
+        public FunctionInfo FinalCommand;
+        #endregion Instance Module
 
         /// <summary>
-        /// Event that is executed each logging cycle, right before processing items.
+        /// The last 128 errors that happenend to the provider instance
         /// </summary>
-        public ScriptBlock StartEvent;
+        public LimitedConcurrentQueue<ErrorRecord> Errors = new LimitedConcurrentQueue<ErrorRecord>(128);
 
         /// <summary>
-        /// Event that is executed for each message written
+        /// Returns the name of the provider instance.
         /// </summary>
-        public ScriptBlock MessageEvent;
-
-        /// <summary>
-        /// Event that is executed for each error written
-        /// </summary>
-        public ScriptBlock ErrorEvent;
-
-        /// <summary>
-        /// Event that is executed once per logging cycle, after processing all message and error items.
-        /// </summary>
-        public ScriptBlock EndEvent;
-
-        /// <summary>
-        /// Final Event that is executed when stopping the logging script.
-        /// </summary>
-        public ScriptBlock FinalEvent;
-
-        /// <summary>
-        /// This will import the events into the current execution context, breaking runspace affinity
-        /// </summary>
-        public void LocalizeEvents()
-        {
-            UtilityHost.ImportScriptBlock(BeginEvent);
-            UtilityHost.ImportScriptBlock(StartEvent);
-            UtilityHost.ImportScriptBlock(MessageEvent);
-            UtilityHost.ImportScriptBlock(ErrorEvent);
-            UtilityHost.ImportScriptBlock(EndEvent);
-            UtilityHost.ImportScriptBlock(FinalEvent);
-        }
-        #endregion Scriptblocks Logging Execution
-
-        #region Function Extension / Integration
-        /// <summary>
-        /// Script that recognizes, whether the provider has been isntalled correctly. Some providers require installation, in order to function properly.
-        /// </summary>
-        public ScriptBlock IsInstalledScript;
-
-        /// <summary>
-        /// Script that installs the provider
-        /// </summary>
-        public ScriptBlock InstallationScript;
-
-        /// <summary>
-        /// Script that generates dynamic parameters for installing the provider.
-        /// </summary>
-        public ScriptBlock InstallationParameters;
-
-        /// <summary>
-        /// Scriptblock that adds additional parameters as needed to the Set-PSFLoggingProvider function
-        /// </summary>
-        public ScriptBlock ConfigurationParameters;
-
-        /// <summary>
-        /// The configuration steps taken by the Set-PSFLoggingProvider function
-        /// </summary>
-        public ScriptBlock ConfigurationScript;
-        #endregion Function Extension / Integration
-
-        #region Troubleshooting / Analysis
-        /// <summary>
-        /// List of errors that happened on the logging runspace.
-        /// </summary>
-        public Stack<ErrorRecord> Errors = new Stack<ErrorRecord>();
-        #endregion Troubleshooting / Analysis
-
-        /// <summary>
-        /// Returns the name of the provider.
-        /// </summary>
-        /// <returns>Returns the name of the provider.</returns>
+        /// <returns>Returns the name of the provider instance.</returns>
         public override string ToString()
         {
             return Name;

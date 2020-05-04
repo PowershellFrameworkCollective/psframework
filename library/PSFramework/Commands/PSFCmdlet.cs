@@ -3,6 +3,7 @@ using PSFramework.FlowControl;
 using PSFramework.Message;
 using PSFramework.Meta;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -26,9 +27,10 @@ param (
 	$____PSF____File,
 	$____PSF____Line,
 	$____PSF____Tag,
-	$____PSF____Target
+	$____PSF____Target,
+    $____PSF____Data
 )
-Write-PSFMessage -Message $____PSF____Message -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target
+Write-PSFMessage -Message $____PSF____Message -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target -Data $____PSF____Data
 ";
 
         /// <summary>
@@ -44,9 +46,10 @@ param (
 	$____PSF____File,
 	$____PSF____Line,
 	$____PSF____Tag,
-	$____PSF____Target
+	$____PSF____Target,
+    $____PSF____Data
 )
-Write-PSFMessage -String $____PSF____String -StringValues $____PSF____StringValues -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target
+Write-PSFMessage -String $____PSF____String -StringValues $____PSF____StringValues -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target -Data $____PSF____Data
 ";
 
         internal static string StopFunctionScript = @"
@@ -213,9 +216,10 @@ return
         /// <param name="Line">The line in the file this message was written from</param>
         /// <param name="Tag">Tags to attach to this message</param>
         /// <param name="Target">A target object to specify</param>
-        public void WriteMessage(string Message, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target)
+        /// <param name="Data">Add additional metadata to the message written</param>
+        public void WriteMessage(string Message, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
         {
-            object[] arguments = new object[] { Message, Level, FunctionName, ModuleName, File, Line, Tag, Target };
+            object[] arguments = new object[] { Message, Level, FunctionName, ModuleName, File, Line, Tag, Target, Data };
             Invoke(MessageScript, false, null, null, null, arguments);
         }
 
@@ -231,9 +235,10 @@ return
         /// <param name="Line">The line in the file this message was written from</param>
         /// <param name="Tag">Tags to attach to this message</param>
         /// <param name="Target">A target object to specify</param>
-        public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target)
+        /// <param name="Data">Add additional metadata to the message written</param>
+        public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
         {
-            object[] arguments = new object[] { String, StringValues, Level, FunctionName, ModuleName, File, Line, Tag, Target };
+            object[] arguments = new object[] { String, StringValues, Level, FunctionName, ModuleName, File, Line, Tag, Target, Data };
             Invoke(LocalizedMessageScript, false, null, null, null, arguments);
         }
 

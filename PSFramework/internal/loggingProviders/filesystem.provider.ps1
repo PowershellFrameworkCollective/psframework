@@ -178,7 +178,7 @@ $configurationParameters = {
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
 	
-	$RuntimeParamDic = New-Object  System.Management.Automation.RuntimeDefinedParameterDictionary
+	$RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
 	
 	foreach ($config in $configurations)
 	{

@@ -431,12 +431,18 @@ namespace PSFramework.Utility
         /// Imports a scriptblock into the current sessionstate, without affecting its language mode.
         /// Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
         /// </summary>
-        /// <param name="ScriptBlock">The code to localize</param>
-        public static void ImportScriptBlock(ScriptBlock ScriptBlock)
+        /// <param name="ScriptBlock">The code to localize.</param>
+        /// <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>
+        public static void ImportScriptBlock(ScriptBlock ScriptBlock, bool Global = false)
         {
             object context = GetExecutionContextFromTLS();
-            object internalSessionState = GetPrivateProperty("Internal", GetPrivateProperty("SessionState", context));
-            SetPrivateProperty("SessionStateInternal", ScriptBlock, internalSessionState);
+            object targetState;
+            if (Global)
+                targetState = GetPrivateProperty("TopLevelSessionState", context);
+            else
+                targetState = GetPrivateProperty("Internal", GetPrivateProperty("SessionState", context));
+
+            SetPrivateProperty("SessionStateInternal", ScriptBlock, targetState);
         }
     }
 }

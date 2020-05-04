@@ -9,6 +9,7 @@ internal\configurationvalidation\*.ps1
 internal\configurations\*.ps1
 internal\scripts\loadConfigurationPersisted.ps1
 internal\loggingProviders\*.ps1
+internal\scripts\loggingProviderInstanceModuleCode.ps1
 internal\scripts\async-logging2.ps1
 internal\tepp\scripts\*.ps1
 internal\tepp\tepp-assignment.ps1

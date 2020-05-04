@@ -178,6 +178,19 @@ namespace PSFramework.Configuration
             return ConvertFromPersistedValue(valueString, type);
         }
 
+        /// <summary>
+        /// Retrieve the configuration value only.
+        /// Returns null if the configuration entry does not exist.
+        /// </summary>
+        /// <param name="FullName">The full name of the configuration object of which to return the value</param>
+        /// <returns>The value of the configuration entry.</returns>
+        public static object GetConfigValue(string FullName)
+        {
+            if (!Configurations.ContainsKey(FullName))
+                return null;
+            return Configurations[FullName].Value;
+        }
+
         #region Private methods
         /// <summary>
         /// Converts a plain text into a base64 string

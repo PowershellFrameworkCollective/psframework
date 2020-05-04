@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Management.Automation;
@@ -85,6 +86,39 @@ namespace PSFramework.Message
         /// The time pattern used when writing logfiles using the filesystem provider
         /// </summary>
         public static string TimeFormat = String.Format("{0} {1}", System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern);
+
+        /// <summary>
+        /// The interval at which the loging runspace runs. Increase to improve performance, reduce the minimize writing latency.
+        /// </summary>
+        public static int Interval = 1000;
+
+        /// <summary>
+        /// The interval at which the loging runspace runs, when there is nothing to do.
+        /// </summary>
+        public static int IntervalIdle = 5000;
+
+        /// <summary>
+        /// The time with no message written that needs to occur for the logging runspace to switch to idle mode.
+        /// </summary>
+        public static TimeSpan IntervalIdleDuration = new TimeSpan(0, 2, 0);
+
+        /// <summary>
+        /// The time the last message or error were written.
+        /// </summary>
+        public static DateTime LastLogged = DateTime.Now;
+
+        /// <summary>
+        /// The next interval to use.
+        /// </summary>
+        public static int NextInterval
+        {
+            get
+            {
+                if ((LastLogged.Add(IntervalIdleDuration)) > DateTime.Now)
+                    return Interval;
+                return IntervalIdle;
+            }
+        }
         #endregion Defines
 
         #region Queues
@@ -166,6 +200,7 @@ namespace PSFramework.Message
         /// <param name="FunctionName">What function wrote the message</param>
         /// <param name="ModuleName">What module did the function writing this message come from?</param>
         /// <param name="Tags">The tags that were applied to the message</param>
+        /// <param name="Data">Additional data provided by the message</param>
         /// <param name="Level">At what level was the function written</param>
         /// <param name="Runspace">The runspace the message is coming from</param>
         /// <param name="ComputerName">The computer the message was generated on</param>
@@ -176,9 +211,9 @@ namespace PSFramework.Message
         /// <param name="Username">The name of the user under which the code being executed</param>
         /// <param name="ErrorRecord">An associated error record</param>
         /// <returns>The entry that is being written</returns>
-        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, object TargetObject = null)
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, object TargetObject = null)
         {
-            return WriteLogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, File, Line, CallStack, Username, ErrorRecord, "", null, TargetObject);
+            return WriteLogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, File, Line, CallStack, Username, ErrorRecord, "", null, TargetObject);
         }
 
         /// <summary>
@@ -190,6 +225,7 @@ namespace PSFramework.Message
         /// <param name="FunctionName">What function wrote the message</param>
         /// <param name="ModuleName">What module did the function writing this message come from?</param>
         /// <param name="Tags">The tags that were applied to the message</param>
+        /// <param name="Data">Additional data provided by the message</param>
         /// <param name="Level">At what level was the function written</param>
         /// <param name="Runspace">The runspace the message is coming from</param>
         /// <param name="ComputerName">The computer the message was generated on</param>
@@ -202,9 +238,9 @@ namespace PSFramework.Message
         /// <param name="StringValue">The values to format into the localized string</param>
         /// <param name="ErrorRecord">An associated error record</param>
         /// <returns>The entry that is being written</returns>
-        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue, object TargetObject = null)
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue, object TargetObject = null)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username, ErrorRecord, String, StringValue);
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username, ErrorRecord, String, StringValue);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 

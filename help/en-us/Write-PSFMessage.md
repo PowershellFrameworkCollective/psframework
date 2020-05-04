@@ -15,17 +15,19 @@ This function receives messages, then logs and reports them.
 ### Message (Default)
 ```
 Write-PSFMessage [-Level <MessageLevel>] -Message <String> [-StringValues <Object[]>] [-Tag <String[]>]
- [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
+ [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
- [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [<CommonParameters>]
+ [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
+ [<CommonParameters>]
 ```
 
 ### String
 ```
 Write-PSFMessage [-Level <MessageLevel>] -String <String> [-StringValues <Object[]>] [-Tag <String[]>]
- [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
+ [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
- [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [<CommonParameters>]
+ [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -435,6 +437,38 @@ Note: The message will still be logged as a single entry, even if you later add 
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Data
+Specify additional data points that are furnished to the logging providers.
+Data provided may be arbitrary and will not be touched by the logging system itself.
+
+```yaml
+Type: Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PSCmdlet
+The cmdlet object to use for writing errors.
+Offer the $PSCmdlet variable of the calling function for this parameter.
+
+```yaml
+Type: PSCmdlet
 Parameter Sets: (All)
 Aliases:
 

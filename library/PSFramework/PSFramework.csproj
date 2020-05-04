@@ -91,6 +91,9 @@
     <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
+    <Compile Include="Logging\ProviderInstance.cs" />
+    <Compile Include="Logging\ProviderV2.cs" />
+    <Compile Include="Logging\ProviderVersion.cs" />
     <Compile Include="Message\CallStack.cs" />
     <Compile Include="Message\CallStackEntry.cs" />
     <Compile Include="Message\LogEntry.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="Utility\TypeTransformationAttribute.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\NoResultsAction.cs" />
+    <Compile Include="Validation\PsfValidateLanguageMode.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
     <Compile Include="Validation\PsfValidateScriptAttribute.cs" />
     <Compile Include="Validation\PsfValidateSetAttribute.cs" />

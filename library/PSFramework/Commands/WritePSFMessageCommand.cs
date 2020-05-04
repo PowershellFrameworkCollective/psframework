@@ -1,5 +1,6 @@
 ﻿using PSFramework.Message;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -59,6 +60,14 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public string[] Tag;
+
+        /// <summary>
+        /// Specify additional data points that are furnished to the logging providers.
+        /// Data provided is arbitrary and not touched by the logging system itself.
+        /// </summary>
+        [Parameter()]
+        [AllowNull()]
+        public Hashtable Data;
 
         /// <summary>
         /// The name of the calling function.
@@ -145,6 +154,12 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public SwitchParameter Breakpoint;
+
+        /// <summary>
+        /// The cmdlet object to use for writing errors.
+        /// </summary>
+        [Parameter()]
+        public PSCmdlet PSCmdlet;
         #endregion Parameters
 
         #region Private fields
@@ -338,6 +353,9 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (StringValues == null)
                 StringValues = new object[10];
 
+            if (PSCmdlet == null)
+                PSCmdlet = this;
+
             #region Resolving Meta Information
             _callStack = Utility.UtilityHost.Callstack;
             CallStackFrame callerFrame = null;
@@ -438,18 +456,11 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             }
             #endregion Exception Integration
 
-            #region Error handling
+            #region Error handling p1
             PsfExceptionRecord errorRecord = null;
             if (ErrorRecord != null)
-            {
-                if (!_fromStopFunction)
-                    if (EnableException)
-                        foreach (ErrorRecord record in ErrorRecord)
-                            WriteError(record);
-
                 errorRecord = LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, _Tags, _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
-            }
-            #endregion Error handling
+            #endregion Error handling p1
 
             LogEntryType channels = LogEntryType.None;
 
@@ -556,7 +567,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Data, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)
@@ -565,6 +576,13 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     try { InvokeCommand.InvokeScript(subscription.ScriptBlock.ToString(), entry); }
                     catch (Exception e){ WriteError(new ErrorRecord(e, "", ErrorCategory.NotSpecified, entry)); }
                 }
+
+            #region Error handling p2
+            if (ErrorRecord != null)
+                if (!_fromStopFunction && EnableException)
+                    foreach (ErrorRecord record in ErrorRecord)
+                        PSCmdlet.WriteError(record);
+            #endregion Error handling p2
         }
         #endregion Cmdlet Implementation
 

@@ -23,6 +23,8 @@ $exceptions['LegalSurplus'] = @(
 	'Assembly.UtilityHost.PrivateFieldNotFound'
 	'Assembly.UtilityHost.PrivateMethodNotFound'
 	'Assembly.UtilityHost.PrivatePropertyNotFound'
+	'Assembly.Validation.LanguageMode.BadMode'
+	'Assembly.Validation.LanguageMode.NotAScriptBlock'
 	'Assembly.Validation.UntrustedData'
 	'Configuration.Remove-PSFConfig.ShouldRemove'
 	'Configuration_ValidateLanguage'

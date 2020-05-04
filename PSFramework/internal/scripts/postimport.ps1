@@ -31,6 +31,7 @@ foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\loggingPr
 }
 
 # Start the logging system
+. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\loggingProviderInstanceModuleCode.ps1"
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\async-logging2.ps1"
 
 # Launch the Tab Expansion system

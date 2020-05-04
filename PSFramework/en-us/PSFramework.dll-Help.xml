@@ -530,7 +530,7 @@
           <maml:Description>
             <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
             <maml:para>- $_ : The exception (not error record) thrown</maml:para>
-            <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+            <maml:para>- $args[0] : The Target object specified in the -Target parameter</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
           <dev:type>
@@ -713,7 +713,7 @@
           <maml:Description>
             <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
             <maml:para>- $_ : The exception (not error record) thrown</maml:para>
-            <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+            <maml:para>- $args[0] : The Target object specified in the -Target parameter</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
           <dev:type>
@@ -911,7 +911,7 @@
         <maml:Description>
           <maml:para>Only when this scriptblock returns $true will it try again. The script receives two input items:</maml:para>
           <maml:para>- $_ : The exception (not error record) thrown</maml:para>
-          <maml:para>- $args[0] : The Target object specified in the -Target parameter.</maml:para>
+          <maml:para>- $args[0] : The Target object specified in the -Target parameter</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">ScriptBlock</command:parameterValue>
         <dev:type>
@@ -3224,6 +3224,30 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Data</maml:name>
+          <maml:Description>
+            <maml:para>Specify additional data points that are furnished to the logging providers. Data provided may be arbitrary and will not be touched by the logging system itself.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PSCmdlet</maml:name>
+          <maml:Description>
+            <maml:para>The cmdlet object to use for writing errors. Offer the $PSCmdlet variable of the calling function for this parameter.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCmdlet</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Write-PSFMessage</maml:name>
@@ -3420,6 +3444,30 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Data</maml:name>
+          <maml:Description>
+            <maml:para>Specify additional data points that are furnished to the logging providers. Data provided may be arbitrary and will not be touched by the logging system itself.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PSCmdlet</maml:name>
+          <maml:Description>
+            <maml:para>The cmdlet object to use for writing errors. Offer the $PSCmdlet variable of the calling function for this parameter.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCmdlet</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -3632,6 +3680,30 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Data</maml:name>
+        <maml:Description>
+          <maml:para>Specify additional data points that are furnished to the logging providers. Data provided may be arbitrary and will not be touched by the logging system itself.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PSCmdlet</maml:name>
+        <maml:Description>
+          <maml:para>The cmdlet object to use for writing errors. Offer the $PSCmdlet variable of the calling function for this parameter.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCmdlet</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />

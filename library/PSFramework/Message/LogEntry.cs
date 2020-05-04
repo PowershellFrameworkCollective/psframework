@@ -1,7 +1,9 @@
 ﻿using PSFramework.Localization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 
 namespace PSFramework.Message
 {
@@ -37,10 +39,10 @@ namespace PSFramework.Message
             get
             {
                 if (String.IsNullOrEmpty(String))
-                    return _Message;
+                    return StripColorTags(_Message);
                 if (null == StringValue)
-                    return LocalizationHost.Read(String.Format("{0}.{1}", ModuleName, String));
-                return String.Format(LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)), StringValue);
+                    return StripColorTags(LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)));
+                return StripColorTags(String.Format(LocalizationHost.ReadLog(String.Format("{0}.{1}", ModuleName, String)), StringValue));
             }
             set { }
         }
@@ -69,6 +71,11 @@ namespace PSFramework.Message
         /// The tags applied to the message
         /// </summary>
         public List<string> Tags = new List<string>();
+
+        /// <summary>
+        /// Additional metadata provided by the message writer
+        /// </summary>
+        public Hashtable Data;
 
         /// <summary>
         /// What level was the message?
@@ -142,6 +149,7 @@ namespace PSFramework.Message
         /// <param name="FunctionName">What function wrote the message</param>
         /// <param name="ModuleName">Name of the module the function writing this message came from</param>
         /// <param name="Tags">Tags that were applied to the message</param>
+        /// <param name="Data">Additional data provided by the message writer</param>
         /// <param name="Level">What level was the message written at.</param>
         /// <param name="Runspace">The ID of the runspace that wrote the message.</param>
         /// <param name="ComputerName">The computer the message was generated on.</param>
@@ -153,7 +161,7 @@ namespace PSFramework.Message
         /// <param name="ErrorRecord">An associated error item.</param>
         /// <param name="String">The string key to use for retrieving localized strings</param>
         /// <param name="StringValue">The values to format into the localized string</param>
-        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue)
+        public LogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, object TargetObject, string File, int Line, CallStack CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue)
         {
             this.Message = Message;
             this.Type = Type;
@@ -161,6 +169,7 @@ namespace PSFramework.Message
             this.FunctionName = FunctionName;
             this.ModuleName = ModuleName;
             this.Tags = Tags;
+            this.Data = Data;
             this.Level = Level;
             this.Runspace = Runspace;
             this.ComputerName = ComputerName;
@@ -172,6 +181,11 @@ namespace PSFramework.Message
             this.ErrorRecord = ErrorRecord;
             this.String = String;
             this.StringValue = StringValue;
+        }
+
+        private string StripColorTags(string Message)
+        {
+            return Regex.Replace(Message, "<c=[\"']\\w+[\"']>|</c>", "");
         }
     }
 }

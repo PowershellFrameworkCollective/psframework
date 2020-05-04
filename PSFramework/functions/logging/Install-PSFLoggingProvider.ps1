@@ -47,18 +47,13 @@
 	{
 		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
 		{
+			[PSFramework.Utility.UtilityHost]::ImportScriptBlock([PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].InstallationParameters)
 			[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].InstallationParameters.Invoke()
 		}
 	}
 	
-	begin
-	{
-		
-	}
 	process
 	{
-		if (Test-PSFFunctionInterrupt) { return }
-		
 		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
 		{
 			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install'
@@ -66,19 +61,17 @@
 		}
 		
 		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()]
+		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.IsInstalledScript)
+		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.InstallationScript)
 		
-		if (-not ([System.Management.Automation.ScriptBlock]::Create($provider.IsInstalledScript).Invoke()))
+		if (-not $provider.IsInstalledScript.Invoke())
 		{
-			try { [System.Management.Automation.ScriptBlock]::Create($provider.InstallationScript).Invoke() }
+			try { $provider.InstallationScript.Invoke() }
 			catch
 			{
 				Stop-PSFFunction -Message "Failed to install provider '$Name'" -EnableException $EnableException -Target $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'install'
 				return
 			}
 		}
-	}
-	end
-	{
-		if (Test-PSFFunctionInterrupt) { return }
 	}
 }

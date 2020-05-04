@@ -1,16 +1,30 @@
 ﻿# CHANGELOG
 ## ???
 
+- New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
-- New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter
+- New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
+- New: Command Test-PSFLanguageMode : Tests, in what language mode a specified scriptblock is in.
+- New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter.
+- New: Validation Attribute PsfValidateLanguageMode : Validates the language mode of a scriptblock.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retr validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
 - Upd: Write-PSFMessage - New parameter: `-NoNewLine` avoids adding a new line after writing to screen.
+- Upd: Write-PSFMessage - New parameter: `-PSCmdlet` will in combination with `-EnableException` and `-ErrorRecord` write the errors in the context of the specified $PSCmdlet.
+- Upd: Write-PSFMessage - New parameter: `-Data` allows specifying additional data points for the log
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
+- Upd: New-PSFSupportPackage - added linux & mac support (thanks, @nyanhp)
+- Upd: Register-PSFLoggingProvider - require FullLanguage language mode on all scriptblock parameters.
+- Upd: Register-PSFLoggingProvider - added parameters to allow creation of second generation logging providers.
+- Upd: PSFCmdlet - WriteMessage() now also accepts a Hashtable input as Data
+- Upd: PSFCmdlet - WriteLocalizedMessage() now also accepts a Hashtable input as Data
+- Upd: Logging - Increased log execution interval and added idle detection with extended intervals in non-use to reduce CPU impact.
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
+- Fix: Localization - logging language only honored when specifying string values.
+- Fix: Register-PSFLoggingProvider - auto-install fails to notify system of success, failing the registration auto-enable even when it installed correctly.
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.

@@ -261,7 +261,7 @@
             <param name="Level">How many levels to peek into the callstack</param>
             <returns>The caller information of the specified level</returns>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -273,8 +273,9 @@
             <param name="Line">The line in the file this message was written from</param>
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
+            <param name="Data">Add additional metadata to the message written</param>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -287,6 +288,7 @@
             <param name="Line">The line in the file this message was written from</param>
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
+            <param name="Data">Add additional metadata to the message written</param>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.StopCommand(System.String,System.Exception,System.Object,System.String,System.String,System.String,System.Int32,System.String[],System.Boolean)">
             <summary>
@@ -756,6 +758,12 @@
             This allows filtering and grouping by category of message, targeting specific messages.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.Data">
+            <summary>
+            Specify additional data points that are furnished to the logging providers.
+            Data provided is arbitrary and not touched by the logging system itself.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.FunctionName">
             <summary>
             The name of the calling function.
@@ -828,6 +836,11 @@
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.Breakpoint">
             <summary>
             Enables breakpoints on the current message. By default, setting '-Debug' will NOT cause an interrupt on the current position.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.PSCmdlet">
+            <summary>
+            The cmdlet object to use for writing errors.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._timestamp">
@@ -1468,6 +1481,14 @@
             </summary>
             <param name="TypeQualifiedPersistedValue">The value in its persisted state, with a prefixed type identifier.</param>
             <returns>The natural state of the value originally persisted</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.GetConfigValue(System.String)">
+            <summary>
+            Retrieve the configuration value only.
+            Returns null if the configuration entry does not exist.
+            </summary>
+            <param name="FullName">The full name of the configuration object of which to return the value</param>
+            <returns>The value of the configuration entry.</returns>
         </member>
         <member name="M:PSFramework.Configuration.ConfigurationHost.Utf8ToBase64(System.String)">
             <summary>
@@ -2289,6 +2310,11 @@
             Whether the provider must be installed, in order for it to be used.
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.Provider.ProviderVersion">
+            <summary>
+            The generation of the logging provider.
+            </summary>
+        </member>
         <member name="P:PSFramework.Logging.Provider.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
@@ -2353,6 +2379,11 @@
             Final Event that is executed when stopping the logging script.
             </summary>
         </member>
+        <member name="M:PSFramework.Logging.Provider.LocalizeEvents">
+            <summary>
+            This will import the events into the current execution context, breaking runspace affinity
+            </summary>
+        </member>
         <member name="F:PSFramework.Logging.Provider.IsInstalledScript">
             <summary>
             Script that recognizes, whether the provider has been isntalled correctly. Some providers require installation, in order to function properly.
@@ -2383,6 +2414,12 @@
             List of errors that happened on the logging runspace.
             </summary>
         </member>
+        <member name="M:PSFramework.Logging.Provider.ToString">
+            <summary>
+            Returns the name of the provider.
+            </summary>
+            <returns>Returns the name of the provider.</returns>
+        </member>
         <member name="T:PSFramework.Logging.ProviderHost">
             <summary>
             Provides infrastructure services for the logging provider system
@@ -2409,6 +2446,209 @@
             Returns all enabled &amp; initialized logging provider
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.GetEnabledInstances">
+            <summary>
+            Returns all enabled provider instances
+            </summary>
+            <returns>All enabled provider instances</returns>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitializedInstances">
+            <summary>
+            Returns all enabled and initialized provider instances
+            </summary>
+            <returns>All enabled and initialized provider instances</returns>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderHost.ProviderV2ModuleScript">
+            <summary>
+            The scriptblock used to create the dynamic module implementing the logging provider generation 2 logging instance.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.InitializeProviderInstance(PSFramework.Logging.ProviderInstance)">
+            <summary>
+            Initializes a logging provider instance, creating the dynamic module needed and updating its metadata to reflect this change.
+            </summary>
+            <param name="Instance">The instance to initialize</param>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.UpdateAllInstances">
+            <summary>
+            Updates all V2 provider instances, creating new ones depending on configuration.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Logging.ProviderInstance">
+            <summary>
+            Active instance of a logging provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Name">
+            <summary>
+            name of the instance
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Provider">
+            <summary>
+            The logging provider it is an instance of
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Enabled">
+            <summary>
+            Whether the logging provider instance is enabled. Only when this is set to true will the logging script execute its events.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Initialized">
+            <summary>
+            The provider instance has had its initial runtime configuration (what is stored in the BeginEvent) applied.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.#ctor(PSFramework.Logging.ProviderV2,System.String)">
+            <summary>
+            Creates a new instance of a logging provider
+            </summary>
+            <param name="Provider">The provider from which to create an instance.</param>
+            <param name="Name">The name of the instance to create.</param>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.IncludeModules">
+            <summary>
+            List of modules to include in the logging. Only messages generated from these modules will be considered by the provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.ExcludeModules">
+            <summary>
+            List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.IncludeTags">
+            <summary>
+            List of tags to include. Only messages with these tags will be considered by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.ExcludeTags">
+            <summary>
+            List of tags to exclude. Messages with these tags will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.LogEntry)">
+            <summary>
+            Tests whether a log entry applies to the provider instance
+            </summary>
+            <param name="Entry">The Entry to validate</param>
+            <returns>Whether it applies</returns>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.PsfExceptionRecord)">
+            <summary>
+            Tests whether an error record applies to the provider instance
+            </summary>
+            <param name="Record">The error record to test</param>
+            <returns>Whether it applies to the provider instance</returns>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Module">
+            <summary>
+            The module containing the instance content
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.BeginCommand">
+            <summary>
+            The function to use to execute in the begin phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.StartCommand">
+            <summary>
+            The function to use to execute the start phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.MessageCommand">
+            <summary>
+            The function to use to execute the message phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.ErrorCommand">
+            <summary>
+            The function to use to execute the error phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.EndCommand">
+            <summary>
+            the function to use to execute the end phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.FinalCommand">
+            <summary>
+            The function to use to execute the final phase
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.Errors">
+            <summary>
+            The last 128 errors that happenend to the provider instance
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.ToString">
+            <summary>
+            Returns the name of the provider instance.
+            </summary>
+            <returns>Returns the name of the provider instance.</returns>
+        </member>
+        <member name="T:PSFramework.Logging.ProviderV2">
+            <summary>
+            A generation 2 logging provider, supporting resource isolation and multi-instance operation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderV2.ProviderVersion">
+            <summary>
+            The generation of the logging provider.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderV2.Instances">
+            <summary>
+            The list of instances currently enabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderV2.ConfigurationRoot">
+            <summary>
+            The root configuration name.
+            Used by instances to facilitate instance-specific configuration retrieval.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderV2.InstanceProperties">
+            <summary>
+            List of configuration properties one can assign to a logging provider instance.
+            Maps directly to instance-specific configuration keys.
+            Mostly for documentation purposes.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderV2.Functions">
+            <summary>
+            Functions used by the logging provider instances.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderV2.EnabledInstances">
+            <summary>
+            List of enabled instances
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderV2.DisabledInstances">
+            <summary>
+            List of disabled instances
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderV2.UpdateInstances">
+            <summary>
+            Creates provider instances based on configuration.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Logging.ProviderVersion">
+            <summary>
+            The generation of the Logging Provider Type
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderVersion.Version_1">
+            <summary>
+            The initial, now legacy version of logging providers, where all providers share the same variable scope.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderVersion.Version_2">
+            <summary>
+            Generation 2 logging provider, where each provider is handled as a dynamically created module, properly isolating resource from each other.
+            </summary>
         </member>
         <member name="T:PSFramework.Message.CallStack">
             <summary>
@@ -2523,6 +2763,11 @@
             The tags applied to the message
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogEntry.Data">
+            <summary>
+            Additional metadata provided by the message writer
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogEntry.Level">
             <summary>
             What level was the message?
@@ -2583,7 +2828,7 @@
             Creates an empty log entry
             </summary>
         </member>
-        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[])">
+        <member name="M:PSFramework.Message.LogEntry.#ctor(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.Object,System.String,System.Int32,PSFramework.Message.CallStack,System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[])">
             <summary>
             Creates a filled out log entry
             </summary>
@@ -2593,6 +2838,7 @@
             <param name="FunctionName">What function wrote the message</param>
             <param name="ModuleName">Name of the module the function writing this message came from</param>
             <param name="Tags">Tags that were applied to the message</param>
+            <param name="Data">Additional data provided by the message writer</param>
             <param name="Level">What level was the message written at.</param>
             <param name="Runspace">The ID of the runspace that wrote the message.</param>
             <param name="ComputerName">The computer the message was generated on.</param>
@@ -2715,6 +2961,31 @@
             The time pattern used when writing logfiles using the filesystem provider
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.Interval">
+            <summary>
+            The interval at which the loging runspace runs. Increase to improve performance, reduce the minimize writing latency.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.IntervalIdle">
+            <summary>
+            The interval at which the loging runspace runs, when there is nothing to do.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.IntervalIdleDuration">
+            <summary>
+            The time with no message written that needs to occur for the logging runspace to switch to idle mode.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.LastLogged">
+            <summary>
+            The time the last message or error were written.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Message.LogHost.NextInterval">
+            <summary>
+            The next interval to use.
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.LogHost.OutQueueError">
             <summary>
             The outbound queue for errors. These will be processed and written to xml
@@ -2751,7 +3022,7 @@
             <param name="ComputerName">The computer the error was written on</param>
             <returns>The error entry, so it may be included in the message generated</returns>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -2761,6 +3032,7 @@
             <param name="FunctionName">What function wrote the message</param>
             <param name="ModuleName">What module did the function writing this message come from?</param>
             <param name="Tags">The tags that were applied to the message</param>
+            <param name="Data">Additional data provided by the message</param>
             <param name="Level">At what level was the function written</param>
             <param name="Runspace">The runspace the message is coming from</param>
             <param name="ComputerName">The computer the message was generated on</param>
@@ -2772,7 +3044,7 @@
             <param name="ErrorRecord">An associated error record</param>
             <returns>The entry that is being written</returns>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[],System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[],System.Object)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -2782,6 +3054,7 @@
             <param name="FunctionName">What function wrote the message</param>
             <param name="ModuleName">What module did the function writing this message come from?</param>
             <param name="Tags">The tags that were applied to the message</param>
+            <param name="Data">Additional data provided by the message</param>
             <param name="Level">At what level was the function written</param>
             <param name="Runspace">The runspace the message is coming from</param>
             <param name="ComputerName">The computer the message was generated on</param>
@@ -5550,7 +5823,7 @@
         </member>
         <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.#ctor">
             <summary>
-            Creates a new, empty collection limited to a defaukt nax size of 10
+            Creates a new, empty collection limited to a default max size of 10
             </summary>
         </member>
         <member name="M:PSFramework.Utility.LimitedConcurrentQueue`1.#ctor(System.Int32)">
@@ -6151,12 +6424,13 @@
             Stored scriptblocks that can be retrieved on demand anywhere within the process
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.UtilityHost.ImportScriptBlock(System.Management.Automation.ScriptBlock)">
+        <member name="M:PSFramework.Utility.UtilityHost.ImportScriptBlock(System.Management.Automation.ScriptBlock,System.Boolean)">
             <summary>
             Imports a scriptblock into the current sessionstate, without affecting its language mode.
             Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
             </summary>
-            <param name="ScriptBlock">The code to localize</param>
+            <param name="ScriptBlock">The code to localize.</param>
+            <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>
         </member>
         <member name="T:PSFramework.Validation.NoResultsActionPreference">
             <summary>
@@ -6172,6 +6446,33 @@
             <summary>
             Fail in fire and blood
             </summary>
+        </member>
+        <member name="T:PSFramework.Validation.PsfValidateLanguageMode">
+            <summary>
+            Validation attribute that tests a scriptblock's language mode.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidateLanguageMode.Modes">
+            <summary>
+            The legal language modes, defaults to FullLanguage
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateLanguageMode.ValidateElement(System.Object)">
+            <summary>
+            Validation routine used by the engine
+            </summary>
+            <param name="element">The object to validate must be a scriptblock.</param>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateLanguageMode.#ctor">
+            <summary>
+            Creates a default instance, validating for full language.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidateLanguageMode.#ctor(System.Management.Automation.PSLanguageMode[])">
+            <summary>
+            Creates a custom instance, validating for the specified modes.
+            </summary>
+            <param name="Modes">The modes to test against.</param>
         </member>
         <member name="T:PSFramework.Validation.PsfValidatePatternAttribute">
             <summary>

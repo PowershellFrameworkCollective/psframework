@@ -220,6 +220,7 @@
 					<TableColumnHeader/>
 					<TableColumnHeader/>
 					<TableColumnHeader/>
+					<TableColumnHeader/>
 				</TableHeaders>
 				<TableRowEntries>
 					<TableRowEntry>
@@ -229,6 +230,9 @@
 							</TableColumnItem>
 							<TableColumnItem>
 								<PropertyName>Enabled</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ProviderVersion</PropertyName>
 							</TableColumnItem>
 							<TableColumnItem>
 								<PropertyName>IncludeModules</PropertyName>
@@ -253,6 +257,53 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
+		
+        <!-- PSFramework.Logging.ProviderInstance -->
+        <View>
+            <Name>PSFramework.Logging.ProviderInstance</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Logging.ProviderInstance</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Provider</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Enabled</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>IncludeModules</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ExcludeModules</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>IncludeTags</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ExcludeTags</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
 
 		<!-- PSFramework.Message.LogEntry -->
 		<View>
