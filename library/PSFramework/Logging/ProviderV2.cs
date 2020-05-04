@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PSFramework.Logging
 {
@@ -71,6 +71,11 @@ namespace PSFramework.Logging
                 return result.ToArray();
             }
         }
+
+        /// <summary>
+        /// The default values to include in configuration for new instances
+        /// </summary>
+        public Hashtable ConfigurationDefaultValues;
 
         /// <summary>
         /// Creates provider instances based on configuration.

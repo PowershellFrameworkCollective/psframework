@@ -19,7 +19,7 @@
 		
 		Version 1
 		---------
-	
+		
 		All providers share the same scope for the execution of ALL of those actions/scriptblocks!
 		This makes it important to give your variables/functions a unique name, in order to avoid conflicts.
 		General Guideline:
@@ -53,7 +53,7 @@
 		'PSFramework.Logging.LogFile.FilePath'
 		Then the ConfigurationRoot would be:
 		'PSFramework.Logging.LogFile'
-	
+		
 		For more information on the configuration system, see:
 		https://psframework.org/documentation/documents/psframework/configuration.html
 	
@@ -62,6 +62,11 @@
 		Examples from the default providers:
 		LogFile: 'CsvDelimiter','FilePath','FileType','Headers','IncludeHeader','Logname','TimeFormat'
 		GELF: 'Encrypt','GelfServer','Port'
+	
+	.PARAMETER ConfigurationDefaultValues
+		A hashtable containing the default values to assume when creating a new instance of a logging provider.
+		This data is used during Set-PSFLoggingProvider when nothing in particular is specified for a given value.
+		Instances that are defined through configuration are responsible for their full configuration set and will not be provided these values.
 	
 	.PARAMETER FunctionDefinitions
 		If your provider instances need access to helper functions, the easiest way is to provide them using this parameter.
@@ -158,6 +163,10 @@
 		[Parameter(Mandatory = $true, ParameterSetName = 'Version2')]
 		[string[]]
 		$InstanceProperties,
+		
+		[Parameter(ParameterSetName = 'Version2')]
+		[Hashtable]
+		$ConfigurationDefaultValues,
 		
 		[Parameter(ParameterSetName = 'Version2')]
 		[System.Management.Automation.ScriptBlock]
@@ -284,6 +293,7 @@
 			$provider.Name = $Name
 			$provider.ConfigurationRoot = $ConfigurationRoot.Trim('.')
 			$provider.InstanceProperties = $InstanceProperties
+			$provider.ConfigurationDefaultValues = $ConfigurationDefaultValues
 			$provider.BeginEvent = $BeginEvent
 			$provider.StartEvent = $StartEvent
 			$provider.MessageEvent = $MessageEvent

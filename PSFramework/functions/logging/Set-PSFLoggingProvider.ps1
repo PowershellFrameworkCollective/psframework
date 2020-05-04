@@ -143,7 +143,15 @@
 		{
 			if (Test-PSFParameterBinding -ParameterName $propertyName -Not) { continue }
 			
-			Set-PSFConfig -FullName "$($provider.ConfigurationRoot).$($instanceAffix)$($propertyName)" -Value $PSBoundParameters[$propertyName]
+			$value = $provider.ConfigurationDefaultValues[$propertyName]
+			$initialize = $true
+			if (Test-PSFParameterBinding -ParameterName $propertyName)
+			{
+				$initialize = $false
+				$value = $PSBoundParameters[$propertyName]
+			}
+			
+			Set-PSFConfig -FullName "$($provider.ConfigurationRoot).$($instanceAffix)$($propertyName)" -Value $value -Initialize:$initialize
 		}
 		#endregion V2 Instance Properties
 		

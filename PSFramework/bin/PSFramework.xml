@@ -2630,6 +2630,11 @@
             List of disabled instances
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.ProviderV2.ConfigurationDefaultValues">
+            <summary>
+            The default values to include in configuration for new instances
+            </summary>
+        </member>
         <member name="M:PSFramework.Logging.ProviderV2.UpdateInstances">
             <summary>
             Creates provider instances based on configuration.

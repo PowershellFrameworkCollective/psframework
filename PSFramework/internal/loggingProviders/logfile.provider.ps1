@@ -173,6 +173,13 @@ $paramRegisterPSFLoggingProvider = @{
 	FunctionDefinitions = $functionDefinitions
 	StartEvent		   = $start_event
 	MessageEvent	   = $message_Event
+	ConfigurationDefaultValues = @{
+		IncludeHeader = $true
+		Headers	      = 'ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username'
+		FileType	  = 'CSV'
+		CsvDelimiter  = ','
+		TimeFormat    = "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)"
+	}
 }
 
 Register-PSFLoggingProvider @paramRegisterPSFLoggingProvider
