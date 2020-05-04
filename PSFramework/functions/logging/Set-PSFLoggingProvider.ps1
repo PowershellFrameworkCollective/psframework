@@ -141,8 +141,6 @@
 		#region V2 Instance Properties
 		foreach ($propertyName in $provider.InstanceProperties)
 		{
-			if (Test-PSFParameterBinding -ParameterName $propertyName -Not) { continue }
-			
 			$value = $provider.ConfigurationDefaultValues[$propertyName]
 			$initialize = $true
 			if (Test-PSFParameterBinding -ParameterName $propertyName)

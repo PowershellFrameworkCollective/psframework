@@ -129,8 +129,8 @@ $start_event = {
 				@{
 					Name	   = 'Timestamp'
 					Expression = {
-						if (-not (Get-ConfigValue 'TimeFormat')) { $_.Timestamp }
-						else { $_.Timestamp.ToString((Get-ConfigValue -FullName 'TimeFormat')) }
+						if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp }
+						else { $_.Timestamp.ToString((Get-ConfigValue -Name 'TimeFormat')) }
 					}
 				}
 			}
@@ -180,6 +180,7 @@ $paramRegisterPSFLoggingProvider = @{
 		CsvDelimiter  = ','
 		TimeFormat    = "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)"
 	}
+	ConfigurationSettings = $configuration_Settings
 }
 
 Register-PSFLoggingProvider @paramRegisterPSFLoggingProvider
