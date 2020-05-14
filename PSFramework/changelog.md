@@ -22,6 +22,7 @@
 - Upd: PSFCmdlet - WriteLocalizedMessage() now also accepts a Hashtable input as Data
 - Upd: Logging - Increased log execution interval and added idle detection with extended intervals in non-use to reduce CPU impact.
 - Upd: Logging Provider: logfile - Updated to generation 2 to enable multi-instance capabilities.
+- Upd: Logging Provider: logfile - Added new output format: CMTrace
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
