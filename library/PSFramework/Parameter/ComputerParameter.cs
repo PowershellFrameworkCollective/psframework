@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using PSFramework.Utility;
+using System.Collections.Generic;
 
 namespace PSFramework.Parameter
 {
@@ -243,13 +244,12 @@ namespace PSFramework.Parameter
             PSObject input = new PSObject(InputObject);
             this.InputObject = InputObject;
 
-            string key = "";
+            List<string> mappings = null;
 
             foreach (string name in input.TypeNames)
             {
-                if (_PropertyMapping.ContainsKey(name))
+                if (_PropertyMapping.TryGetValue(name, out mappings))
                 {
-                    key = name;
                     break;
                 }
 
@@ -257,10 +257,10 @@ namespace PSFramework.Parameter
                     Type = ComputerParameterInputType.SMOServer;
             }
 
-            if (key == "")
+            if (mappings == null)
                 throw new ArgumentException(String.Format("Could not interpret {0}", InputObject.GetType().FullName));
 
-            foreach (string property in _PropertyMapping[key])
+            foreach (string property in mappings)
             {
                 if (input.Properties[property] != null && input.Properties[property].Value != null && !String.IsNullOrEmpty(input.Properties[property].Value.ToString()))
                 {

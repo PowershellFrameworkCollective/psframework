@@ -274,10 +274,10 @@ namespace PSFramework.Utility
             object globalScope = GetPrivateProperty("GlobalScope", topLevelState);
             Dictionary<string, AliasInfo> aliases = (Dictionary<string, AliasInfo>)GetPrivateField("_alias", globalScope);
 
-            if (!aliases.ContainsKey(Name))
-                throw new ItemNotFoundException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasNotFound"), Name));
+            AliasInfo alias;
 
-            AliasInfo alias = aliases[Name];
+            if (!aliases.TryGetValue(Name, out alias))
+                throw new ItemNotFoundException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasNotFound"), Name));
 
             if ((alias.Options & ScopedItemOptions.Constant) != 0)
                 throw new InvalidOperationException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.AliasProtected"), Name));

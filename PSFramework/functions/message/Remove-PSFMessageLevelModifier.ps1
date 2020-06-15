@@ -51,24 +51,14 @@
 		{
 			if ($item -eq "PSFramework.Message.MessageLevelModifier") { continue }
 			
-			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item))
-			{
-				$dummy = $null
-				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item, [ref] $dummy)
-			}
-			else
+			if (-not ([PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item, [ref] $dummy)))
 			{
 				Stop-PSFFunction -Message "No message level modifier of name $item found!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail','input','level','message' -Continue
 			}
 		}
 		foreach ($item in $Modifier)
 		{
-			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item.Name))
-			{
-				$dummy = $null
-				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item.Name, [ref]$dummy)
-			}
-			else
+			if (-not ([PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item, [ref] $dummy)))
 			{
 				Stop-PSFFunction -Message "No message level modifier of name $($item.Name) found!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'input', 'level', 'message' -Continue
 			}

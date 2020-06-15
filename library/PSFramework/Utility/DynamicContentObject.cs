@@ -32,8 +32,9 @@ namespace PSFramework.Utility
         /// <param name="Type">The type of dynamic content object to create (if creatable)</param>
         public static void Set(string Name, object Value, DynamicContentObjectType Type = DynamicContentObjectType.Common)
         {
-            if (Values.ContainsKey(Name))
-                Values[Name].Value = Value;
+            DynamicContentObject dynamicContentObject;
+            if (Values.TryGetValue(Name, out dynamicContentObject))
+                dynamicContentObject.Value = Value;
             else
             {
                 switch (Type)
@@ -64,10 +65,11 @@ namespace PSFramework.Utility
         /// <returns>The Dynamic Content Object selected</returns>
         public static DynamicContentObject Get(string Name)
         {
-            if (!Values.ContainsKey(Name))
-                Values[Name] = new DynamicContentObject(Name, null);
+            DynamicContentObject dynamicContentObject;
+            if (!Values.TryGetValue(Name, out dynamicContentObject))
+                Values[Name] = dynamicContentObject = new DynamicContentObject(Name, null);
 
-            return Values[Name];
+            return dynamicContentObject;
         }
         #endregion Statics
 

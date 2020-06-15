@@ -1,4 +1,4 @@
-﻿using PSFramework.Message;
+using PSFramework.Message;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -472,12 +472,13 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     if (!String.IsNullOrEmpty(Once))
                     {
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
-                        if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
+                        Configuration.Config cfg;
+                        if (!(Configuration.ConfigurationHost.Configurations.TryGetValue(onceName, out cfg) && (bool)cfg.Value))
                         {
                             WriteWarning(_MessageStreams);
                             channels = channels | LogEntryType.Warning;
 
-                            Configuration.Config cfg = new Configuration.Config();
+                            cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
                             cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
@@ -506,12 +507,13 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     if (!String.IsNullOrEmpty(Once))
                     {
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
-                        if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
+                        Configuration.Config cfg;
+                        if (!(Configuration.ConfigurationHost.Configurations.TryGetValue(onceName, out cfg) && (bool)cfg.Value))
                         {
                             InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
                             channels = channels | LogEntryType.Information;
 
-                            Configuration.Config cfg = new Configuration.Config();
+                            cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
                             cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
@@ -599,9 +601,10 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
 
             string lowTypeName = Item.GetType().FullName;
 
-            if (MessageHost.TargetTransforms.ContainsKey(lowTypeName))
+            ScriptBlock scriptBlock;
+            if (MessageHost.TargetTransforms.TryGetValue(lowTypeName, out scriptBlock))
             {
-                try { return InvokeCommand.InvokeScript(false, ScriptBlock.Create(MessageHost.TargetTransforms[lowTypeName].ToString()), null, Item); }
+                try { return InvokeCommand.InvokeScript(false, ScriptBlock.Create(scriptBlock.ToString()), null, Item); }
                 catch (Exception e)
                 {
                     MessageHost.WriteTransformError(new ErrorRecord(e, "Write-PSFMessage", ErrorCategory.OperationStopped, null), FunctionName, ModuleName, Item, TransformType.Target, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId);
@@ -635,9 +638,10 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
 
             string lowTypeName = Item.GetType().FullName;
 
-            if (MessageHost.ExceptionTransforms.ContainsKey(lowTypeName))
+            ScriptBlock scriptBlock;
+            if (MessageHost.ExceptionTransforms.TryGetValue(lowTypeName, out scriptBlock))
             {
-                try { return (Exception)InvokeCommand.InvokeScript(false, ScriptBlock.Create(MessageHost.ExceptionTransforms[lowTypeName].ToString()), null, Item)[0].BaseObject; }
+                try { return (Exception)InvokeCommand.InvokeScript(false, ScriptBlock.Create(scriptBlock.ToString()), null, Item)[0].BaseObject; }
                 catch (Exception e)
                 {
                     MessageHost.WriteTransformError(new ErrorRecord(e, "Write-PSFMessage", ErrorCategory.OperationStopped, null), FunctionName, ModuleName, Item, TransformType.Exception, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId);

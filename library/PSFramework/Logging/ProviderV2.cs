@@ -94,12 +94,13 @@ namespace PSFramework.Logging
                     continue;
 
                 Match match = regex.Match(name);
-                if (!Instances.ContainsKey(match.Groups[1].Value))
-                    Instances[match.Groups[1].Value] = new ProviderInstance(this, match.Groups[1].Value);
+                string key = match.Groups[1].Value;
+                if (!Instances.ContainsKey(key))
+                    Instances[key] = new ProviderInstance(this, key);
             }
 
             bool enableState = false;
-            if (Instances.Values.Where(o => o.Enabled).Count() > 0)
+            if (Instances.Values.Any(o => o.Enabled))
                 enableState = true;
             Enabled = enableState;
         }

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PSFramework.TaskEngine
@@ -73,12 +74,12 @@ namespace PSFramework.TaskEngine
         /// <returns>The cache item storing data and potentially data gathering script.</returns>
         public static CacheItem GetCacheItem(string Module, string Name)
         {
-            if (!Cache.ContainsKey(Module))
-                return null;
-            if (!Cache[Module].ContainsKey(Name))
-                return null;
+            ConcurrentDictionary<string, CacheItem> module;
+            CacheItem value;
+            if (Cache.TryGetValue(Module, out module) && module.TryGetValue(Name, out value))
+                return value;
 
-            return Cache[Module][Name];
+            return null;
         }
 
         /// <summary>
@@ -91,12 +92,14 @@ namespace PSFramework.TaskEngine
         {
             lock (newCacheLock)
             {
-                if (!Cache.ContainsKey(Module))
-                    Cache[Module] = new ConcurrentDictionary<string, CacheItem>(StringComparer.InvariantCultureIgnoreCase);
-                if (!Cache[Module].ContainsKey(Name))
-                    Cache[Module][Name] = new CacheItem(Module, Name);
+                ConcurrentDictionary<string, CacheItem> module;
+                CacheItem value;
+                if (!Cache.TryGetValue(Module, out module))
+                    module = Cache.GetOrAdd(Module, new ConcurrentDictionary<string, CacheItem>(StringComparer.InvariantCultureIgnoreCase));
+                if (!module.TryGetValue(Name, out value))
+                    value = module.GetOrAdd(Name, new CacheItem(Module, Name));
 
-                return Cache[Module][Name];
+                return value;
             }
         }
         private static object newCacheLock = 24;
@@ -111,12 +114,9 @@ namespace PSFramework.TaskEngine
         {
             lock (newCacheLock)
             {
-                if (!Cache.ContainsKey(Module))
-                    return false;
-                if (!Cache[Module].ContainsKey(Name))
-                    return false;
-
-                return true;
+                ConcurrentDictionary<string, CacheItem> module;
+                CacheItem value;
+                return (Cache.TryGetValue(Module, out module) && module.TryGetValue(Name, out value));
             }
         }
 
@@ -125,10 +125,10 @@ namespace PSFramework.TaskEngine
         /// </summary>
         public static void ClearExpiredCacheData()
         {
-            foreach (string module in Cache.Keys)
-                foreach (string name in Cache[module].Keys)
-                    if (Cache[module][name].Expired)
-                        Cache[module][name].Value = null;
+            foreach (KeyValuePair<string, ConcurrentDictionary<string, CacheItem>> module in Cache)
+                foreach (CacheItem value in module.Value.Values)
+                    if (value.Expired)
+                        value.Value = null;
         }
     }
 }

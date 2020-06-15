@@ -24,11 +24,11 @@
 		$Name
 	)
 	
-	if (-not ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name)))
+	New-Variable -Name task -Scope Private -Force
+	if (-not ([PSFramework.TaskEngine.TaskHost]::Tasks.TryGetValue($Name, [ref]$task)))
 	{
 		return $false
 	}
 	
-	$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
 	$task.LastExecution -gt $task.Registered
 }

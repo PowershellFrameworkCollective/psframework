@@ -35,8 +35,9 @@ namespace PSFramework.Runspace
         {
             get
             {
-                if (Values.ContainsKey(System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId))
-                    return Values[System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId];
+                object value;
+                if (Values.TryGetValue(System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, out value))
+                    return value;
                 else if (OfferDefaultValue)
                     return DefaultValue;
                 else

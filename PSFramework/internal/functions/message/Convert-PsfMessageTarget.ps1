@@ -41,9 +41,9 @@
 	
 	$typeName = $Target.GetType().FullName
 	
-	if ([PSFramework.Message.MessageHost]::TargetTransforms.ContainsKey($typeName))
+	New-Variable -Name scriptBlock -Scope Private -Force
+	if ([PSFramework.Message.MessageHost]::TargetTransforms.TryGetValue($typeName, [ref]$scriptBlock))
 	{
-		$scriptBlock = [PSFramework.Message.MessageHost]::TargetTransforms[$typeName]
 		try
 		{
 			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $Target)

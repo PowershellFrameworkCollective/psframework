@@ -1,4 +1,4 @@
-﻿using PSFramework.Configuration;
+using PSFramework.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -258,9 +258,10 @@ namespace PSFramework.Commands
             }
             #endregion Name Interpretation
 
-            _Exists = ConfigurationHost.Configurations.ContainsKey(_NameFull);
+            Config config;
+            _Exists = ConfigurationHost.Configurations.TryGetValue(_NameFull, out config);
             if (_Exists)
-                _Config = ConfigurationHost.Configurations[_NameFull];
+                _Config = config;
             _Initialize = Initialize;
             _Persisted = !String.IsNullOrEmpty(PersistedValue);
             _PolicyEnforced = (_Exists && _Config.PolicyEnforced);

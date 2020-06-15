@@ -41,9 +41,9 @@
 	
 	$typeName = $Exception.GetType().FullName
 	
-	if ([PSFramework.Message.MessageHost]::ExceptionTransforms.ContainsKey($typeName))
+	New-Variable -Name scriptBlock -Scope Private -Force
+	if ([PSFramework.Message.MessageHost]::ExceptionTransforms.TryGetValue($typeName, [ref]$scriptBlock))
 	{
-		$scriptBlock = [PSFramework.Message.MessageHost]::ExceptionTransforms[$typeName]
 		try
 		{
 			$tempException = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $Exception)

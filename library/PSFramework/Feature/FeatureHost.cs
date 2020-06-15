@@ -32,9 +32,12 @@ namespace PSFramework.Feature
         /// <param name="Value">The value to set it to</param>
         public static void WriteModuleFlag(string ModuleName, string FeatureFlag, bool Value)
         {
-            if (!_ModuleFeatureFlags.ContainsKey(ModuleName))
-                _ModuleFeatureFlags[ModuleName] = new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
-            _ModuleFeatureFlags[ModuleName][FeatureFlag] = Value;
+            ConcurrentDictionary<string, bool> flags;
+            if (!_ModuleFeatureFlags.TryGetValue(ModuleName, out flags))
+            {
+                flags = _ModuleFeatureFlags.GetOrAdd(ModuleName, new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase));
+            }
+            flags[FeatureFlag] = Value;
         }
 
         /// <summary>
@@ -57,11 +60,11 @@ namespace PSFramework.Feature
         {
             if (String.IsNullOrEmpty(FeatureFlag))
                 return false;
-            if (_ModuleFeatureFlags.ContainsKey(ModuleName) && _ModuleFeatureFlags[ModuleName].ContainsKey(FeatureFlag))
-                return _ModuleFeatureFlags[ModuleName][FeatureFlag];
-            if (_ExperimentalFeatureFlags.ContainsKey(FeatureFlag) && _ExperimentalFeatureFlags[FeatureFlag])
-                return true;
-            return false;
+            ConcurrentDictionary<string, bool> flags;
+            bool flag;
+            if (_ModuleFeatureFlags.TryGetValue(ModuleName, out flags) && flags.TryGetValue(FeatureFlag, out flag))
+                return flag;
+            return (_ExperimentalFeatureFlags.TryGetValue(ModuleName, out flag) && flag);
         }
 
         /// <summary>
@@ -76,9 +79,9 @@ namespace PSFramework.Feature
                 return false;
             if (String.IsNullOrEmpty(ModuleName))
                 return false;
-            if (_ModuleFeatureFlags.ContainsKey(ModuleName) && _ModuleFeatureFlags[ModuleName].ContainsKey(FeatureFlag))
-                return _ModuleFeatureFlags[ModuleName][FeatureFlag];
-            return false;
+            ConcurrentDictionary<string, bool> flags;
+            bool flag;
+            return (_ModuleFeatureFlags.TryGetValue(ModuleName, out flags) && flags.TryGetValue(FeatureFlag, out flag) && flag);
         }
         #endregion Module Feature Flags
     }

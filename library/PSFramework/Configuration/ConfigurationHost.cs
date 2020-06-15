@@ -33,9 +33,9 @@ namespace PSFramework.Configuration
         /// <returns>Whether the deletion was successful</returns>
         public static bool DeleteConfiguration(string FullName)
         {
-            if (!Configurations.ContainsKey(FullName))
+            Config configItem;
+            if (!Configurations.TryGetValue(FullName, out configItem))
                 throw new ItemNotFoundException(String.Format(Localization.LocalizationHost.ReadLog("PSFramework.Assembly.ConfigurationHost.ConfigNotFound"), FullName));
-            Config configItem = Configurations[FullName];
             if (!configItem.AllowDelete || configItem.PolicyEnforced)
                 return false;
 
@@ -186,9 +186,10 @@ namespace PSFramework.Configuration
         /// <returns>The value of the configuration entry.</returns>
         public static object GetConfigValue(string FullName)
         {
-            if (!Configurations.ContainsKey(FullName))
+            Config configItem;
+            if (!Configurations.TryGetValue(FullName, out configItem))
                 return null;
-            return Configurations[FullName].Value;
+            return configItem.Value;
         }
 
         #region Private methods

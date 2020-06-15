@@ -41,13 +41,14 @@
 	)
 	process
 	{
-		if ([PSFramework.Utility.UtilityHost]::ScriptBlocks.ContainsKey($Name))
+		New-Variable -Name script -Scope Private -Force
+		if ([PSFramework.Utility.UtilityHost]::ScriptBlocks.TryGetValue($Name, [ref]$script))
 		{
-			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Scriptblock = $Scriptblock
+			script.Scriptblock = $Scriptblock
 		}
 		else
 		{
-			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name] = New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock)
+			$null = [PSFramework.Utility.UtilityHost]::ScriptBlocks.TryAdd($Name, (New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock)))
 		}
 	}
 }

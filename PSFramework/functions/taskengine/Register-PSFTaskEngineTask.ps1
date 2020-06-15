@@ -98,9 +98,10 @@
 	)
 	
 	#region Case: Task already registered
-	if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name))
+	New-Variable -Name task -Scope Private -Force
+
+	if ([PSFramework.TaskEngine.TaskHost]::Tasks.TryGetValue($Name, [ref]$task))
 	{
-		$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
 		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description}
 		if ($task.ScriptBlock -ne $ScriptBlock) { $task.ScriptBlock = $ScriptBlock }
 		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $Once }

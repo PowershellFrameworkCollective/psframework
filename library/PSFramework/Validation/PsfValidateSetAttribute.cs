@@ -1,4 +1,5 @@
 ﻿using PSFramework.Extension;
+using PSFramework.TabExpansion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -105,9 +106,10 @@ namespace PSFramework.Validation
                 return results.ToArray();
             }
 
-            if (TabExpansion.TabExpansionHost.Scripts.ContainsKey(TabCompletion))
+            ScriptContainer scriptContainer;
+            if (TabExpansion.TabExpansionHost.Scripts.TryGetValue(TabCompletion, out scriptContainer))
             {
-                return TabExpansion.TabExpansionHost.Scripts[TabCompletion].Invoke();
+                return scriptContainer.Invoke();
             }
 
             return new string[0];

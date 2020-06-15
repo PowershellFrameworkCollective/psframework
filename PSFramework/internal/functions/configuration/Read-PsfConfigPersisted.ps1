@@ -130,7 +130,7 @@
 			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileSystem $filename)))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion File - Computer Wide
@@ -141,7 +141,7 @@
 			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineDefault))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion Registry - Computer Wide
@@ -152,7 +152,7 @@
 			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserShared $filename)))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion File - User Shared
@@ -163,7 +163,7 @@
 			foreach ($item in (Read-Registry -Path $script:path_RegistryUserDefault))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion Registry - User Shared
@@ -174,7 +174,7 @@
 			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserLocal $filename)))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion File - User Local
@@ -185,7 +185,7 @@
 			foreach ($item in (Read-Registry -Path $script:path_RegistryUserEnforced -Enforced))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion Registry - User Enforced
@@ -196,7 +196,7 @@
 			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineEnforced -Enforced))
 			{
 				if (-not $Default) { $results[$item.FullName] = $item }
-				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+				else { $null = $results.TryAdd($item.FullName, $item) }
 			}
 		}
 		#endregion Registry - System Enforced

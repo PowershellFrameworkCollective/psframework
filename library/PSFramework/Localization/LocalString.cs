@@ -40,12 +40,13 @@ namespace PSFramework.Localization
                 if (_Strings.Keys.Count == 0)
                     throw new InvalidOperationException("Cannot offer string value without at least ONE string registered");
 
-                if (_Strings.ContainsKey(LocalizationHost.Language))
-                    return _Strings[LocalizationHost.Language];
-                if (_Strings.ContainsKey(CultureInfo.CurrentUICulture.Name))
-                    return _Strings[CultureInfo.CurrentUICulture.Name];
-                if (_Strings.ContainsKey("en-US"))
-                    return _Strings["en-US"];
+                string value;
+                if (_Strings.TryGetValue(LocalizationHost.Language, out value))
+                    return value;
+                if (_Strings.TryGetValue(CultureInfo.CurrentUICulture.Name, out value))
+                    return value;
+                if (_Strings.TryGetValue("en-US", out value))
+                    return value;
 
                 return _Strings.Values.First();
             }
@@ -61,16 +62,18 @@ namespace PSFramework.Localization
                 if (_Strings.Keys.Count == 0)
                     throw new InvalidOperationException("Cannot offer string value without at least ONE string registered");
 
-                if (LocalizationHost.ModuleLoggingLanguage.ContainsKey(Module) && _Strings.ContainsKey(LocalizationHost.ModuleLoggingLanguage[Module]))
-                    return _Strings[LocalizationHost.ModuleLoggingLanguage[Module]];
-                if (_Strings.ContainsKey(LocalizationHost.LoggingLanguage))
-                    return _Strings[LocalizationHost.LoggingLanguage];
-                if (_Strings.ContainsKey(LocalizationHost.Language))
-                    return _Strings[LocalizationHost.Language];
-                if (_Strings.ContainsKey(CultureInfo.CurrentUICulture.Name))
-                    return _Strings[CultureInfo.CurrentUICulture.Name];
-                if (_Strings.ContainsKey("en-US"))
-                    return _Strings["en-US"];
+                string moduleLoggingLanguage;
+                string value;
+                if (LocalizationHost.ModuleLoggingLanguage.TryGetValue(Module, out moduleLoggingLanguage) && _Strings.TryGetValue(moduleLoggingLanguage, out value))
+                    return value;
+                if (_Strings.TryGetValue(LocalizationHost.LoggingLanguage, out value))
+                    return value;
+                if (_Strings.TryGetValue(LocalizationHost.Language, out value))
+                    return value;
+                if (_Strings.TryGetValue(CultureInfo.CurrentUICulture.Name, out value))
+                    return value;
+                if (_Strings.TryGetValue("en-US", out value))
+                    return value;
 
                 return _Strings.Values.First();
             }

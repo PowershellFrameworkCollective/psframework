@@ -80,9 +80,10 @@
 	
 	dynamicparam
 	{
-		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
+		New-Variable -Name provider -Scope Private -Force
+
+		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.TryGetValue($Name, [ref]$provider)))
 		{
-			$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
 			[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.ConfigurationParameters, $true)
 			$results = $provider.ConfigurationParameters.Invoke() | Where-Object { $_ -is [System.Management.Automation.RuntimeDefinedParameterDictionary] }
 			if (-not $results) { $results = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary }
@@ -107,13 +108,14 @@
 	
 	begin
 	{
-		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
+		New-Variable -Name provider -Scope Private -Force
+
+		if (-not ([PSFramework.Logging.ProviderHost]::Providers.TryGetValue($Name, [ref]$provider)))
 		{
 			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.NotFound' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name
 			return
 		}
 		
-		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
 		if ($InstanceName -and $provider.ProviderVersion -eq 'Version_1')
 		{
 			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.V1NoInstance' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name

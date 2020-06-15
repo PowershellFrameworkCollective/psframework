@@ -45,22 +45,25 @@
 	
 	dynamicparam
 	{
-		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
+		New-Variable -Name provider -Scope Private -Force
+
+		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.TryGetValue($Name, [ref]$provider)))
 		{
 			[PSFramework.Utility.UtilityHost]::ImportScriptBlock([PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters)
-			[PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters.Invoke()
+			$provider.InstallationParameters.Invoke()
 		}
 	}
 	
 	process
 	{
-		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
+		New-Variable -Name provider -Scope Private -Force
+
+		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.TryGetValue($Name, [ref]$provider)))
 		{
 			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install'
 			return
 		}
 		
-		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
 		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.IsInstalledScript)
 		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($provider.InstallationScript)
 		

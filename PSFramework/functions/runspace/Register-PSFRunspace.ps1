@@ -56,14 +56,16 @@
 		$NoMessage
 	)
 	
-	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($Name)
+	New-Variable -Name runspace -Scope Private -Force
+
+	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.TryGetValue($Name, [ref]$runspace))
 	{
 		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Updating runspace: <c='em'>$($Name)</c>" -Target $Name -Tag 'runspace','register' }
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name].SetScript($ScriptBlock)
+		$runspace.SetScript($ScriptBlock)
 	}
 	else
 	{
 		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Registering runspace: <c='em'>$($Name)</c>" -Target $Name -Tag 'runspace', 'register' }
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name] = New-Object PSFramework.Runspace.RunspaceContainer($Name, $ScriptBlock)
+		$null = [PSFramework.Runspace.RunspaceHost]::Runspaces.TryAdd($Name, (New-Object PSFramework.Runspace.RunspaceContainer($Name, $ScriptBlock)))
 	}
 }

@@ -192,11 +192,13 @@
 						Write-Config -Config $item -Scope $Scope -EnableException $EnableException
 					}
 					
+					New-Variable -Name config -Scope Private -Force
+
 					foreach ($item in $FullName)
 					{
-						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item))
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.TryGetValue($item. [ref]$config))
 						{
-							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item]) -Scope $Scope -EnableException $EnableException
+							Write-Config -Config $config-Scope $Scope -EnableException $EnableException
 						}
 					}
 				}
@@ -223,11 +225,13 @@
 						if ($configurationItems.FullName -notcontains $item.FullName) { $configurationItems += $item }
 					}
 					
+					New-Variable -Name config -Scope Private -Force
+
 					foreach ($item in $FullName)
 					{
-						if (($configurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item)))
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.TryGetValue($item. [ref]$config))
 						{
-							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item]
+							$configurationItems += $config
 						}
 					}
 				}
