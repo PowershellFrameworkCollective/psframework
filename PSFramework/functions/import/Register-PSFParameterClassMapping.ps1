@@ -59,19 +59,19 @@
 			{
 				"Computer"
 				{
-					[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"DateTime"
 				{
-					[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"TimeSpan"
 				{
-					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"Encoding"
 				{
-					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				default
 				{

@@ -153,7 +153,7 @@ namespace PSFramework.Logging
             {
                 bool test = false;
                 foreach (string module in IncludeModules)
-                    if (Entry.ModuleName.ToLower() == module.ToLower())
+                    if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                         test = true;
 
                 if (!test)
@@ -161,7 +161,7 @@ namespace PSFramework.Logging
             }
 
             foreach (string module in ExcludeModules)
-                if (Entry.ModuleName.ToLower() == module.ToLower())
+                if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
             if (IncludeTags.Count > 0)
@@ -190,7 +190,7 @@ namespace PSFramework.Logging
             {
                 bool test = false;
                 foreach (string module in IncludeModules)
-                    if (Record.ModuleName.ToLower() == module.ToLower())
+                    if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                         test = true;
 
                 if (!test)
@@ -198,7 +198,7 @@ namespace PSFramework.Logging
             }
 
             foreach (string module in ExcludeModules)
-                if (Record.ModuleName.ToLower() == module.ToLower())
+                if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
             if (IncludeTags.Count > 0)

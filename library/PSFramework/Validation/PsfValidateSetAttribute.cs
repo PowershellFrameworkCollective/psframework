@@ -105,9 +105,9 @@ namespace PSFramework.Validation
                 return results.ToArray();
             }
 
-            if (TabExpansion.TabExpansionHost.Scripts.ContainsKey(TabCompletion.ToLower()))
+            if (TabExpansion.TabExpansionHost.Scripts.ContainsKey(TabCompletion))
             {
-                return TabExpansion.TabExpansionHost.Scripts[TabCompletion.ToLower()].Invoke();
+                return TabExpansion.TabExpansionHost.Scripts[TabCompletion].Invoke();
             }
 
             return new string[0];

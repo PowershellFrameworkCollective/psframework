@@ -39,7 +39,7 @@
 	
 	if ($null -eq $Target) { return }
 	
-	$typeName = $Target.GetType().FullName.ToLower()
+	$typeName = $Target.GetType().FullName
 	
 	if ([PSFramework.Message.MessageHost]::TargetTransforms.ContainsKey($typeName))
 	{

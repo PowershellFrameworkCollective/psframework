@@ -471,7 +471,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 {
                     if (!String.IsNullOrEmpty(Once))
                     {
-                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
                             WriteWarning(_MessageStreams);
@@ -479,7 +479,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
 
                             Configuration.Config cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
-                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
                             cfg.Description = "Locking setting that disables further display of the specified message";
                             cfg.Value = true;
@@ -505,7 +505,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 {
                     if (!String.IsNullOrEmpty(Once))
                     {
-                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
                             InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
@@ -513,7 +513,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
 
                             Configuration.Config cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
-                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
                             cfg.Description = "Locking setting that disables further display of the specified message";
                             cfg.Value = true;
@@ -597,7 +597,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (Item == null)
                 return null;
 
-            string lowTypeName = Item.GetType().FullName.ToLower();
+            string lowTypeName = Item.GetType().FullName;
 
             if (MessageHost.TargetTransforms.ContainsKey(lowTypeName))
             {
@@ -633,7 +633,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (Item == null)
                 return Item;
 
-            string lowTypeName = Item.GetType().FullName.ToLower();
+            string lowTypeName = Item.GetType().FullName;
 
             if (MessageHost.ExceptionTransforms.ContainsKey(lowTypeName))
             {

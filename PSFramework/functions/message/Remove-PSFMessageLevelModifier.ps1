@@ -51,10 +51,10 @@
 		{
 			if ($item -eq "PSFramework.Message.MessageLevelModifier") { continue }
 			
-			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item.ToLower()))
+			if ([PSFramework.Message.MessageHost]::MessageLevelModifiers.ContainsKey($item))
 			{
 				$dummy = $null
-				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item.ToLower(), [ref] $dummy)
+				$null = [PSFramework.Message.MessageHost]::MessageLevelModifiers.TryRemove($item, [ref] $dummy)
 			}
 			else
 			{

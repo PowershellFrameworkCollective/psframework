@@ -8,7 +8,7 @@
 		while ($true)
 		{
 			# This portion is critical to gracefully closing the script
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -notlike "Running")
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -notlike "Running")
 			{
 				break
 			}
@@ -152,7 +152,7 @@
 	finally
 	{
 		#region Flush log on exit
-		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -like "Running") -and (-not [PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
+		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -like "Running") -and (-not [PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
 		{
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
@@ -272,7 +272,7 @@
 		if ($wasBroken) { [PSFramework.Logging.ProviderHost]::LoggingState = 'Broken' }
 		else { [PSFramework.Logging.ProviderHost]::LoggingState = 'Stopped' }
 		
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()
+		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].SignalStopped()
 	}
 }
 

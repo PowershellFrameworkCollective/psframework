@@ -24,11 +24,11 @@
 		$Name
 	)
 	
-	if (-not ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name.ToLower())))
+	if (-not ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name)))
 	{
 		return $false
 	}
 	
-	$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name.ToLower()]
+	$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
 	$task.LastExecution -gt $task.Registered
 }

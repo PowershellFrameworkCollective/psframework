@@ -110,9 +110,9 @@ namespace PSFramework.Parameter
                     return;
                 }
 
-                if (_PropertyMapping.ContainsKey(name.ToLower()))
+                if (_PropertyMapping.ContainsKey(name))
                 {
-                    key = name.ToLower();
+                    key = name;
                     break;
                 }
             }
