@@ -70,6 +70,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Import-PSFLocalizedString',
+		'Import-PSFLoggingProvider',
 		'Import-PSFPowerShellDataFile',
 		'Install-PSFLoggingProvider',
 		'Invoke-PSFCommand',

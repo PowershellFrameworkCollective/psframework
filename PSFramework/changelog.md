@@ -6,9 +6,22 @@
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
 - New: Command Test-PSFLanguageMode : Tests, in what language mode a specified scriptblock is in.
+- New: Command Import-PSFLoggingProvider : Imports additional logging providers or logging provider configuration from a filesystem path or network url.
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter.
 - New: Validation Attribute PsfValidateLanguageMode : Validates the language mode of a scriptblock.
-- Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retr validation
+- New: Logging Provider: eventlog - logs to the windows eventlog
+- New: Validation Scriptblock: PSFramework.Validate.FSPath - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.FileOrParent - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.Folder - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path.Container - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path.Leaf - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
 - Upd: Write-PSFMessage - New parameter: `-NoNewLine` avoids adding a new line after writing to screen.

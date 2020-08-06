@@ -445,5 +445,36 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
+		
+        <!-- PSFramework.Utility.ScriptBlockItem -->
+        <View>
+            <Name>PSFramework.Utility.ScriptBlockItem</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Utility.ScriptBlockItem</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>LastRetrieved</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CountRetrieved</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
 	</ViewDefinitions>
 </Configuration>
