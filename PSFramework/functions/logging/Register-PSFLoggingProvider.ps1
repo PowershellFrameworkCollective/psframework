@@ -166,7 +166,7 @@
 		
 		[Parameter(ParameterSetName = 'Version2')]
 		[Hashtable]
-		$ConfigurationDefaultValues,
+		$ConfigurationDefaultValues = @{ },
 		
 		[Parameter(ParameterSetName = 'Version2')]
 		[System.Management.Automation.ScriptBlock]
@@ -286,7 +286,7 @@
 			# Initialize custom config defined by logging provider
 			foreach ($property in $InstanceProperties)
 			{
-				Set-PSFConfig -FullName "$ConfigurationRoot.$property" -Value $null -Initialize
+				Set-PSFConfig -FullName "$ConfigurationRoot.$property" -Value $ConfigurationDefaultValues[$property] -Initialize
 			}
 			
 			$provider = New-Object PSFramework.Logging.ProviderV2
@@ -314,7 +314,7 @@
 	}
 	
 	
-	try { if ($RegistrationEvent) { . $RegistrationEvent } }
+	try { if ($RegistrationEvent) { & $RegistrationEvent } }
 	catch
 	{
 		$dummy = $null
