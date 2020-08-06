@@ -27,18 +27,17 @@
 	
 	begin
 	{
-		$mapping = @{ }
-		
+		$internalExecutionContext = [PSFramework.Utility.UtilityHost]::GetExecutionContextFromTLS()
+		$topLevelSessionState = [PSFramework.Utility.UtilityHost]::GetPrivateProperty('TopLevelSessionState', $internalExecutionContext)
+		$globalScope = [PSFramework.Utility.UtilityHost]::GetPrivateProperty('GlobalScope', $topLevelSessionState)
+		$addMethod = $globalScope.GetType().GetMethod('AddType', [System.Reflection.BindingFlags]'Instance, NonPublic')
 	}
 	process
 	{
 		foreach ($typeObject in $ClassType)
 		{
-			$mapping[$typeObject.Name] = $typeObject
+			$arguments = @($typeObject.Name, $typeObject)
+			$addMethod.Invoke($globalScope, $arguments)
 		}
-	}
-	end
-	{
-		Set-PSFTypeAlias -Mapping $mapping
 	}
 }

@@ -65,5 +65,11 @@ foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\parameter
 # Load resources for TEPP input completion
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\teppInputResources.ps1"
 
+# Load Scriptblocks
+foreach ($file in (Get-ChildItem -Path "$($script:ModuleRoot)\internal\scriptblocks\*.ps1"))
+{
+	. Import-ModuleFile -Path $file.FullName
+}
+
 # Finally register the license
 . Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\license.ps1"

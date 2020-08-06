@@ -31,7 +31,7 @@
 			$hash.$Match
 		}
 		
-		[regex]::Replace($path, '%day%|%computername%|%hour%|%processid%|%date%|%username%|%dayofweek%|%minute%|%userdomain%|%logname%', $scriptBlock)
+		[regex]::Replace($path, '%day%|%computername%|%hour%|%processid%|%date%|%username%|%dayofweek%|%minute%|%userdomain%|%logname%', $scriptBlock, 'IgnoreCase')
 	}
 	
 	function Write-LogFileMessage
@@ -53,8 +53,7 @@
 			[string]
 			$CsvDelimiter,
 			
-			[string[]]
-			$Headers
+			$MessageItem
 		)
 		
 		$parent = Split-Path $Path
@@ -101,6 +100,20 @@
 				$xml.table.tr[1].OuterXml | Add-Content -Path $Path -Encoding UTF8
 			}
 			#endregion Html
+			#region CMTrace
+			"CMTrace"
+			{
+				$cType = 1
+				if ($MessageItem.Level -eq 'Warning') { $cType = 2 }
+				if ($MessageItem.ErrorRecord) { $cType = 3 }
+				$fileEntry = '<no file>'
+				if ($MessageItem.File) { $fileEntry = Split-Path -Path $MessageItem.File -Leaf }
+				
+				$format = '<![LOG[{0}]LOG]!><time="{1:HH:mm:ss.fff}+000" date="{1:MM-dd-yyyy}" component="{6}:{2} > {7}" context="{3}" type="{4}" thread="{5}" file="{6}:{2} > {7}">'
+				$line = $format -f $MessageItem.LogMessage, $MessageItem.Timestamp, $MessageItem.Line, $MessageItem.TargetObject, $cType, $MessageItem.Runspace, $fileEntry, $MessageItem.FunctionName
+				$line | Add-Content -Path $Path -Encoding UTF8
+			}
+			#endregion CMTrace
 		}
 		#endregion Type-Based Output
 	}
@@ -142,7 +155,6 @@ $start_event = {
 		IncludeHeader = Get-ConfigValue -Name 'IncludeHeader'
 		FileType	  = Get-ConfigValue -Name 'FileType'
 		CsvDelimiter  = Get-ConfigValue -Name 'CsvDelimiter'
-		Headers	      = $script:logfile_headers
 		Path		  = Get-LogFilePath
 	}
 }
@@ -152,7 +164,7 @@ $message_Event = {
 		$Message
 	)
 	
-	$Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage
+	$Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message
 }
 
 $configuration_Settings = {

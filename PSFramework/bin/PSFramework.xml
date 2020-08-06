@@ -2250,6 +2250,11 @@
             Write as Xml fragment
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.LogFileFileType.CMTrace">
+            <summary>
+            Write as CMTrace compatible entry
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.LoggingState">
             <summary>
             Used to signal the current processing state of the logging runspace

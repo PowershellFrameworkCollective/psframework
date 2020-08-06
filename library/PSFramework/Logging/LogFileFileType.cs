@@ -23,6 +23,11 @@
         /// <summary>
         /// Write as Xml fragment
         /// </summary>
-        Xml
+        Xml,
+
+        /// <summary>
+        /// Write as CMTrace compatible entry
+        /// </summary>
+        CMTrace
     }
 }
