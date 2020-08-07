@@ -48,7 +48,16 @@ $FunctionDefinitions = {
         $LogType = Get-ConfigValue -Name 'LogType'
 
         # Take inputed object and convert it to a Json object using UTF8 encoding
-        $bodyAsJson = ConvertTo-Json $ObjectToProcess
+        $loggingMessage = [PSCustomObject]@{
+            Message      = $ObjectToProcess.LogMessage
+            Timestamp    = $ObjectToProcess.TimeStamp
+            ComputerName = $ObjectToProcess.ComputerName
+            CallStack    = $ObjectToProcess.CallStack
+            UserName     = $ObjectToProcess.Username
+            ErrorRecord  = $ObjectToProcess.ErrorRecord
+        }
+
+        $bodyAsJson = ConvertTo-Json $loggingMessage
         $body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
 
         $restMethod = "POST"
@@ -67,7 +76,7 @@ $FunctionDefinitions = {
             RestResource    = $restResource
         }
 
-        # Generate the signature needed to gain access to the Azure workspace
+        # Generate a signature needed to gain access to the Azure workspace
         $signature = Get-LogSignature @signatureArgs
 
         # RestAPI headers
@@ -155,7 +164,7 @@ $FunctionDefinitions = {
         )
 
         $xHeaders = "x-ms-date:" + $DateAndTime
-        $stringToHash = $RestMethod + [System.Environment]::NewLine + $ContentLength + [System.Environment]::NewLine + $RestContentType + [System.Environment]::NewLine + $xHeaders + [System.Environment]::NewLine + $RestResource
+        $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
         $bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
         $keyBytes = [Convert]::FromBase64String($sharedKey)
         $sha256 = New-Object System.Security.Cryptography.HMACSHA256
