@@ -46,89 +46,89 @@ $FunctionDefinitions = {
             $ObjectToProcess
         )
 
-        begin{
+        begin {
             # Grab the default configuration values for the logging provider
             $WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
             $SharedKey = Get-ConfigValue -Name 'SharedKey'
             $LogType = Get-ConfigValue -Name 'LogType'
         }
 
-        process{
+        process {
             # Create a custom PSObject and convert it to a Json object using UTF8 encoding
-        $loggingMessage = [PSCustomObject]@{
-            Message      = $ObjectToProcess.LogMessage
-            Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
-            Type         = $ObjectToProcess.Type.ToString()
-            ComputerName = $ObjectToProcess.ComputerName
-            Runspace     = $ObjectToProcess.Runspace
-            UserName     = $ObjectToProcess.UserName
-            ModuleName   = $ObjectToProcess.ModuleName
-            FunctionName = $ObjectToProcess.FunctionName
-            File         = $ObjectToProcess.File
-            CallStack    = $ObjectToProcess.CallStack
-            TargetObject = $ObjectToProcess.TargetObject
-            ErrorRecord  = $ObjectToProcess.ErrorRecord
-        }
-
-        $bodyAsJson = ConvertTo-Json $loggingMessage
-        $body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
-
-        $restMethod = "POST"
-        $restContentType = "application/json"
-        $restResource = "/api/logs"
-        $date = [DateTime]::UtcNow.ToString("r")
-        $contentLength = $body.Length
-
-        $signatureArgs = @{
-            WorkspaceID     = $WorkspaceID
-            SharedKey       = $SharedKey
-            DateAndTime     = $date
-            ContentLength   = $contentLength
-            RestMethod      = $restMethod
-            RestContentType = $restContentType
-            RestResource    = $restResource
-        }
-
-        # Generate a signature needed to gain access to the Azure workspace
-        $signature = Get-LogSignature @signatureArgs
-
-        # RestAPI headers
-        $headers = @{
-            "Authorization"        = $signature
-            "Log-Type"             = $logType
-            "x-ms-date"            = $date
-            "time-generated-field" = "TimeStamp"
-        }
-
-        try {
-            $uri = "https://$($WorkspaceID).ods.opinsights.azure.com$($restResource)?api-version=2016-04-01"
-            $webResponse = Invoke-WebRequest -Uri $uri -Method $restMethod -ContentType $restContentType -Headers $headers -Body $body -UseBasicParsing
-            switch ($webResponse.StatusCode) {
-                '400' {
-                    switch ($webResponse.StatusDescription) {
-                        'InactiveCustomer' { throw "Sucessful Post to Azure Workspace" }
-                        'InvalidApiVersion' { throw "The API version that you specified was not recognized by the service." }
-                        'InvalidCustomerId' { throw "The workspace ID specified is invalid." }
-                        'InvalidDataFormat' { throw "Invalid JSON was submitted. The response body might contain more information about how to resolve the error." }
-                        'InvalidLogType' { throw "The log type specified contained special characters or numerics." }
-                        'MissingApiVersion' { throw "The API version wasn’t specified." }
-                        'MissingContentType' { throw "The content type wasn’t specified." }
-                        'MissingLogType' { throw "The required value log type wasn’t specified." }
-                        'UnsupportedContentType' { throw "The content type was not set to application/json." }
-                    }
-                }
-
-                '403' { throw "The service failed to authenticate the request. Verify that the workspace ID and connection key are valid." }
-                '404' { throw "Either the URL provided is incorrect, or the request is too large." }
-                '429' { throw "The service is experiencing a high volume of data from your account. Please retry the request later." }
-                '500' { throw "The service encountered an internal error. Please retry the request." }
-                '503' { throw "The service currently is unavailable to receive requests. Please retry your request." }
+            $loggingMessage = [PSCustomObject]@{
+                Message      = $ObjectToProcess.LogMessage
+                Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
+                Type         = $ObjectToProcess.Type.ToString()
+                ComputerName = $ObjectToProcess.ComputerName
+                Runspace     = $ObjectToProcess.Runspace
+                UserName     = $ObjectToProcess.UserName
+                ModuleName   = $ObjectToProcess.ModuleName
+                FunctionName = $ObjectToProcess.FunctionName
+                File         = $ObjectToProcess.File
+                CallStack    = $ObjectToProcess.CallStack
+                TargetObject = $ObjectToProcess.TargetObject
+                ErrorRecord  = $ObjectToProcess.ErrorRecord
             }
-        }
-        catch { throw }
+
+            $bodyAsJson = ConvertTo-Json $loggingMessage
+            $body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
+
+            $restMethod = "POST"
+            $restContentType = "application/json"
+            $restResource = "/api/logs"
+            $date = [DateTime]::UtcNow.ToString("r")
+            $contentLength = $body.Length
+
+            $signatureArgs = @{
+                WorkspaceID     = $WorkspaceID
+                SharedKey       = $SharedKey
+                DateAndTime     = $date
+                ContentLength   = $contentLength
+                RestMethod      = $restMethod
+                RestContentType = $restContentType
+                RestResource    = $restResource
+            }
+
+            # Generate a signature needed to gain access to the Azure workspace
+            $signature = Get-LogSignature @signatureArgs
+
+            # RestAPI headers
+            $headers = @{
+                "Authorization"        = $signature
+                "Log-Type"             = $logType
+                "x-ms-date"            = $date
+                "time-generated-field" = "TimeStamp"
+            }
+
+            try {
+                $uri = "https://$($WorkspaceID).ods.opinsights.azure.com$($restResource)?api-version=2016-04-01"
+                $webResponse = Invoke-WebRequest -Uri $uri -Method $restMethod -ContentType $restContentType -Headers $headers -Body $body -UseBasicParsing
+                switch ($webResponse.StatusCode) {
+                    '400' {
+                        switch ($webResponse.StatusDescription) {
+                            'InactiveCustomer' { throw "Sucessful Post to Azure Workspace" }
+                            'InvalidApiVersion' { throw "The API version that you specified was not recognized by the service." }
+                            'InvalidCustomerId' { throw "The workspace ID specified is invalid." }
+                            'InvalidDataFormat' { throw "Invalid JSON was submitted. The response body might contain more information about how to resolve the error." }
+                            'InvalidLogType' { throw "The log type specified contained special characters or numerics." }
+                            'MissingApiVersion' { throw "The API version wasn’t specified." }
+                            'MissingContentType' { throw "The content type wasn’t specified." }
+                            'MissingLogType' { throw "The required value log type wasn’t specified." }
+                            'UnsupportedContentType' { throw "The content type was not set to application/json." }
+                        }
+                    }
+
+                    '403' { throw "The service failed to authenticate the request. Verify that the workspace ID and connection key are valid." }
+                    '404' { throw "Either the URL provided is incorrect, or the request is too large." }
+                    '429' { throw "The service is experiencing a high volume of data from your account. Please retry the request later." }
+                    '500' { throw "The service encountered an internal error. Please retry the request." }
+                    '503' { throw "The service currently is unavailable to receive requests. Please retry your request." }
+                }
+            }
+            catch { throw }
         }
 
-        end{}
+        end {}
     }
 
     Function Get-LogSignature {
@@ -179,8 +179,8 @@ $FunctionDefinitions = {
             $RestResource
         )
 
-        begin{}
-        process{
+        begin {}
+        process {
             $xHeaders = "x-ms-date:" + $DateAndTime
             $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
             $bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
@@ -191,7 +191,7 @@ $FunctionDefinitions = {
             $encodedHash = [Convert]::ToBase64String($computedHash)
             $authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
         }
-        end{
+        end {
             return $authorization
         }
     }
