@@ -297,20 +297,15 @@ PreparingToExpandVerboseMessage=Preparing to expand...
 				$path
 			)
 
-			$uniqueInputPaths = @()
+			$uniqueInputPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
 
 			# null and empty check are are already done on Path parameter at the cmdlet layer.
 			foreach ($currentPath in $path)
 			{
-				$currentInputPath = $currentPath.ToUpper()
-				if ($uniqueInputPaths.Contains($currentInputPath))
+				if (-not $uniqueInputPaths.Add($currentPath))
 				{
 					$errorMessage = ($LocalizedData.DuplicatePathFoundError -f $inputParameter, $currentPath, $inputParameter)
 					ThrowTerminatingErrorHelper "DuplicatePathFound" $errorMessage ([System.Management.Automation.ErrorCategory]::InvalidArgument) $currentPath
-				}
-				else
-				{
-					$uniqueInputPaths += $currentInputPath
 				}
 			}
 		}
@@ -1443,20 +1438,15 @@ PreparingToExpandVerboseMessage=Preparing to expand...
 				$path
 			)
 
-			$uniqueInputPaths = @()
+			$uniqueInputPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
 
 			# null and empty check are are already done on Path parameter at the cmdlet layer.
 			foreach ($currentPath in $path)
 			{
-				$currentInputPath = $currentPath.ToUpper()
-				if ($uniqueInputPaths.Contains($currentInputPath))
+				if (-not $uniqueInputPaths.Add($currentPath))
 				{
 					$errorMessage = ($LocalizedData.DuplicatePathFoundError -f $inputParameter, $currentPath, $inputParameter)
 					ThrowTerminatingErrorHelper "DuplicatePathFound" $errorMessage ([System.Management.Automation.ErrorCategory]::InvalidArgument) $currentPath
-				}
-				else
-				{
-					$uniqueInputPaths += $currentInputPath
 				}
 			}
 		}

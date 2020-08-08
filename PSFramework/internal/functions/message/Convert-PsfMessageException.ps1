@@ -39,7 +39,7 @@
 	
 	if ($null -eq $Exception) { return }
 	
-	$typeName = $Exception.GetType().FullName.ToLower()
+	$typeName = $Exception.GetType().FullName
 	
 	if ([PSFramework.Message.MessageHost]::ExceptionTransforms.ContainsKey($typeName))
 	{

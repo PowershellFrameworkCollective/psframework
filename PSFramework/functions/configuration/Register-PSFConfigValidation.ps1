@@ -37,5 +37,5 @@
 		$ScriptBlock
 	)
 	
-	[PSFramework.Configuration.ConfigurationHost]::Validation[$Name.ToLower()] = $ScriptBlock
+	[PSFramework.Configuration.ConfigurationHost]::Validation[$Name] = $ScriptBlock
 }

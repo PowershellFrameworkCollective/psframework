@@ -68,11 +68,11 @@ namespace PSFramework.Utility
             {
                 if (Name == ".")
                     return true;
-                if (Name.ToLower() == "localhost")
+                if (string.Equals(Name, "localhost", StringComparison.InvariantCultureIgnoreCase))
                     return true;
-                if (Name.ToLower() == Environment.MachineName.ToLower())
+                if (string.Equals(Name, Environment.MachineName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
-                if (Name.ToLower() == (Environment.MachineName + "." + Environment.GetEnvironmentVariable("USERDNSDOMAIN")).ToLower())
+                if (string.Equals(Name, (Environment.MachineName + "." + Environment.GetEnvironmentVariable("USERDNSDOMAIN")), StringComparison.InvariantCultureIgnoreCase))
                     return true;
             }
             catch { }
