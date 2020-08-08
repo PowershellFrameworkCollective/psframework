@@ -108,6 +108,12 @@ namespace PSFramework.Message
         public static DateTime LastLogged = DateTime.Now;
 
         /// <summary>
+        /// Whether the logging is enabled at all.
+        /// Setting this to false will stop and prevent the start of the logging runspace.
+        /// </summary>
+        public static bool LoggingEnabled = true;
+
+        /// <summary>
         /// The next interval to use.
         /// </summary>
         public static int NextInterval

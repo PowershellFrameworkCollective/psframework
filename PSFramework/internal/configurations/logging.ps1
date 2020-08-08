@@ -7,3 +7,8 @@ Set-PSFConfig -Module PSFramework -Name 'Logging.Interval' -Value 1000 -Initiali
 Set-PSFConfig -Module PSFramework -Name 'Logging.Interval.Idle' -Value 5000 -Initialize -Validation "integerpositive" -Handler { [PSFramework.Message.LogHost]::IntervalIdle = $args[0] } -Description 'The interval at which the loging runspace runs, when there is nothing to do.'
 Set-PSFConfig -Module PSFramework -Name 'Logging.Interval.IdleDuration' -Value (New-TimeSpan -Minutes 2) -Initialize -Validation "timespan" -Handler { [PSFramework.Message.LogHost]::IntervalIdleDuration = $args[0] } -Description 'The time with no message written that needs to occur for the logging runspace to switch to idle mode.'
 Set-PSFConfig -Module PSFramework -Name 'Logging.Provider.Source' -Value $null -Initialize -Validation 'uriabsolute' -Description 'Path where PSFramework looks for a provider index file. This file is used to load and configure additional logging providers. See "Get-Help Import-PSFLoggingProvider -Detailed" for more information'
+Set-PSFConfig -Module PSFramework -Name 'Logging.Enabled' -Value $true -Initialize -Validation 'bool' -Handler {
+	[PSFramework.Message.LogHost]::LoggingEnabled = $args[0]
+	if ($args[0]) { Start-PSFRunspace -Name 'psframework.logging' -NoMessage }
+	else { Stop-PSFRunspace -Name 'psframework.logging' }
+} -Description 'Whether the PSFramework performs any logging at all. Disabling this will stop the background runspace that performs the logging.'

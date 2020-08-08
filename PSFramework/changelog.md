@@ -21,6 +21,7 @@
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)

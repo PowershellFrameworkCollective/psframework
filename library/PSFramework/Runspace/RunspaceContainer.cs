@@ -2,6 +2,7 @@
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace PSFramework.Runspace
 {

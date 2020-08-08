@@ -2991,6 +2991,12 @@
             The time the last message or error were written.
             </summary>
         </member>
+        <member name="F:PSFramework.Message.LogHost.LoggingEnabled">
+            <summary>
+            Whether the logging is enabled at all.
+            Setting this to false will stop and prevent the start of the logging runspace.
+            </summary>
+        </member>
         <member name="P:PSFramework.Message.LogHost.NextInterval">
             <summary>
             The next interval to use.

@@ -12,6 +12,7 @@
 			{
 				break
 			}
+			if (-not ([PSFramework.Message.LogHost]::LoggingEnabled)) { break }
 			
 			# Create instances as needed on cycle begin
 			[PSFramework.Logging.ProviderHost]::UpdateAllInstances()
