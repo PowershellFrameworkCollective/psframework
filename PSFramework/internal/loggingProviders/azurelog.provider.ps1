@@ -47,13 +47,19 @@ $FunctionDefinitions = {
         $SharedKey = Get-ConfigValue -Name 'SharedKey'
         $LogType = Get-ConfigValue -Name 'LogType'
 
-        # Take inputed object and convert it to a Json object using UTF8 encoding
+        # Create a custom PSObject and convert it to a Json object using UTF8 encoding
         $loggingMessage = [PSCustomObject]@{
             Message      = $ObjectToProcess.LogMessage
-            Timestamp    = $ObjectToProcess.TimeStamp
+            Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
+            Type         = $ObjectToProcess.Type.ToString()
             ComputerName = $ObjectToProcess.ComputerName
+            Runspace     = $ObjectToProcess.Runspace
+            UserName     = $ObjectToProcess.UserName
+            ModuleName   = $ObjectToProcess.ModuleName
+            FunctionName = $ObjectToProcess.FunctionName
+            File         = $ObjectToProcess.File
             CallStack    = $ObjectToProcess.CallStack
-            UserName     = $ObjectToProcess.Username
+            TargetObject = $ObjectToProcess.TargetObject
             ErrorRecord  = $ObjectToProcess.ErrorRecord
         }
 
