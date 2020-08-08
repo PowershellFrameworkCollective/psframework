@@ -34,7 +34,11 @@ $FunctionDefinitions = {
             In the final table output in the Azure workspace each property imported to the table will have its own column
             and they will be specified by the property type that was inserted to the table.
             Each Azure workspace column name will be suffixed with the data type - _d for double, _b for boolean, _s for string, etc.
-    #>
+
+            How to register this provider
+            -----------------------------
+            Set-PSFLoggingProvider -Name AzureWorkspaceLogger -InstanceName YourInstanceName -WorkspaceId "AzureWorkspaceId" -SharedKey "AzureWorkspaceSharedKey" -LogType "Message" -enabled $True
+        #>
 
         [cmdletbinding()]
         Param(
@@ -42,12 +46,15 @@ $FunctionDefinitions = {
             $ObjectToProcess
         )
 
-        # Grab the default configuration values for the logging provider
-        $WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
-        $SharedKey = Get-ConfigValue -Name 'SharedKey'
-        $LogType = Get-ConfigValue -Name 'LogType'
+        begin{
+            # Grab the default configuration values for the logging provider
+            $WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
+            $SharedKey = Get-ConfigValue -Name 'SharedKey'
+            $LogType = Get-ConfigValue -Name 'LogType'
+        }
 
-        # Create a custom PSObject and convert it to a Json object using UTF8 encoding
+        process{
+            # Create a custom PSObject and convert it to a Json object using UTF8 encoding
         $loggingMessage = [PSCustomObject]@{
             Message      = $ObjectToProcess.LogMessage
             Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
@@ -119,6 +126,9 @@ $FunctionDefinitions = {
             }
         }
         catch { throw }
+        }
+
+        end{}
     }
 
     Function Get-LogSignature {
@@ -169,16 +179,21 @@ $FunctionDefinitions = {
             $RestResource
         )
 
-        $xHeaders = "x-ms-date:" + $DateAndTime
-        $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
-        $bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
-        $keyBytes = [Convert]::FromBase64String($sharedKey)
-        $sha256 = New-Object System.Security.Cryptography.HMACSHA256
-        $sha256.Key = $keyBytes
-        $computedHash = $sha256.ComputeHash($bytesToHash)
-        $encodedHash = [Convert]::ToBase64String($computedHash)
-        $authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
-        return $authorization
+        begin{}
+        process{
+            $xHeaders = "x-ms-date:" + $DateAndTime
+            $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
+            $bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
+            $keyBytes = [Convert]::FromBase64String($sharedKey)
+            $sha256 = New-Object System.Security.Cryptography.HMACSHA256
+            $sha256.Key = $keyBytes
+            $computedHash = $sha256.ComputeHash($bytesToHash)
+            $encodedHash = [Convert]::ToBase64String($computedHash)
+            $authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
+        }
+        end{
+            return $authorization
+        }
     }
 }
 
@@ -214,4 +229,5 @@ $paramRegisterPSFAzureLoggingProvider = @{
     }
 }
 
+# Register the Azure logging provider
 Register-PSFLoggingProvider @paramRegisterPSFAzureLoggingProvider
