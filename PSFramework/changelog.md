@@ -10,6 +10,8 @@
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter.
 - New: Validation Attribute PsfValidateLanguageMode : Validates the language mode of a scriptblock.
 - New: Logging Provider: eventlog - logs to the windows eventlog
+- New: Logging Provider: splunk - logs to a splunk SIEM server
+- New: Logging Provider: azureloganalytics - logs to Azure Log Analytics
 - New: Validation Scriptblock: PSFramework.Validate.FSPath - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.FSPath.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.FSPath.FileOrParent - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
