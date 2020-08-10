@@ -162,6 +162,7 @@
     <Compile Include="Utility\DynamicContentQueue.cs" />
     <Compile Include="Utility\DynamicContentStack.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
+    <Compile Include="Utility\PsfScriptBlock.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />
     <Compile Include="Utility\Size.cs" />

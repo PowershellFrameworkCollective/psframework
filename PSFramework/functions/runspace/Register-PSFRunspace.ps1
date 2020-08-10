@@ -56,7 +56,7 @@
 		$NoMessage
 	)
 	
-	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($Name)
+	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($Name))
 	{
 		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Updating runspace: <c='em'>$($Name)</c>" -Target $Name -Tag 'runspace','register' }
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name].SetScript($ScriptBlock)

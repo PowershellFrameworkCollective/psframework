@@ -64,7 +64,7 @@
 					try
 					{
 						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item)</c>" -Target $item -Tag "runspace", "start" }
-						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.].Start()
+						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item].Start()
 					}
 					catch
 					{

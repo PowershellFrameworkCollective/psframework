@@ -278,4 +278,17 @@
 }
 
 Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging' -NoMessage
-Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage
+
+$exemptedProcesses = 'CacheBuilder64', 'CacheBuilder', 'ImportModuleHelp'
+# Do not start background Runspace if ...
+if (
+	-not (
+		# ... run in the PowerShell Studio Cache Builder
+		(($Host.Name -eq 'Default Host') -and ((Get-Process -Id $PID).ProcessName -in $exemptedProcesses)) -or
+		# ... run in Azure Functions
+		($env:AZUREPS_HOST_ENVIRONMENT -like 'AzureFunctions/*')
+	)
+)
+{
+	Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage
+}

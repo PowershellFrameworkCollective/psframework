@@ -598,11 +598,6 @@
             The configuration item changed
             </summary>
         </member>
-        <member name="F:PSFramework.Commands.SetPSFConfigCommand._KillIt">
-            <summary>
-            Whether execution should be terminated silently.
-            </summary>
-        </member>
         <member name="F:PSFramework.Commands.SetPSFConfigCommand._Initialize">
             <summary>
             Whether this is an initialization execution.
@@ -642,11 +637,6 @@
             <summary>
             The reason validation failed.
             Filled by ApplyValue.
-            </summary>
-        </member>
-        <member name="M:PSFramework.Commands.SetPSFConfigCommand.BeginProcessing">
-            <summary>
-            Implements the begin action of Set-PSFConfig
             </summary>
         </member>
         <member name="M:PSFramework.Commands.SetPSFConfigCommand.ProcessRecord">
@@ -5847,6 +5837,112 @@
             Creates a new, empty collection limited to the specified size
             </summary>
             <param name="Size">The maximum size</param>
+        </member>
+        <member name="T:PSFramework.Utility.PsfScriptBlock">
+            <summary>
+            Wrapper class around the traditional scriptblock class, extending its capabilities
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.PsfScriptBlock.ScriptBlock">
+            <summary>
+            The original Scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.Ast">
+            <summary>
+            The Ast of he scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.Attributes">
+            <summary>
+            The Attributes that have been assigned to the scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.DebuggerHidden">
+            <summary>
+            Whether the scriptblock is visible to the debugger
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.File">
+            <summary>
+            What file the scriptblock comes from
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.Id">
+            <summary>
+            Unique ID of the scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.IsConfiguration">
+            <summary>
+            Whether the scriptblock is a DSC configuration
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.IsFilter">
+            <summary>
+            Whether the scriptblock is a filter
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.Module">
+            <summary>
+            The module the scriptblock belongs to.
+            Don't rely on this, as it may be subject to change.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.StartPosition">
+            <summary>
+            Some text metadata of the scriptblock
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.ToString">
+            <summary>
+            Returns the string representation of the scriptblock
+            </summary>
+            <returns>the string representation of the scriptblock</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.GetNewClosure">
+            <summary>
+            Wraps the original Scriptblock method GetNewClosure()
+            </summary>
+            <returns>A copy of the ScriptBlock with a new closure.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeEx(System.Boolean,System.Object,System.Object,System.Object,System.Boolean,System.Boolean,System.Object[])">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.Invoke(System.Object[])">
+            <summary>
+            Invoke the scriptblock in legacy mode.
+            </summary>
+            <param name="args">Arguments to pass into the scriptblock</param>
+            <returns>The results of the invocation</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.#ctor(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create a new PsfScriptBlock by wrapping a regular scriptblock.
+            </summary>
+            <param name="Script">The Scriptblock to wrap</param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.op_Implicit(PSFramework.Utility.PsfScriptBlock)~System.Management.Automation.ScriptBlock">
+            <summary>
+            Implicitly convert PsfScriptblock to ScriptBlock
+            </summary>
+            <param name="Script">The PsfScriptBlock to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.op_Implicit(System.Management.Automation.ScriptBlock)~PSFramework.Utility.PsfScriptBlock">
+            <summary>
+            Implicitly convert ScriptBlock to PsfScriptblock
+            </summary>
+            <param name="Script">The ScriptBlock to convert</param>
         </member>
         <member name="T:PSFramework.Utility.RegexHelper">
             <summary>
