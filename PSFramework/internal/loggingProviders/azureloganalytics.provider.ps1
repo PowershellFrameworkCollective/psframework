@@ -58,7 +58,7 @@ $FunctionDefinitions = {
             $loggingMessage = [PSCustomObject]@{
                 Message      = $ObjectToProcess.LogMessage
                 Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
-                Type         = $ObjectToProcess.Type.ToString()
+                Level        = $ObjectToProcess.Level.ToString()
                 ComputerName = $ObjectToProcess.ComputerName
                 Runspace     = $ObjectToProcess.Runspace
                 UserName     = $ObjectToProcess.UserName
@@ -127,8 +127,6 @@ $FunctionDefinitions = {
             }
             catch { throw }
         }
-
-        end {}
     }
 
     Function Get-LogSignature {
@@ -179,7 +177,6 @@ $FunctionDefinitions = {
             $RestResource
         )
 
-        begin {}
         process {
             $xHeaders = "x-ms-date:" + $DateAndTime
             $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
@@ -190,8 +187,6 @@ $FunctionDefinitions = {
             $computedHash = $sha256.ComputeHash($bytesToHash)
             $encodedHash = [Convert]::ToBase64String($computedHash)
             $authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
-        }
-        end {
             return $authorization
         }
     }
@@ -209,17 +204,17 @@ $message_event = {
 
 # Configuration values for the logging provider
 $configuration_Settings = {
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogging.WorkspaceId' -Value "" -Initialize -Validation 'string' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogging.SharedKey' -Value "" -Initialize -Validation 'string' -Description "SharedId for the Azure Workspace we are logging our data objects to."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogging.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
+    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'string' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
+    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'string' -Description "SharedId for the Azure Workspace we are logging our data objects to."
+    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
 }
 
 # Registered parameters for the logging provider.
 # ConfigurationDefaultValues are used for all instances of the azure logging provider
-$paramRegisterPSFAzureLoggingProvider = @{
-    Name                       = "AzureWorkspaceLogger"
+$paramRegisterPSFAzureLogAnalyticsProvider = @{
+    Name                       = "AzureLogAnalytics"
     Version2                   = $true
-    ConfigurationRoot          = 'PSFramework.Logging.AzureLogging'
+    ConfigurationRoot          = 'PSFramework.Logging.AzureLogAnalytics'
     InstanceProperties         = 'WorkspaceId', 'SharedKey', 'LogType'
     MessageEvent               = $message_Event
     ConfigurationSettings      = $configuration_Settings
@@ -230,4 +225,4 @@ $paramRegisterPSFAzureLoggingProvider = @{
 }
 
 # Register the Azure logging provider
-Register-PSFLoggingProvider @paramRegisterPSFAzureLoggingProvider
+Register-PSFLoggingProvider @paramRegisterPSFAzureLogAnalyticsProvider
