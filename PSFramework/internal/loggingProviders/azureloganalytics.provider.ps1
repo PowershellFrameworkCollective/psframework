@@ -37,7 +37,7 @@ $FunctionDefinitions = {
 
             How to register this provider
             -----------------------------
-            Set-PSFLoggingProvider -Name AzureWorkspaceLogger -InstanceName YourInstanceName -WorkspaceId "AzureWorkspaceId" -SharedKey "AzureWorkspaceSharedKey" -LogType "Message" -enabled $True
+            Set-PSFLoggingProvider -Name AzureLogAnalytics -InstanceName YourInstanceName -WorkspaceId "AzureWorkspaceId" -SharedKey "AzureWorkspaceSharedKey" -LogType "Message" -enabled $True
         #>
 
         [cmdletbinding()]

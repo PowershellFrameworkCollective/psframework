@@ -57,7 +57,7 @@
 			$body = ConvertTo-Json -InputObject @{ event = $InputObject; host = $HostName; time = $unixEpochTime } -Compress
 			
 			# Only return if something went wrong, i.e. http response is not "success"
-			try { $result = Invoke-RestMethodCustom -Uri $uri -Method Post -Headers @{ Authorization = "Splunk $Token" } -Body $body -ErrorAction Stop -IgnoreCert }
+			try { $null = Invoke-RestMethodCustom -Uri $uri -Method Post -Headers @{ Authorization = "Splunk $Token" } -Body $body -ErrorAction Stop -IgnoreCert:$(Get-ConfigValue -Name IgnoreCert) }
 			catch { throw }
 		}
 	}
@@ -132,7 +132,7 @@
 		}
 		$selectProps = @($selectProps) + @(@{ Name = 'LogName'; Expression = { $name } })
 		
-		$Message | Select-PSFObject $selectProps | Send-SplunkData -HostName $Message.COmputerName -Timestamp $Message.Timestamp -Uri $splunkUrl -Token $splunkToken
+		$Message | Select-PSFObject $selectProps | Send-SplunkData -HostName $Message.ComputerName -Timestamp $Message.Timestamp -Uri $splunkUrl -Token $splunkToken
 	}
 }
 
