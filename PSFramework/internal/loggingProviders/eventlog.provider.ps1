@@ -90,7 +90,7 @@
 		$data = $startingMessage, $PID, $script:Instance.Name, $loggingID
 		try
 		{
-			Write-LogEntry -LogName $logName -Source $source -Type Information -Category 1000 -EventId 999 -Data $startingMessage, $data
+			Write-LogEntry -LogName $logName -Source $source -Type Information -Category 1000 -EventId 999 -Data $data
 			$script:logName = $logName
 			$script:source = $source
 			return
@@ -100,7 +100,7 @@
 			try
 			{
 				[System.Diagnostics.EventLog]::CreateEventSource($source, $logName)
-				Write-LogEntry -LogName $logName -Source $source -Type Information -Category 1000 -EventId 999 -Data $startingMessage, $data
+				Write-LogEntry -LogName $logName -Source $source -Type Information -Category 1000 -EventId 999 -Data $data
 				$script:logName = $logName
 				$script:source = $source
 				return
@@ -109,7 +109,7 @@
 			{
 				if (-not (Get-ConfigValue -Name UseFallback)) { throw }
 				
-				Write-LogEntry -LogName Application -Source Application -Type Information -Category 1000 -EventId 999 -Data $startingMessage, $data
+				Write-LogEntry -LogName Application -Source Application -Type Information -Category 1000 -EventId 999 -Data $data
 				$script:logName = 'Application'
 				$script:source = 'Application'
 			}
@@ -120,6 +120,7 @@
 $begin_event = {
 	Start-EventLogging
 }
+
 $message_event = {
 	param (
 		$Message

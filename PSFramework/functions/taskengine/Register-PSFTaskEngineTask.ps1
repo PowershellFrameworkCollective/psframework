@@ -98,9 +98,9 @@
 	)
 	
 	#region Case: Task already registered
-	if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name.ToLower()))
+	if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name))
 	{
-		$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name.ToLower()]
+		$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
 		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description}
 		if ($task.ScriptBlock -ne $ScriptBlock) { $task.ScriptBlock = $ScriptBlock }
 		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $Once }
@@ -141,7 +141,7 @@
 		if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
 		$task.Priority = $Priority
 		$task.Registered = Get-Date
-		[PSFramework.TaskEngine.TaskHost]::Tasks[$Name.ToLower()] = $task
+		[PSFramework.TaskEngine.TaskHost]::Tasks[$Name] = $task
 	}
 	#endregion New Task
 	

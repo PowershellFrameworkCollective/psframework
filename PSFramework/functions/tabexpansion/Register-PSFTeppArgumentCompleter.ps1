@@ -45,7 +45,7 @@
 	
 	foreach ($Param in $Parameter)
 	{
-		$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name.ToLower()].ScriptBlock
+		$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name].ScriptBlock
 		Register-ArgumentCompleter -CommandName $Command -ParameterName $Param -ScriptBlock $scriptBlock
 	}
 }

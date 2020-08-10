@@ -26,7 +26,7 @@ namespace PSFramework.Parameter
         /// Contains the list of property mappings.
         /// Types can be registered to it, allowing the parameter class to blindly interpret unknown types
         /// </summary>
-        internal static ConcurrentDictionary<string, List<string>> _PropertyMapping = new ConcurrentDictionary<string, List<string>>();
+        internal static ConcurrentDictionary<string, List<string>> _PropertyMapping = new ConcurrentDictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
@@ -35,7 +35,7 @@ namespace PSFramework.Parameter
         /// <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid property was found</param>
         public static void SetTypePropertyMapping(string Name, List<string> PropertyName)
         {
-            _PropertyMapping[Name.ToLower()] = PropertyName;
+            _PropertyMapping[Name] = PropertyName;
         }
         #endregion Static tools
 

@@ -194,9 +194,9 @@
 					
 					foreach ($item in $FullName)
 					{
-						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item))
 						{
-							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]) -Scope $Scope -EnableException $EnableException
+							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item]) -Scope $Scope -EnableException $EnableException
 						}
 					}
 				}
@@ -225,9 +225,9 @@
 					
 					foreach ($item in $FullName)
 					{
-						if (($configurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower())))
+						if (($configurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item)))
 						{
-							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]
+							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item]
 						}
 					}
 				}

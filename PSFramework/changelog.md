@@ -10,6 +10,8 @@
 - New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter.
 - New: Validation Attribute PsfValidateLanguageMode : Validates the language mode of a scriptblock.
 - New: Logging Provider: eventlog - logs to the windows eventlog
+- New: Logging Provider: splunk - logs to a splunk SIEM server
+- New: Logging Provider: azureloganalytics - logs to Azure Log Analytics
 - New: Validation Scriptblock: PSFramework.Validate.FSPath - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.FSPath.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.FSPath.FileOrParent - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
@@ -21,6 +23,8 @@
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
+- New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
@@ -34,13 +38,19 @@
 - Upd: PSFCmdlet - WriteMessage() now also accepts a Hashtable input as Data
 - Upd: PSFCmdlet - WriteLocalizedMessage() now also accepts a Hashtable input as Data
 - Upd: Logging - Increased log execution interval and added idle detection with extended intervals in non-use to reduce CPU impact.
+- Upd: Logging - Disabled autostart of logging runpace in PowerShell Studio Module cacher
+- Upd: Logging - Disabled autostart of logging runpace in Azure Functions
 - Upd: Logging Provider: logfile - Updated to generation 2 to enable multi-instance capabilities.
 - Upd: Logging Provider: logfile - Added new output format: CMTrace
+- Upd: Set-PSFConfig - Now accepts from the pipeline
+- Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
 - Fix: Localization - logging language only honored when specifying string values.
 - Fix: Register-PSFLoggingProvider - auto-install fails to notify system of success, failing the registration auto-enable even when it installed correctly.
+- Fix: Set-PSFConfig - security fix
+- Fix: Set-PSFConfig - security fix
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.

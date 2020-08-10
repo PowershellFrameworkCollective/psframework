@@ -33,7 +33,7 @@
 	{
 		$index = $Value.IndexOf(":")
 		if ($index -lt 1) { throw "No type identifier found!" }
-		$type = $Value.Substring(0, $index).ToLower()
+		$type = $Value.Substring(0, $index)
 		$content = $Value.Substring($index + 1)
 		
 		switch ($type)

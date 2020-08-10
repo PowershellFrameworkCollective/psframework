@@ -133,12 +133,12 @@ namespace PSFramework.Message
         /// <summary>
         /// Provides the option to transform exceptions based on the original exception type
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> ExceptionTransforms = new ConcurrentDictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> ExceptionTransforms = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> TargetTransforms = new ConcurrentDictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> TargetTransforms = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// The list of transformation errors that occured.
@@ -185,7 +185,7 @@ namespace PSFramework.Message
         /// <summary>
         /// List of all modifiers that apply to message levels
         /// </summary>
-        public static ConcurrentDictionary<string, MessageLevelModifier> MessageLevelModifiers = new ConcurrentDictionary<string, MessageLevelModifier>();
+        public static ConcurrentDictionary<string, MessageLevelModifier> MessageLevelModifiers = new ConcurrentDictionary<string, MessageLevelModifier>(StringComparer.InvariantCultureIgnoreCase);
         #endregion Transformations
 
         #region Events

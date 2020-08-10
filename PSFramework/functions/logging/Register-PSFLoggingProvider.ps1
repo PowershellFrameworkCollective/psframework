@@ -230,7 +230,7 @@
 		$EnableException
 	)
 	
-	if ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower()))
+	if ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name))
 	{
 		return
 	}
@@ -267,7 +267,7 @@
 			
 			$provider.InstallationOptional = Get-PSFConfigValue -FullName "LoggingProvider.$Name.InstallOptional" -Fallback $false
 			
-			[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()] = $provider
+			[PSFramework.Logging.ProviderHost]::Providers[$Name] = $provider
 		}
 		#endregion Implement Version 1 Logging Provider (legacy)
 		
@@ -308,7 +308,7 @@
 			$provider.InstallationParameters = $InstallationParameters
 			$provider.InstallationOptional = Get-PSFConfigValue -FullName "LoggingProvider.$Name.InstallOptional" -Fallback $false
 			
-			[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()] = $provider
+			[PSFramework.Logging.ProviderHost]::Providers[$Name] = $provider
 		}
 		#endregion Implement Version 2 Logging Provider
 	}
@@ -318,7 +318,7 @@
 	catch
 	{
 		$dummy = $null
-		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name.ToLower(), [ref] $dummy)
+		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name, [ref] $dummy)
 		Stop-PSFFunction -Message "Failed to register logging provider '$Name' - Registration event failed." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
 		return
 	}

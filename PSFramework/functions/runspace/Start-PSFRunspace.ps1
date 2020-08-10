@@ -57,24 +57,24 @@
 			# Ignore all output from Get-PSFRunspace - it'll be handled by the second loop
 			if ($item -eq "psframework.runspace.runspacecontainer") { continue }
 			
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item.ToLower()))
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item))
 			{
 				if ($PSCmdlet.ShouldProcess($item, "Starting Runspace"))
 				{
 					try
 					{
-						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "start" }
-						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Start()
+						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item)</c>" -Target $item -Tag "runspace", "start" }
+						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item].Start()
 					}
 					catch
 					{
-						Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.ToLower())</c>" -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item.ToLower() -Continue
+						Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item)</c>" -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 					}
 				}
 			}
 			else
 			{
-				Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.ToLower())</c> | No runspace registered under this name!" -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "start" -Target $item.ToLower() -Continue
+				Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item)</c> | No runspace registered under this name!" -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 			}
 		}
 		
@@ -84,12 +84,12 @@
 			{
 				try
 				{
-					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "start" }
+					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name)</c>" -Target $item -Tag "runspace", "start" }
 					$item.Start()
 				}
 				catch
 				{
-					Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+					Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.Name)</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 				}
 			}
 		}

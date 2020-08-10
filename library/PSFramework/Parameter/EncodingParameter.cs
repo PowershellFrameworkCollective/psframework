@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using System.Reflection;
 using System.Text;
@@ -72,9 +73,9 @@ namespace PSFramework.Parameter
 
             foreach (string name in input.TypeNames)
             {
-                if (_PropertyMapping.ContainsKey(name.ToLower()))
+                if (_PropertyMapping.ContainsKey(name))
                 {
-                    key = name.ToLower();
+                    key = name;
                     break;
                 }
             }
@@ -95,6 +96,21 @@ namespace PSFramework.Parameter
             }
         }
 
+        private static readonly Dictionary<string, Encoding> EncodingMappings = new Dictionary<string, Encoding>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "unicode", Encoding.Unicode },
+            { "bigendianunicode", Encoding.BigEndianUnicode },
+            { "utf8", new UTF8Encoding(true) },
+            { "utf8bom", new UTF8Encoding(true) },
+            { "utf8nobom", new UTF8Encoding(false) },
+            { "utf7", Encoding.UTF7 },
+            { "utf32", Encoding.UTF32 },
+            { "ascii", Encoding.ASCII },
+            { "default", Encoding.Default },
+            { "oem", Encoding.UTF8 },
+            { "bigendianutf32", Encoding.GetEncoding("utf-32BE") },
+        };
+
         /// <summary>
         /// Returns the correct encoding for a given string
         /// </summary>
@@ -102,33 +118,13 @@ namespace PSFramework.Parameter
         /// <returns>The encoding to retrieve.</returns>
         private Encoding GetEncoding(string Text)
         {
-            switch (Text.ToLower())
+            Encoding encoding;
+            if (EncodingMappings.TryGetValue(Text, out encoding))
             {
-                case "unicode":
-                    return Encoding.Unicode;
-                case "bigendianunicode":
-                    return Encoding.BigEndianUnicode;
-                case "utf8":
-                    return new UTF8Encoding(true);
-                case "utf8bom":
-                    return new UTF8Encoding(true);
-                case "utf8nobom":
-                    return new UTF8Encoding(false);
-                case "utf7":
-                    return Encoding.UTF7;
-                case "utf32":
-                    return Encoding.UTF32;
-                case "ascii":
-                    return Encoding.ASCII;
-                case "default":
-                    return Encoding.Default;
-                case "oem":
-                    return Encoding.UTF8;
-                case "bigendianutf32":
-                    return Encoding.GetEncoding("utf-32BE");
-                default:
-                    return Encoding.GetEncoding(Text);
+                return encoding;
             }
+
+            return Encoding.GetEncoding(Text);
         }
 
         /// <summary>
