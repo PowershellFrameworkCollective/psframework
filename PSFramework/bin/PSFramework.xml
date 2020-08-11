@@ -2512,6 +2512,16 @@
             List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider instance.
             </summary>
         </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.IncludeFunctions">
+            <summary>
+            List of functions to include in the logging. Only messages generated from these functions will be considered by the provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.ExcludeFunctions">
+            <summary>
+            List of functions to exclude in the logging. Messages generated from these functions will be ignored by this provider instance.
+            </summary>
+        </member>
         <member name="P:PSFramework.Logging.ProviderInstance.IncludeTags">
             <summary>
             List of tags to include. Only messages with these tags will be considered by this provider instance.
@@ -2520,6 +2530,23 @@
         <member name="P:PSFramework.Logging.ProviderInstance.ExcludeTags">
             <summary>
             List of tags to exclude. Messages with these tags will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.MinLevel">
+            <summary>
+            The minimum level of message to log.
+            Note, the lower the level, the higher the priority.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.MaxLevel">
+            <summary>
+            The maximum level of message to log.
+            Note, the lower the level, the higher the priority.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.IncludeWarning">
+            <summary>
+            Whether to include warning messages in the log
             </summary>
         </member>
         <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.LogEntry)">
@@ -5846,6 +5873,11 @@
         <member name="F:PSFramework.Utility.PsfScriptBlock.ScriptBlock">
             <summary>
             The original Scriptblock
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfScriptBlock.LanguageMode">
+            <summary>
+            The language mode the scriptblock is running under
             </summary>
         </member>
         <member name="P:PSFramework.Utility.PsfScriptBlock.Ast">

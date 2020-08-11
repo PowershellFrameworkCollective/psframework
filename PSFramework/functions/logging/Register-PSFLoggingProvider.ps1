@@ -280,8 +280,13 @@
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.InstallOptional" -Value $false -Initialize -Validation "bool" -Description "Whether installing the logging provider is mandatory, in order for it to be enabled"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeModules" -Value @() -Initialize -Validation "stringarray" -Description "Module whitelist. Only messages from listed modules will be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeModules" -Value @() -Initialize -Validation "stringarray" -Description "Module blacklist. Messages from listed modules will not be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeFunctions" -Value @() -Initialize -Validation "stringarray" -Description "Function whitelist. Only messages from listed functions will be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeFunctions" -Value @() -Initialize -Validation "stringarray" -Description "Function blacklist. Messages from listed functions will not be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeTags" -Value @() -Initialize -Validation "stringarray" -Description "Tag whitelist. Only messages with these tags will be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeTags" -Value @() -Initialize -Validation "stringarray" -Description "Tag blacklist. Messages with these tags will not be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeWarning" -Value $true -Initialize -Validation "bool" -Description "Whether to log warning messages"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.MinLevel" -Value 1 -Initialize -Validation "integer1to9" -Description "The minimum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.MaxLevel" -Value 9 -Initialize -Validation "integer1to9" -Description "The maximum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
 			
 			# Initialize custom config defined by logging provider
 			foreach ($property in $InstanceProperties)

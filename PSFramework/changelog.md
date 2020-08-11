@@ -23,6 +23,7 @@
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- New: Configuration Validation: integer1to9 - Ensures the input is an integer between 1 and 9.
 - New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
 - New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation

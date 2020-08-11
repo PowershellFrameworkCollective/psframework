@@ -1,11 +1,11 @@
-﻿Register-PSFConfigValidation -Name "integer0to9" -ScriptBlock {
-	Param (
+﻿Register-PSFConfigValidation -Name "integer1to9" -ScriptBlock {
+	param (
 		$Value
 	)
 	
 	$Result = New-Object PSObject -Property @{
 		Success = $True
-		Value = $null
+		Value   = $null
 		Message = ""
 	}
 	
@@ -17,9 +17,9 @@
 		return $Result
 	}
 	
-	if (($number -lt 0) -or ($number -gt 9))
+	if (($number -lt 1) -or ($number -gt 9))
 	{
-		$Result.Message = "Out of range. Specify a number ranging from 0 to 9"
+		$Result.Message = "Out of range. Specify a number ranging from 1 to 9"
 		$Result.Success = $False
 		return $Result
 	}

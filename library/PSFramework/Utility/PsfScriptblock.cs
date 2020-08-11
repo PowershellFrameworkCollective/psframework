@@ -20,6 +20,14 @@ namespace PSFramework.Utility
 
         #region Properties
         /// <summary>
+        /// The language mode the scriptblock is running under
+        /// </summary>
+        public PSLanguageMode LanguageMode
+        {
+            get { return (PSLanguageMode)UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock); }
+        }
+
+        /// <summary>
         /// The Ast of he scriptblock
         /// </summary>
         public System.Management.Automation.Language.Ast Ast { get { return ScriptBlock.Ast; } }

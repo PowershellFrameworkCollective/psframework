@@ -60,8 +60,13 @@ namespace PSFramework.Logging
             // Includes & Excludes
             IncludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeModules"));
             ExcludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeModules"));
+            IncludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeFunctions"));
+            ExcludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeFunctions"));
             IncludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeTags"));
             ExcludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeTags"));
+            IncludeWarning = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeWarning"));
+            MinLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MinLevel"), 1);
+            MaxLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MaxLevel"), 9);
         }
 
         private List<string> ToStringList(object Entries)
@@ -71,6 +76,20 @@ namespace PSFramework.Logging
 
             List<string> strings = new List<string>();
             return LanguagePrimitives.ConvertTo(Entries, strings.GetType()) as List<string>;
+        }
+        private bool ToBool(object Value)
+        {
+            if (Value == null)
+                return true;
+            try { return (bool)Value; }
+            catch { return true; }
+        }
+        private int ToInt(object Value, int DefaultValue)
+        {
+            if (Value == null)
+                return DefaultValue;
+            try { return (int)Value; }
+            catch { return DefaultValue; }
         }
         #endregion Constructor & Utils
 
@@ -107,6 +126,38 @@ namespace PSFramework.Logging
             }
         }
 
+        private List<string> _IncludeFunctions = new List<string>();
+        /// <summary>
+        /// List of functions to include in the logging. Only messages generated from these functions will be considered by the provider instance.
+        /// </summary>
+        public List<string> IncludeFunctions
+        {
+            get { return _IncludeFunctions; }
+            set
+            {
+                if (value == null)
+                    _IncludeFunctions.Clear();
+                else
+                    _IncludeFunctions = value;
+            }
+        }
+
+        private List<string> _ExcludeFunctions = new List<string>();
+        /// <summary>
+        /// List of functions to exclude in the logging. Messages generated from these functions will be ignored by this provider instance.
+        /// </summary>
+        public List<string> ExcludeFunctions
+        {
+            get { return _ExcludeFunctions; }
+            set
+            {
+                if (value == null)
+                    _ExcludeFunctions.Clear();
+                else
+                    _ExcludeFunctions = value;
+            }
+        }
+
         private List<string> _IncludeTags = new List<string>();
         /// <summary>
         /// List of tags to include. Only messages with these tags will be considered by this provider instance.
@@ -139,6 +190,49 @@ namespace PSFramework.Logging
             }
         }
 
+        private int _MinLevel = 1;
+        /// <summary>
+        /// The minimum level of message to log.
+        /// Note, the lower the level, the higher the priority.
+        /// </summary>
+        public int MinLevel
+        {
+            get { return _MinLevel; }
+            set
+            {
+                if (value < 1)
+                    _MinLevel = 1;
+                else if (value > 9)
+                    _MinLevel = 9;
+                else
+                    _MinLevel = value;
+            }
+        }
+        
+        private int _MaxLevel = 9;
+        /// <summary>
+        /// The maximum level of message to log.
+        /// Note, the lower the level, the higher the priority.
+        /// </summary>
+        public int MaxLevel
+        {
+            get { return _MaxLevel; }
+            set
+            {
+                if (value < 1)
+                    _MaxLevel = 1;
+                else if (value > 9)
+                    _MaxLevel = 9;
+                else
+                    _MaxLevel = value;
+            }
+        }
+
+        /// <summary>
+        /// Whether to include warning messages in the log
+        /// </summary>
+        public bool IncludeWarning = true;
+
         /// <summary>
         /// Tests whether a log entry applies to the provider instance
         /// </summary>
@@ -146,9 +240,18 @@ namespace PSFramework.Logging
         /// <returns>Whether it applies</returns>
         public bool MessageApplies(Message.LogEntry Entry)
         {
-            if ((IncludeModules.Count == 0) && (ExcludeModules.Count == 0) && (IncludeTags.Count == 0) && (ExcludeTags.Count == 0))
-                return true;
+            // Level
+            if (!IncludeWarning && (Entry.Level == Message.MessageLevel.Warning))
+                return false;
+            if (((_MinLevel != 1) || (_MaxLevel != 9)) && (Entry.Level != Message.MessageLevel.Warning))
+            {
+                if (Entry.Level < (Message.MessageLevel)_MinLevel)
+                    return false;
+                if (Entry.Level > (Message.MessageLevel)_MaxLevel)
+                    return false;
+            }
 
+            // Modules
             if (IncludeModules.Count > 0)
             {
                 bool test = false;
@@ -164,6 +267,23 @@ namespace PSFramework.Logging
                 if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
+            // Functions
+            if (IncludeFunctions.Count > 0)
+            {
+                bool test = false;
+                foreach (string function in IncludeFunctions)
+                    if (UtilityHost.IsLike(Entry.FunctionName, function))
+                        test = true;
+
+                if (!test)
+                    return false;
+            }
+
+            foreach (string function in ExcludeFunctions)
+                if (UtilityHost.IsLike(Entry.FunctionName, function))
+                    return false;
+
+            // Tags
             if (IncludeTags.Count > 0)
             {
                 if (IncludeTags.Except(Entry.Tags).ToList().Count == IncludeTags.Count)
@@ -183,9 +303,7 @@ namespace PSFramework.Logging
         /// <returns>Whether it applies to the provider instance</returns>
         public bool MessageApplies(Message.PsfExceptionRecord Record)
         {
-            if ((IncludeModules.Count == 0) && (ExcludeModules.Count == 0) && (IncludeTags.Count == 0) && (ExcludeTags.Count == 0))
-                return true;
-
+            // Modules
             if (IncludeModules.Count > 0)
             {
                 bool test = false;
@@ -201,6 +319,23 @@ namespace PSFramework.Logging
                 if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
+            // Functions
+            if (IncludeFunctions.Count > 0)
+            {
+                bool test = false;
+                foreach (string function in IncludeFunctions)
+                    if (UtilityHost.IsLike(Record.FunctionName, function))
+                        test = true;
+
+                if (!test)
+                    return false;
+            }
+
+            foreach (string function in ExcludeFunctions)
+                if (UtilityHost.IsLike(Record.FunctionName, function))
+                    return false;
+
+            // Tags
             if (IncludeTags.Count > 0)
             {
                 if (IncludeTags.Except(Record.Tags).ToList().Count == IncludeTags.Count)

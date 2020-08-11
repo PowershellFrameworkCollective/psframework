@@ -446,6 +446,49 @@
 			</TableControl>
 		</View>
 		
+        <!-- PSFramework.Utility.PsfScriptBlock -->
+        <View>
+            <Name>PSFramework.Utility.PsfScriptBlock</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Utility.PsfScriptBlock</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader>
+                        <Label>Length</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Id</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.StartPosition.Length 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Module</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>LanguageMode</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Attributes</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+		
         <!-- PSFramework.Utility.ScriptBlockItem -->
         <View>
             <Name>PSFramework.Utility.ScriptBlockItem</Name>
