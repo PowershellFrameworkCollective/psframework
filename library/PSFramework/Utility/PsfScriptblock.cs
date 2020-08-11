@@ -104,7 +104,7 @@ namespace PSFramework.Utility
                     return null;
                 if (result.GetType() == typeof(PSObject))
                     return new System.Collections.ObjectModel.Collection<PSObject>() { result as PSObject };
-                return (System.Collections.ObjectModel.Collection<PSObject>)ScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
+                return (System.Collections.ObjectModel.Collection<PSObject>)result;
             }
         }
 
