@@ -48,7 +48,10 @@ namespace PSFramework.Logging
             ProviderHost.InitializeProviderInstance(this);
         }
 
-        private void ImportConfig()
+        /// <summary>
+        /// Refreshes the filter and enablement settings from configuration
+        /// </summary>
+        public void ImportConfig()
         {
             string configRoot = $"LoggingProvider.{Provider.Name}";
             if (!String.IsNullOrEmpty(Name) && !String.Equals(Name, "Default", StringComparison.InvariantCultureIgnoreCase))

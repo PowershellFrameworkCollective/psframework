@@ -2312,37 +2312,64 @@
         </member>
         <member name="P:PSFramework.Logging.Provider.IncludeModules">
             <summary>
-            List of modules to include in the logging. Only messages generated from these modules will be considered by the provider
+            List of modules to include in the logging. Only messages generated from these modules will be considered by the provider instance.
             </summary>
         </member>
         <member name="P:PSFramework.Logging.Provider.ExcludeModules">
             <summary>
-            List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider.
+            List of modules to exclude in the logging. Messages generated from these modules will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.IncludeFunctions">
+            <summary>
+            List of functions to include in the logging. Only messages generated from these functions will be considered by the provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.ExcludeFunctions">
+            <summary>
+            List of functions to exclude in the logging. Messages generated from these functions will be ignored by this provider instance.
             </summary>
         </member>
         <member name="P:PSFramework.Logging.Provider.IncludeTags">
             <summary>
-            List of tags to include. Only messages with these tags will be considered by this provider.
+            List of tags to include. Only messages with these tags will be considered by this provider instance.
             </summary>
         </member>
         <member name="P:PSFramework.Logging.Provider.ExcludeTags">
             <summary>
-            List of tags to exclude. Messages with these tags will be ignored by this provider.
+            List of tags to exclude. Messages with these tags will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.MinLevel">
+            <summary>
+            The minimum level of message to log.
+            Note, the lower the level, the higher the priority.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.MaxLevel">
+            <summary>
+            The maximum level of message to log.
+            Note, the lower the level, the higher the priority.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.IncludeWarning">
+            <summary>
+            Whether to include warning messages in the log
             </summary>
         </member>
         <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.LogEntry)">
             <summary>
-            Tests whether a log entry applies to the provider
+            Tests whether a log entry applies to the provider instance
             </summary>
             <param name="Entry">The Entry to validate</param>
             <returns>Whether it applies</returns>
         </member>
         <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.PsfExceptionRecord)">
             <summary>
-            Tests whether an error record applies to the provider
+            Tests whether an error record applies to the provider instance
             </summary>
             <param name="Record">The error record to test</param>
-            <returns>Whether it applies to the provider</returns>
+            <returns>Whether it applies to the provider instance</returns>
         </member>
         <member name="F:PSFramework.Logging.Provider.BeginEvent">
             <summary>
@@ -2501,6 +2528,11 @@
             </summary>
             <param name="Provider">The provider from which to create an instance.</param>
             <param name="Name">The name of the instance to create.</param>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.ImportConfig">
+            <summary>
+            Refreshes the filter and enablement settings from configuration
+            </summary>
         </member>
         <member name="P:PSFramework.Logging.ProviderInstance.IncludeModules">
             <summary>
@@ -5949,6 +5981,32 @@
             <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
             <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
             <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeEx(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeEx(System.Object,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="Value">The value to offer as argument / input for the scriptblock</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeGlobal(System.Object)">
+            <summary>
+            Invoke the Scriptblock rehomed to the global scope
+            </summary>
+            <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
             <returns>Whatever output this scriptblock generates</returns>
         </member>
         <member name="M:PSFramework.Utility.PsfScriptBlock.Invoke(System.Object[])">

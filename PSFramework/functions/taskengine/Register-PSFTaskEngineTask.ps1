@@ -64,7 +64,7 @@
 			- Sets it to priority "Critical", ensuring it takes precedence over most other tasks.
 	#>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTaskEngineTask')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
@@ -81,6 +81,7 @@
 		$Once,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = "Repeating")]
+		[PsfValidateScript('PSFramework.Validate.TimeSpan.Positive', ErrorString = 'PSFramework.Validate.TimeSpan.Positive')]
 		[PSFTimeSpan]
 		$Interval,
 		
@@ -97,53 +98,48 @@
 		$EnableException
 	)
 	
-	#region Case: Task already registered
-	if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name))
+	process
 	{
-		$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
-		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description}
-		if ($task.ScriptBlock -ne $ScriptBlock) { $task.ScriptBlock = $ScriptBlock }
-		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $Once }
-		if (Test-PSFParameterBinding -ParameterName Interval)
-		{
-			$task.Once = $false
-			$task.Interval = $Interval
-		}
-		if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
-		if (Test-PSFParameterBinding -ParameterName Priority) { $task.Priority = $Priority }
 		
-		if ($ResetTask)
+		#region Case: Task already registered
+		if ([PSFramework.TaskEngine.TaskHost]::Tasks.ContainsKey($Name))
 		{
-			$task.Registered = Get-Date
-			$task.LastExecution = New-Object System.DateTime(0)
-			$task.State = 'Pending'
-		}
-	}
-	#endregion Case: Task already registered
-	
-	#region New Task
-	else
-	{
-		$task = New-Object PSFramework.TaskEngine.PsfTask
-		$task.Name = $Name.ToLower()
-		if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description }
-		$task.ScriptBlock = $ScriptBlock
-		if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $true }
-		if (Test-PSFParameterBinding -ParameterName Interval)
-		{
-			if ($Interval.Value.Ticks -le 0)
+			$task = [PSFramework.TaskEngine.TaskHost]::Tasks[$Name]
+			if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description }
+			if ($task.ScriptBlock -ne $ScriptBlock) { $task.ScriptBlock = $ScriptBlock }
+			if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $Once }
+			if (Test-PSFParameterBinding -ParameterName Interval)
 			{
-				Stop-PSFFunction -Message "Failed to register task: $Name - Interval cannot be 0 or less" -Category InvalidArgument -EnableException $EnableException
-				return
+				$task.Once = $false
+				$task.Interval = $Interval
 			}
-			else { $task.Interval = $Interval }
+			if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
+			if (Test-PSFParameterBinding -ParameterName Priority) { $task.Priority = $Priority }
+			
+			if ($ResetTask)
+			{
+				$task.Registered = Get-Date
+				$task.LastExecution = New-Object System.DateTime(0)
+				$task.State = 'Pending'
+			}
 		}
-		if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
-		$task.Priority = $Priority
-		$task.Registered = Get-Date
-		[PSFramework.TaskEngine.TaskHost]::Tasks[$Name] = $task
+		#endregion Case: Task already registered
+		
+		#region New Task
+		else
+		{
+			$task = New-Object PSFramework.TaskEngine.PsfTask
+			$task.Name = $Name
+			if (Test-PSFParameterBinding -ParameterName Description) { $task.Description = $Description }
+			$task.ScriptBlock = $ScriptBlock
+			if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $true }
+			if (Test-PSFParameterBinding -ParameterName Interval) { $task.Interval = $Interval }
+			if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
+			$task.Priority = $Priority
+			$task.Registered = Get-Date
+			[PSFramework.TaskEngine.TaskHost]::Tasks[$Name] = $task
+		}
+		#endregion New Task
 	}
-	#endregion New Task
-	
-	Start-PSFRunspace -Name "psframework.taskengine"
+	end { Start-PSFRunspace -Name "psframework.taskengine" }
 }

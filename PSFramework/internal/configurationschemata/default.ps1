@@ -158,7 +158,7 @@
 			else { $data = Read-PsfConfigFile -RawJson $Resource -ErrorAction Stop }
 		}
 	}
-	catch { Stop-PSFFunction -Message "Failed to import $Resource" -EnableException $EnableException -Tag 'fail', 'import' -ErrorRecord $_ -Continue -Target $Resource -Cmdlet $Settings["Cmdlet"] }
+	catch { Stop-PSFFunction -String 'Configuration.Schema.Default.ImportFailed' -StringValues $Resource -EnableException $EnableException -Tag 'fail', 'import' -ErrorRecord $_ -Continue -Target $Resource -Cmdlet $Settings["Cmdlet"] }
 	
 	:element foreach ($element in $data)
 	{
@@ -199,7 +199,7 @@
 			}
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to set '$($element.FullName)'" -ErrorRecord $_ -EnableException $EnableException -Tag 'fail', 'import' -Continue -Target $Resource -Cmdlet $Settings["Cmdlet"]
+				Stop-PSFFunction -String 'Configuration.Schema.Default.SetFailed' -StringValues $element.FullName -ErrorRecord $_ -EnableException $EnableException -Tag 'fail', 'import' -Continue -Target $Resource -Cmdlet $Settings["Cmdlet"]
 			}
 		}
 	}

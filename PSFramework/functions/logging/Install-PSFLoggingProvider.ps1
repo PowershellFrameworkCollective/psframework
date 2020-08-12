@@ -47,8 +47,7 @@
 	{
 		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
-			[PSFramework.Utility.UtilityHost]::ImportScriptBlock([PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters)
-			[PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters.Invoke()
+			[PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters.InvokeGlobal()
 		}
 	}
 	

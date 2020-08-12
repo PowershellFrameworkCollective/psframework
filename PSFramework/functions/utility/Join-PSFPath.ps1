@@ -42,20 +42,22 @@
 		$Normalize
 	)
 	
-	$resultingPath = $Path
-	
-	foreach ($childItem in $Child)
+	process
 	{
-		$resultingPath = Join-Path -Path $resultingPath -ChildPath $childItem
+		$resultingPath = $Path
+		
+		foreach ($childItem in $Child)
+		{
+			$resultingPath = Join-Path -Path $resultingPath -ChildPath $childItem
+		}
+		
+		if ($Normalize)
+		{
+			$defaultSeparator = [System.IO.Path]::DirectorySeparatorChar
+			$altSeparator = [System.IO.Path]::AltDirectorySeparatorChar
+			$resultingPath = $resultingPath.Replace($altSeparator, $defaultSeparator)
+		}
+		
+		$resultingPath
 	}
-	
-	if ($Normalize)
-	{
-		$defaultSeparator = [System.IO.Path]::DirectorySeparatorChar
-		$altSeparator = "/"
-		if ($defaultSeparator -eq "/") { $altSeparator = "\" }
-		$resultingPath = $resultingPath.Replace($altSeparator, $defaultSeparator)
-	}
-	
-	$resultingPath
 }

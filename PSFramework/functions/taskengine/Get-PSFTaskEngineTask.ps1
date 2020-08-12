@@ -28,5 +28,8 @@
 		$Name = "*"
 	)
 	
-	[PSFramework.TaskEngine.TaskHost]::Tasks.Values | Where-Object Name -Like $Name
+	process
+	{
+		[PSFramework.TaskEngine.TaskHost]::Tasks.Values | Where-Object Name -Like $Name
+	}
 }

@@ -49,7 +49,7 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTaskEngineCache')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]
 		[string]
@@ -64,6 +64,7 @@
 		[object]
 		$Value,
 		
+		[PsfValidateScript('PSFramework.Validate.TimeSpan.Positive', ErrorString = 'PSFramework.Validate.TimeSpan.Positive')]
 		[PSFTimespan]
 		$Lifetime,
 		
@@ -74,13 +75,16 @@
 		$CollectorArgument
 	)
 	
-	if ([PSFramework.TaskEngine.TaskHost]::TestCacheItem($Module, $Name))
+	process
 	{
-		$cacheItem = [PSFramework.TaskEngine.TaskHost]::GetCacheItem($Module, $Name)
+		if ([PSFramework.TaskEngine.TaskHost]::TestCacheItem($Module, $Name))
+		{
+			$cacheItem = [PSFramework.TaskEngine.TaskHost]::GetCacheItem($Module, $Name)
+		}
+		else { $cacheItem = [PSFramework.TaskEngine.TaskHost]::NewCacheItem($Module, $Name) }
+		if (Test-PSFParameterBinding -ParameterName Value) { $cacheItem.Value = $Value }
+		if (Test-PSFParameterBinding -ParameterName Lifetime) { $cacheItem.Expiration = $Lifetime }
+		if (Test-PSFParameterBinding -ParameterName Collector) { $cacheItem.Collector = $Collector }
+		if (Test-PSFParameterBinding -ParameterName CollectorArgument) { $cacheItem.CollectorArgument = $CollectorArgument }
 	}
-	else { $cacheItem = [PSFramework.TaskEngine.TaskHost]::NewCacheItem($Module, $Name) }
-	if (Test-PSFParameterBinding -ParameterName Value) { $cacheItem.Value = $Value }
-	if (Test-PSFParameterBinding -ParameterName Lifetime) { $cacheItem.Expiration = $Lifetime }
-	if (Test-PSFParameterBinding -ParameterName Collector) { $cacheItem.Collector = $Collector }
-	if (Test-PSFParameterBinding -ParameterName CollectorArgument) { $cacheItem.CollectorArgument = $CollectorArgument }
 }

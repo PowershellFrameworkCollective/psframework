@@ -330,14 +330,14 @@
 	
 	#region Auto-Install & Enable
 	$shouldEnable = Get-PSFConfigValue -FullName "LoggingProvider.$Name.Enabled" -Fallback $false
-	$isInstalled = $provider.IsInstalledScript.Invoke()
+	$isInstalled = $provider.IsInstalledScript.InvokeGlobal()
 	
 	if (-not $isInstalled -and (Get-PSFConfigValue -FullName "LoggingProvider.$Name.AutoInstall" -Fallback $false))
 	{
 		try
 		{
 			Install-PSFLoggingProvider -Name $Name -EnableException
-			$isInstalled = $provider.IsInstalledScript.Invoke()
+			$isInstalled = $provider.IsInstalledScript.InvokeGlobal()
 		}
 		catch
 		{

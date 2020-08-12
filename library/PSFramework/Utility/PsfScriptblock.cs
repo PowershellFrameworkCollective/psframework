@@ -117,6 +117,41 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Do a rich invocation of the scriptblock
+        /// </summary>
+        /// <param name="UseLocalScope">Whether a new scope should be created for this</param>
+        /// <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+        /// <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(bool UseLocalScope, bool ImportContext, bool ImportGlobal)
+        {
+            return InvokeEx(UseLocalScope, null, null, null, ImportContext, ImportGlobal, null);
+        }
+
+        /// <summary>
+        /// Do a rich invocation of the scriptblock
+        /// </summary>
+        /// <param name="Value">The value to offer as argument / input for the scriptblock</param>
+        /// <param name="UseLocalScope">Whether a new scope should be created for this</param>
+        /// <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+        /// <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(object Value, bool UseLocalScope, bool ImportContext, bool ImportGlobal)
+        {
+            return InvokeEx(UseLocalScope, Value, Value, null, ImportContext, ImportGlobal, Value);
+        }
+
+        /// <summary>
+        /// Invoke the Scriptblock rehomed to the global scope
+        /// </summary>
+        /// <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeGlobal(object Value = null)
+        {
+            return InvokeEx(true, Value, Value, null, true, true, Value);
+        }
+
+        /// <summary>
         /// Invoke the scriptblock in legacy mode.
         /// </summary>
         /// <param name="args">Arguments to pass into the scriptblock</param>

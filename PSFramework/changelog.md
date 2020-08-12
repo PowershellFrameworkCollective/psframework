@@ -22,6 +22,7 @@
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.TimeSpan.Positive - prebuilt validation scriptblock for use with PsfValidateScript. Validation messages available with same label.
 - New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
 - New: Configuration Validation: integer1to9 - Ensures the input is an integer between 1 and 9.
 - New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
@@ -34,6 +35,7 @@
 - Upd: Write-PSFMessage - New parameter: `-Data` allows specifying additional data points for the log
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
 - Upd: New-PSFSupportPackage - added linux & mac support (thanks, @nyanhp)
+- Upd: New-PSFSupportPackage - now supports taking console buffer screenshot from ISE
 - Upd: Register-PSFLoggingProvider - require FullLanguage language mode on all scriptblock parameters.
 - Upd: Register-PSFLoggingProvider - added parameters to allow creation of second generation logging providers.
 - Upd: PSFCmdlet - WriteMessage() now also accepts a Hashtable input as Data
@@ -45,6 +47,8 @@
 - Upd: Logging Provider: logfile - Added new output format: CMTrace
 - Upd: Set-PSFConfig - Now accepts from the pipeline
 - Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
+- Upd: Disable-PSFTaskEngineTask - Added Name parameter
+- Upd: Enable-PSFTaskEngineTask - Added Name parameter
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.

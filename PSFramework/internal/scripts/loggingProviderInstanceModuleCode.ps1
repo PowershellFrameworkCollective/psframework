@@ -27,8 +27,8 @@
 			if ($LoggingProviderInstance.Provider.Functions)
 			{
 				if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.Functions -Mode "ConstrainedLanguage") { throw "The functions resource scriptblock is in constrained language mode and cannot be loaded!" }
-				[PSFramework.Utility.UtilityHost]::ImportScriptBlock($LoggingProviderInstance.Provider.Functions)
-				. $LoggingProviderInstance.Provider.Functions
+				# Invoke in current scope after localizing the scriptblock into the current context
+				$LoggingProviderInstance.Provider.Functions.InvokeEx($false, $true, $false)
 			}
 			
 			${  functionNames  } = @{
