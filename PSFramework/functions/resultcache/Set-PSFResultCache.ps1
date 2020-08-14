@@ -57,31 +57,30 @@
 		$CommandName = (Get-PSCallStack)[0].Command
 	)
 	
-	Begin
+	begin
 	{
-		$IsPipeline = -not $PSBoundParameters.ContainsKey("InputObject")
+		$isPipeline = -not $PSBoundParameters.ContainsKey("InputObject")
 		[PSFramework.ResultCache.ResultCache]::Function = $CommandName
 		
-		if ($IsPipeline -and (-not $DisableCache))
+		if ($isPipeline -and -not $DisableCache)
 		{
-			[PSFramework.ResultCache.ResultCache]::Result = @()
+			[PSFramework.ResultCache.ResultCache]::Result = [System.Collections.ArrayList]@()
 		}
 	}
-	Process
+	process
 	{
-		if ($IsPipeline)
+		if (-not $DisableCache)
 		{
-			if (-not $DisableCache) { [PSFramework.ResultCache.ResultCache]::Result += $PSItem }
-			if ($PassThru) { $PSItem }
+			if ($isPipeline) { $null = [PSFramework.ResultCache.ResultCache]::Result.Add($InputObject) }
+			else { [PSFramework.ResultCache.ResultCache]::Result = $InputObject }
 		}
-		else
-		{
-			if (-not $DisableCache) { [PSFramework.ResultCache.ResultCache]::Result = $InputObject }
-			if ($PassThru) { $InputObject }
-		}
+		if ($PassThru) { $InputObject }
 	}
-	End
+	end
 	{
-		
+		if ($isPipeline -and -not $DisableCache)
+		{
+			[PSFramework.ResultCache.ResultCache]::Result = [PSFramework.ResultCache.ResultCache]::Result.ToArray()
+		}
 	}
 }

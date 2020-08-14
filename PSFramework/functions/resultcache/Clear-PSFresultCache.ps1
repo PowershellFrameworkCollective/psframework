@@ -23,8 +23,11 @@
 		
 	)
 	
-	if ($pscmdlet.ShouldProcess("Result cache", "Clearing the result cache"))
+	process
 	{
-		[PSFramework.ResultCache.ResultCache]::Clear()
+		if (Test-PSFShouldProcess -Target 'Result Cache' -ActionString 'Clear-PSFResultCache.Clear' -PSCmdlet $PSCmdlet)
+		{
+			[PSFramework.ResultCache.ResultCache]::Clear()
+		}
 	}
 }
