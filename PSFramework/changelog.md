@@ -27,6 +27,7 @@
 - New: Configuration Validation: integer1to9 - Ensures the input is an integer between 1 and 9.
 - New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
 - New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
+- New: Class RunspaceBoundValueGeneric - Allows statically maintaining values that may contain specific values per runspace.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
@@ -49,6 +50,11 @@
 - Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
 - Upd: Disable-PSFTaskEngineTask - Added Name parameter
 - Upd: Enable-PSFTaskEngineTask - Added Name parameter
+- Upd: Added debug mode for more visual PSFramework import
+- Upd: Added scheduled timer to clean up runspace bound values for runspaces that no longer exist
+- Upd: Register-PSFTeppScriptblock - added `-Global` parameter
+- Upd: Set-PSFScriptblock - added `-Global` parameter
+- Upd: Validation Attribute PsfValidateScript - added `Global = ` named property to execute script in the global context
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.

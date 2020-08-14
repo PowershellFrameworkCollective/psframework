@@ -4717,6 +4717,11 @@
             Callstack at the moment of the call
             </summary>
         </member>
+        <member name="F:PSFramework.PSFCore.DebugData.Runspace">
+            <summary>
+            Runspace the message was written from
+            </summary>
+        </member>
         <member name="M:PSFramework.PSFCore.DebugData.#ctor(System.String,System.Object)">
             <summary>
             Create debug information for troubleshooting purposes
@@ -4766,6 +4771,11 @@
             The master switch to enable debug mode.
             </summary>
         </member>
+        <member name="F:PSFramework.PSFCore.PSFCoreHost.VerboseDebug">
+            <summary>
+            Whether to write debug messages to the screen
+            </summary>
+        </member>
         <member name="P:PSFramework.PSFCore.PSFCoreHost.DebugQueueSize">
             <summary>
             The total capacity of the debug queue
@@ -4811,6 +4821,35 @@
             <param name="ScriptThis">The value to make available as $this</param>
             <param name="Args">The value to make available as $args</param>
             <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Extension.ScriptBlockExt.Clone(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Clones the specified scriptblock maintaining its language mode.
+            </summary>
+            <param name="ScriptBlock">The Scriptblock to clone</param>
+            <returns>A clone of the scriptblock with the languagemode intact</returns>
+        </member>
+        <member name="M:PSFramework.Extension.ScriptBlockExt.ToGlobal(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Resets the current scriptblock's sessionstate to the current runspace's global sessionstate.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to globalize</param>
+            <returns>The globalized scriptblock</returns>
+        </member>
+        <member name="M:PSFramework.Extension.ScriptBlockExt.ToLocal(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Resets the current scriptblock's sessionstate to the current runspace's current sessionstate.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to import</param>
+            <returns>The imported scriptblock</returns>
+        </member>
+        <member name="M:PSFramework.Extension.ScriptBlockExt.Import(System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Resets the current scriptblock's sessionstate to either the current runspace's current sessionstate or its global sessionstate.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to import</param>
+            <param name="Global">Whether to import into the global sessionstate</param>
+            <returns>The imported ScriptBlock</returns>
         </member>
         <member name="T:PSFramework.ResultCache.ResultCache">
             <summary>
@@ -4885,6 +4924,45 @@
             <param name="Value">The object to set as the initial value</param>
         </member>
         <member name="M:PSFramework.Runspace.RunspaceBoundValue.#ctor(System.Object,System.Boolean)">
+            <summary>
+            Create a runspace bound value object with its initial value
+            </summary>
+            <param name="Value">The object to set as the initial value</param>
+            <param name="OfferDefaultValue">Whether the initial / default value should be offered when accessed from runspaces that do not have a runspace-local value</param>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceBoundValueGeneric`1">
+            <summary>
+            Generic implementation of RunspaceBoundValue
+            </summary>
+            <typeparam name="T">The type to use for wrapping</typeparam>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceBoundValueGeneric`1.DefaultValue">
+            <summary>
+            The default value to offer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceBoundValueGeneric`1.Values">
+            <summary>
+            The values available on a "per runspace" basis
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceBoundValueGeneric`1.Value">
+            <summary>
+            The value to offer or set, specific per runspace from which it is called
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValueGeneric`1.#ctor">
+            <summary>
+            Create an empty runspace bound value object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValueGeneric`1.#ctor(`0)">
+            <summary>
+            Create a runspace bound value object with its initial value
+            </summary>
+            <param name="Value">The object to set as the initial value</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValueGeneric`1.#ctor(`0,System.Boolean)">
             <summary>
             Create a runspace bound value object with its initial value
             </summary>
@@ -4968,6 +5046,11 @@
         <member name="P:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
             <summary>
             List of all runspace bound values in use
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.StartRbvTimer">
+            <summary>
+            Starts the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -5202,12 +5285,27 @@
             </summary>
             <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
         </member>
+        <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Create an argument completer offering a scriptblock that is supposed to produce completion data.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+            <param name="Global">Whether to execute the scriptblock in the global context.</param>
+        </member>
         <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.Management.Automation.ScriptBlock,System.String)">
             <summary>
             Create an argument completer offering a scriptblock that is supposed to produce completion data.
             </summary>
             <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
             <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.Management.Automation.ScriptBlock,System.String,System.Boolean)">
+            <summary>
+            Create an argument completer offering a scriptblock that is supposed to produce completion data.
+            </summary>
+            <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+            <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+            <param name="Global">Whether to execute the scriptblock in the global context.</param>
         </member>
         <member name="T:PSFramework.TabExpansion.ScriptContainer">
             <summary>
@@ -5254,6 +5352,11 @@
             How long are previous values valid, before a new execution becomes necessary.
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.Global">
+            <summary>
+            Whether to execute the scriptblock in the global scope
+            </summary>
+        </member>
         <member name="P:PSFramework.TabExpansion.ScriptContainer.ShouldExecute">
             <summary>
             Returns whether a new refresh of tab completion should be executed.
@@ -5280,15 +5383,6 @@
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
             </summary>
         </member>
-        <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter)">
-            <summary>
-            Registers a new completion scriptblock
-            </summary>
-            <param name="Name">The name of the completion scriptblock</param>
-            <param name="ScriptBlock">The scriptblock that will provide completion data</param>
-            <param name="Mode">What completion mode to use</param>
-            <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
-        </member>
         <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean)">
             <summary>
             Registers a new completion scriptblock
@@ -5297,6 +5391,17 @@
             <param name="ScriptBlock">The scriptblock that will provide completion data</param>
             <param name="Mode">What completion mode to use</param>
             <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
+            <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean,System.Boolean)">
+            <summary>
+            Registers a new completion scriptblock
+            </summary>
+            <param name="Name">The name of the completion scriptblock</param>
+            <param name="ScriptBlock">The scriptblock that will provide completion data</param>
+            <param name="Mode">What completion mode to use</param>
+            <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
+            <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
             <param name="PassThru">Parameter is ignored. Needed to have a second signature that returns the script container.</param>
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
@@ -6099,6 +6204,11 @@
             The scriptblock stored
             </summary>
         </member>
+        <member name="F:PSFramework.Utility.ScriptBlockItem.Global">
+            <summary>
+            Whether the scriptblock should be invoked as global scriptblock
+            </summary>
+        </member>
         <member name="P:PSFramework.Utility.ScriptBlockItem.CountRetrieved">
             <summary>
             The number of times this scriptblock has been used
@@ -6109,12 +6219,13 @@
             When the scriptblock has last been used
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
             <summary>
             Create a new scriptblock item by offering both name and code
             </summary>
             <param name="Name">The name of the scriptblock</param>
             <param name="ScriptBlock">The scriptblock</param>
+            <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
         </member>
         <member name="T:PSFramework.Utility.Size">
             <summary>
@@ -6606,6 +6717,23 @@
             <param name="Name">The name of the method to retrieve</param>
             <returns>The method object requested</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateMethod(System.String,System.Object)">
+            <summary>
+            Returns the private method on an object
+            </summary>
+            <param name="Name">The name of the method</param>
+            <param name="Instance">The object from which to read the method from</param>
+            <returns>The method sought</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.InvokePrivateMethod(System.String,System.Object,System.Object[])">
+            <summary>
+            Executes a private method of an object
+            </summary>
+            <param name="Name">Name of the method to invoke</param>
+            <param name="Instance">The object whose method to run</param>
+            <param name="Arguments">Arguments to pass to the method</param>
+            <returns>Whatever the private method may return</returns>
+        </member>
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
@@ -6741,6 +6869,11 @@
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlock">
             <summary>
             Gets the scriptblock to be used in the validation
+            </summary>
+        </member>
+        <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.Global">
+            <summary>
+            Whether the scriptblock should be invoked as global scriptblock
             </summary>
         </member>
         <member name="P:PSFramework.Validation.PsfValidateScriptAttribute.ScriptBlockName">

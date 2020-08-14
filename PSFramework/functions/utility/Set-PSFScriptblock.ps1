@@ -18,6 +18,10 @@
 	.PARAMETER Scriptblock
 		The scriptcode to register
 	
+	.PARAMETER Global
+		Whether the scriptblock should be invoked in the global context.
+		If defined, accessing the scriptblock will automatically globalize it before returning it.
+	
 	.EXAMPLE
 		PS C:\> Set-PSFScriptblock -Name 'MyModule.TestServer' -Scriptblock $Scriptblock
 	
@@ -37,7 +41,10 @@
 		
 		[Parameter(Position = 1, Mandatory = $true)]
 		[System.Management.Automation.ScriptBlock]
-		$Scriptblock
+		$Scriptblock,
+		
+		[switch]
+		$Global
 	)
 	process
 	{

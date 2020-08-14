@@ -5,7 +5,7 @@
 	
 	try
 	{
-		$module = New-Module -Name (New-Guid) -ArgumentList $LoggingProviderInstance -ScriptBlock {
+		$module = New-Module -Name ([guid]::NewGuid()) -ArgumentList $LoggingProviderInstance -ScriptBlock {
 			param (
 				$LoggingProviderInstance
 			)
@@ -32,12 +32,12 @@
 			}
 			
 			${  functionNames  } = @{
-				Begin   = New-Guid
-				Start   = New-Guid
-				Message = New-Guid
-				Error   = New-Guid
-				End	    = New-Guid
-				Final   = New-Guid
+				Begin   = [guid]::NewGuid()
+				Start   = [guid]::NewGuid()
+				Message = [guid]::NewGuid()
+				Error   = [guid]::NewGuid()
+				End	    = [guid]::NewGuid()
+				Final   = [guid]::NewGuid()
 			}
 			
 			function Get-ConfigValue

@@ -42,7 +42,7 @@
 	
 	process
 	{
-		if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $TabCompletion -Action "Setting the cache")
+		if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $TabCompletion -ActionString 'Set-PSFTeppResult.UpdateValue')
 		{
 			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion].LastResult = $Value
 			[PSFramework.TabExpansion.TabExpansionHost]::Scripts[$TabCompletion].LastExecution = ([System.DateTime]::Now)

@@ -14,8 +14,8 @@
 		$common = 'PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider'
 		$properties.PSObject.Properties.Name | Where-Object { $_ -notin $common }
 	}
-}
+} -Global
 
 Register-PSFTeppScriptblock -Name "PSFramework-Unregister-PSFConfig-Module" -ScriptBlock {
 	[PSFramework.Configuration.ConfigurationHost]::Configurations.Values.Module | Select-Object -Unique
-}
+} -Global

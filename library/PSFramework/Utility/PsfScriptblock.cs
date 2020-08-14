@@ -5,6 +5,8 @@ using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using PSFramework.Extension;
+using PSFramework.Runspace;
+using PSFramework.Utility;
 
 namespace PSFramework.Utility
 {
@@ -102,18 +104,15 @@ namespace PSFramework.Utility
         /// <returns>Whatever output this scriptblock generates</returns>
         public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(bool UseLocalScope, object DollerUnder, object Input, object ScriptThis, bool ImportContext, bool ImportGlobal, params object[] Args)
         {
-            // Avoid concurrent access to prevent accidental Context import collisions when called in parallel from multiple runspaces.
-            lock (_Lock)
-            {
-                if (ImportContext)
-                    UtilityHost.ImportScriptBlock(ScriptBlock, ImportGlobal);
-                object result = ScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
-                if (result == null)
-                    return null;
-                if (result.GetType() == typeof(PSObject))
-                    return new System.Collections.ObjectModel.Collection<PSObject>() { result as PSObject };
-                return (System.Collections.ObjectModel.Collection<PSObject>)result;
-            }
+            ScriptBlock tempScriptBlock = ScriptBlock;
+            if (ImportContext)
+                tempScriptBlock = ScriptBlock.Clone().Import(ImportGlobal);
+            object result = tempScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
+            if (result == null)
+                return null;
+            if (result.GetType() == typeof(PSObject))
+                return new System.Collections.ObjectModel.Collection<PSObject>() { result as PSObject };
+            return (System.Collections.ObjectModel.Collection<PSObject>)result;
         }
 
         /// <summary>
@@ -160,10 +159,6 @@ namespace PSFramework.Utility
         {
             return ScriptBlock.Invoke(args);
         }
-
-        #pragma warning disable 0649
-        private static PsfScriptBlock _Lock = ScriptBlock.Create("");
-        #pragma warning restore 0649
         #endregion Methods
 
         /// <summary>

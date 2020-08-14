@@ -47,12 +47,14 @@ namespace PSFramework.TabExpansion
         /// <param name="ScriptBlock">The scriptblock that will provide completion data</param>
         /// <param name="Mode">What completion mode to use</param>
         /// <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
-        public static void RegisterCompletion(string Name, ScriptBlock ScriptBlock, TeppScriptMode Mode, TimeSpanParameter CacheDuration)
+        /// <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
+        public static void RegisterCompletion(string Name, ScriptBlock ScriptBlock, TeppScriptMode Mode, TimeSpanParameter CacheDuration, bool Global)
         {
             ScriptContainer script = new ScriptContainer();
             script.Name = Name;
             script.LastDuration = new TimeSpan(-1);
             script.LastResultsValidity = CacheDuration;
+            script.Global = Global;
 
             TeppScriptMode effectiveMode = Mode;
             if (effectiveMode == TeppScriptMode.Auto)
@@ -79,10 +81,11 @@ namespace PSFramework.TabExpansion
         /// <param name="ScriptBlock">The scriptblock that will provide completion data</param>
         /// <param name="Mode">What completion mode to use</param>
         /// <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
+        /// <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
         /// <param name="PassThru">Parameter is ignored. Needed to have a second signature that returns the script container.</param>
-        public static ScriptContainer RegisterCompletion(string Name, ScriptBlock ScriptBlock, TeppScriptMode Mode, TimeSpanParameter CacheDuration, bool PassThru)
+        public static ScriptContainer RegisterCompletion(string Name, ScriptBlock ScriptBlock, TeppScriptMode Mode, TimeSpanParameter CacheDuration, bool Global, bool PassThru)
         {
-            RegisterCompletion(Name, ScriptBlock, Mode, CacheDuration);
+            RegisterCompletion(Name, ScriptBlock, Mode, CacheDuration, Global);
             return Scripts[Name];
         }
 

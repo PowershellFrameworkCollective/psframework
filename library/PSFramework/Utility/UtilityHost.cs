@@ -385,6 +385,32 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Returns the private method on an object
+        /// </summary>
+        /// <param name="Name">The name of the method</param>
+        /// <param name="Instance">The object from which to read the method from</param>
+        /// <returns>The method sought</returns>
+        public static MethodInfo GetPrivateMethod(string Name, object Instance)
+        {
+            MethodInfo method = Instance.GetType().GetMethod(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (method == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateMethodNotFound", Name)), "Name");
+            return method;
+        }
+
+        /// <summary>
+        /// Executes a private method of an object
+        /// </summary>
+        /// <param name="Name">Name of the method to invoke</param>
+        /// <param name="Instance">The object whose method to run</param>
+        /// <param name="Arguments">Arguments to pass to the method</param>
+        /// <returns>Whatever the private method may return</returns>
+        public static object InvokePrivateMethod(string Name, object Instance, object[] Arguments)
+        {
+            return GetPrivateMethod(Name, Instance).Invoke(Instance, Arguments);
+        }
+
+        /// <summary>
         /// Returns the current callstack
         /// </summary>
         public static IEnumerable<CallStackFrame> Callstack

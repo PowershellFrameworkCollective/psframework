@@ -37,15 +37,16 @@
 		[string]
 		$Name
 	)
-	
-	if (($PSVersionTable["PSVersion"].Major -lt 5) -and (-not (Get-Item function:Register-ArgumentCompleter -ErrorAction Ignore)))
+	process
 	{
-		return
-	}
-	
-	foreach ($Param in $Parameter)
-	{
-		$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name].ScriptBlock
-		Register-ArgumentCompleter -CommandName $Command -ParameterName $Param -ScriptBlock $scriptBlock
+		foreach ($Param in $Parameter)
+		{
+			$scriptBlock = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name].ScriptBlock
+			if ([PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name].InnerScriptBlock)
+			{
+				[PSFramework.Utility.UtilityHost]::ImportScriptBlock($scriptBlock, $true)
+			}
+			Register-ArgumentCompleter -CommandName $Command -ParameterName $Param -ScriptBlock $scriptBlock
+		}
 	}
 }
