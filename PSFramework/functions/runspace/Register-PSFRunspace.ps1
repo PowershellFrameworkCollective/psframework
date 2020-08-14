@@ -58,12 +58,12 @@
 	
 	if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($Name))
 	{
-		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Updating runspace: <c='em'>$($Name)</c>" -Target $Name -Tag 'runspace','register' }
+		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -String 'Register-PSFRunspace.Runspace.Updating' -StringValues $Name -Target $Name -Tag 'runspace', 'register' }
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name].SetScript($ScriptBlock)
 	}
 	else
 	{
-		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Registering runspace: <c='em'>$($Name)</c>" -Target $Name -Tag 'runspace', 'register' }
+		if (-not $NoMessage) { Write-PSFMessage -Level Verbose -String 'Register-PSFRunspace.Runspace.Creating' -StringValues $Name -Target $Name -Tag 'runspace', 'register' }
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$Name] = New-Object PSFramework.Runspace.RunspaceContainer($Name, $ScriptBlock)
 	}
 }
