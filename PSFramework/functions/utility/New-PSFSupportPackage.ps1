@@ -78,11 +78,6 @@
 			[CmdletBinding()]
 			param ()
 			
-			if ($Host.Name -eq 'Visual Studio Code Host')
-			{
-				
-			}
-			
 			if ($Host.Name -eq 'Windows PowerShell ISE Host')
 			{
 				return $psIse.CurrentPowerShellTab.ConsolePane.Text
