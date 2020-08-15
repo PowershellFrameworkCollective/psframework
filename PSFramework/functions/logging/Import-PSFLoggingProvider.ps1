@@ -223,7 +223,7 @@
 				}
 				catch
 				{
-					Stop-PSFFunction -Message "Error loading json data from $effectivePath" -ErrorRecord $_ -EnableException $EnableException
+					Stop-PSFFunction -String 'Import-PSFLoggingProvider.Import.Error' -StringValues $effectivePath -ErrorRecord $_ -EnableException $EnableException
 					return
 				}
 			}
@@ -238,7 +238,7 @@
 		foreach ($datum in $dataReceived)
 		{
 			try { Import-ProviderData -Data $datum }
-			catch { Stop-PSFFunction -Message "Error processing logging provider datum" -EnableException $EnableException -ErrorRecord $_ -Continue -Target $datum }
+			catch { Stop-PSFFunction -String 'Import-PSFLoggingProvider.Datum.Error' -EnableException $EnableException -ErrorRecord $_ -Continue -Target $datum }
 		}
 	}
 }

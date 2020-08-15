@@ -184,7 +184,7 @@
 	{
 		if (Test-PSFFunctionInterrupt) { return }
 		
-		$provider.ConfigurationScript.InvokeGlobal()
+		$provider.ConfigurationScript.InvokeGlobal($PSBoundParameters)
 		
 		$instanceAffix = ''
 		if ($InstanceName -and ($InstanceName -ne "Default")) { $instanceAffix = "$InstanceName." }

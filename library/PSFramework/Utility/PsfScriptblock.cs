@@ -151,6 +151,16 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Invoke the Scriptblock rehomed to the current sessionstate
+        /// </summary>
+        /// <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeLocal(object Value = null)
+        {
+            return InvokeEx(true, Value, Value, null, true, false, Value);
+        }
+
+        /// <summary>
         /// Invoke the scriptblock in legacy mode.
         /// </summary>
         /// <param name="args">Arguments to pass into the scriptblock</param>

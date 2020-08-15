@@ -35,26 +35,18 @@
 		$EnableException
 	)
 	
-	Begin
-	{
-		
-	}
 	Process
 	{
-		foreach ($l in $License)
+		foreach ($licenseObject in $License)
 		{
-			if ($PSCmdlet.ShouldProcess("$($l.Product) $($l.ProductVersion) ($($l.LicenseName))", "Remove License"))
+			if (Test-PSFShouldProcess -Action 'Remove License' -Target $licenseObject -PSCmdlet $PSCmdlet)
 			{
-				try { [PSFramework.License.LicenseHost]::Remove($l) }
+				try { [PSFramework.License.LicenseHost]::Remove($licenseObject) }
 				catch
 				{
-					Stop-PSFFunction -Message "Failed to remove license" -ErrorRecord $_ -EnableException $EnableException -Target $l -Continue
+					Stop-PSFFunction -Message "Failed to remove license" -ErrorRecord $_ -EnableException $EnableException -Target $licenseObject -Continue
 				}
 			}
 		}
-	}
-	End
-	{
-		
 	}
 }

@@ -72,22 +72,7 @@
 				$HelpFile
 			)
 			
-			# System.Management.Automation.Runspaces.LocalPipeline will let us get at ExecutionContext.
-			# Note: $ExecutionContext is *not* an instance of this object.
-			$pipelineType = [PowerShell].Assembly.GetType('System.Management.Automation.Runspaces.LocalPipeline')
-			$method = $pipelineType.GetMethod(
-				'GetExecutionContextFromTLS',
-				[System.Reflection.BindingFlags]'Static,NonPublic'
-			)
-			
-			# Invoke the method to get an instance of ExecutionContext.
-			$context = $method.Invoke(
-				$null,
-				[System.Reflection.BindingFlags]'Static,NonPublic',
-				$null,
-				$null,
-				(Get-Culture)
-			)
+			$context = [PSFramework.Utility.UtilityHost]::GetExecutionContextFromTLS()
 			
 			# Get the SessionStateInternal type
 			$internalType = [PowerShell].Assembly.GetType('System.Management.Automation.SessionStateInternal')

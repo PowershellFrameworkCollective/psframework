@@ -29,7 +29,7 @@
 		Version 2
 		---------
 		
-		All providers run in an isolated module context.
+		Each provider runs in an isolated module context.
 		A provider can have multiple instances of itself active at the same time, each with separate resource isolation.
 		Additional tooling provided makes it also easier to publish complex logging providers.
 		Share variables between events by making them script-scope (e.g.: $script:path)
@@ -143,8 +143,9 @@
 		
 		Registers the filesystem provider, providing events for every single occasion.
 #>
+	[PSFramework.PSFCore.NoJeaCommandAttribute()]
 	[CmdletBinding(DefaultParameterSetName = 'Version1', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFLoggingProvider')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
@@ -235,7 +236,7 @@
 		return
 	}
 	
-	if ($ConfigurationSettings) { . $ConfigurationSettings }
+	if ($ConfigurationSettings) { & $ConfigurationSettings }
 	if (Test-PSFParameterBinding -ParameterName Enabled)
 	{
 		Set-PSFConfig -FullName "LoggingProvider.$Name.Enabled" -Value $Enabled.ToBool() -DisableHandler
@@ -323,8 +324,8 @@
 	catch
 	{
 		$dummy = $null
-		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name, [ref] $dummy)
-		Stop-PSFFunction -Message "Failed to register logging provider '$Name' - Registration event failed." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
+		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name, [ref]$dummy)
+		Stop-PSFFunction -String 'Register-PSFLoggingProvider.RegistrationEvent.Failed' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
 		return
 	}
 	
@@ -343,11 +344,11 @@
 		{
 			if ($provider.InstallationOptional)
 			{
-				Write-PSFMessage -Level Warning -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -Tag 'logging', 'provider', 'fail', 'install' -EnableException $EnableException
+				Write-PSFMessage -Level Warning -String 'Register-PSFLoggingProvider.Installation.Failed' -StringValues $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'fail', 'install' -EnableException $EnableException
 			}
 			else
 			{
-				Stop-PSFFunction -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+				Stop-PSFFunction -String 'Register-PSFLoggingProvider.Installation.Failed' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
 				return
 			}
 		}
@@ -355,10 +356,10 @@
 	
 	if ($shouldEnable)
 	{
-		if ($isInstalled) { $provider.Enabled = $true }
+		if ($isInstalled -or $provider.InstallationOptional) { $provider.Enabled = $true }
 		else
 		{
-			Stop-PSFFunction -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFLoggingProvider' to properly install the prerequisites." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+			Stop-PSFFunction -String 'Register-PSFLoggingProvider.NotInstalled.Termination' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
 			return
 		}
 	}

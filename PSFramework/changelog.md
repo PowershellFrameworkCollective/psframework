@@ -2,6 +2,7 @@
 ## ???
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
+- New: Feature PSFramework.Stop-PSFFunction.ShowWarning - Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.
 - New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
@@ -55,6 +56,12 @@
 - Upd: Register-PSFTeppScriptblock - added `-Global` parameter
 - Upd: Set-PSFScriptblock - added `-Global` parameter
 - Upd: Validation Attribute PsfValidateScript - added `Global = ` named property to execute script in the global context
+- Upd: Register-PSFLoggingProvider - flagged as unsafe for JEA
+- Upd: Set-PSFTypeAlias - now accepts from the pipeline
+- Upd: Stop-PSFFunction - added parameter `-AlwaysWarning`, ensuring it will always show the warning, even when throwing a terminating exception.
+- Fix: Register-PSFLoggingProvider - respects `InstallationOptional` setting
+- Fix: Install-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the installation scriptblock
+- Fix: Set-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the configuration scriptblock
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
