@@ -23,7 +23,7 @@ namespace PSFramework.Utility
         /// <returns>A user friendly number format</returns>
         public override string ToString()
         {
-            string left;
+            string left = "";
             string right = "";
 
             // Determine right part of decimal separator
@@ -47,12 +47,14 @@ namespace PSFramework.Utility
             {
                 int remaining = tempLeft.Length % SegmentSize;
                 int index = remaining;
-                left = tempLeft.Substring(0, remaining);
+                if (remaining > 0)
+                    left = tempLeft.Substring(0, remaining);
                 while (index < tempLeft.Length)
                 {
                     left += $"{SegmentSeparator}{tempLeft.Substring(index, SegmentSize)}";
                     index += SegmentSize;
                 }
+                left = left.TrimStart(SegmentSeparator.ToCharArray());
             }
 
             if (String.IsNullOrEmpty(right))
