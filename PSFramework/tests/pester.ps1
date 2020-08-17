@@ -26,6 +26,12 @@ Import-Module "$PSScriptRoot\..\PSFramework.psm1" -Force
 # Need to import explicitly so we can use the configuration class
 Import-Module Pester
 
+# Load Extensions
+foreach ($file in Get-ChildItem "$PSScriptRoot\extensions" -Filter '*.ps1')
+{
+	. $file.FullName
+}
+
 Write-PSFMessage -Level Important -Message "Creating test result folder"
 $null = New-Item -Path "$PSScriptRoot\..\.." -Name TestResults -ItemType Directory -Force
 

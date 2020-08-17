@@ -54,6 +54,7 @@
 		
 		Exports all settings of the module 'MyModule' that are no longer the original default values to json.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'FullName', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFConfig')]
 	param (
 		[Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = $true)]

@@ -56,4 +56,4 @@
 		}
 	}
 }
-Add-AssertionOperator -Name BeTrueForAny -Test $function:BeTrueForAny -Alias Any -SupportsArrayInput
+Add-ShouldOperator -Name BeTrueForAny -Test $function:BeTrueForAny -Alias Any -SupportsArrayInput
