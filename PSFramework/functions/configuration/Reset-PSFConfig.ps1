@@ -77,10 +77,10 @@
 		#region By configuration Item
 		foreach ($item in $ConfigurationItem)
 		{
-			if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
+			if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 			{
 				try { $item.ResetValue() }
-				catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+				catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 			}
 		}
 		#endregion By configuration Item
@@ -94,10 +94,10 @@
 			
 			foreach ($item in (Get-PSFConfig -FullName $nameItem))
 			{
-				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
+				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 				{
 					try { $item.ResetValue() }
-					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}
 		}
@@ -106,10 +106,10 @@
 		{
 			foreach ($item in (Get-PSFConfig -Module $Module -Name $Name))
 			{
-				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -Action 'Reset to default value')
+				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 				{
 					try { $item.ResetValue() }
-					catch { Stop-PSFFunction -Message "Failed to reset the configuration item." -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
 				}
 			}
 		}

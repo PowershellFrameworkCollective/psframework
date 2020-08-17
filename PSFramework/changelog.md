@@ -47,8 +47,12 @@
 - Upd: Logging - Disabled autostart of logging runpace in Azure Functions
 - Upd: Logging Provider: logfile - Updated to generation 2 to enable multi-instance capabilities.
 - Upd: Logging Provider: logfile - Added new output format: CMTrace
+- Upd: Get-PSFConfig - Now accepts from the pipeline
+- Upd: Get-PSFConfigValue - Now accepts positional input
 - Upd: Set-PSFConfig - Now accepts from the pipeline
 - Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
+- Upd: Unregister-PSFConfig - Added failover on non-windows from UserDefault to FileUserLocal scope
+- Upd: Unregister-PSFConfig - Added failover on non-windows from SystemDefault to FileSystem scope
 - Upd: Disable-PSFTaskEngineTask - Added Name parameter
 - Upd: Enable-PSFTaskEngineTask - Added Name parameter
 - Upd: Added debug mode for more visual PSFramework import
@@ -69,6 +73,9 @@
 - Fix: Register-PSFLoggingProvider - auto-install fails to notify system of success, failing the registration auto-enable even when it installed correctly.
 - Fix: Set-PSFConfig - security fix
 - Fix: Set-PSFConfig - security fix
+- Fix: Import-PSFConfig - resolved scriptblock handling issues in multi-runspace scenarios
+- Fix: Register-PSFConfig - error detecting parameterset in pipeline scenarios
+- Fix: Register-PSFConfig - failed to failover for SystemDefault scope on non-Windows
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.

@@ -37,7 +37,7 @@
 	[OutputType([PSFramework.Configuration.Config])]
 	[CmdletBinding(DefaultParameterSetName = "FullName", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfig')]
 	Param (
-		[Parameter(ParameterSetName = "FullName", Position = 0)]
+		[Parameter(ParameterSetName = "FullName", Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string]
 		$FullName = "*",
 		
@@ -53,19 +53,26 @@
 		$Force
 	)
 	
-	switch ($PSCmdlet.ParameterSetName)
+	process
 	{
-		"Module"
+		switch ($PSCmdlet.ParameterSetName)
 		{
-			$Name = $Name.ToLower()
-			$Module = $Module.ToLower()
+			"Module"
+			{
+				[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object {
+					($_.Name -like $Name) -and
+					($_.Module -like $Module) -and
+					((-not $_.Hidden) -or ($Force))
+				} | Sort-Object Module, Name
+			}
 			
-			[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object { ($_.Name -like $Name) -and ($_.Module -like $Module) -and ((-not $_.Hidden) -or ($Force)) } | Sort-Object Module, Name
-		}
-		
-		"FullName"
-		{
-			[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object { ("$($_.Module).$($_.Name)" -like $FullName) -and ((-not $_.Hidden) -or ($Force)) } | Sort-Object Module, Name
+			"FullName"
+			{
+				[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object {
+					("$($_.Module).$($_.Name)" -like $FullName) -and
+					((-not $_.Hidden) -or ($Force))
+				} | Sort-Object Module, Name
+			}
 		}
 	}
 }
