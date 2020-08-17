@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## ???
+## 1.3.135-preview1 : 2020-08-17
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
 - New: Feature PSFramework.Stop-PSFFunction.ShowWarning - Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.
