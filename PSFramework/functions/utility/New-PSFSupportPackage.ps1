@@ -255,14 +255,14 @@
 		try { $data | Export-PsfClixml -Path $filePathXml -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -String 'New-PSFSupportPackage.Export.Failed' -ErrorRecord $_ -Target $filePathXml
+			Stop-PSFFunction -String 'New-PSFSupportPackage.Export.Failed' -ErrorRecord $_ -Target $filePathXml -EnableException $EnableException
 			return
 		}
 		
 		try { Compress-Archive -Path $filePathXml -DestinationPath $filePathZip -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -String 'New-PSFSupportPackage.ZipCompression.Failed' -ErrorRecord $_ -Target $filePathZip
+			Stop-PSFFunction -String 'New-PSFSupportPackage.ZipCompression.Failed' -ErrorRecord $_ -Target $filePathZip -EnableException $EnableException
 			return
 		}
 		

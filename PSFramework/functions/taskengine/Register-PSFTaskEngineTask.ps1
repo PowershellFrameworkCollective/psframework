@@ -141,5 +141,5 @@
 		}
 		#endregion New Task
 	}
-	end { Start-PSFRunspace -Name "psframework.taskengine" }
+	end { Start-PSFRunspace -Name "psframework.taskengine" -EnableException:$EnableException }
 }

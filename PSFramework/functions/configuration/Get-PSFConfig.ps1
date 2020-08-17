@@ -34,6 +34,7 @@
 	
 			Retrieve all configuration elements from all modules, even hidden ones.
     #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[OutputType([PSFramework.Configuration.Config])]
 	[CmdletBinding(DefaultParameterSetName = "FullName", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfig')]
 	Param (

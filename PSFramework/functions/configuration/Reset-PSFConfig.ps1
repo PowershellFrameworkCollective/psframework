@@ -80,7 +80,7 @@
 			if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 			{
 				try { $item.ResetValue() }
-				catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+				catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue -EnableException $EnableException }
 			}
 		}
 		#endregion By configuration Item
@@ -97,7 +97,7 @@
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 				{
 					try { $item.ResetValue() }
-					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue -EnableException $EnableException}
 				}
 			}
 		}
@@ -109,7 +109,7 @@
 				if (Test-PSFShouldProcess -PSCmdlet $PSCmdlet -Target $item.FullName -ActionString 'Reset-PSFConfig.Resetting')
 				{
 					try { $item.ResetValue() }
-					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -Continue }
+					catch { Stop-PSFFunction -String 'Reset-PSFConfig.Resetting.Failed' -ErrorRecord $_ -Cmdlet $PSCmdlet -EnableException $EnableException -Continue }
 				}
 			}
 		}

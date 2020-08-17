@@ -72,8 +72,19 @@
 	$config += Set-PSFConfig -FullName $settingName2 -Value 17 -PassThru
 	$config += Set-PSFConfig -FullName $settingName3 -Value 42 -PassThru
 	
+	$variables = @{
+		module	     = $module
+		locations    = $locations
+		settingName1 = $settingName1
+		settingName2 = $settingName2
+		settingName3 = $settingName3
+		config	     = $config
+	}
+	
 	foreach ($location in $locations)
 	{
+		$variables['location'] = $location
+		
 		# Don't test locations that require elevation to write to when not running elevated
 		if ($location.Elevated -and (-not (Test-PSFPowerShell -Elevated)))
 		{
@@ -85,7 +96,7 @@
 			{
 				'Registry'
 				{
-					It "Should properly set up configuration settings in registry" {
+					It "Should properly set up configuration settings in registry" -TestCases $variables {
 						if (Test-Path $location.Path)
 						{
 							(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
@@ -97,19 +108,19 @@
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
 					}
-					It "Should properly remove a single setting by fullname" {
+					It "Should properly remove a single setting by fullname" -TestCases $variables {
 						Unregister-PSFConfig -FullName $settingName1 -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
 					}
-					It "Should properly remove multiple settings by fullname" {
+					It "Should properly remove multiple settings by fullname" -TestCases $variables {
 						Unregister-PSFConfig -FullName $settingName2, $settingName3 -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
 					}
-					It "Should properly remove all settings by fullname when piped to" {
+					It "Should properly remove all settings by fullname when piped to" -TestCases $variables {
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
@@ -123,7 +134,7 @@
 					# Refresh Registry
 					Register-PSFConfig -Config $config -Scope $location.Scope
 					
-					It "Should properly remove a single setting by config-item" {
+					It "Should properly remove a single setting by config-item" -TestCases $variables {
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
@@ -132,13 +143,13 @@
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
 					}
-					It "Should properly remove multiple settings by config-item" {
+					It "Should properly remove multiple settings by config-item" -TestCases $variables {
 						Unregister-PSFConfig -ConfigurationItem $config[1..2] -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
 					}
-					It "Should properly remove all settings by config-item when piped to" {
+					It "Should properly remove all settings by config-item when piped to" -TestCases $variables {
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
@@ -152,7 +163,7 @@
 					# Refresh Registry
 					Register-PSFConfig -Config $config -Scope $location.Scope
 					
-					It "Should properly remove a single setting by module and name" {
+					It "Should properly remove a single setting by module and name" -TestCases $variables {
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
@@ -161,7 +172,7 @@
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
 					}
-					It "Should properly remove multiple settings by module and name" {
+					It "Should properly remove multiple settings by module and name" -TestCases $variables {
 						Unregister-PSFConfig -Module 'Unregister-PSFConfig' -Scope $location.Scope
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -BeNullOrEmpty
@@ -170,7 +181,7 @@
 				}
 				'File'
 				{
-					It "Should properly set up configuration settings in registry" {
+					It "Should properly set up configuration settings in registry" -TestCases $variables {
 						if (Test-Path $location.ConfigPath)
 						{
 							Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Should -BeNullOrEmpty
@@ -178,19 +189,19 @@
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 3
 					}
-					It "Should properly remove a single setting by fullname" {
+					It "Should properly remove a single setting by fullname" -TestCases $variables {
 						Unregister-PSFConfig -FullName $settingName1 -Scope $location.Scope
 						Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)" | Should -BeNullOrEmpty
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 2
 					}
-					It "Should properly remove multiple settings by fullname" {
+					It "Should properly remove multiple settings by fullname" -TestCases $variables {
 						Unregister-PSFConfig -FullName $settingName2, $settingName3 -Scope $location.Scope
 						if (Test-Path $location.ConfigPath)
 						{
 							Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Should -BeNullOrEmpty
 						}
 					}
-					It "Should properly remove all settings by fullname when piped to" {
+					It "Should properly remove all settings by fullname when piped to" -TestCases $variables {
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 3
 						$settingName1, $settingName2, $settingName3 | Unregister-PSFConfig -Scope $location.Scope
@@ -203,19 +214,19 @@
 					# Refresh Registry
 					Register-PSFConfig -Config $config -Scope $location.Scope
 					
-					It "Should properly remove a single setting by config-item" {
+					It "Should properly remove a single setting by config-item" -TestCases $variables {
 						Unregister-PSFConfig -ConfigurationItem $config[0] -Scope $location.Scope
 						Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)" | Should -BeNullOrEmpty
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 2
 					}
-					It "Should properly remove multiple settings by config-item" {
+					It "Should properly remove multiple settings by config-item" -TestCases $variables {
 						Unregister-PSFConfig -ConfigurationItem $config[1..2] -Scope $location.Scope
 						if (Test-Path $location.ConfigPath)
 						{
 							Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Should -BeNullOrEmpty
 						}
 					}
-					It "Should properly remove all settings by config-item when piped to" {
+					It "Should properly remove all settings by config-item when piped to" -TestCases $variables {
 						Register-PSFConfig -Config $config -Scope $location.Scope
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 3
 						$config | Unregister-PSFConfig -Scope $location.Scope
@@ -228,12 +239,12 @@
 					# Refresh Registry
 					Register-PSFConfig -Config $config -Scope $location.Scope
 					
-					It "Should properly remove a single setting by module and name" {
+					It "Should properly remove a single setting by module and name" -TestCases $variables {
 						Unregister-PSFConfig -Module 'Unregister-PSFConfig' -Name 'Phase1.Setting1' -Scope $location.Scope
 						Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)" | Should -BeNullOrEmpty
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 2
 					}
-					It "Should properly remove multiple settings by module and name" {
+					It "Should properly remove multiple settings by module and name" -TestCases $variables {
 						Unregister-PSFConfig -Module 'Unregister-PSFConfig' -Scope $location.Scope
 						if (Test-Path $location.ConfigPath)
 						{

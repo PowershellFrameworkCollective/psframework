@@ -53,7 +53,7 @@
 			$unixEpochStart = New-Object -TypeName DateTime -ArgumentList 1970, 1, 1, 0, 0, 0, ([DateTimeKind]::Utc)
 			$unixEpochTime = [int]($Timestamp.ToUniversalTime() - $unixEpochStart).TotalSeconds
 			
-			# Create json object to send 
+			# Create json object to send
 			$body = ConvertTo-Json -InputObject @{ event = $InputObject; host = $HostName; time = $unixEpochTime } -Compress
 			
 			# Only return if something went wrong, i.e. http response is not "success"

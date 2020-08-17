@@ -34,6 +34,7 @@
 		
 		For each computer in the domain, it will pick the DNSHostName if available, otherwise the Name.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Default')]
 	param (
 		[Parameter(Mandatory = $true, Position = 0)]

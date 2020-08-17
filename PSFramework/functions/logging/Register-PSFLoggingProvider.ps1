@@ -143,6 +143,7 @@
 		
 		Registers the filesystem provider, providing events for every single occasion.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[PSFramework.PSFCore.NoJeaCommandAttribute()]
 	[CmdletBinding(DefaultParameterSetName = 'Version1', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFLoggingProvider')]
 	param (
