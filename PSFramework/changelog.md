@@ -29,6 +29,7 @@
 - New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
 - New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
 - New: Class RunspaceBoundValueGeneric - Allows statically maintaining values that may contain specific values per runspace.
+- New: Class PSFNumber - Wraps a number into a humanized format while retaining its nature as number
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)

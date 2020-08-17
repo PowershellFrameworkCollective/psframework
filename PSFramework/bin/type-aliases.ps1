@@ -7,6 +7,7 @@ $TypeAliasTable = @{
 	PSFDateTimeParameter    = "PSFramework.Parameter.DateTimeParameter"
 	PSFEncoding			    = "PSFramework.Parameter.EncodingParameter"
 	PSFEncodingParameter    = "PSFramework.Parameter.EncodingParameter"
+	PSFNumber			    = 'PSFramework.Utility.Number'
 	psfrgx				    = "PSFramework.Utility.RegexHelper"
 	PsfScriptBlock		    = 'PSFramework.Utility.PsfScriptBlock'
 	PSFSize				    = "PSFramework.Utility.Size"

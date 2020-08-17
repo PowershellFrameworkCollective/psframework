@@ -1779,6 +1779,12 @@
             A parent license to indicate a product used within a product.
             </summary>
         </member>
+        <member name="M:PSFramework.License.License.ToString">
+            <summary>
+            The default string representation of the license object
+            </summary>
+            <returns>The default string representation of the license object</returns>
+        </member>
         <member name="T:PSFramework.License.LicenseHost">
             <summary>
             Host class covering all static needs of the licensing system.
@@ -6002,6 +6008,158 @@
             </summary>
             <param name="Size">The maximum size</param>
         </member>
+        <member name="T:PSFramework.Utility.Number">
+            <summary>
+            Wrapper class around double to facilitate human-friendly formatting in object properties
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.Number.Value">
+            <summary>
+            The actual value being wrapped
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Number.ToString">
+            <summary>
+            Provides a user friendly representation of a number
+            </summary>
+            <returns>A user friendly number format</returns>
+        </member>
+        <member name="P:PSFramework.Utility.Number.SegmentSize">
+            <summary>
+            Size of each segment before the decimal seaparator when displaying numbers
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Number.SegmentSeparator">
+            <summary>
+            The seperator used inbetween each segment when displaying numbers
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Number.DecimalSeparator">
+            <summary>
+            The decimal seperator when displaying numbers
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Number.DecimalDigits">
+            <summary>
+            When displaying numbers, how many digits after the decimal seperator will be shown?
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Number.#ctor">
+            <summary>
+            Create an empty number
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Number.#ctor(System.Double)">
+            <summary>
+            Create a number with an initial value
+            </summary>
+            <param name="Value">The initial value of the number</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.CompareTo(PSFramework.Utility.Number)">
+            <inheritdoc cref="M:System.IComparable`1.CompareTo(`0)"/>
+            <remarks>For sorting</remarks>
+        </member>
+        <member name="M:PSFramework.Utility.Number.CompareTo(System.Object)">
+            <inheritdoc cref="M:System.IComparable.CompareTo(System.Object)"/>
+            <remarks>For sorting</remarks>
+            <exception cref="T:System.ArgumentException">If you compare with something invalid.</exception>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Addition(PSFramework.Utility.Number,PSFramework.Utility.Number)">
+            <summary>
+            Adds two sizes
+            </summary>
+            <param name="a">The first size to add</param>
+            <param name="b">The second size to add</param>
+            <returns>The sum of both sizes</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Subtraction(PSFramework.Utility.Number,PSFramework.Utility.Number)">
+            <summary>
+            Substracts two sizes
+            </summary>
+            <param name="a">The first size to substract</param>
+            <param name="b">The second size to substract</param>
+            <returns>The difference between both sizes</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Multiply(PSFramework.Utility.Number,System.Double)">
+            <summary>
+            Multiplies two sizes with each other
+            </summary>
+            <param name="a">The size to multiply</param>
+            <param name="b">The size to multiply with</param>
+            <returns>A multiplied size.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Division(PSFramework.Utility.Number,System.Double)">
+            <summary>
+            Divides one size by another. 
+            </summary>
+            <param name="a">The size to divide</param>
+            <param name="b">The size to divide with</param>
+            <returns>Divided size (note: Cut off)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Multiply(PSFramework.Utility.Number,PSFramework.Utility.Number)">
+            <summary>
+            Multiplies two sizes with each other
+            </summary>
+            <param name="a">The size to multiply</param>
+            <param name="b">The size to multiply with</param>
+            <returns>A multiplied size.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Division(PSFramework.Utility.Number,PSFramework.Utility.Number)">
+            <summary>
+            Divides one size by another.
+            </summary>
+            <param name="a">The size to divide</param>
+            <param name="b">The size to divide with</param>
+            <returns>Divided size (note: Cut off)</returns>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(System.Int32)~PSFramework.Utility.Number">
+            <summary>
+            Implicitly converts int to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(System.Decimal)~PSFramework.Utility.Number">
+            <summary>
+            Implicitly converts int to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(PSFramework.Utility.Number)~System.Int32">
+            <summary>
+            Implicitly converts size to int
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(System.Int64)~PSFramework.Utility.Number">
+            <summary>
+            Implicitly converts long to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(PSFramework.Utility.Number)~System.Int64">
+            <summary>
+            Implicitly converts size to long
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(System.String)~PSFramework.Utility.Number">
+            <summary>
+            Implicitly converts string to size
+            </summary>
+            <param name="a">The string to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(System.Double)~PSFramework.Utility.Number">
+            <summary>
+            Implicitly converts double to size
+            </summary>
+            <param name="a">The number to convert</param>
+        </member>
+        <member name="M:PSFramework.Utility.Number.op_Implicit(PSFramework.Utility.Number)~System.Double">
+            <summary>
+            Implicitly converts size to double
+            </summary>
+            <param name="a">The size to convert</param>
+        </member>
         <member name="T:PSFramework.Utility.PsfScriptBlock">
             <summary>
             Wrapper class around the traditional scriptblock class, extending its capabilities
@@ -6110,6 +6268,13 @@
         <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeGlobal(System.Object)">
             <summary>
             Invoke the Scriptblock rehomed to the global scope
+            </summary>
+            <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeLocal(System.Object)">
+            <summary>
+            Invoke the Scriptblock rehomed to the current sessionstate
             </summary>
             <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
             <returns>Whatever output this scriptblock generates</returns>
@@ -6608,6 +6773,26 @@
         <member name="F:PSFramework.Utility.UtilityHost.SizeStyle">
             <summary>
             The way size objects are usually displayed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.NumberSegmentSize">
+            <summary>
+            Size of each segment before the decimal seaparator when displaying numbers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.NumberSegmentSeparator">
+            <summary>
+            The seperator used inbetween each segment when displaying numbers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.NumberDecimalSeparator">
+            <summary>
+            The decimal seperator when displaying numbers
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.UtilityHost.NumberDecimalDigits">
+            <summary>
+            When displaying numbers, how many digits after the decimal seperator will be shown?
             </summary>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.IsLocalhost(System.String)">
