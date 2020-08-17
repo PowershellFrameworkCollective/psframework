@@ -12,9 +12,9 @@
 	$Exclude = ""
 )
 
-Write-PSFMessage -Level Important -Message "Starting Tests"
+Write-Host "Starting Tests"
 
-Write-PSFMessage -Level Important -Message "Importing Module"
+Write-Host "Importing Module"
 
 $global:testroot = $PSScriptRoot
 $global:__pester_data = @{ }
