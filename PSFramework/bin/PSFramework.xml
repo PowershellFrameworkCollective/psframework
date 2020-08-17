@@ -1779,6 +1779,12 @@
             A parent license to indicate a product used within a product.
             </summary>
         </member>
+        <member name="M:PSFramework.License.License.ToString">
+            <summary>
+            The default string representation of the license object
+            </summary>
+            <returns>The default string representation of the license object</returns>
+        </member>
         <member name="T:PSFramework.License.LicenseHost">
             <summary>
             Host class covering all static needs of the licensing system.
@@ -6110,6 +6116,13 @@
         <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeGlobal(System.Object)">
             <summary>
             Invoke the Scriptblock rehomed to the global scope
+            </summary>
+            <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.InvokeLocal(System.Object)">
+            <summary>
+            Invoke the Scriptblock rehomed to the current sessionstate
             </summary>
             <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
             <returns>Whatever output this scriptblock generates</returns>
