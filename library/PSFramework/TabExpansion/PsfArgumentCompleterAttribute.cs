@@ -23,7 +23,18 @@ namespace PSFramework.TabExpansion
         /// </summary>
         /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
         public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock)
-            : base(TabExpansionHost.RegisterCompletion(Guid.NewGuid().ToString(), ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), true).ScriptBlock)
+            : base(TabExpansionHost.RegisterCompletion(Guid.NewGuid().ToString(), ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), false, true).ScriptBlock)
+        {
+
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        /// <param name="Global">Whether to execute the scriptblock in the global context.</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, bool Global)
+            : base(TabExpansionHost.RegisterCompletion(Guid.NewGuid().ToString(), ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), Global, true).ScriptBlock)
         {
 
         }
@@ -34,7 +45,19 @@ namespace PSFramework.TabExpansion
         /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
         /// <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
         public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name)
-            : base(TabExpansionHost.RegisterCompletion(Name, ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), true).ScriptBlock)
+            : base(TabExpansionHost.RegisterCompletion(Name, ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), false, true).ScriptBlock)
+        {
+
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        /// <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+        /// <param name="Global">Whether to execute the scriptblock in the global context.</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name, bool Global)
+            : base(TabExpansionHost.RegisterCompletion(Name, ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), Global, true).ScriptBlock)
         {
 
         }

@@ -52,8 +52,4 @@
 			Update-TypeData -AppendPath $fullName
 		}
 	}
-	end
-	{
-	
-	}
 }

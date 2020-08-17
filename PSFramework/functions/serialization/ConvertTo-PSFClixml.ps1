@@ -83,7 +83,7 @@
 		}
 		catch
 		{
-			Stop-PSFFunction -Message "Failed to export object" -ErrorRecord $_ -EnableException $true -Target $resolvedPath -Cmdlet $PSCmdlet
+			Stop-PSFFunction -String 'ConvertTo-PSFClixml.Conversion.Error' -ErrorRecord $_ -EnableException $true -Target $resolvedPath -Cmdlet $PSCmdlet
 		}
 	}
 }

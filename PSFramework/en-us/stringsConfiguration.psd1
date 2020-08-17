@@ -8,6 +8,8 @@
 	'Configuration.Remove-PSFConfig.DeleteFailed'		  = 'Failed to remove configuration setting: {0} | Can be deleted: {1} | Enforced by policy {2}'
 	
 	# Schema: default
+	'Configuration.Schema.Default.ImportFailed'		      = 'Failed to import {0}' # $Resource
+	'Configuration.Schema.Default.SetFailed'		      = "Failed to set '{0}'" # $element.FullName
 	
 	# Schema: metajson
 	'Configuration.Schema.MetaJson.ProcessResource'	      = 'Processing resource: {0}'

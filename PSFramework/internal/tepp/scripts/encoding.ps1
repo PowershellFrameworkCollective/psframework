@@ -13,4 +13,4 @@
 	{
 		[System.Text.Encoding]::GetEncodings().BodyName
 	}
-}
+} -Global

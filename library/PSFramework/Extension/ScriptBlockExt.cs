@@ -5,6 +5,7 @@ using System.Management.Automation;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using PSFramework.Utility;
 
 namespace PSFramework.Extension
 {
@@ -30,6 +31,52 @@ namespace PSFramework.Extension
             Type type = ScriptBlock.GetType();
             MethodInfo method = type.GetMethod("DoInvokeReturnAsIs", BindingFlags.NonPublic | BindingFlags.Instance);
             return method.Invoke(ScriptBlock, arguments);
+        }
+
+        /// <summary>
+        /// Clones the specified scriptblock maintaining its language mode.
+        /// </summary>
+        /// <param name="ScriptBlock">The Scriptblock to clone</param>
+        /// <returns>A clone of the scriptblock with the languagemode intact</returns>
+        public static ScriptBlock Clone(this ScriptBlock ScriptBlock)
+        {
+            ScriptBlock newBlock = (ScriptBlock)UtilityHost.InvokePrivateMethod("Clone", ScriptBlock, null);
+            UtilityHost.SetPrivateProperty("LanguageMode", newBlock, UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock));
+            return newBlock;
+        }
+
+        /// <summary>
+        /// Resets the current scriptblock's sessionstate to the current runspace's global sessionstate.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to globalize</param>
+        /// <returns>The globalized scriptblock</returns>
+        public static ScriptBlock ToGlobal(this ScriptBlock ScriptBlock)
+        {
+            UtilityHost.ImportScriptBlock(ScriptBlock, true);
+            return ScriptBlock;
+        }
+
+        /// <summary>
+        /// Resets the current scriptblock's sessionstate to the current runspace's current sessionstate.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to import</param>
+        /// <returns>The imported scriptblock</returns>
+        public static ScriptBlock ToLocal(this ScriptBlock ScriptBlock)
+        {
+            UtilityHost.ImportScriptBlock(ScriptBlock);
+            return ScriptBlock;
+        }
+
+        /// <summary>
+        /// Resets the current scriptblock's sessionstate to either the current runspace's current sessionstate or its global sessionstate.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to import</param>
+        /// <param name="Global">Whether to import into the global sessionstate</param>
+        /// <returns>The imported ScriptBlock</returns>
+        public static ScriptBlock Import(this ScriptBlock ScriptBlock, bool Global = false)
+        {
+            UtilityHost.ImportScriptBlock(ScriptBlock, Global);
+            return ScriptBlock;
         }
     }
 }

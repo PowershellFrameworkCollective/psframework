@@ -192,7 +192,7 @@ namespace PSFramework.Message
         /// <summary>
         /// List of events that subscribe to messages being written
         /// </summary>
-        public static ConcurrentDictionary<string, MessageEventSubscription> Events = new ConcurrentDictionary<string, MessageEventSubscription>();
+        public static ConcurrentDictionary<string, MessageEventSubscription> Events = new ConcurrentDictionary<string, MessageEventSubscription>(StringComparer.InvariantCultureIgnoreCase);
         #endregion Events
     }
 }

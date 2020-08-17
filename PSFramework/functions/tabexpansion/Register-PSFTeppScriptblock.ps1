@@ -36,6 +36,10 @@
 			This can be used together with a background refresh mechanism to offload the cost of expensive queries into the background.
 			See Set-PSFTeppResult for details on how to refresh the cache.
 	
+		.PARAMETER Global
+			Whether the scriptblock should be executed in the global context.
+			This parameter is needed to reliably execute in background runspaces, but means no direct access to module content.
+	
 		.EXAMPLE
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
 			Register-PSFTeppArgumentCompleter -Command Get-Alcohol -Parameter Type -Name "psalcohol-liquids"
@@ -68,11 +72,14 @@
 		$Mode = "Auto",
 		
 		[PSFramework.Parameter.TimeSpanParameter]
-		$CacheDuration = 0
+		$CacheDuration = 0,
+		
+		[switch]
+		$Global
 	)
 	
 	process
 	{
-		[PSFramework.TabExpansion.TabExpansionHost]::RegisterCompletion($Name, $ScriptBlock, $Mode, $CacheDuration)
+		[PSFramework.TabExpansion.TabExpansionHost]::RegisterCompletion($Name, $ScriptBlock, $Mode, $CacheDuration, $Global)
 	}
 }

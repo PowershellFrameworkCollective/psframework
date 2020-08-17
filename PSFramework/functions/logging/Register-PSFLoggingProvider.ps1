@@ -29,7 +29,7 @@
 		Version 2
 		---------
 		
-		All providers run in an isolated module context.
+		Each provider runs in an isolated module context.
 		A provider can have multiple instances of itself active at the same time, each with separate resource isolation.
 		Additional tooling provided makes it also easier to publish complex logging providers.
 		Share variables between events by making them script-scope (e.g.: $script:path)
@@ -143,8 +143,9 @@
 		
 		Registers the filesystem provider, providing events for every single occasion.
 #>
+	[PSFramework.PSFCore.NoJeaCommandAttribute()]
 	[CmdletBinding(DefaultParameterSetName = 'Version1', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFLoggingProvider')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
@@ -235,7 +236,7 @@
 		return
 	}
 	
-	if ($ConfigurationSettings) { . $ConfigurationSettings }
+	if ($ConfigurationSettings) { & $ConfigurationSettings }
 	if (Test-PSFParameterBinding -ParameterName Enabled)
 	{
 		Set-PSFConfig -FullName "LoggingProvider.$Name.Enabled" -Value $Enabled.ToBool() -DisableHandler
@@ -280,8 +281,13 @@
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.InstallOptional" -Value $false -Initialize -Validation "bool" -Description "Whether installing the logging provider is mandatory, in order for it to be enabled"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeModules" -Value @() -Initialize -Validation "stringarray" -Description "Module whitelist. Only messages from listed modules will be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeModules" -Value @() -Initialize -Validation "stringarray" -Description "Module blacklist. Messages from listed modules will not be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeFunctions" -Value @() -Initialize -Validation "stringarray" -Description "Function whitelist. Only messages from listed functions will be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeFunctions" -Value @() -Initialize -Validation "stringarray" -Description "Function blacklist. Messages from listed functions will not be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeTags" -Value @() -Initialize -Validation "stringarray" -Description "Tag whitelist. Only messages with these tags will be logged"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.ExcludeTags" -Value @() -Initialize -Validation "stringarray" -Description "Tag blacklist. Messages with these tags will not be logged"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeWarning" -Value $true -Initialize -Validation "bool" -Description "Whether to log warning messages"
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.MinLevel" -Value 1 -Initialize -Validation "integer1to9" -Description "The minimum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.MaxLevel" -Value 9 -Initialize -Validation "integer1to9" -Description "The maximum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
 			
 			# Initialize custom config defined by logging provider
 			foreach ($property in $InstanceProperties)
@@ -318,31 +324,31 @@
 	catch
 	{
 		$dummy = $null
-		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name, [ref] $dummy)
-		Stop-PSFFunction -Message "Failed to register logging provider '$Name' - Registration event failed." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
+		$null = [PSFramework.Logging.ProviderHost]::Providers.TryRemove($Name, [ref]$dummy)
+		Stop-PSFFunction -String 'Register-PSFLoggingProvider.RegistrationEvent.Failed' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'register'
 		return
 	}
 	
 	#region Auto-Install & Enable
 	$shouldEnable = Get-PSFConfigValue -FullName "LoggingProvider.$Name.Enabled" -Fallback $false
-	$isInstalled = $provider.IsInstalledScript.Invoke()
+	$isInstalled = $provider.IsInstalledScript.InvokeGlobal()
 	
 	if (-not $isInstalled -and (Get-PSFConfigValue -FullName "LoggingProvider.$Name.AutoInstall" -Fallback $false))
 	{
 		try
 		{
 			Install-PSFLoggingProvider -Name $Name -EnableException
-			$isInstalled = $provider.IsInstalledScript.Invoke()
+			$isInstalled = $provider.IsInstalledScript.InvokeGlobal()
 		}
 		catch
 		{
 			if ($provider.InstallationOptional)
 			{
-				Write-PSFMessage -Level Warning -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -Tag 'logging', 'provider', 'fail', 'install' -EnableException $EnableException
+				Write-PSFMessage -Level Warning -String 'Register-PSFLoggingProvider.Installation.Failed' -StringValues $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'fail', 'install' -EnableException $EnableException
 			}
 			else
 			{
-				Stop-PSFFunction -Message "Failed to install logging provider '$Name'" -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+				Stop-PSFFunction -String 'Register-PSFLoggingProvider.Installation.Failed' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
 				return
 			}
 		}
@@ -350,10 +356,10 @@
 	
 	if ($shouldEnable)
 	{
-		if ($isInstalled) { $provider.Enabled = $true }
+		if ($isInstalled -or $provider.InstallationOptional) { $provider.Enabled = $true }
 		else
 		{
-			Stop-PSFFunction -Message "Failed to enable logging provider $Name on registration! It was not recognized as installed. Consider running 'Install-PSFLoggingProvider' to properly install the prerequisites." -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
+			Stop-PSFFunction -String 'Register-PSFLoggingProvider.NotInstalled.Termination' -StringValues $Name -ErrorRecord $_ -EnableException $EnableException -Tag 'logging', 'provider', 'fail', 'install'
 			return
 		}
 	}

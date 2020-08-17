@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
+using PSFramework.Utility;
 
 namespace PSFramework.Logging
 {
@@ -38,7 +39,7 @@ namespace PSFramework.Logging
         /// <summary>
         /// Functions used by the logging provider instances.
         /// </summary>
-        public ScriptBlock Functions;
+        public PsfScriptBlock Functions;
 
         /// <summary>
         /// List of enabled instances

@@ -5,7 +5,7 @@
 	
 	try
 	{
-		$module = New-Module -Name (New-Guid) -ArgumentList $LoggingProviderInstance -ScriptBlock {
+		$module = New-Module -Name ([guid]::NewGuid()) -ArgumentList $LoggingProviderInstance -ScriptBlock {
 			param (
 				$LoggingProviderInstance
 			)
@@ -27,17 +27,17 @@
 			if ($LoggingProviderInstance.Provider.Functions)
 			{
 				if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.Functions -Mode "ConstrainedLanguage") { throw "The functions resource scriptblock is in constrained language mode and cannot be loaded!" }
-				[PSFramework.Utility.UtilityHost]::ImportScriptBlock($LoggingProviderInstance.Provider.Functions)
-				. $LoggingProviderInstance.Provider.Functions
+				# Invoke in current scope after localizing the scriptblock into the current context
+				$LoggingProviderInstance.Provider.Functions.InvokeEx($false, $true, $false)
 			}
 			
 			${  functionNames  } = @{
-				Begin   = New-Guid
-				Start   = New-Guid
-				Message = New-Guid
-				Error   = New-Guid
-				End	    = New-Guid
-				Final   = New-Guid
+				Begin   = [guid]::NewGuid()
+				Start   = [guid]::NewGuid()
+				Message = [guid]::NewGuid()
+				Error   = [guid]::NewGuid()
+				End	    = [guid]::NewGuid()
+				Final   = [guid]::NewGuid()
 			}
 			
 			function Get-ConfigValue

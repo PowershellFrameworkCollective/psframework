@@ -1,6 +1,6 @@
 ﻿Register-PSFTeppScriptblock -Name 'PSFramework-tepp-scriptblockname' -ScriptBlock {
 	[PSFramework.TabExpansion.TabExpansionHost]::Scripts.Keys
-}
+} -Global
 
 Register-PSFTeppScriptblock -Name 'PSFramework-tepp-parametername' -ScriptBlock {
 	if ($fakeBoundParameter.Command)
@@ -15,4 +15,4 @@ Register-PSFTeppScriptblock -Name 'PSFramework-tepp-parametername' -ScriptBlock 
 		}
 		catch { }
 	}
-}
+} -Global

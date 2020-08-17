@@ -34,7 +34,7 @@
 		Starts the runspace registered under the name 'mymodule.maintenance'
 #>
 	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Start-PSFRunspace')]
-	Param (
+	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
 		$Name,
@@ -63,18 +63,18 @@
 				{
 					try
 					{
-						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item)</c>" -Target $item -Tag "runspace", "start" }
+						if (-not $NoMessage) { Write-PSFMessage -Level Verbose -String 'Start-PSFRunspace.Starting' -StringValues ($item) -Target $item -Tag "runspace", "start" }
 						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item].Start()
 					}
 					catch
 					{
-						Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item)</c>" -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+						Stop-PSFFunction -String 'Start-PSFRunspace.Starting.Failed' -StringValues $item -ErrorRecord $_ -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 					}
 				}
 			}
 			else
 			{
-				Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item)</c> | No runspace registered under this name!" -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+				Stop-PSFFunction -String 'Start-PSFRunspace.UnknownRunspace' -StringValues $item -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 			}
 		}
 		
@@ -84,12 +84,12 @@
 			{
 				try
 				{
-					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -Message "Starting runspace: <c='em'>$($item.Name)</c>" -Target $item -Tag "runspace", "start" }
+					if (-not $NoMessage) { Write-PSFMessage -Level Verbose -String 'Start-PSFRunspace.Starting' -StringValues $item.Name -Target $item -Tag "runspace", "start" }
 					$item.Start()
 				}
 				catch
 				{
-					Stop-PSFFunction -Message "Failed to start runspace: <c='em'>$($item.Name)</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
+					Stop-PSFFunction -String 'Start-PSFRunspace.Starting.Failed' -StringValues $item.Name -EnableException $EnableException -Tag "fail", "argument", "runspace", "start" -Target $item -Continue
 				}
 			}
 		}

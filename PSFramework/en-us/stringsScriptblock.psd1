@@ -9,4 +9,6 @@
 	'Validate.Uri.Absolute'	       = 'The specified input is not an absolute uri: {0}'
 	'Validate.Uri.Absolute.File'   = 'The specified input is not an absolute uri pointing at a file: {0}'
 	'Validate.Uri.Absolute.Https'  = 'The specified input is not an absolute uri pointing at a weblink (https://...): {0}'
+	
+	'Validate.TimeSpan.Positive'   = 'The specified input is not a timespan with a value greater than 0: {0}'
 }

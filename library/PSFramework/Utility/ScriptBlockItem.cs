@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,11 @@ namespace PSFramework.Utility
         private ScriptBlock _ScriptBlock;
 
         /// <summary>
+        /// Whether the scriptblock should be invoked as global scriptblock
+        /// </summary>
+        public bool Global;
+
+        /// <summary>
         /// The number of times this scriptblock has been used
         /// </summary>
         public int CountRetrieved { get; private set; }
@@ -47,10 +53,12 @@ namespace PSFramework.Utility
         /// </summary>
         /// <param name="Name">The name of the scriptblock</param>
         /// <param name="ScriptBlock">The scriptblock</param>
-        public ScriptBlockItem(string Name, ScriptBlock ScriptBlock)
+        /// <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
+        public ScriptBlockItem(string Name, ScriptBlock ScriptBlock, bool Global = false)
         {
             this.Name = Name;
             this.ScriptBlock = ScriptBlock;
+            this.Global = Global;
         }
     }
 }

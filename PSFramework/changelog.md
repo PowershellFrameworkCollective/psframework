@@ -2,6 +2,7 @@
 ## ???
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
+- New: Feature PSFramework.Stop-PSFFunction.ShowWarning - Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.
 - New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
 - New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
@@ -22,9 +23,12 @@
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
 - New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.TimeSpan.Positive - prebuilt validation scriptblock for use with PsfValidateScript. Validation messages available with same label.
 - New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- New: Configuration Validation: integer1to9 - Ensures the input is an integer between 1 and 9.
 - New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
 - New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
+- New: Class RunspaceBoundValueGeneric - Allows statically maintaining values that may contain specific values per runspace.
 - Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
 - Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
 - Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
@@ -33,6 +37,7 @@
 - Upd: Write-PSFMessage - New parameter: `-Data` allows specifying additional data points for the log
 - Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
 - Upd: New-PSFSupportPackage - added linux & mac support (thanks, @nyanhp)
+- Upd: New-PSFSupportPackage - now supports taking console buffer screenshot from ISE
 - Upd: Register-PSFLoggingProvider - require FullLanguage language mode on all scriptblock parameters.
 - Upd: Register-PSFLoggingProvider - added parameters to allow creation of second generation logging providers.
 - Upd: PSFCmdlet - WriteMessage() now also accepts a Hashtable input as Data
@@ -44,6 +49,19 @@
 - Upd: Logging Provider: logfile - Added new output format: CMTrace
 - Upd: Set-PSFConfig - Now accepts from the pipeline
 - Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
+- Upd: Disable-PSFTaskEngineTask - Added Name parameter
+- Upd: Enable-PSFTaskEngineTask - Added Name parameter
+- Upd: Added debug mode for more visual PSFramework import
+- Upd: Added scheduled timer to clean up runspace bound values for runspaces that no longer exist
+- Upd: Register-PSFTeppScriptblock - added `-Global` parameter
+- Upd: Set-PSFScriptblock - added `-Global` parameter
+- Upd: Validation Attribute PsfValidateScript - added `Global = ` named property to execute script in the global context
+- Upd: Register-PSFLoggingProvider - flagged as unsafe for JEA
+- Upd: Set-PSFTypeAlias - now accepts from the pipeline
+- Upd: Stop-PSFFunction - added parameter `-AlwaysWarning`, ensuring it will always show the warning, even when throwing a terminating exception.
+- Fix: Register-PSFLoggingProvider - respects `InstallationOptional` setting
+- Fix: Install-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the installation scriptblock
+- Fix: Set-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the configuration scriptblock
 - Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
 - Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
 - Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.

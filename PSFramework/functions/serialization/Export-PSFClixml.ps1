@@ -46,6 +46,7 @@
 #>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFClixml')]
 	param (
+		[PsfValidateScript('PSFramework.Validate.FSPath.FileOrParent', ErrorString = 'PSFramework.Validate.FSPath.FileOrParent')]
 		[Parameter(Mandatory = $true, Position = 0)]
 		[string]
 		$Path,
@@ -71,10 +72,8 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		
 		try { $resolvedPath = Resolve-PSFPath -Path $Path -Provider FileSystem -SingleItem -NewChild }
-		catch { Stop-PSFFunction -Message "Could not resolve outputpath: $Path" -EnableException $true -Cmdlet $PSCmdlet -ErrorRecord $_ }
+		catch { Stop-PSFFunction -String 'Validate.FSPath.FileOrParent' -StringValues $Path -EnableException $true -Cmdlet $PSCmdlet -ErrorRecord $_ }
 		[System.Collections.ArrayList]$data = @()
 	}
 	process
@@ -86,7 +85,7 @@
 	{
 		try
 		{
-			Write-PSFMessage -Level Verbose -Message "Writing data to '$resolvedPath'"
+			Write-PSFMessage -Level Verbose -String 'Export-PSFClixml.Exporting' -StringValues $resolvedPath
 			if ($Style -like 'Byte')
 			{
 				if ($NoCompression)
@@ -116,7 +115,7 @@
 		}
 		catch
 		{
-			Stop-PSFFunction -Message "Failed to export object" -ErrorRecord $_ -EnableException $true -Target $resolvedPath -Cmdlet $PSCmdlet
+			Stop-PSFFunction -String 'Export-PSFClixml.Exporting.Failed' -ErrorRecord $_ -EnableException $true -Target $resolvedPath -Cmdlet $PSCmdlet
 		}
 	}
 }

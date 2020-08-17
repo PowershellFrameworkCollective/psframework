@@ -34,6 +34,11 @@ namespace PSFramework.PSFCore
         public CallStack ScriptCallstack = new CallStack(UtilityHost.Callstack);
 
         /// <summary>
+        /// Runspace the message was written from
+        /// </summary>
+        public Guid Runspace = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId;
+
+        /// <summary>
         /// Create debug information for troubleshooting purposes
         /// </summary>
         /// <param name="Data">The data to write</param>

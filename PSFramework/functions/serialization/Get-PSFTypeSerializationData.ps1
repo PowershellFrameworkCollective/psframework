@@ -75,6 +75,7 @@
 				.SYNOPSIS
 					Returns the header for a types XML file
 			#>
+			[CmdletBinding()]
 			Param (
 				
 			)
@@ -92,6 +93,7 @@
 				.SYNOPSIS
 					Processes a type into proper XML
 			#>
+			[CmdletBinding()]
 			Param (
 				[string]
 				$Type,
@@ -149,6 +151,7 @@
 				.SYNOPSIS
 					Returns the footer for a types XML file
 			#>
+			[CmdletBinding()]
 			Param (
 				
 			)

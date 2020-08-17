@@ -5,6 +5,8 @@ using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using PSFramework.Extension;
+using PSFramework.Runspace;
+using PSFramework.Utility;
 
 namespace PSFramework.Utility
 {
@@ -19,6 +21,14 @@ namespace PSFramework.Utility
         internal ScriptBlock ScriptBlock;
 
         #region Properties
+        /// <summary>
+        /// The language mode the scriptblock is running under
+        /// </summary>
+        public PSLanguageMode LanguageMode
+        {
+            get { return (PSLanguageMode)UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock); }
+        }
+
         /// <summary>
         /// The Ast of he scriptblock
         /// </summary>
@@ -94,18 +104,60 @@ namespace PSFramework.Utility
         /// <returns>Whatever output this scriptblock generates</returns>
         public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(bool UseLocalScope, object DollerUnder, object Input, object ScriptThis, bool ImportContext, bool ImportGlobal, params object[] Args)
         {
-            // Avoid concurrent access to prevent accidental Context import collisions when called in parallel from multiple runspaces.
-            lock (_Lock)
-            {
-                if (ImportContext)
-                    UtilityHost.ImportScriptBlock(ScriptBlock, ImportGlobal);
-                object result = ScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
-                if (result == null)
-                    return null;
-                if (result.GetType() == typeof(PSObject))
-                    return new System.Collections.ObjectModel.Collection<PSObject>() { result as PSObject };
-                return (System.Collections.ObjectModel.Collection<PSObject>)ScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
-            }
+            ScriptBlock tempScriptBlock = ScriptBlock;
+            if (ImportContext)
+                tempScriptBlock = ScriptBlock.Clone().Import(ImportGlobal);
+            object result = tempScriptBlock.DoInvokeReturnAsIs(UseLocalScope, 2, DollerUnder, Input, ScriptThis, Args);
+            if (result == null)
+                return null;
+            if (result.GetType() == typeof(PSObject))
+                return new System.Collections.ObjectModel.Collection<PSObject>() { result as PSObject };
+            return (System.Collections.ObjectModel.Collection<PSObject>)result;
+        }
+
+        /// <summary>
+        /// Do a rich invocation of the scriptblock
+        /// </summary>
+        /// <param name="UseLocalScope">Whether a new scope should be created for this</param>
+        /// <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+        /// <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(bool UseLocalScope, bool ImportContext, bool ImportGlobal)
+        {
+            return InvokeEx(UseLocalScope, null, null, null, ImportContext, ImportGlobal, null);
+        }
+
+        /// <summary>
+        /// Do a rich invocation of the scriptblock
+        /// </summary>
+        /// <param name="Value">The value to offer as argument / input for the scriptblock</param>
+        /// <param name="UseLocalScope">Whether a new scope should be created for this</param>
+        /// <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+        /// <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeEx(object Value, bool UseLocalScope, bool ImportContext, bool ImportGlobal)
+        {
+            return InvokeEx(UseLocalScope, Value, Value, null, ImportContext, ImportGlobal, Value);
+        }
+
+        /// <summary>
+        /// Invoke the Scriptblock rehomed to the global scope
+        /// </summary>
+        /// <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeGlobal(object Value = null)
+        {
+            return InvokeEx(true, Value, Value, null, true, true, Value);
+        }
+
+        /// <summary>
+        /// Invoke the Scriptblock rehomed to the current sessionstate
+        /// </summary>
+        /// <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+        /// <returns>Whatever output this scriptblock generates</returns>
+        public System.Collections.ObjectModel.Collection<PSObject> InvokeLocal(object Value = null)
+        {
+            return InvokeEx(true, Value, Value, null, true, false, Value);
         }
 
         /// <summary>
@@ -117,10 +169,6 @@ namespace PSFramework.Utility
         {
             return ScriptBlock.Invoke(args);
         }
-
-        #pragma warning disable 0649
-        private static PsfScriptBlock _Lock = ScriptBlock.Create("");
-        #pragma warning restore 0649
         #endregion Methods
 
         /// <summary>
