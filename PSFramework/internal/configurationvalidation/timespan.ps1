@@ -9,7 +9,7 @@
 		Message = ""
 	}
 	
-	try { [timespan]$timespan = $Value }
+	try { [timespan]$timespan = [PSFramework.Parameter.TimeSpanParameter]$Value }
 	catch
 	{
 		$Result.Message = "Not a Timespan: $Value"
