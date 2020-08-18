@@ -1,4 +1,4 @@
----
+﻿---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version:
@@ -16,8 +16,8 @@ Combines should process, try/catch error handling and logging in one package.
 ```
 Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target <Object>]
  [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>] [-Tag <String[]>]
- [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+ [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>]
+ [-RetryCondition <ScriptBlock>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### String
@@ -25,7 +25,7 @@ Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target 
 Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -ActionString <String> [-ActionStringValues <Object[]>]
  [-Target <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>]
  [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-RetryCondition <ScriptBlock>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -302,8 +302,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -RetryCondition
+Only when this scriptblock returns $true will it try again.
+The script receives two input items:
+
+- $_ : The exception (not error record) thrown
+- $args[0] : The Target object specified in the -Target parameter
+
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -79,6 +79,12 @@
 		This object will be in the error record (which will be written, even in non-silent mode, just won't show it).
 		If you specify such an object, it becomes simple to actually figure out, just where things failed at.
 	
+	.PARAMETER AlwaysWarning
+		Ensures the command always writes a warning, no matter what.
+		by default, when -EnableException is set to $true it will hide the warning instead.
+		You can enable this to always be on for your module by setting the feature flag: PSFramework.Stop-PSFFunction.ShowWarning
+		For more information on feature flags, see "Get-Help Set-PSFFeature -Detailed"
+	
 	.PARAMETER Continue
 		This will cause the function to call continue while not running with exceptions enabled (-EnableException).
 		Useful when mass-processing items where an error shouldn't break the loop.
@@ -166,6 +172,9 @@
 		$Target,
 		
 		[switch]
+		$AlwaysWarning,
+		
+		[switch]
 		$Continue,
 		
 		[switch]
@@ -230,6 +239,8 @@
 	
 	#region Message Handling
 	$records = @()
+	$showWarning = $AlwaysWarning
+	if (-not $showWarning) { $showWarning = Test-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -ModuleName $ModuleName }
 	
 	$paramWritePSFMessage = @{
 		Level				     = 'Warning'
@@ -267,7 +278,7 @@
 		}
 		
 		# Manage Debugging
-		if ($EnableException) { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage 3>$null }
+		if ($EnableException -and -not $showWarning) { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage 3>$null }
 		else { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage }
 	}
 	else
@@ -276,7 +287,7 @@
 		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
-		if ($EnableException) { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage 3>$null }
+		if ($EnableException -and -not $showWarning) { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage 3>$null }
 		else { Write-PSFMessage -ErrorRecord $records @paramWritePSFMessage }
 	}
 	#endregion Message Handling

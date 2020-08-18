@@ -1,4 +1,4 @@
----
+﻿---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version: https://psframework.org/documentation/commands/PSFramework/Select-PSFObject.html
@@ -62,10 +62,10 @@ _
 
 ### Example 2: Converting type
 ```
-Import-Csv .\file.csv | Select-PSFObject Name, "Length as Size to DbaSize"
+Import-Csv .\file.csv | Select-PSFObject Name, "Length as Size to PSFSize"
 ```
 
-Selects the properties Name and Length, renaming Length to Size and converting it to \[DbaSize\] (a userfriendly representation of size numbers contained in the dbatools module)
+Selects the properties Name and Length, renaming Length to Size and converting it to \[Example\] (a userfriendly representation of size numbers without turning the data into string)
 
 _
 
@@ -409,7 +409,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

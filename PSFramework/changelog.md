@@ -1,4 +1,83 @@
 ﻿# CHANGELOG
+## 1.3.135-preview1 : 2020-08-17
+
+- Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
+- New: Feature PSFramework.Stop-PSFFunction.ShowWarning - Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.
+- New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
+- New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
+- New: Command Select-PSFConfig : Select a subset of configuration entries and return them as objects.
+- New: Command Test-PSFLanguageMode : Tests, in what language mode a specified scriptblock is in.
+- New: Command Import-PSFLoggingProvider : Imports additional logging providers or logging provider configuration from a filesystem path or network url.
+- New: Parameter Attribute PsfArgumentCompleter : Extends ArgumentCompleter and replaces the _need_ for Register-PSFArgumentCompleter.
+- New: Validation Attribute PsfValidateLanguageMode : Validates the language mode of a scriptblock.
+- New: Logging Provider: eventlog - logs to the windows eventlog
+- New: Logging Provider: splunk - logs to a splunk SIEM server
+- New: Logging Provider: azureloganalytics - logs to Azure Log Analytics
+- New: Validation Scriptblock: PSFramework.Validate.FSPath - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.FileOrParent - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.FSPath.Folder - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path.Container - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Path.Leaf - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.File - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.Uri.Absolute.Https - prebuilt validation scriptblocks for use with PsfValidateScript. Validation messages available with same label.
+- New: Validation Scriptblock: PSFramework.Validate.TimeSpan.Positive - prebuilt validation scriptblock for use with PsfValidateScript. Validation messages available with same label.
+- New: Configuration Validation: uriabsolute - Ensures the input is an absolute Uri.
+- New: Configuration Validation: integer1to9 - Ensures the input is an integer between 1 and 9.
+- New: Configuration Setting: PSFramework.Logging.Enabled - allows fully disabling the logging runspace by configuration.
+- New: Class PsfScriptBlock - Wraps a scriptblock and provides native support for $_, $this, $args as input. Also supports rehoming your scriptblock to a runspace or the global scope withoutbreaking languagemode.
+- New: Class RunspaceBoundValueGeneric - Allows statically maintaining values that may contain specific values per runspace.
+- New: Class PSFNumber - Wraps a number into a humanized format while retaining its nature as number
+- Upd: Invoke-PSFProtectedCommand - Added `-RetryCondition` parameter to allow custom scriptblocks for retry validation
+- Upd: ConvertTo-PSFHashtable - Added `-CaseSensitive` parameter
+- Upd: Write-PSFMessage - Support for including level-based prefixes for CI/CD services such as Azure DevOps. (thanks, @splaxi)
+- Upd: Write-PSFMessage - New parameter: `-NoNewLine` avoids adding a new line after writing to screen.
+- Upd: Write-PSFMessage - New parameter: `-PSCmdlet` will in combination with `-EnableException` and `-ErrorRecord` write the errors in the context of the specified $PSCmdlet.
+- Upd: Write-PSFMessage - New parameter: `-Data` allows specifying additional data points for the log
+- Upd: Test-PSFPowerShell - now able to execute remotely, testing a target host.
+- Upd: New-PSFSupportPackage - added linux & mac support (thanks, @nyanhp)
+- Upd: New-PSFSupportPackage - now supports taking console buffer screenshot from ISE
+- Upd: Register-PSFLoggingProvider - require FullLanguage language mode on all scriptblock parameters.
+- Upd: Register-PSFLoggingProvider - added parameters to allow creation of second generation logging providers.
+- Upd: PSFCmdlet - WriteMessage() now also accepts a Hashtable input as Data
+- Upd: PSFCmdlet - WriteLocalizedMessage() now also accepts a Hashtable input as Data
+- Upd: Logging - Increased log execution interval and added idle detection with extended intervals in non-use to reduce CPU impact.
+- Upd: Logging - Disabled autostart of logging runpace in PowerShell Studio Module cacher
+- Upd: Logging - Disabled autostart of logging runpace in Azure Functions
+- Upd: Logging Provider: logfile - Updated to generation 2 to enable multi-instance capabilities.
+- Upd: Logging Provider: logfile - Added new output format: CMTrace
+- Upd: Get-PSFConfig - Now accepts from the pipeline
+- Upd: Get-PSFConfigValue - Now accepts positional input
+- Upd: Set-PSFConfig - Now accepts from the pipeline
+- Upd: Set-PSFConfig - Handler scriptblocks can now use $_ instead of $args[0]
+- Upd: Unregister-PSFConfig - Added failover on non-windows from UserDefault to FileUserLocal scope
+- Upd: Unregister-PSFConfig - Added failover on non-windows from SystemDefault to FileSystem scope
+- Upd: Disable-PSFTaskEngineTask - Added Name parameter
+- Upd: Enable-PSFTaskEngineTask - Added Name parameter
+- Upd: Added debug mode for more visual PSFramework import
+- Upd: Added scheduled timer to clean up runspace bound values for runspaces that no longer exist
+- Upd: Register-PSFTeppScriptblock - added `-Global` parameter
+- Upd: Set-PSFScriptblock - added `-Global` parameter
+- Upd: Validation Attribute PsfValidateScript - added `Global = ` named property to execute script in the global context
+- Upd: Register-PSFLoggingProvider - flagged as unsafe for JEA
+- Upd: Set-PSFTypeAlias - now accepts from the pipeline
+- Upd: Stop-PSFFunction - added parameter `-AlwaysWarning`, ensuring it will always show the warning, even when throwing a terminating exception.
+- Fix: Register-PSFLoggingProvider - respects `InstallationOptional` setting
+- Fix: Install-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the installation scriptblock
+- Fix: Set-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the configuration scriptblock
+- Fix: ConvertTo-PSFHashtable : The `-Include` parameter functionality was case sensitive (as the sole parameter being so)
+- Fix: Missing help for new cmdlets has been fixed and integrated into CI/CD
+- Fix: PSFCmdlet - fails with 'Variable was precompiled for performance reasons' in some situations when writing messages.
+- Fix: Localization - logging language only honored when specifying string values.
+- Fix: Register-PSFLoggingProvider - auto-install fails to notify system of success, failing the registration auto-enable even when it installed correctly.
+- Fix: Set-PSFConfig - security fix
+- Fix: Set-PSFConfig - security fix
+- Fix: Import-PSFConfig - resolved scriptblock handling issues in multi-runspace scenarios
+- Fix: Register-PSFConfig - error detecting parameterset in pipeline scenarios
+- Fix: Register-PSFConfig - failed to failover for SystemDefault scope on non-Windows
+
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.
  - New: Command Set-PSFPath : Configures a path under a specified name.

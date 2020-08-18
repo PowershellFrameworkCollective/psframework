@@ -1,4 +1,4 @@
----
+﻿---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version: https://psframework.org/documentation/commands/PSFramework/Write-PSFMessage.html
@@ -15,17 +15,19 @@ This function receives messages, then logs and reports them.
 ### Message (Default)
 ```
 Write-PSFMessage [-Level <MessageLevel>] -Message <String> [-StringValues <Object[]>] [-Tag <String[]>]
- [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
+ [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
- [-Target <Object>] [-EnableException <Boolean>] [-Breakpoint] [<CommonParameters>]
+ [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
+ [<CommonParameters>]
 ```
 
 ### String
 ```
 Write-PSFMessage [-Level <MessageLevel>] -String <String> [-StringValues <Object[]>] [-Tag <String[]>]
- [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
+ [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
- [-Target <Object>] [-EnableException <Boolean>] [-Breakpoint] [<CommonParameters>]
+ [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -284,7 +286,7 @@ Accept wildcard characters: False
 ### -ErrorRecord
 If an error record should be noted with the message, add the full record here.
 Especially designed for use with Warning-mode, it can legally be used in either mode.
-The error will be added to the $Error variable and enqued in the logging/debugging system.
+The error will be added to the $Error variable and enqueued in the logging/debugging system.
 
 ```yaml
 Type: ErrorRecord[]
@@ -429,8 +431,56 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -NoNewLine
+Does not include a new line entry when writing a message to screen.
+Note: The message will still be logged as a single entry, even if you later add additional text.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Data
+Specify additional data points that are furnished to the logging providers.
+Data provided may be arbitrary and will not be touched by the logging system itself.
+
+```yaml
+Type: Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PSCmdlet
+The cmdlet object to use for writing errors.
+Offer the $PSCmdlet variable of the calling function for this parameter.
+
+```yaml
+Type: PSCmdlet
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

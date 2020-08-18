@@ -37,7 +37,7 @@
 	{
 		'All'
 		{
-			New-Object PSObject -Property @{
+			[pscustomobject]@{
 				Result    = ([PSFramework.ResultCache.ResultCache]::Result)
 				Function  = ([PSFramework.ResultCache.ResultCache]::Function)
 				Timestamp = ([PSFramework.ResultCache.ResultCache]::Timestamp)

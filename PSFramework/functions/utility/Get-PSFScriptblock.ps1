@@ -34,6 +34,7 @@
 #>
 	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'List')]
 	[OutputType([System.Management.Automation.ScriptBlock], ParameterSetName = 'Name')]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidDefaultValueForMandatoryParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Name')]
 	param (

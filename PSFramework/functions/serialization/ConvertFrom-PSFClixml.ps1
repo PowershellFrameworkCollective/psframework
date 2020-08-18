@@ -52,7 +52,7 @@
 		if ($InputObject -is [string]) { Convert-Item -Data $InputObject }
 		elseif ($InputObject -is [System.Byte[]]) { Convert-Item -Data $InputObject }
 		elseif ($InputObject -is [System.Byte]) { $null = $byteList.Add($InputObject) }
-		else { Stop-PSFFunction -Message "Unsupported input! Provide either a string or byte-array that previously were serialized from objects in powershell" -EnableException $true }
+		else { Stop-PSFFunction -String 'ConvertFrom-PSFClixml.BadInput' -EnableException $true }
 	}
 	end
 	{

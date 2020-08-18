@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Timers;
 
 namespace PSFramework.Runspace
 {
@@ -32,5 +33,24 @@ namespace PSFramework.Runspace
         }
         private static List<RunspaceBoundValue> _runspaceBoundValues = new List<RunspaceBoundValue>();
         private static readonly object _runspaceBoundValuesLock = new object();
+
+        private static Timer _Timer;
+
+        /// <summary>
+        /// Starts the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+        /// </summary>
+        internal static void StartRbvTimer()
+        {
+            _Timer = new Timer(900000); // Every 15 minutes should suffice
+            _Timer.Elapsed += CleanupRunspaceBoundVariables;
+            _Timer.AutoReset = true;
+            _Timer.Enabled = true;
+        }
+
+        private static void CleanupRunspaceBoundVariables(Object source, ElapsedEventArgs e)
+        {
+            foreach (RunspaceBoundValue value in _RunspaceBoundValues)
+                value.PurgeExpired();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PSFramework.Message;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -59,6 +60,14 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public string[] Tag;
+
+        /// <summary>
+        /// Specify additional data points that are furnished to the logging providers.
+        /// Data provided is arbitrary and not touched by the logging system itself.
+        /// </summary>
+        [Parameter()]
+        [AllowNull()]
+        public Hashtable Data;
 
         /// <summary>
         /// The name of the calling function.
@@ -127,6 +136,13 @@ namespace PSFramework.Commands
         public object Target;
 
         /// <summary>
+        /// Skip adding a new line after writing the message to screen.
+        /// It is still logged as a single message though.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter NoNewLine;
+
+        /// <summary>
         /// This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		/// This is less user friendly, but allows catching exceptions in calling scripts.
         /// </summary>
@@ -138,6 +154,12 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public SwitchParameter Breakpoint;
+
+        /// <summary>
+        /// The cmdlet object to use for writing errors.
+        /// </summary>
+        [Parameter()]
+        public PSCmdlet PSCmdlet;
         #endregion Parameters
 
         #region Private fields
@@ -195,10 +217,10 @@ namespace PSFramework.Commands
         /// Scriptblock that writes the host messages
         /// </summary>
         private static string _writeHostScript = @"
-param ( $___psframework__string )
+param ( $___psframework__string, $NoNewLine )
 
-if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore }
-else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore }
+if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
+else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
 ";
 
         /// <summary>
@@ -331,6 +353,9 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (StringValues == null)
                 StringValues = new object[10];
 
+            if (PSCmdlet == null)
+                PSCmdlet = this;
+
             #region Resolving Meta Information
             _callStack = Utility.UtilityHost.Callstack;
             CallStackFrame callerFrame = null;
@@ -431,18 +456,11 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             }
             #endregion Exception Integration
 
-            #region Error handling
+            #region Error handling p1
             PsfExceptionRecord errorRecord = null;
             if (ErrorRecord != null)
-            {
-                if (!_fromStopFunction)
-                    if (EnableException)
-                        foreach (ErrorRecord record in ErrorRecord)
-                            WriteError(record);
-
                 errorRecord = LogHost.WriteErrorEntry(ErrorRecord, FunctionName, ModuleName, _Tags, _timestamp, _MessageSystem, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName);
-            }
-            #endregion Error handling
+            #endregion Error handling p1
 
             LogEntryType channels = LogEntryType.None;
 
@@ -453,7 +471,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 {
                     if (!String.IsNullOrEmpty(Once))
                     {
-                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
                             WriteWarning(_MessageStreams);
@@ -461,7 +479,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
 
                             Configuration.Config cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
-                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
                             cfg.Description = "Locking setting that disables further display of the specified message";
                             cfg.Value = true;
@@ -487,15 +505,15 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 {
                     if (!String.IsNullOrEmpty(Once))
                     {
-                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once).ToLower();
+                        string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
-                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
+                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
                             channels = channels | LogEntryType.Information;
 
                             Configuration.Config cfg = new Configuration.Config();
                             cfg.Module = "messageonce";
-                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once).ToLower();
+                            cfg.Name = String.Format("{0}.{1}", FunctionName, Once);
                             cfg.Hidden = true;
                             cfg.Description = "Locking setting that disables further display of the specified message";
                             cfg.Value = true;
@@ -506,7 +524,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     else
                     {
                         //InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
-                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, _MessageHost);
+                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
                         channels = channels | LogEntryType.Information;
                     }
                 }
@@ -549,7 +567,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Data, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)
@@ -558,6 +576,13 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     try { InvokeCommand.InvokeScript(subscription.ScriptBlock.ToString(), entry); }
                     catch (Exception e){ WriteError(new ErrorRecord(e, "", ErrorCategory.NotSpecified, entry)); }
                 }
+
+            #region Error handling p2
+            if (ErrorRecord != null)
+                if (!_fromStopFunction && EnableException)
+                    foreach (ErrorRecord record in ErrorRecord)
+                        PSCmdlet.WriteError(record);
+            #endregion Error handling p2
         }
         #endregion Cmdlet Implementation
 
@@ -572,7 +597,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (Item == null)
                 return null;
 
-            string lowTypeName = Item.GetType().FullName.ToLower();
+            string lowTypeName = Item.GetType().FullName;
 
             if (MessageHost.TargetTransforms.ContainsKey(lowTypeName))
             {
@@ -608,7 +633,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (Item == null)
                 return Item;
 
-            string lowTypeName = Item.GetType().FullName.ToLower();
+            string lowTypeName = Item.GetType().FullName;
 
             if (MessageHost.ExceptionTransforms.ContainsKey(lowTypeName))
             {
@@ -689,20 +714,20 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             {
                 switch (Level)
                 {
-                    case MessageLevel.Critical:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueCritical, _message);
-                        break;
                     case MessageLevel.Host:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
                         break;
-                    case MessageLevel.Significant:
+                    case MessageLevel.Significant | MessageLevel.Critical:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
                         break;
-                    case MessageLevel.Verbose:
+                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
                         break;
                     case MessageLevel.Warning:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
+                        if (Tag != null && Tag.Contains("error", StringComparer.InvariantCultureIgnoreCase))
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
+                        else
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
                         break;
                     default:
                         break;
@@ -755,20 +780,20 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             {
                 switch (Level)
                 {
-                    case MessageLevel.Critical:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueCritical, _messageColor);
-                        break;
                     case MessageLevel.Host:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueHost, _messageColor);
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
                         break;
-                    case MessageLevel.Significant:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _messageColor);
+                    case MessageLevel.Significant | MessageLevel.Critical:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
                         break;
-                    case MessageLevel.Verbose:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _messageColor);
+                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
                         break;
                     case MessageLevel.Warning:
-                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _messageColor);
+                        if (Tag != null && Tag.Contains("error", StringComparer.InvariantCultureIgnoreCase))
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
+                        else
+                            _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
                         break;
                     default:
                         break;

@@ -62,7 +62,7 @@
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFMessageLevelModifier')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
@@ -93,47 +93,19 @@
 		$EnableException
 	)
 	
-	if (Test-PSFParameterBinding -ParameterName IncludeFunctionName, ExcludeFunctionName, IncludeModuleName, ExcludeModuleName, IncludeTags, ExcludeTags -Not)
+	process
 	{
-		Stop-PSFFunction -Message "Must specify at least one condition in order to apply message level modifier!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'argument', 'message', 'level'
-		return
+		if (Test-PSFParameterBinding -ParameterName IncludeFunctionName, ExcludeFunctionName, IncludeModuleName, ExcludeModuleName, IncludeTags, ExcludeTags -Not)
+		{
+			Stop-PSFFunction -Message "Must specify at least one condition in order to apply message level modifier!" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'argument', 'message', 'level'
+			return
+		}
+		
+		$properties = $PSBoundParameters | ConvertTo-PSFHashtable -Include Name, Modifier, IncludeFunctionName, ExcludeFunctionName, IncludeModuleName, ExcludeModuleName, IncludeTags, ExcludeTags
+		$levelModifier = New-Object PSFramework.Message.MessageLevelModifier -Property $properties
+		
+		[PSFramework.Message.MessageHost]::MessageLevelModifiers[$levelModifier.Name] = $levelModifier
+		
+		$levelModifier
 	}
-	
-	$levelModifier = New-Object PSFramework.Message.MessageLevelModifier
-	$levelModifier.Name = $Name.ToLower()
-	$levelModifier.Modifier = $Modifier
-	
-	if (Test-PSFParameterBinding -ParameterName IncludeFunctionName)
-	{
-		$levelModifier.IncludeFunctionName = $IncludeFunctionName
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName ExcludeFunctionName)
-	{
-		$levelModifier.ExcludeFunctionName = $ExcludeFunctionName
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName IncludeModuleName)
-	{
-		$levelModifier.IncludeModuleName = $IncludeModuleName
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName ExcludeModuleName)
-	{
-		$levelModifier.ExcludeModuleName = $ExcludeModuleName
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName IncludeTags)
-	{
-		$levelModifier.IncludeTags = $IncludeTags
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName ExcludeTags)
-	{
-		$levelModifier.ExcludeTags = $ExcludeTags
-	}
-	
-	[PSFramework.Message.MessageHost]::MessageLevelModifiers[$levelModifier.Name] = $levelModifier
-	
-	$levelModifier
 }

@@ -62,5 +62,14 @@ namespace PSFramework.License
         /// A parent license to indicate a product used within a product.
         /// </summary>
         public License Parent;
+
+        /// <summary>
+        /// The default string representation of the license object
+        /// </summary>
+        /// <returns>The default string representation of the license object</returns>
+        public override string ToString()
+        {
+            return $"{Product} {ProductVersion} ({LicenseName})";
+        }
     }
 }

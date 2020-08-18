@@ -145,7 +145,7 @@ namespace PSFramework.Utility
             this.Value = Value;
             this.Name = Name.ToLower();
 
-            Values[Name.ToLower()] = this;
+            Values[this.Name] = this;
         }
         #endregion object properties
     }

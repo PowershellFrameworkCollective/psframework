@@ -36,5 +36,8 @@
 		$Name
 	)
 	
-	[PSFramework.TaskEngine.TaskHost]::TestCacheItem($Module, $Name)
+	process
+	{
+		[PSFramework.TaskEngine.TaskHost]::TestCacheItem($Module, $Name)
+	}
 }

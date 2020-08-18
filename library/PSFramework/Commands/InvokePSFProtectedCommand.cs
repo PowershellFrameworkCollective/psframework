@@ -97,6 +97,13 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public string[] RetryErrorType = new string[0];
+
+        /// <summary>
+        /// Only when this scriptblock returns $true will it try again.
+        /// The scriptblock receives argument: The exception object.
+        /// </summary>
+        [Parameter()]
+        public ScriptBlock RetryCondition;
         #endregion Parameters
 
         #region Private Fields
@@ -215,10 +222,10 @@ return
 
                 try
                 {
-                    object result = PSCmdlet.InvokeCommand.InvokeScript(false, ScriptBlock, null, null);
+                    var result = PSCmdlet.InvokeCommand.InvokeScript(false, ScriptBlock, null, null);
                     WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Success", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
-                    if (result != null)
-                        WriteObject(result);
+                    if (result != null && result.Count > 0)
+                        WriteObject(result, true);
                     return;
                 }
                 catch (Exception e)
@@ -228,6 +235,11 @@ return
                         tempError = ((ActionPreferenceStopException)tempError).ErrorRecord.Exception;
 
                     if (RetryCount == 0)
+                    {
+                        Terminate(tempError);
+                        return;
+                    }
+                    if (RetryCondition != null && !LanguagePrimitives.IsTrue(Invoke(RetryCondition, true, tempError, tempError, null, new object[] { Target })))
                     {
                         Terminate(tempError);
                         return;

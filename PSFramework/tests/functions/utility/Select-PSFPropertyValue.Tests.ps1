@@ -1,6 +1,14 @@
 Describe "Select-PSFPropertyValue Unit Tests" -Tag "Unit" {
 	BeforeAll {
 		# Place here all things needed to prepare for the tests
+		$object = [pscustomobject]@{
+			Length   = 42
+			Name	 = "Foo"
+			FullName = "Foo.Bar.Com"
+			Empty    = ""
+			Null	 = $null
+			Zero	 = 0
+		}
 	}
 	AfterAll {
 		# Here is where all the cleanup tasks go
@@ -92,15 +100,6 @@ Describe "Select-PSFPropertyValue Unit Tests" -Tag "Unit" {
 		}
 	}
 	#endregion Signature Test
-	
-	$object = [pscustomobject]@{
-		Length   = 42
-		Name	 = "Foo"
-		FullName = "Foo.Bar.Com"
-		Empty    = ""
-		Null	 = $null
-		Zero	 = 0
-	}
 	
 	Describe "Testing parameterset Default" {
 		It "Should select a single property correctly" {

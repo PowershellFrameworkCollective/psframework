@@ -91,6 +91,9 @@
     <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
+    <Compile Include="Logging\ProviderInstance.cs" />
+    <Compile Include="Logging\ProviderV2.cs" />
+    <Compile Include="Logging\ProviderVersion.cs" />
     <Compile Include="Message\CallStack.cs" />
     <Compile Include="Message\CallStackEntry.cs" />
     <Compile Include="Message\LogEntry.cs" />
@@ -136,12 +139,15 @@
     <Compile Include="Extension\ScriptBlockExt.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
     <Compile Include="Runspace\RunspaceBoundValue.cs" />
+    <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
     <Compile Include="Serialization\ClixmlDataStyle.cs" />
     <Compile Include="Serialization\ClixmlSerializer.cs" />
     <Compile Include="Serialization\SerializationTypeConverter.cs" />
+    <Compile Include="TabExpansion\CompletionResultComparer.cs" />
+    <Compile Include="TabExpansion\PsfArgumentCompleterAttribute.cs" />
     <Compile Include="TabExpansion\ScriptContainer.cs" />
     <Compile Include="TabExpansion\TabExpansionHost.cs" />
     <Compile Include="TabExpansion\TeppScriptMode.cs" />
@@ -157,6 +163,8 @@
     <Compile Include="Utility\DynamicContentQueue.cs" />
     <Compile Include="Utility\DynamicContentStack.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
+    <Compile Include="Utility\Number.cs" />
+    <Compile Include="Utility\PsfScriptBlock.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />
     <Compile Include="Utility\Size.cs" />
@@ -165,6 +173,7 @@
     <Compile Include="Utility\TypeTransformationAttribute.cs" />
     <Compile Include="Utility\UtilityHost.cs" />
     <Compile Include="Validation\NoResultsAction.cs" />
+    <Compile Include="Validation\PsfValidateLanguageMode.cs" />
     <Compile Include="Validation\PsfValidatePatternAttribute.cs" />
     <Compile Include="Validation\PsfValidateScriptAttribute.cs" />
     <Compile Include="Validation\PsfValidateSetAttribute.cs" />

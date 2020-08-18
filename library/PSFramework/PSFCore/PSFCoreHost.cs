@@ -40,6 +40,7 @@ namespace PSFramework.PSFCore
                 return;
             _Initialized = true;
 
+            Runspace.RunspaceHost.StartRbvTimer();
             // Initialization logic goes here
         }
         private static bool _Initialized = false;
@@ -77,6 +78,11 @@ namespace PSFramework.PSFCore
         private static bool _DebugMode = false;
 
         /// <summary>
+        /// Whether to write debug messages to the screen
+        /// </summary>
+        public static bool VerboseDebug = false;
+
+        /// <summary>
         /// The total capacity of the debug queue
         /// </summary>
         public static int DebugQueueSize
@@ -101,6 +107,8 @@ namespace PSFramework.PSFCore
                 return;
 
             DebugData.Enqueue(new DebugData(Label, Data));
+            if (VerboseDebug)
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")} : {Label}");
         }
 
         /// <summary>

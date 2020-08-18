@@ -1,4 +1,5 @@
 ﻿using PSFramework.PSFCore;
+using PSFramework.Utility;
 using System;
 using System.Management.Automation;
 
@@ -95,12 +96,12 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The handler script that is run whenever the configuration value is set.
         /// </summary>
-        public ScriptBlock Handler;
+        public PsfScriptBlock Handler;
 
         /// <summary>
         /// Validates the user input
         /// </summary>
-        public ScriptBlock Validation;
+        public PsfScriptBlock Validation;
 
         /// <summary>
         /// Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"

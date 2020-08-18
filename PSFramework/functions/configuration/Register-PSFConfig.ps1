@@ -48,7 +48,7 @@
 		Retrieves all configuration items of the module MyModule, then registers them in registry to enforce them for all users on the current system.
 #>
 	[CmdletBinding(DefaultParameterSetName = "Default", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFConfig')]
-	Param (
+	param (
 		[Parameter(ParameterSetName = "Default", Position = 0, ValueFromPipeline = $true)]
 		[PSFramework.Configuration.Config[]]
 		$Config,
@@ -74,9 +74,9 @@
 	
 	begin
 	{
-		if ($script:NoRegistry -and ($Scope -band 14))
+		if ($script:NoRegistry -and ($Scope -band 10))
 		{
-			Stop-PSFFunction -Message "Cannot register configurations on non-windows machines to registry. Please specify a file-based scope" -Tag 'NotSupported' -Category NotImplemented
+			Stop-PSFFunction -String 'Register-PSFConfig.NoRegistry' -Tag 'NotSupported' -Category ResourceUnavailable
 			return
 		}
 		
@@ -91,12 +91,10 @@
 			$Scope = [PSFramework.Configuration.ConfigScope]::FileSystem
 		}
 		
-		$parSet = $PSCmdlet.ParameterSetName
-		
 		function Write-Config
 		{
 			[CmdletBinding()]
-			Param (
+			param (
 				[PSFramework.Configuration.Config]
 				$Config,
 				
@@ -112,13 +110,13 @@
 			
 			if (-not $Config -or ($Config.RegistryData -eq "<type not supported>"))
 			{
-				Stop-PSFFunction -Message "Invalid Input, cannot export $($Config.FullName), type not supported" -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
+				Stop-PSFFunction -String 'Register-PSFConfig.Type.NotSupported' -StringValues $Config.FullName -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 			
 			try
 			{
-				Write-PSFMessage -Level Verbose -Message "Registering $($Config.FullName) for $Scope" -Tag "Config" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
+				Write-PSFMessage -Level Verbose -String 'Register-PSFConfig.Registering' -StringValues $Config.FullName, $Scope -Tag "Config" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
 				#region User Default
 				if (1 -band $Scope)
 				{
@@ -153,7 +151,7 @@
 			}
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to export $($Config.FullName), to scope $Scope" -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework"
+				Stop-PSFFunction -String 'Register-PSFConfig.Registering.Failed' -StringValues $Config.FullName, $Scope -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 		}
@@ -162,7 +160,7 @@
 		{
 			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
 			[CmdletBinding()]
-			Param (
+			param (
 				[string]
 				$Path
 			)
@@ -174,7 +172,7 @@
 		}
 		
 		# For file based persistence
-		$configurationItems = @()
+		$fileConfigurationItems = @()
 	}
 	process
 	{
@@ -183,7 +181,7 @@
 		#region Registry Based
 		if ($Scope -band 15)
 		{
-			switch ($parSet)
+			switch ($PSCmdlet.ParameterSetName)
 			{
 				"Default"
 				{
@@ -194,9 +192,9 @@
 					
 					foreach ($item in $FullName)
 					{
-						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower()))
+						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item))
 						{
-							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]) -Scope $Scope -EnableException $EnableException
+							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item]) -Scope $Scope -EnableException $EnableException
 						}
 					}
 				}
@@ -214,20 +212,20 @@
 		#region File Based
 		else
 		{
-			switch ($parSet)
+			switch ($PSCmdlet.ParameterSetName)
 			{
 				"Default"
 				{
 					foreach ($item in $Config)
 					{
-						if ($configurationItems.FullName -notcontains $item.FullName) { $configurationItems += $item }
+						if ($fileConfigurationItems.FullName -notcontains $item.FullName) { $fileConfigurationItems += $item }
 					}
 					
 					foreach ($item in $FullName)
 					{
-						if (($configurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item.ToLower())))
+						if (($fileConfigurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item)))
 						{
-							$configurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item.ToLower()]
+							$fileConfigurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item]
 						}
 					}
 				}
@@ -235,7 +233,7 @@
 				{
 					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
 					{
-						if ($configurationItems.FullName -notcontains $item.FullName) { $configurationItems += $item }
+						if ($fileConfigurationItems.FullName -notcontains $item.FullName) { $fileConfigurationItems += $item }
 					}
 				}
 			}
@@ -247,15 +245,15 @@
 		#region Finish File Based Persistence
 		if ($Scope -band 16)
 		{
-			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
+			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
 		}
 		if ($Scope -band 32)
 		{
-			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileUserShared "psf_config.json")
+			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileUserShared "psf_config.json")
 		}
 		if ($Scope -band 64)
 		{
-			Write-PsfConfigFile -Config $configurationItems -Path (Join-Path $script:path_FileSystem "psf_config.json")
+			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileSystem "psf_config.json")
 		}
 		#endregion Finish File Based Persistence
 	}

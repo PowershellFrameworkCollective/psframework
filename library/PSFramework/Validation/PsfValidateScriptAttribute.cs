@@ -36,13 +36,33 @@ namespace PSFramework.Validation
         {
             get
             {
+                ScriptBlock tempScb;
                 if (!String.IsNullOrEmpty(ScriptBlockName))
-                    return Utility.UtilityHost.ScriptBlocks[ScriptBlockName].ScriptBlock;
-                return _ScriptBlock;
+                    tempScb = Utility.UtilityHost.ScriptBlocks[ScriptBlockName].ScriptBlock;
+                else
+                    tempScb = _ScriptBlock;
+                if (Global)
+                    return tempScb.Clone().ToGlobal();
+                return tempScb;
             }
             private set { _ScriptBlock = value; }
         }
         private ScriptBlock _ScriptBlock;
+
+        /// <summary>
+        /// Whether the scriptblock should be invoked as global scriptblock
+        /// </summary>
+        public bool Global
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ScriptBlockName))
+                    return Utility.UtilityHost.ScriptBlocks[ScriptBlockName].Global;
+                return _Global;
+            }
+            set { _Global = value; }
+        }
+        private bool _Global;
 
         /// <summary>
         /// Name of a stored scriptblock to use
@@ -57,9 +77,7 @@ namespace PSFramework.Validation
         protected override void ValidateElement(object element)
         {
             if (element == null)
-            {
-                throw new ValidationMetadataException("ArgumentIsEmpty", null);
-            }
+                throw new ValidationMetadataException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.Generic.ArgumentIsEmpty", null)));
 
             object result = ScriptBlock.DoInvokeReturnAsIs(true, 2, element, null, null, new object[] { element });
             

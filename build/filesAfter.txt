@@ -9,6 +9,7 @@ internal\configurationvalidation\*.ps1
 internal\configurations\*.ps1
 internal\scripts\loadConfigurationPersisted.ps1
 internal\loggingProviders\*.ps1
+internal\scripts\loggingProviderInstanceModuleCode.ps1
 internal\scripts\async-logging2.ps1
 internal\tepp\scripts\*.ps1
 internal\tepp\tepp-assignment.ps1
@@ -19,4 +20,5 @@ internal\scripts\removalEvent.ps1
 internal\scripts\variables.ps1
 internal\scripts\sessionRegistration.ps1
 internal\scripts\teppInputResources.ps1
+internal\scriptblocks\*.ps1
 internal\scripts\license.ps1

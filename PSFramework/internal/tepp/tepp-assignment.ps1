@@ -49,6 +49,8 @@ Register-PSFTeppArgumentCompleter -Command Get-PSFLocalizedString -Parameter Nam
 Register-PSFTeppArgumentCompleter -Command Get-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
 Register-PSFTeppArgumentCompleter -Command Install-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
 Register-PSFTeppArgumentCompleter -Command Set-PSFLoggingProvider -Parameter Name -Name 'PSFramework-logging-provider'
+Register-PSFTeppArgumentCompleter -Command Get-PSFLoggingProviderInstance -Parameter ProviderName -Name 'PSFramework-logging-instance-provider'
+Register-PSFTeppArgumentCompleter -Command Get-PSFLoggingProviderInstance -Parameter Name -Name 'PSFramework-logging-instance-name'
 #endregion Logging
 
 #region Message

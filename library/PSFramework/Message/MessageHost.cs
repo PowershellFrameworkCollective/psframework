@@ -99,7 +99,7 @@ namespace PSFramework.Message
         /// <summary>
         /// Define the message prefix value for the critical level
         /// </summary>
-        public static string PrefixValueCritical = "##vso[task.logissue type=error;]";
+        public static string PrefixValueError = "##vso[task.logissue type=error;]";
 
         /// <summary>
         /// Define the message prefix value for the warning level
@@ -133,12 +133,12 @@ namespace PSFramework.Message
         /// <summary>
         /// Provides the option to transform exceptions based on the original exception type
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> ExceptionTransforms = new ConcurrentDictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> ExceptionTransforms = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> TargetTransforms = new ConcurrentDictionary<string, ScriptBlock>();
+        public static ConcurrentDictionary<string, ScriptBlock> TargetTransforms = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// The list of transformation errors that occured.
@@ -185,14 +185,14 @@ namespace PSFramework.Message
         /// <summary>
         /// List of all modifiers that apply to message levels
         /// </summary>
-        public static ConcurrentDictionary<string, MessageLevelModifier> MessageLevelModifiers = new ConcurrentDictionary<string, MessageLevelModifier>();
+        public static ConcurrentDictionary<string, MessageLevelModifier> MessageLevelModifiers = new ConcurrentDictionary<string, MessageLevelModifier>(StringComparer.InvariantCultureIgnoreCase);
         #endregion Transformations
 
         #region Events
         /// <summary>
         /// List of events that subscribe to messages being written
         /// </summary>
-        public static ConcurrentDictionary<string, MessageEventSubscription> Events = new ConcurrentDictionary<string, MessageEventSubscription>();
+        public static ConcurrentDictionary<string, MessageEventSubscription> Events = new ConcurrentDictionary<string, MessageEventSubscription>(StringComparer.InvariantCultureIgnoreCase);
         #endregion Events
     }
 }

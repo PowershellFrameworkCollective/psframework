@@ -29,6 +29,12 @@ namespace PSFramework.Commands
         public string[] Exclude = new string[0];
 
         /// <summary>
+        /// Enables case sensitivity.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter CaseSensitive;
+
+        /// <summary>
         /// Enables adding empty keys for explicitly included keys that were not found on the input
         /// </summary>
         [Parameter()]
@@ -48,6 +54,8 @@ namespace PSFramework.Commands
         public PSObject[] InputObject;
         #endregion Parameters
 
+        StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
+
         #region Cmdlet Methods
         /// <summary>
         /// Implements the basic processing logic to convert objects to hashtables
@@ -57,18 +65,21 @@ namespace PSFramework.Commands
             if (InputObject == null)
                 return;
 
+            if (CaseSensitive.ToBool())
+                _Comparison = StringComparer.InvariantCulture;
+
             foreach (PSObject inputItem in InputObject)
             {
                 if (inputItem == null)
                     continue;
 
-                Hashtable result = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+                Hashtable result = new Hashtable(_Comparison);
 
                 if (inputItem.BaseObject.GetType() == (typeof(Hashtable)))
                     result = (Hashtable)((Hashtable)inputItem.BaseObject).Clone();
 
                 else if (inputItem.BaseObject as IDictionary != null)
-                    result = new Hashtable(inputItem.BaseObject as IDictionary, StringComparer.InvariantCultureIgnoreCase);
+                    result = new Hashtable(inputItem.BaseObject as IDictionary, _Comparison);
 
                 else
                     foreach (string name in inputItem.Properties.Select(o => o.Name))
@@ -82,7 +93,7 @@ namespace PSFramework.Commands
                 {
                     object[] keys = new object[result.Keys.Count];
                     result.Keys.CopyTo(keys, 0);
-                    foreach (string key in keys.Where(o => !Include.Contains(o) && result.ContainsKey(o)))
+                    foreach (string key in keys.Where(o => !Include.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
                         result.Remove(key);    
                     if (Inherit.ToBool())
                         foreach (string name in Include.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))

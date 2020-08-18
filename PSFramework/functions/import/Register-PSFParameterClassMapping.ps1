@@ -34,7 +34,7 @@
 		- having it use the 'DNSHostName' property if available, falling back to 'Name' if necessary
 #>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFParameterClassMapping')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true)]
 		[PSFramework.Parameter.ParameterClasses]
 		$ParameterClass,
@@ -59,30 +59,30 @@
 			{
 				"Computer"
 				{
-					[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"DateTime"
 				{
-					[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"TimeSpan"
 				{
-					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				"Encoding"
 				{
-					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName.ToLower(), $Properties)
+					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName, $Properties)
 				}
 				default
 				{
-					Stop-PSFFunction -Message "Support for the $ParameterClass parameter class has not yet been added!" -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented
+					Stop-PSFFunction -String 'Register-PSFParameterClassMapping.NotImplemented' -StringValues $ParameterClass -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented
 					return
 				}
 			}
 		}
 		catch
 		{
-			Stop-PSFFunction -Message "Failed to update property mapping for $ParameterClass : $Typename. This is likely happening on some Linux distributions due to an underlying .NET issue and means the parameter class cannot be used." -EnableException $EnableException -Tag 'fail', '.NET' -ErrorRecord $_
+			Stop-PSFFunction -String 'Register-PSFParameterClassMapping.Registration.Error' -StringValues $ParameterClass, $Typename -EnableException $EnableException -Tag 'fail', '.NET' -ErrorRecord $_
 			return
 		}
 	}

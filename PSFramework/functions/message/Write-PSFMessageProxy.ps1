@@ -43,6 +43,7 @@
 		This will create an alias named "Write-Host" pointing at "Write-PSFMessageProxy".
 		Then it will write the message "Example Message", which is automatically written to Level "Important" (which by default will be written to host).
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Write-PSFMessageProxy')]
 	param (
 		[Parameter(Position = 0)]

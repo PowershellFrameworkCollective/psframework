@@ -1,4 +1,10 @@
 ﻿$script:ModuleRoot = $PSScriptRoot
+
+if ($PSFramework_DebugMode) { [PSFramework.PSFCore.PSFCoreHost]::DebugMode = $true }
+if ($PSFramework_DebugVerbose) { [PSFramework.PSFCore.PSFCoreHost]::VerboseDebug = $true }
+
+[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Starting Import","")
+
 if (($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
 {
 	# This is considered safe, as you should not be using unsafe localization resources in a constrained endpoint
@@ -34,6 +40,8 @@ if (($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.OS -like "*Wind
 }
 if (Test-Path (Join-Path (Resolve-Path -Path "$($script:ModuleRoot)\..") '.git')) { $importIndividualFiles = $true }
 if ("<was not compiled>" -eq '<was not compiled>') { $importIndividualFiles = $true }
+
+[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Finished Pre-Import Config", "DotSource: $script:doDotSource | Individual Files: $importIndividualFiles")
 
 function Import-ModuleFile
 {
@@ -73,21 +81,25 @@ function Import-ModuleFile
 if ($importIndividualFiles)
 {
 	# Execute Preimport actions
+	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PreImport", "")
 	. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\preimport.ps1"
 	
 	# Import all internal functions
+	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("InternalFunctions", "")
 	foreach ($function in (Get-ChildItem "$($script:ModuleRoot)\internal\functions" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
 	{
 		. Import-ModuleFile -Path $function.FullName
 	}
 	
 	# Import all public functions
+	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Functions", "")
 	foreach ($function in (Get-ChildItem "$($script:ModuleRoot)\functions" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
 	{
 		. Import-ModuleFile -Path $function.FullName
 	}
 	
 	# Execute Postimport actions
+	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PostImport", "")
 	. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\postimport.ps1"
 	
 	# End it here, do not load compiled code below

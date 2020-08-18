@@ -18,30 +18,32 @@
 	}
 	
 	Context "Ensuring validation can be created, assigned and used" {
-		#region Scriptblock
-		$scriptblock = {
-			Param (
-				$Value
-			)
-			
-			$Result = New-Object PSObject -Property @{
-				Success = $True
-				Value   = $null
-				Message = ""
-			}
-			
-			if ($Value -notin 0, 1)
-			{
-				$Result.Message = "Not a '0' or '1': $Value"
-				$Result.Success = $False
+		BeforeAll {
+			#region Scriptblock
+			$scriptblock = {
+				param (
+					$Value
+				)
+				
+				$Result = New-Object PSObject -Property @{
+					Success = $True
+					Value   = $null
+					Message = ""
+				}
+				
+				if ($Value -notin 0, 1)
+				{
+					$Result.Message = "Not a '0' or '1': $Value"
+					$Result.Success = $False
+					return $Result
+				}
+				
+				$Result.Value = [int]$Value
+				
 				return $Result
 			}
-						
-			$Result.Value = [int]$Value
-			
-			return $Result
+			#endregion Scriptblock
 		}
-		#endregion Scriptblock
 		# Create Validation Rule that should be valid
 		It "Should create the validation rule without an issue" {
 			{ Register-PSFConfigValidation -Name 'integer0or1' -ScriptBlock $scriptblock } | Should -Not -Throw

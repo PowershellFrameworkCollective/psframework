@@ -52,7 +52,7 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
-        /// Creates a new, empty collection limited to a defaukt nax size of 10
+        /// Creates a new, empty collection limited to a default max size of 10
         /// </summary>
         public LimitedConcurrentQueue()
             : this(10)

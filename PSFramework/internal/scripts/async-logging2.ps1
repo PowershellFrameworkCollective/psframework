@@ -8,33 +8,63 @@
 		while ($true)
 		{
 			# This portion is critical to gracefully closing the script
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -notlike "Running")
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -notlike "Running")
 			{
 				break
 			}
+			if (-not ([PSFramework.Message.LogHost]::LoggingEnabled)) { break }
+			
+			# Create instances as needed on cycle begin
+			[PSFramework.Logging.ProviderHost]::UpdateAllInstances()
 			
 			#region Manage Begin Event
+			#region V1 providers
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetEnabled())
 			{
 				if (-not $___provider.Initialized)
 				{
 					[PSFramework.Logging.ProviderHost]::LoggingState = 'Initializing'
+					$___provider.LocalizeEvents()
+					
 					try
 					{
-						$ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.BeginEvent)), $null, $null)
+						$ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.BeginEvent, $null, $null)
 						$___provider.Initialized = $true
 					}
 					catch { $___provider.Errors.Push($_) }
 				}
 			}
+			#endregion V1 providers
+			
+			#region V2 provider Instances
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetEnabledInstances())
+			{
+				if ($___instance.Initialized) { continue }
+				
+				[PSFramework.Logging.ProviderHost]::LoggingState = 'Initializing'
+				
+				try
+				{
+					& $___instance.BeginCommand
+					$___instance.Initialized = $true
+				}
+				catch { $___instance.Errors.Enqueue($_)}
+			}
+			#endregion V2 provider Instances
+			
 			[PSFramework.Logging.ProviderHost]::LoggingState = 'Ready'
 			#endregion Manage Begin Event
 			
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null) }
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
+			}
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+			{
+				try { & $___instance.StartCommand }
+				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
 			
@@ -50,11 +80,21 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry) }
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
+					
+					foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+					{
+						if ($___instance.MessageApplies($Entry))
+						{
+							try { & $___instance.MessageCommand $Entry }
+							catch { $___instance.Errors.Enqueue($_) }
+						}
+					}
 				}
+				[PSFramework.Message.LogHost]::LastLogged = [DateTime]::Now
 			}
 			#endregion Message Event
 			
@@ -71,24 +111,39 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.ErrorEvent)), $null, $Record) }
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.ErrorEvent, $null, $Record) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
+					
+					foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+					{
+						if ($___instance.MessageApplies($Record))
+						{
+							try { & $___instance.ErrorCommand $Record }
+							catch { $___instance.Errors.Enqueue($_) }
+						}
+					}
 				}
+				[PSFramework.Message.LogHost]::LastLogged = [DateTime]::Now
 			}
 			#endregion Error Event
 			
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null) }
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
+			}
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+			{
+				try { & $___instance.EndCommand }
+				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion End Event
 			
 			[PSFramework.Logging.ProviderHost]::LoggingState = 'Ready'
-			Start-Sleep -Milliseconds 100
+			Start-Sleep -Milliseconds ([PSFramework.Message.LogHost]::NextInterval)
 		}
 	}
 	catch
@@ -98,13 +153,18 @@
 	finally
 	{
 		#region Flush log on exit
-		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -like "Running") -and (-not [PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
+		if (([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -like "Running") -and (-not [PSFramework.Configuration.ConfigurationHost]::Configurations["psframework.logging.disablelogflush"].Value))
 		{
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.StartEvent)), $null, $null) }
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
+			}
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+			{
+				try { & $___instance.StartCommand }
+				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
 			
@@ -120,8 +180,17 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Entry) }
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
 							catch { $___provider.Errors.Push($_) }
+						}
+					}
+					
+					foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+					{
+						if ($___instance.MessageApplies($Entry))
+						{
+							try { & $___instance.MessageCommand $Entry }
+							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
 				}
@@ -141,8 +210,17 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.MessageEvent)), $null, $Record) }
+							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Record) }
 							catch { $___provider.Errors.Push($_) }
+						}
+					}
+					
+					foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+					{
+						if ($___instance.MessageApplies($Record))
+						{
+							try { & $___instance.ErrorCommand $Record }
+							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
 				}
@@ -152,8 +230,13 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.EndEvent)), $null, $null) }
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
+			}
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+			{
+				try { & $___instance.EndCommand }
+				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion End Event
 		}
@@ -162,22 +245,50 @@
 		#region Final Event
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
-			try { $ExecutionContext.InvokeCommand.InvokeScript($false, ([System.Management.Automation.ScriptBlock]::Create($___provider.FinalEvent)), $null, $null) }
+			try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
 			catch { $___provider.Errors.Push($_) }
+		}
+		foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+		{
+			try { & $___instance.FinalCommand }
+			catch { $___instance.Errors.Enqueue($_) }
 		}
 		
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
 			$___provider.Initialized = $false
 		}
+		foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
+		{
+			$___instance.Initialized = $false
+		}
+		foreach ($___provider in [PSFramework.Logging.ProviderHost]::Providers.Values)
+		{
+			if ($___provider.ProviderVersion -eq 'Version_1') { continue }
+			
+			$___provider.Instances.Clear()
+		}
 		#endregion Final Event
 		
 		if ($wasBroken) { [PSFramework.Logging.ProviderHost]::LoggingState = 'Broken' }
 		else { [PSFramework.Logging.ProviderHost]::LoggingState = 'Stopped' }
 		
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()
+		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].SignalStopped()
 	}
 }
 
 Register-PSFRunspace -ScriptBlock $scriptBlock -Name 'PSFramework.Logging' -NoMessage
-Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage
+
+$exemptedProcesses = 'CacheBuilder64', 'CacheBuilder', 'ImportModuleHelp'
+# Do not start background Runspace if ...
+if (
+	-not (
+		# ... run in the PowerShell Studio Cache Builder
+		(($Host.Name -eq 'Default Host') -and ((Get-Process -Id $PID).ProcessName -in $exemptedProcesses)) -or
+		# ... run in Azure Functions
+		($env:AZUREPS_HOST_ENVIRONMENT -like 'AzureFunctions/*')
+	)
+)
+{
+	Start-PSFRunspace -Name 'PSFramework.Logging' -NoMessage
+}

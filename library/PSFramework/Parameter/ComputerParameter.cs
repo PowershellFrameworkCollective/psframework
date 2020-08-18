@@ -247,13 +247,13 @@ namespace PSFramework.Parameter
 
             foreach (string name in input.TypeNames)
             {
-                if (_PropertyMapping.ContainsKey(name.ToLower()))
+                if (_PropertyMapping.ContainsKey(name))
                 {
-                    key = name.ToLower();
+                    key = name;
                     break;
                 }
 
-                if (name.ToLower() == "microsoft.sqlserver.management.smo.server")
+                if (string.Equals(name, "microsoft.sqlserver.management.smo.server", StringComparison.InvariantCultureIgnoreCase))
                     Type = ComputerParameterInputType.SMOServer;
             }
 
