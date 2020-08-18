@@ -6286,6 +6286,12 @@
             <param name="args">Arguments to pass into the scriptblock</param>
             <returns>The results of the invocation</returns>
         </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.ToGlobal">
+            <summary>
+            Return a global clone of the scriptblock
+            </summary>
+            <returns>A global clone of the scriptblock</returns>
+        </member>
         <member name="M:PSFramework.Utility.PsfScriptBlock.#ctor(System.Management.Automation.ScriptBlock)">
             <summary>
             Create a new PsfScriptBlock by wrapping a regular scriptblock.

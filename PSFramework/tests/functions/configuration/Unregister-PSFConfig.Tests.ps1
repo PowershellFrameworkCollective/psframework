@@ -72,7 +72,7 @@
 	$config += Set-PSFConfig -FullName $settingName2 -Value 17 -PassThru
 	$config += Set-PSFConfig -FullName $settingName3 -Value 42 -PassThru
 	
-	$variables = @{
+	$variablesMain = @{
 		module	     = $module
 		locations    = $locations
 		settingName1 = $settingName1
@@ -83,6 +83,7 @@
 	
 	foreach ($location in $locations)
 	{
+		$variables = $variablesMain.Clone()
 		$variables['location'] = $location
 		
 		# Don't test locations that require elevation to write to when not running elevated
@@ -131,10 +132,10 @@
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
 					}
 					
-					# Refresh Registry
-					Register-PSFConfig -Config $config -Scope $location.Scope
-					
 					It "Should properly remove a single setting by config-item" -TestCases $variables {
+						# Refresh Registry
+						Register-PSFConfig -Config $config -Scope $location.Scope
+						
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
@@ -160,10 +161,10 @@
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -BeNullOrEmpty
 					}
 					
-					# Refresh Registry
-					Register-PSFConfig -Config $config -Scope $location.Scope
-					
 					It "Should properly remove a single setting by module and name" -TestCases $variables {
+						# Refresh Registry
+						Register-PSFConfig -Config $config -Scope $location.Scope
+						
 						(Get-ItemProperty -Path $location.Path).$settingName1 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName2 | Should -Not -BeNullOrEmpty
 						(Get-ItemProperty -Path $location.Path).$settingName3 | Should -Not -BeNullOrEmpty
@@ -181,7 +182,7 @@
 				}
 				'File'
 				{
-					It "Should properly set up configuration settings in registry" -TestCases $variables {
+					It "Should properly set up configuration settings in the file system" -TestCases $variables {
 						if (Test-Path $location.ConfigPath)
 						{
 							Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)|$($settingName2)|$($settingName3)" | Should -BeNullOrEmpty
@@ -211,10 +212,10 @@
 						}
 					}
 					
-					# Refresh Registry
-					Register-PSFConfig -Config $config -Scope $location.Scope
-					
 					It "Should properly remove a single setting by config-item" -TestCases $variables {
+						# Refresh Registry
+						Register-PSFConfig -Config $config -Scope $location.Scope
+						
 						Unregister-PSFConfig -ConfigurationItem $config[0] -Scope $location.Scope
 						Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)" | Should -BeNullOrEmpty
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 2
@@ -236,10 +237,10 @@
 						}
 					}
 					
-					# Refresh Registry
-					Register-PSFConfig -Config $config -Scope $location.Scope
-					
 					It "Should properly remove a single setting by module and name" -TestCases $variables {
+						# Refresh Registry
+						Register-PSFConfig -Config $config -Scope $location.Scope
+						
 						Unregister-PSFConfig -Module 'Unregister-PSFConfig' -Name 'Phase1.Setting1' -Scope $location.Scope
 						Get-Content -Path $location.ConfigPath | Select-String "$($settingName1)" | Should -BeNullOrEmpty
 						(Get-Content -Path $location.ConfigPath | Select-String "$($settingName2)|$($settingName3)" | Measure-Object).Count | Should -Be 2

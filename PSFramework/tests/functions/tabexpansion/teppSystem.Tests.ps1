@@ -55,9 +55,9 @@
 	}
 	
 	It 'can complete a straight completion' {
-		Complete 'Get-Alcohol -Type B' | Should -HaveProperty CompletionText -WithValue Beer
+		Complete -Expression 'Get-Alcohol -Type B' | Should -HaveProperty CompletionText -WithValue Beer
 	}
 	It 'can complete a completion dependent on another parameter value' {
-		Complete 'Get-Alcohol -Type Beer -Unit M' | Should -HaveProperty CompletionText -WithValue 'Maß'
+		Complete -Expression 'Get-Alcohol -Type Beer -Unit M' | Should -HaveProperty CompletionText -WithValue 'Maß'
 	}
 }

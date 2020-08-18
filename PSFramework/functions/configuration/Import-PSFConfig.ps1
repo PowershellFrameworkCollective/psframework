@@ -138,7 +138,7 @@
 			
 			foreach ($rItem in $resolvedItem)
 			{
-				$schemaScript.InvokeGlobal($rItem, $settings)
+				$schemaScript.ToGlobal().Invoke($rItem, $settings)
 			}
 		}
 		#endregion Explicit Path

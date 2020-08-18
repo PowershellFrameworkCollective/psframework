@@ -21,6 +21,7 @@ $global:__pester_data = @{ }
 
 Remove-Module PSFramework -ErrorAction Ignore
 Import-Module "$PSScriptRoot\..\PSFramework.psd1"
+Import-Module PSModuleDevelopment
 Import-Module "$PSScriptRoot\..\PSFramework.psm1" -Force
 
 # Need to import explicitly so we can use the configuration class
