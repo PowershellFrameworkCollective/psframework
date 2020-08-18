@@ -69,22 +69,22 @@
 			#region Csv
 			"Csv"
 			{
-				if ((-not $fileExists) -and $IncludeHeader) { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Set-Content -Path $Path -Encoding UTF8 }
-				else { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Select-Object -Skip 1 | Add-Content -Path $Path -Encoding UTF8 }
+				if ((-not $fileExists) -and $IncludeHeader) { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Set-Content -Path $Path -Encoding $script:encoding }
+				else { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Select-Object -Skip 1 | Add-Content -Path $Path -Encoding $script:encoding }
 			}
 			#endregion Csv
 			#region Json
 			"Json"
 			{
-				if ($fileExists) { Add-Content -Path $Path -Value "," -Encoding UTF8 }
-				$Message | ConvertTo-Json | Add-Content -Path $Path -NoNewline -Encoding UTF8
+				if ($fileExists) { Add-Content -Path $Path -Value "," -Encoding $script:encoding }
+				$Message | ConvertTo-Json | Add-Content -Path $Path -NoNewline -Encoding $script:encoding
 			}
 			#endregion Json
 			#region XML
 			"XML"
 			{
 				[xml]$xml = $message | ConvertTo-Xml -NoTypeInformation
-				$xml.Objects.InnerXml | Add-Content -Path $Path -Encoding UTF8
+				$xml.Objects.InnerXml | Add-Content -Path $Path -Encoding $script:encoding
 			}
 			#endregion XML
 			#region Html
@@ -94,10 +94,10 @@
 				
 				if ((-not $fileExists) -and $IncludeHeader)
 				{
-					$xml.table.tr[0].OuterXml | Add-Content -Path $Path -Encoding UTF8
+					$xml.table.tr[0].OuterXml | Add-Content -Path $Path -Encoding $script:encoding
 				}
 				
-				$xml.table.tr[1].OuterXml | Add-Content -Path $Path -Encoding UTF8
+				$xml.table.tr[1].OuterXml | Add-Content -Path $Path -Encoding $script:encoding
 			}
 			#endregion Html
 			#region CMTrace
@@ -111,12 +111,38 @@
 				
 				$format = '<![LOG[{0}]LOG]!><time="{1:HH:mm:ss.fff}+000" date="{1:MM-dd-yyyy}" component="{6}:{2} > {7}" context="{3}" type="{4}" thread="{5}" file="{6}:{2} > {7}">'
 				$line = $format -f $MessageItem.LogMessage, $MessageItem.Timestamp, $MessageItem.Line, $MessageItem.TargetObject, $cType, $MessageItem.Runspace, $fileEntry, $MessageItem.FunctionName
-				$line | Add-Content -Path $Path -Encoding UTF8
+				$line | Add-Content -Path $Path -Encoding $script:encoding
 			}
 			#endregion CMTrace
 		}
 		#endregion Type-Based Output
 	}
+	
+	function Invoke-LogRotate
+	{
+		[CmdletBinding()]
+		param (
+			
+		)
+		
+		$basePath = Get-ConfigValue -Name 'LogRotatePath'
+		$minimumRetention = (Get-ConfigValue -Name 'LogRetentionTime') -as [PSFTimeSpan] -as [Timespan]
+		if (-not $basePath) { return }
+		if (-not $minimumRetention) { throw "No minimum retention defined" }
+		if ($minimumRetention.TotalSeconds -le 0) { throw "Minimum retention must be positive! Retention: $minimumRetention" }
+		
+		# Don't logrotate more than every 5 minutes
+		if ($script:lastRotate -gt (Get-Date).AddMinutes(-5)) { return }
+		$script:lastRotate = Get-Date
+		
+		$limit = (Get-Date).Subtract($minimumRetention)
+		Get-ChildItem -Path $basePath -Filter (Get-ConfigValue -Name 'LogRotateFilter') -Recurse:(Get-ConfigValue -Name 'LogRotateRecurse') -File | Where-Object LastWriteTime -LT $limit | Remove-Item -Force -ErrorAction Stop
+	}
+}
+
+#region Events
+$begin_event = {
+	$script:lastRotate = (Get-Date).AddMinutes(-10)
 }
 
 $start_event = {
@@ -157,9 +183,11 @@ $start_event = {
 		CsvDelimiter  = Get-ConfigValue -Name 'CsvDelimiter'
 		Path		  = Get-LogFilePath
 	}
+	
+	$script:encoding = Get-ConfigValue -Name 'Encoding'
 }
 
-$message_Event = {
+$message_event = {
 	param (
 		$Message
 	)
@@ -167,30 +195,46 @@ $message_Event = {
 	$Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message
 }
 
+$end_event = {
+	Invoke-LogRotate
+}
+#endregion Events
+
 $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FilePath' -Value "" -Initialize -Validation string -Description "The path to where the logfile is written. Supports some placeholders such as %Date% to allow for timestamp in the name. For full documentation on the supported wildcards, see the documentation on https://psframework.org"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Logname' -Value "" -Initialize -Validation string -Description "A special string you can use as a placeholder in the logfile path (by using '%logname%' as placeholder)"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.IncludeHeader' -Value $true -Initialize -Validation bool -Description "Whether a written csv file will include headers"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Headers' -Value @('ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username') -Initialize -Validation stringarray -Description "The properties to export, in the order to select them."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Description "In what format to write the logfile. Supported styles: CSV, XML, Html or Json. Html, XML and Json will be written as fragments."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Description "In what format to write the logfile. Supported styles: CSV, XML, Html, Json or CMTrace. Html, XML and Json will be written as fragments."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value "," -Initialize -Validation string -Description "The delimiter to use when writing to csv."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Description "The format used for timestamps in the logfile"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Encoding' -Value "UTF8" -Initialize -Validation string -Description "In what encoding to write the logfile."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotatePath' -Value "" -Initialize -Validation string -Description "The path where to logrotate. Specifying this setting will cause the logging provider to also rotate older logfiles"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRetentionTime' -Value "30d" -Initialize -Validation timespan -Description "The minimum age for a logfile to be considered for deletion as part of logrotation"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value "*" -Initialize -Validation string -Description "A filter to apply to all files logrotated"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateRecurse' -Value $false -Initialize -Validation bool -Description "Whether the logrotate aspect should recursively look for files to logrotate"
 }
 
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "logfile"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.LogFile'
-	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat'
+	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse'
 	FunctionDefinitions = $functionDefinitions
+	BeginEvent		   = $begin_event
 	StartEvent		   = $start_event
-	MessageEvent	   = $message_Event
+	MessageEvent	   = $message_event
+	EndEvent		   = $end_event
 	ConfigurationDefaultValues = @{
 		IncludeHeader = $true
 		Headers	      = 'ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username'
 		FileType	  = 'CSV'
 		CsvDelimiter  = ','
 		TimeFormat    = "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)"
+		Encoding	  = 'UTF8'
+		LogRetentionTime = '30d'
+		LogRotateFilter = '*'
+		LogRotateRecurse = $false
 	}
 	ConfigurationSettings = $configuration_Settings
 }

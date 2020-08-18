@@ -1,4 +1,10 @@
 ﻿# CHANGELOG
+## ???
+
+- Upd: Logging Provider logfile - added configuration for encoding
+- Upd: Logging Provider logfile - added logrotate capability
+- Upd: Configuration Validation timespan - now supports PSFTimespan notation
+
 ## 1.3.135-preview1 : 2020-08-17
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
