@@ -32,9 +32,9 @@
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectComparisonWithNull", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfigValue')]
-	Param (
+	param (
 		[Alias('Name')]
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, Position = 0)]
 		[string]
 		$FullName,
 		
@@ -45,18 +45,16 @@
 		$NotNull
 	)
 	
-	$FullName = $FullName.ToLower()
-	
-	$temp = $null
-	$temp = [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value
-	if ($temp -eq $null) { $temp = $Fallback }
-	
-	if ($NotNull -and ($temp -eq $null))
+	process
 	{
-		Stop-PSFFunction -Message "No Configuration Value available for $FullName" -EnableException $true -Category InvalidData -Target $FullName
-	}
-	else
-	{
+		$temp = $null
+		$temp = [PSFramework.Configuration.ConfigurationHost]::Configurations[$FullName].Value
+		if ($null -eq $temp) { $temp = $Fallback }
+		
+		if ($NotNull -and ($null -eq $temp))
+		{
+			Stop-PSFFunction -String 'Get-PSFConfigValue.NoValue' -StringValues $FullName -EnableException $true -Category InvalidData -Target $FullName
+		}
 		return $temp
 	}
 }

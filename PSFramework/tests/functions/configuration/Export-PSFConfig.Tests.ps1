@@ -26,10 +26,12 @@
 	# Export all configuration items of a module to file
 	# Export all (and only) unchanged items of a module to file
 	Describe "Testing core export integrity" {
-		$configItems = @()
-		$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings1 -Value 42 -PassThru -Initialize
-		$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings2 -Value 23 -PassThru -Initialize
-		$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings3 -Value "foo" -PassThru -Initialize
+		BeforeAll {
+			$configItems = @()
+			$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings1 -Value 42 -PassThru -Initialize
+			$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings2 -Value 23 -PassThru -Initialize
+			$configItems += Set-PSFConfig -FullName Export-PSFConfig.TestPhase1.Settings3 -Value "foo" -PassThru -Initialize
+		}
 		
 		It "Should correctly export a single configuration item" {
 			$configItems[0] | Export-PSFConfig -OutPath "TestDrive:\Export-PSFConfig.test1.json"
@@ -74,9 +76,11 @@
 	# - Complex Export
 	# - Simple/Complex in hybrid export
 	Describe "Ensuring all export styles are correctly created" {
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings1 -Value 42 -SimpleExport
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings2 -Value 23
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings3 -Value (Get-Date) -SimpleExport
+		BeforeAll {
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings1 -Value 42 -SimpleExport
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings2 -Value 23
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings3 -Value (Get-Date) -SimpleExport
+		}
 		
 		It "Should create a simple export" {
 			Export-PSFConfig -FullName Export-PSFConfig.TestPhase2.Settings1 -OutPath "TestDrive:\Export-PSFConfig.testB1.json"
@@ -135,17 +139,19 @@
 	# - Exports to the correct scopes' files
 	# - Throws on a registry scope
 	Describe "Ensuring Module Cache functionality works as designed" {
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings1 -Value 42 -ModuleExport -Initialize
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings2 -Value 23
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings3 -Value (Get-Date) -ModuleExport -Hidden -Initialize
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings4 -Value "foo" -ModuleExport -Hidden -Initialize
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings1 -Value 42
-		Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings3 -Value (Get-Date)
-		
-		$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
-		$pathFileUserLocal = & $module { $path_FileUserLocal }
-		$pathFileUserShared = & $module { $path_FileUserShared }
-		$pathFileSystem = & $module { $path_FileSystem }
+		BeforeAll {
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings1 -Value 42 -ModuleExport -Initialize
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings2 -Value 23
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings3 -Value (Get-Date) -ModuleExport -Hidden -Initialize
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings4 -Value "foo" -ModuleExport -Hidden -Initialize
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings1 -Value 42
+			Set-PSFConfig -FullName Export-PSFConfig.TestPhase3.Settings3 -Value (Get-Date)
+			
+			$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
+			$pathFileUserLocal = & $module { $path_FileUserLocal }
+			$pathFileUserShared = & $module { $path_FileUserShared }
+			$pathFileSystem = & $module { $path_FileSystem }
+		}
 		
 		It "Should only export configuration settings marked for export in the module cache" {
 			Export-PSFConfig -ModuleName Export-PSFConfig

@@ -13,8 +13,8 @@ This will make it easier for us to troubleshoot and you won't be sending us the 
 	'New-PSFSupportPackage.MsgErrors'			  = "Collecting PSFramework logged errors (Get-PSFMessage -Errors)" # 
 	'New-PSFSupportPackage.ConsoleBuffer'		  = "Trying to collect copy of console buffer (what you can see on your console)" # 
 	'New-PSFSupportPackage.OperatingSystem'	      = "Collecting Operating System information (Win32_OperatingSystem)" # 
-	'New-PSFSupportPackage.CPU'				      = "Collecting CPU information (Win32_Processor)" # 
-	'New-PSFSupportPackage.RAM'				      = "Collecting Ram information (Win32_PhysicalMemory)" # 
+	'New-PSFSupportPackage.CPU'				      = "Collecting CPU information ({0})" # 
+	'New-PSFSupportPackage.RAM'				      = "Collecting Ram information ({0})" # 
 	'New-PSFSupportPackage.PSVersion'			  = "Collecting PowerShell & .NET Version (`$PSVersionTable)" # 
 	'New-PSFSupportPackage.History'			      = "Collecting Input history (Get-History)" # 
 	'New-PSFSupportPackage.Modules'			      = "Collecting list of loaded modules (Get-Module)" # 

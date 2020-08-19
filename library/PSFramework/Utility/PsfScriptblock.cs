@@ -169,6 +169,15 @@ namespace PSFramework.Utility
         {
             return ScriptBlock.Invoke(args);
         }
+        
+        /// <summary>
+        /// Return a global clone of the scriptblock
+        /// </summary>
+        /// <returns>A global clone of the scriptblock</returns>
+        public ScriptBlock ToGlobal()
+        {
+            return ScriptBlock.Clone().ToGlobal();
+        }
         #endregion Methods
 
         /// <summary>

@@ -52,4 +52,4 @@
 		}
 	}
 }
-Add-AssertionOperator -Name BeTrueForAll -Test $function:BeTrueForAll -Alias All -SupportsArrayInput
+Add-ShouldOperator -Name BeTrueForAll -Test $function:BeTrueForAll -Alias All -SupportsArrayInput

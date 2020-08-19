@@ -60,6 +60,7 @@
 	
 		Selects all configuration settings under 'LoggingProvider.LogFile.*', grouping the value ends as PSObject.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding()]
 	param (
 		[Alias('Name')]

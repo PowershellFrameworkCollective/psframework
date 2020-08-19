@@ -36,6 +36,8 @@
 		[ScriptBlock]
 		$ScriptBlock
 	)
-	
-	[PSFramework.Configuration.ConfigurationHost]::Validation[$Name] = $ScriptBlock
+	process
+	{
+		[PSFramework.Configuration.ConfigurationHost]::Validation[$Name] = $ScriptBlock
+	}
 }

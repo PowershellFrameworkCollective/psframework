@@ -18,13 +18,15 @@
 	}
 	
 	Context "Validating registry persistence" {
-		$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
-		$pathRegistryUserDefault = & $module { $path_RegistryUserDefault }
-		$pathRegistryUserEnforced = & $module { $path_RegistryUserEnforced }
-		$pathRegistryMachineDefault = & $module { $path_RegistryMachineDefault }
-		$pathRegistryMachineEnforced = & $module { $path_RegistryMachineEnforced }
-		
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Value 24
+		BeforeAll {
+			$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
+			$pathRegistryUserDefault = & $module { $path_RegistryUserDefault }
+			$pathRegistryUserEnforced = & $module { $path_RegistryUserEnforced }
+			$pathRegistryMachineDefault = & $module { $path_RegistryMachineDefault }
+			$pathRegistryMachineEnforced = & $module { $path_RegistryMachineEnforced }
+			
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Value 24
+		}
 		
 		# Test Persistence for Registry > User > Default
 		It "Should correctly persist to the user-default registry location" {
@@ -66,12 +68,14 @@
 		}
 	}
 	Context "Validating file persistence" {
-		$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
-		$pathFileUserLocal = & $module { $path_FileUserLocal }
-		$pathFileUserShared = & $module { $path_FileUserShared }
-		$pathFileSystem = & $module { $path_FileSystem }
-		
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting2' -Value 32
+		BeforeAll {
+			$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
+			$pathFileUserLocal = & $module { $path_FileUserLocal }
+			$pathFileUserShared = & $module { $path_FileUserShared }
+			$pathFileSystem = & $module { $path_FileSystem }
+			
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting2' -Value 32
+		}
 		# Test Persistence for File > User > Local
 		It "Should correctly persist to the user-local specific file" {
 			$tempPathRoot = $pathFileUserLocal
@@ -134,17 +138,19 @@
 	}
 	
 	Context "Ensuring Content based Data Integrity" {
-		$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
-		$pathRegistryUserDefault = & $module { $path_RegistryUserDefault }
-		$pathFileUserLocal = & $module { $path_FileUserLocal }
-		
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting1' -Value 1
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting2' -Value 2
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting3' -Value 3
-		
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting4' -Value 4
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting5' -Value 5 -SimpleExport
-		Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting6' -Value 6
+		BeforeAll {
+			$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
+			$pathRegistryUserDefault = & $module { $path_RegistryUserDefault }
+			$pathFileUserLocal = & $module { $path_FileUserLocal }
+			
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting1' -Value 1
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting2' -Value 2
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting3' -Value 3
+			
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting4' -Value 4
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting5' -Value 5 -SimpleExport
+			Set-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting6' -Value 6
+		}
 		
 		It "should export single and multiple items to registry without issues" {
 			{ Register-PSFConfig -FullName 'Register-PSFConfig.Phase2.Setting1' } | Should -Not -Throw

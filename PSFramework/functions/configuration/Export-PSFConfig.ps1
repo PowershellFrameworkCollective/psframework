@@ -54,8 +54,9 @@
 		
 		Exports all settings of the module 'MyModule' that are no longer the original default values to json.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'FullName', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFConfig')]
-	Param (
+	param (
 		[Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = $true)]
 		[string]
 		$FullName,
@@ -99,13 +100,12 @@
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-		
 		$items = @()
 		
-		if (($Scope -band 15) -and ($ModuleName))
+		# Values 1, 2, 4 and 8 represent the four registry locations
+		if (($Scope -band 15) -and $ModuleName)
 		{
-			Stop-PSFFunction -Message "Cannot export modulecache to registry! Please pick a file scope for your export destination" -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'scope', 'registry'
+			Stop-PSFFunction -String 'Export-PSFConfig.ToRegistry' -EnableException $EnableException -Category InvalidArgument -Tag 'fail', 'scope', 'registry'
 			return
 		}
 	}
@@ -126,26 +126,26 @@
 		
 		if (-not $ModuleName)
 		{
-			try { Write-PsfConfigFile -Config ($items | Where-Object { -not $SkipUnchanged -or -not $_.Unchanged } ) -Path $OutPath -Replace }
+			try { Write-PsfConfigFile -Config ($items | Where-Object { -not $SkipUnchanged -or -not $_.Unchanged }) -Path $OutPath -Replace }
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to export to file" -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
+				Stop-PSFFunction -String 'Export-PSFConfig.Write.Error' -EnableException $EnableException -ErrorRecord $_ -Tag 'fail', 'export'
 				return
 			}
 		}
 		else
 		{
-			if ($Scope -band 16)
+			if ($Scope -band 16) # File: User Local
 			{
 				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserLocal "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
-			if ($Scope -band 32)
+			if ($Scope -band 32) # File: User Shared
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileUserShared "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
-			if ($Scope -band 64)
+			if ($Scope -band 64) # File: System-Wide
 			{
-				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true)  -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
+				Write-PsfConfigFile -Config (Get-PSFConfig -Module $ModuleName -Force | Where-Object ModuleExport | Where-Object Unchanged -NE $true) -Path (Join-Path $script:path_FileSystem "$($ModuleName.ToLower())-$($ModuleVersion).json")
 			}
 		}
 	}

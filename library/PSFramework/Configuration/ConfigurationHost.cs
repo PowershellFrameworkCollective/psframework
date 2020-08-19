@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Management.Automation;
+using PSFramework.Utility;
 
 namespace PSFramework.Configuration
 {
@@ -24,7 +25,7 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The list of configuration definitions, controlling how configuration data is ingested.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, PsfScriptBlock> Schemata = new ConcurrentDictionary<string, PsfScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Deletes a configuration setting in compliance with policy.

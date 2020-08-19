@@ -69,10 +69,21 @@
 	
 	begin
 	{
-		if (($PSVersionTable.PSVersion.Major -ge 6) -and ($PSVersionTable.OS -notlike "*Windows*") -and ($Scope -band 15))
+		if ($script:NoRegistry -and ($Scope -band 10))
 		{
-			Stop-PSFFunction -Message "Cannot unregister configurations from registry on non-windows machines." -Tag 'NotSupported' -Category ResourceUnavailable
+			Stop-PSFFunction -String 'Unregister-PSFConfig.NoRegistry' -Tag 'NotSupported' -Category ResourceUnavailable
 			return
+		}
+		
+		# Linux and MAC default to local user store file
+		if ($script:NoRegistry -and ($Scope -eq "UserDefault"))
+		{
+			$Scope = [PSFramework.Configuration.ConfigScope]::FileUserLocal
+		}
+		# Linux and MAC get redirection for SystemDefault to FileSystem
+		if ($script:NoRegistry -and ($Scope -eq "SystemDefault"))
+		{
+			$Scope = [PSFramework.Configuration.ConfigScope]::FileSystem
 		}
 		
 		#region Initialize Collection

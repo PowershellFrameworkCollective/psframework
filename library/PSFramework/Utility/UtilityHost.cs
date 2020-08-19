@@ -33,7 +33,27 @@ namespace PSFramework.Utility
         /// The way size objects are usually displayed
         /// </summary>
         public static SizeStyle SizeStyle = SizeStyle.Dynamic;
-        
+
+        /// <summary>
+        /// Size of each segment before the decimal seaparator when displaying numbers
+        /// </summary>
+        public static int NumberSegmentSize = 3;
+
+        /// <summary>
+        /// The seperator used inbetween each segment when displaying numbers
+        /// </summary>
+        public static string NumberSegmentSeparator = System.Globalization.CultureInfo.CurrentUICulture.NumberFormat.NumberGroupSeparator;
+
+        /// <summary>
+        /// The decimal seperator when displaying numbers
+        /// </summary>
+        public static string NumberDecimalSeparator = System.Globalization.CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+
+        /// <summary>
+        /// When displaying numbers, how many digits after the decimal seperator will be shown?
+        /// </summary>
+        public static int NumberDecimalDigits = 2;
+
         /// <summary>
         /// Tests whether a given string is the local host.
         /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!

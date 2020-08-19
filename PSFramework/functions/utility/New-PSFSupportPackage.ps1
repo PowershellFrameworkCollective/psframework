@@ -162,17 +162,46 @@
 		if (($Include -band 8) -and -not ($Exclude -band 8))
 		{
 			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.OperatingSystem'
-			$hash["OperatingSystem"] = Get-CimInstance -ClassName Win32_OperatingSystem
+			$hash["OperatingSystem"] = if ($IsLinux -or $IsMacOs)
+			{
+				[PSCustomObject]@{
+					OSVersion = [System.Environment]::OSVersion
+					ProcessorCount = [System.Environment]::ProcessorCount
+					Is64Bit   = [System.Environment]::Is64BitOperatingSystem
+					LogicalDrives = [System.Environment]::GetLogicalDrives()
+					SystemDirectory = [System.Environment]::SystemDirectory
+				}
+			}
+			else
+			{
+				Get-CimInstance -ClassName Win32_OperatingSystem
+			}
 		}
 		if (($Include -band 16) -and -not ($Exclude -band 16))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.CPU'
-			$hash["CPU"] = Get-CimInstance -ClassName Win32_Processor
+			$hash["CPU"] = if ($IsLinux -and (Test-Path -Path /proc/cpuinfo))
+			{
+				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.CPU' -StringValues '/proc/cpuinfo'
+				Get-Content -Raw -Path /proc/cpuinfo
+			}
+			else
+			{
+				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.CPU' -StringValues Win32_Processor
+				Get-CimInstance -ClassName Win32_Processor
+			}
 		}
 		if (($Include -band 32) -and -not ($Exclude -band 32))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.RAM'
-			$hash["Ram"] = Get-CimInstance -ClassName Win32_PhysicalMemory
+			$hash["Ram"] = if ($IsLinux -and (Test-Path -Path /proc/meminfo))
+			{
+				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.RAM' -StringValues '/proc/meminfo'
+				Get-Content -Raw -Path /proc/meminfo
+			}
+			else
+			{
+				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.RAM' -StringValues Win32_PhysicalMemory
+				Get-CimInstance -ClassName Win32_PhysicalMemory
+			}
 		}
 		if (($Include -band 64) -and -not ($Exclude -band 64))
 		{
@@ -226,14 +255,14 @@
 		try { $data | Export-PsfClixml -Path $filePathXml -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -String 'New-PSFSupportPackage.Export.Failed' -ErrorRecord $_ -Target $filePathXml
+			Stop-PSFFunction -String 'New-PSFSupportPackage.Export.Failed' -ErrorRecord $_ -Target $filePathXml -EnableException $EnableException
 			return
 		}
 		
 		try { Compress-Archive -Path $filePathXml -DestinationPath $filePathZip -ErrorAction Stop }
 		catch
 		{
-			Stop-PSFFunction -String 'New-PSFSupportPackage.ZipCompression.Failed' -ErrorRecord $_ -Target $filePathZip
+			Stop-PSFFunction -String 'New-PSFSupportPackage.ZipCompression.Failed' -ErrorRecord $_ -Target $filePathZip -EnableException $EnableException
 			return
 		}
 		
