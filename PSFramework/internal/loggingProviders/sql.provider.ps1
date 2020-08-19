@@ -27,41 +27,37 @@
         )
 
         begin {
-            #$SqlServer = Get-ConfigValue -Name 'Instance'
-            $SqlServer = Get-PSFConfigValue -Name "PSFramework.Logging.Sql.SqlServer"
-            $SqlDatabaseName = Get-PSFConfigValue -Name "PSFramework.Logging.Sql.LoggingDatabase"
+            $SqlServer = Get-ConfigValue -Name 'SqlServer'
+            $SqlTable = Get-ConfigValue -Name 'Table'
+            $SqlDatabaseName = Get-ConfigValue -Name 'Database'
         }
 
         process {
-
             $QueryParameters = @{
-                "LogMessage"   = $ObjectToProcess.LogMessage
-                "Level"        = $ObjectToProcess.Level.ToString()
-                "TimeStamp"    = $ObjectToProcess.TimeStamp
+                "Message"      = $ObjectToProcess.LogMessage
+                "Level"        = $ObjectToProcess.Level -as [string]
+                "TimeStamp"    = $ObjectToProcess.TimeStamp.ToUniversalTime()
                 "FunctionName" = $ObjectToProcess.FunctionName
                 "ModuleName"   = $ObjectToProcess.ModuleName
-                "Tags"         = $ObjectToProcess.Tags -join ","
-                "Runspace"     = $ObjectToProcess.Runspace
+                "Tags"         = $ObjectToProcess.Tags -join "," -as [string]
+                "Runspace"     = $ObjectToProcess.Runspace -as [string]
                 "ComputerName" = $ObjectToProcess.ComputerName
                 "TargetObject" = $ObjectToProcess.TargetObject -as [string]
-                "ExecutedFile" = $ObjectToProcess.File -as [string]
+                "File"         = $ObjectToProcess.File
                 "Line"         = $ObjectToProcess.Line
                 "ErrorRecord"  = $ObjectToProcess.ErrorRecord -as [string]
-                "CallStack"    = $ObjectToProcess.CallStack.ToString()
+                "CallStack"    = $ObjectToProcess.CallStack -as [string]
             }
 
-            $insertQuery = @"
-INSERT INTO [LoggingDatabase].[dbo].[LoggingTable](LogMessage, Level, TimeStamp, FunctionName, ModuleName, Tags, Runspace, ComputerName, TargetObject, ExecutedFile, Line, ErrorRecord, CallStack)
-VALUES ('$($QueryParameters.LogMessage)', '$($QueryParameters.Level)', '$($QueryParameters.TimeStamp)', '$($QueryParameters.FunctionName)', '$($QueryParameters.ModuleName)', '$($QueryParameters.Tags)', '$($QueryParameters.Runspace)', '$($QueryParameters.ComputerName)', '$($QueryParameters.TargetObject)', '$($QueryParameters.ExecutedFile)', '$($QueryParameters.Line)', '$($QueryParameters.ErrorRecord)', '$($QueryParameters.CallStack)')
-"@
             try {
-                $SqlInstance = Connect-DbaInstance -SqlInstance $SqlServer  # Creates an SMO Server object that connects using Windows Authentication.
-                if ($SqlInstance.Status -eq 'Offline')
-                { throw "$($SqlDatabaseName) is offline or unreachable." }
-                elseif ($SqlInstance.ConnectionContext.IsOpen -ne 'True') {
+                $SqlInstance = Connect-DbaInstance -SqlInstance $SqlServer
+                if ($SqlInstance.ConnectionContext.IsOpen -ne 'True') {
                     $SqlInstance.ConnectionContext.Connect() # Try to connect to the database
                 }
-                Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabaseName -Query $insertQuery -EnableException
+
+                $insertQuery = "INSERT INTO [LoggingDatabase].[dbo].[$SqlTable](Message, Level, TimeStamp, FunctionName, ModuleName, Tags, Runspace, ComputerName, TargetObject, [File], Line, ErrorRecord, CallStack)
+                VALUES (@Message, @Level, @TimeStamp, @FunctionName, @ModuleName, @Tags, @Runspace, @ComputerName, @TargetObject, @File, @Line, @ErrorRecord, @CallStack)"
+                Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabaseName -Query $insertQuery -SqlParameters $QueryParameters -EnableException
             }
             catch { throw }
         }
@@ -80,41 +76,41 @@ VALUES ('$($QueryParameters.LogMessage)', '$($QueryParameters.Level)', '$($Query
         #>
 
         [cmdletbinding()]
-        param()
+        param(
+        )
 
-        #if (-NOT (Test-Path -Path 'C:\Users\sifu1\AppData\Local\Microsoft\Microsoft SQL Server Local DB\Instances\LoggingDatabase')) {
-        #    New-Item -Name 'LoggingDatabase' -Path 'C:\Users\sifu1\AppData\Local\Microsoft\Microsoft SQL Server Local DB\Instances\' -ItemType Directory
-        #}
+        # need to use dba tools to create the database and credentials for connecting.
+
 
         begin {
 
-            # Load the appropriate .NET assemblies used by SMO
-            [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO')
-
             # set instance and database name variables
-            $sqlInstance = "(localdb)\ProjectsV13"
+            $Credential = Get-ConfigValue -Name 'Credential'
+            $SqlServer = Get-ConfigValue -Name 'SqlServer'
+            $SqlTable = Get-ConfigValue -Name 'Table'
+            $SqlDatabaseName = Get-ConfigValue -Name 'Database'
+
+            $parameters = @{
+                SqlInstance = $SqlServer
+            }
+            if ($Credential) { $parameters.SqlCredential = $Credential }
         }
         process {
             try {
-                # Create the Sql object and database
-                $database = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Database -Argumentlist $sqlInstance, $SqlDatabaseName
-                $database.Create()
-                # set recovery model
-                $database.RecoveryModel = "simple"
-                $database.Alter()
-
-                # Change the database owner
-                $database.SetOwner('sa')
-
-                $createtable = "CREATE TABLE LoggingTable (LogMessage VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), TargetObject VARCHAR(max), ExecutedFile VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max))"
-                invoke-dbaquery -SQLInstance $SqlServer -Database "LoggingDatabase" -query $createtable
+                $dbaconnection = Connect-DbaInstance @parameters
+                if (-NOT (Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -eq $SqlDatabaseName)) {
+                    $database = New-DbaDatabase -SqlInstance $dbaconnection -Name $SqlDatabaseName
+                }
+                if (-NOT($database.Tables | Where-Object Name -eq $SqlTable)) {
+                    $createtable = "CREATE TABLE $SqlTable (Message VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), TargetObject VARCHAR(max), [File] VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max))"
+                    Invoke-dbaquery -SQLInstance $SqlServer -Database $SqlDatabaseName -query $createtable
+                }
             }
             catch {
                 throw
             }
         }
     }
-
 }
 
 #region Installation
@@ -153,7 +149,7 @@ $isInstalled_script = {
 #endregion Installation
 #region Events
 $begin_event = {
-    #New-DefaultSqlDatabaseAndTable
+    New-DefaultSqlDatabaseAndTable
 }
 
 $message_event = {
@@ -172,10 +168,10 @@ $final_event = {
 
 # Configuration values for the logging provider
 $configuration_Settings = {
+    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Credential' -Initialize -Validation 'credential' -Description "SQL server database."
     Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Database' -Value "LoggingDatabase" -Initialize -Validation 'string' -Description "SQL server database."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.DatabaseTable' -Value "LoggingTable" -Initialize -Validation 'string' -Description "SQL server database table."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value "(localdb)\ProjectsV13" -Initialize -Validation 'string' -Description "SQL server hosting logs."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
+    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Table' -Value "LoggingTable" -Initialize -Validation 'string' -Description "SQL server database table."
+    Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value "" -Initialize -Description "SQL server hosting logs."
 }
 
 # Registered parameters for the logging provider.
@@ -184,7 +180,7 @@ $paramRegisterPSFSqlProvider = @{
     Name                       = "Sql"
     Version2                   = $true
     ConfigurationRoot          = 'PSFramework.Logging.Sql'
-    InstanceProperties         = 'Database', 'DatabaseTable', 'SqlServer', 'LogType'
+    InstanceProperties         = 'Database', 'Table', 'SqlServer', 'Credential'
     MessageEvent               = $message_Event
     BeginEvent                 = $begin_event
     FinalEvent                 = $final_event
@@ -194,7 +190,8 @@ $paramRegisterPSFSqlProvider = @{
     InstallationParameters     = $installationParameters
     FunctionDefinitions        = $functionDefinitions
     ConfigurationDefaultValues = @{
-        LogType = 'Message'
+        'Database'  = "LoggingDatabase"
+        'Table'     = "LoggingTable"
     }
 }
 
