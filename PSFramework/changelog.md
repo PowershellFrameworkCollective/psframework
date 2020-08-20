@@ -1,5 +1,5 @@
 ﻿# CHANGELOG
-## ???
+## 1.3.140-preview2 : 2020-08-20
 
 - Upd: Logging Provider logfile - added configuration for encoding
 - Upd: Logging Provider logfile - added configuration for UTC timestamps
