@@ -168,8 +168,16 @@ $start_event = {
 				@{
 					Name	   = 'Timestamp'
 					Expression = {
-						if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp }
-						else { $_.Timestamp.ToString((Get-ConfigValue -Name 'TimeFormat')) }
+						if (Get-ConfigValue -Name 'UTC')
+						{
+							if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp.ToUniversalTime() }
+							else { $_.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name 'TimeFormat')) }
+						}
+						else
+						{
+							if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp }
+							else { $_.Timestamp.ToString((Get-ConfigValue -Name 'TimeFormat')) }
+						}
 					}
 				}
 			}
@@ -209,6 +217,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value "," -Initialize -Validation string -Description "The delimiter to use when writing to csv."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Description "The format used for timestamps in the logfile"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Encoding' -Value "UTF8" -Initialize -Validation string -Description "In what encoding to write the logfile."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.UTC' -Value $false -Initialize -Validation bool -Description "Whether the timestamp in the logfile should be converted to UTC"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotatePath' -Value "" -Initialize -Validation string -Description "The path where to logrotate. Specifying this setting will cause the logging provider to also rotate older logfiles"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRetentionTime' -Value "30d" -Initialize -Validation timespan -Description "The minimum age for a logfile to be considered for deletion as part of logrotation"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value "*" -Initialize -Validation string -Description "A filter to apply to all files logrotated"
@@ -219,7 +228,7 @@ $paramRegisterPSFLoggingProvider = @{
 	Name			   = "logfile"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.LogFile'
-	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse'
+	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse'
 	FunctionDefinitions = $functionDefinitions
 	BeginEvent		   = $begin_event
 	StartEvent		   = $start_event

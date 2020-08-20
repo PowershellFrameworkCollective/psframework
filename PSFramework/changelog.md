@@ -2,6 +2,7 @@
 ## ???
 
 - Upd: Logging Provider logfile - added configuration for encoding
+- Upd: Logging Provider logfile - added configuration for UTC timestamps
 - Upd: Logging Provider logfile - added logrotate capability
 - Upd: Configuration Validation timespan - now supports PSFTimespan notation
 
