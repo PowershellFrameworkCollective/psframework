@@ -20,7 +20,7 @@
 		
 		$data = @(
 			$Message.LogMessage
-			$Message.Timestamp.ToString((Get-ConfigValue -Name TimeFormat))
+			$Message.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name TimeFormat))
 			$Message.FunctionName
 			$Message.ModuleName
 			($Message.Tags -join ",")
