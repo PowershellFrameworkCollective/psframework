@@ -4,6 +4,7 @@
 - Upd: Logging Provider logfile - added configuration for encoding
 - Upd: Logging Provider logfile - added configuration for UTC timestamps
 - Upd: Logging Provider logfile - added logrotate capability
+- Upd: Logging Provider GELF - converted to v2 provider, enabling multiple instances
 - Upd: Configuration Validation timespan - now supports PSFTimespan notation
 
 ## 1.3.135-preview1 : 2020-08-17
