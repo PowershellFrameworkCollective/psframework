@@ -2,6 +2,7 @@
 
 ## ???
 
+- New: Added Tab Expansion Plus Plus code to provide extended tab completion on PS3-4
 - Upd: Invoke-PSFProtectedCommand now respects explicitly bound `-WhatIf` and `-Confirm` parameters.
 
 ## 1.3.140-preview2 : 2020-08-20

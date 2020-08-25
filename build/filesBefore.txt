@@ -2,3 +2,4 @@
 # In the order they are loaded during postimport
 
 internal\scripts\environment.ps1
+internal\scripts\teppCoreCode.ps1
