@@ -1,4 +1,9 @@
 ﻿# CHANGELOG
+
+## ???
+
+- Upd: Invoke-PSFProtectedCommand now respects explicitly bound `-WhatIf` and `-Confirm` parameters.
+
 ## 1.3.140-preview2 : 2020-08-20
 
 - Upd: Logging Provider logfile - added configuration for encoding
