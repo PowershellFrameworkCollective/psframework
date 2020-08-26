@@ -5,6 +5,7 @@ $TypeAliasTable = @{
 	PSFComputerParameter    = "PSFramework.Parameter.ComputerParameter"
 	PSFDateTime			    = "PSFramework.Parameter.DateTimeParameter"
 	PSFDateTimeParameter    = "PSFramework.Parameter.DateTimeParameter"
+	PsfDynamicTransform     = 'PSFramework.Utility.DynamicTransformationAttribute'
 	PSFEncoding			    = "PSFramework.Parameter.EncodingParameter"
 	PSFEncodingParameter    = "PSFramework.Parameter.EncodingParameter"
 	PSFNumber			    = 'PSFramework.Utility.Number'
