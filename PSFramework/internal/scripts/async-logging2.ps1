@@ -63,7 +63,11 @@
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try { & $___instance.StartCommand }
+				try
+				{
+					$___instance.ImportConfig()
+					& $___instance.StartCommand
+				}
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
@@ -142,7 +146,28 @@
 			}
 			#endregion End Event
 			
+			#region Finalize / Cleanup
+			# Adding $true will cause it to also return disabled providers / instances that are intitialized
+			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized($true))
+			{
+				if ($___provider.Enabled) { continue }
+				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
+				catch { $___provider.Errors.Push($_) }
+				$___provider.Initialized = $false
+			}
+			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances($true))
+			{
+				if ($___instance.Enabled) { continue }
+				try { & $___instance.FinalCommand }
+				catch { $___instance.Errors.Enqueue($_) }
+				$___instance.Initialized = $false
+			}
+			#endregion Finalize / Cleanup
+			
 			[PSFramework.Logging.ProviderHost]::LoggingState = 'Ready'
+			
+			# Skip sleeping if the next messages already await
+			if ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0) { continue }
 			Start-Sleep -Milliseconds ([PSFramework.Message.LogHost]::NextInterval)
 		}
 	}

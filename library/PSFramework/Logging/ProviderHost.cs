@@ -37,12 +37,13 @@ namespace PSFramework.Logging
         /// <summary>
         /// Returns all enabled &amp; initialized logging provider
         /// </summary>
+        /// /// <param name="IncludeDisabled">Whether disabled providers should also be returned</param>
         /// <returns></returns>
-        public static List<Provider> GetInitialized()
+        public static List<Provider> GetInitialized(bool IncludeDisabled = false)
         {
             List<Provider> list = new List<Provider>();
             foreach (Provider prov in Providers.Values)
-                if (prov.Enabled && prov.Initialized && (prov as ProviderV2) == null)
+                if ((prov.Enabled || IncludeDisabled) && prov.Initialized && (prov as ProviderV2) == null)
                     list.Add(prov);
             return list;
         }
@@ -71,8 +72,9 @@ namespace PSFramework.Logging
         /// <summary>
         /// Returns all enabled and initialized provider instances
         /// </summary>
+        /// <param name="IncludeDisabled">Whether disabled instances should also be returned</param>
         /// <returns>All enabled and initialized provider instances</returns>
-        public static List<ProviderInstance> GetInitializedInstances()
+        public static List<ProviderInstance> GetInitializedInstances(bool IncludeDisabled = false)
         {
             List<ProviderInstance> results = new List<ProviderInstance>();
 
@@ -82,7 +84,7 @@ namespace PSFramework.Logging
                     continue;
 
                 ProviderV2 prov2 = (ProviderV2)prov;
-                foreach (ProviderInstance inst in prov2.Instances.Values.Where(o => o.Enabled && o.Initialized))
+                foreach (ProviderInstance inst in prov2.Instances.Values.Where(o => (o.Enabled || IncludeDisabled) && o.Initialized))
                     results.Add(inst);
             }
 

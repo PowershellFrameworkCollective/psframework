@@ -2469,10 +2469,11 @@
             </summary>
             <returns>All enabled logging providers</returns>
         </member>
-        <member name="M:PSFramework.Logging.ProviderHost.GetInitialized">
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitialized(System.Boolean)">
             <summary>
             Returns all enabled &amp; initialized logging provider
             </summary>
+            /// <param name="IncludeDisabled">Whether disabled providers should also be returned</param>
             <returns></returns>
         </member>
         <member name="M:PSFramework.Logging.ProviderHost.GetEnabledInstances">
@@ -2481,10 +2482,11 @@
             </summary>
             <returns>All enabled provider instances</returns>
         </member>
-        <member name="M:PSFramework.Logging.ProviderHost.GetInitializedInstances">
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitializedInstances(System.Boolean)">
             <summary>
             Returns all enabled and initialized provider instances
             </summary>
+            <param name="IncludeDisabled">Whether disabled instances should also be returned</param>
             <returns>All enabled and initialized provider instances</returns>
         </member>
         <member name="F:PSFramework.Logging.ProviderHost.ProviderV2ModuleScript">

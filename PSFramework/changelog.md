@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Logging Component - Disabled wait time in logging cycle if messages pending, to avoid delays during message floods
+- Fix: Logging Component - Logging Provider Instances would ignore updating filters at runtime
+- Fix: Logging Component - Execute proper cleanup when provider / instance get disabled explicitly
+
 ## 1.4.143-preview3 : 2020-08-29
 
 - New: Added Tab Expansion Plus Plus code to provide extended tab completion on PS3-4
