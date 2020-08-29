@@ -162,6 +162,7 @@
     <Compile Include="Utility\DynamicContentObjectType.cs" />
     <Compile Include="Utility\DynamicContentQueue.cs" />
     <Compile Include="Utility\DynamicContentStack.cs" />
+    <Compile Include="Utility\DynamicTransformationAttribute.cs" />
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\Number.cs" />
     <Compile Include="Utility\PsfScriptBlock.cs" />

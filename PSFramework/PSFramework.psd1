@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.3.140'
+	ModuleVersion = '1.4.143'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -162,7 +162,7 @@
 		
 		#Support for PowerShellGet galleries.
 		PSData = @{
-			Prerelease = 'preview2'
+			Prerelease = 'preview3'
 			
 			# Tags applied to this module. These help with module discovery in online galleries.
 			Tags = @('scripting', 'infrastructure', 'logging', 'configuration', 'PSEdition_Core', 'PSEdition_Desktop', 'Linux', 'Mac')

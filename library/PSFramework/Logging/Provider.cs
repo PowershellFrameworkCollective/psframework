@@ -231,11 +231,11 @@ namespace PSFramework.Logging
             // Tags
             if (IncludeTags.Count > 0)
             {
-                if (IncludeTags.Except(Entry.Tags).ToList().Count == IncludeTags.Count)
+                if (IncludeTags.Except(Entry.Tags, StringComparer.InvariantCultureIgnoreCase).ToList().Count == IncludeTags.Count)
                     return false;
             }
 
-            if (ExcludeTags.Except(Entry.Tags).ToList().Count < ExcludeTags.Count)
+            if (ExcludeTags.Except(Entry.Tags, StringComparer.InvariantCultureIgnoreCase).ToList().Count < ExcludeTags.Count)
                 return false;
 
             return true;

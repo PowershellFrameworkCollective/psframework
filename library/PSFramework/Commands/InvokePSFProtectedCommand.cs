@@ -205,7 +205,11 @@ return
         /// </summary>
         protected override void ProcessRecord()
         {
-            bool test = PSCmdlet.ShouldProcess(LanguagePrimitives.ConvertTo<string>(Target), _Message);
+            bool test;
+            if (MyInvocation.BoundParameters.ContainsKey("WhatIf") || MyInvocation.BoundParameters.ContainsKey("Confirm"))
+                test = ShouldProcess(LanguagePrimitives.ConvertTo<string>(Target), _Message);
+            else
+                test = PSCmdlet.ShouldProcess(LanguagePrimitives.ConvertTo<string>(Target), _Message);
 
             if (test)
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Confirmed", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);

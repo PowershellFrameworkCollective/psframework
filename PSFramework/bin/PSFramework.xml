@@ -2469,10 +2469,11 @@
             </summary>
             <returns>All enabled logging providers</returns>
         </member>
-        <member name="M:PSFramework.Logging.ProviderHost.GetInitialized">
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitialized(System.Boolean)">
             <summary>
             Returns all enabled &amp; initialized logging provider
             </summary>
+            /// <param name="IncludeDisabled">Whether disabled providers should also be returned</param>
             <returns></returns>
         </member>
         <member name="M:PSFramework.Logging.ProviderHost.GetEnabledInstances">
@@ -2481,10 +2482,11 @@
             </summary>
             <returns>All enabled provider instances</returns>
         </member>
-        <member name="M:PSFramework.Logging.ProviderHost.GetInitializedInstances">
+        <member name="M:PSFramework.Logging.ProviderHost.GetInitializedInstances(System.Boolean)">
             <summary>
             Returns all enabled and initialized provider instances
             </summary>
+            <param name="IncludeDisabled">Whether disabled instances should also be returned</param>
             <returns>All enabled and initialized provider instances</returns>
         </member>
         <member name="F:PSFramework.Logging.ProviderHost.ProviderV2ModuleScript">
@@ -5973,6 +5975,41 @@
             <summary>
             Resets the stack by reestablishing an empty stack.
             </summary>
+        </member>
+        <member name="T:PSFramework.Utility.DynamicTransformationAttribute">
+            <summary>
+            Transformation attribute that can convert PSObjects or hashtables to the target type, so long as it has an empty constructor
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicTransformationAttribute.TargetType">
+            <summary>
+            The type to convert to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicTransformationAttribute.AllowNull">
+            <summary>
+            Whether a null object is acceptable as input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicTransformationAttribute.RequiredProperties">
+            <summary>
+            List of properties that must be specified on the input object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicTransformationAttribute.Transform(System.Management.Automation.EngineIntrinsics,System.Object)">
+            <summary>
+            Converts input to output
+            </summary>
+            <param name="engineIntrinsics"></param>
+            <param name="inputData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicTransformationAttribute.#ctor(System.Type,System.String[])">
+            <summary>
+            Creates the basic attribute specifying the target type
+            </summary>
+            <param name="TargetType">The type to convert to</param>
+            <param name="RequiredProperties">Properties to require</param>
         </member>
         <member name="T:PSFramework.Utility.LimitedConcurrentQueue`1">
             <summary>
