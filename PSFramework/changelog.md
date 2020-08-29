@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.4.143-preview3 : 2020-08-29
 
 - New: Added Tab Expansion Plus Plus code to provide extended tab completion on PS3-4
 - New: Argument Transformation Attribute: PsfDynamicTransform - allows dynamic object conversion from PSObject, hashtable, or type from a different library version
