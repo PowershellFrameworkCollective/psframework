@@ -1,28 +1,10 @@
 ﻿# CHANGELOG
 
-## ???
-
-- Upd: Logging Component - Disabled wait time in logging cycle if messages pending, to avoid delays during message floods
-- Fix: Logging Component - Logging Provider Instances would ignore updating filters at runtime
-- Fix: Logging Component - Execute proper cleanup when provider / instance get disabled explicitly
-
-## 1.4.143-preview3 : 2020-08-29
-
-- New: Added Tab Expansion Plus Plus code to provide extended tab completion on PS3-4
-- New: Argument Transformation Attribute: PsfDynamicTransform - allows dynamic object conversion from PSObject, hashtable, or type from a different library version
-- Upd: Invoke-PSFProtectedCommand now respects explicitly bound `-WhatIf` and `-Confirm` parameters.
-
-## 1.3.140-preview2 : 2020-08-20
-
-- Upd: Logging Provider logfile - added configuration for encoding
-- Upd: Logging Provider logfile - added configuration for UTC timestamps
-- Upd: Logging Provider logfile - added logrotate capability
-- Upd: Logging Provider GELF - converted to v2 provider, enabling multiple instances
-- Upd: Configuration Validation timespan - now supports PSFTimespan notation
-
-## 1.3.135-preview1 : 2020-08-17
+## 1.4.146 : 2020-08-30
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
+- New: Added Tab Expansion Plus Plus code to provide extended tab completion on PS3-4
+- New: Argument Transformation Attribute: PsfDynamicTransform - allows dynamic object conversion from PSObject, hashtable, or type from a different library version
 - New: Feature PSFramework.Stop-PSFFunction.ShowWarning - Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.
 - New: Command Get-PSFLoggingProviderInstance : Lists current logging provider instances
 - New: Command Export-PSFModuleClass : Publishes a PowerShell class to be available from outside of the module it is defined in.
@@ -85,6 +67,13 @@
 - Upd: Register-PSFLoggingProvider - flagged as unsafe for JEA
 - Upd: Set-PSFTypeAlias - now accepts from the pipeline
 - Upd: Stop-PSFFunction - added parameter `-AlwaysWarning`, ensuring it will always show the warning, even when throwing a terminating exception.
+- Upd: Logging Provider logfile - added configuration for encoding
+- Upd: Logging Provider logfile - added configuration for UTC timestamps
+- Upd: Logging Provider logfile - added logrotate capability
+- Upd: Logging Provider GELF - converted to v2 provider, enabling multiple instances
+- Upd: Configuration Validation timespan - now supports PSFTimespan notation
+- Upd: Invoke-PSFProtectedCommand now respects explicitly bound `-WhatIf` and `-Confirm` parameters.
+- Upd: Logging Component - Disabled wait time in logging cycle if messages pending, to avoid delays during message floods
 - Fix: Register-PSFLoggingProvider - respects `InstallationOptional` setting
 - Fix: Install-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the installation scriptblock
 - Fix: Set-PSFLoggingProvider - now correctly passes installation parameters as hashtable into the configuration scriptblock
@@ -98,6 +87,8 @@
 - Fix: Import-PSFConfig - resolved scriptblock handling issues in multi-runspace scenarios
 - Fix: Register-PSFConfig - error detecting parameterset in pipeline scenarios
 - Fix: Register-PSFConfig - failed to failover for SystemDefault scope on non-Windows
+- Fix: Logging Component - Logging Provider Instances would ignore updating filters at runtime
+- Fix: Logging Component - Execute proper cleanup when provider / instance get disabled explicitly
 
 ## 1.1.59 : 2019-11-02
  - New: Command Get-PSFPath : Returns configured paths.
