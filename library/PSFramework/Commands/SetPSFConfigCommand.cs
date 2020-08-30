@@ -12,27 +12,27 @@ namespace PSFramework.Commands
     /// Implements the Set-PSFConfig command
     /// </summary>
     [Cmdlet("Set", "PSFConfig", DefaultParameterSetName = "FullName")]
-    public class SetPSFConfigCommand : PSCmdlet
+    public class SetPSFConfigCommand : PSFCmdlet
     {
         #region Parameters
         /// <summary>
         /// The full name of the setting
         /// </summary>
-        [Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = true)]
-        [Parameter(ParameterSetName = "Persisted", Position = 0, Mandatory = true)]
+        [Parameter(ParameterSetName = "FullName", Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true, ValueFromPipeline = true)]
+        [Parameter(ParameterSetName = "Persisted", Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true, ValueFromPipeline = true)]
         public string FullName;
 
         /// <summary>
         /// The name of the module the setting belongs to.
         /// Is optional due to just specifying a name is legal, in which case the first name segment becomes the module name.
         /// </summary>
-        [Parameter(ParameterSetName = "Module", Position = 0)]
+        [Parameter(ParameterSetName = "Module", Position = 0, ValueFromPipelineByPropertyName = true)]
         public string Module;
 
         /// <summary>
         /// The name of the setting within a module.
         /// </summary>
-        [Parameter(ParameterSetName = "Module", Position = 1, Mandatory = true)]
+        [Parameter(ParameterSetName = "Module", Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         public string Name;
 
         /// <summary>
@@ -144,11 +144,6 @@ namespace PSFramework.Commands
         private Config _Config;
 
         /// <summary>
-        /// Whether execution should be terminated silently.
-        /// </summary>
-        private bool _KillIt;
-
-        /// <summary>
         /// Whether this is an initialization execution.
         /// </summary>
         private bool _Initialize;
@@ -190,24 +185,15 @@ namespace PSFramework.Commands
         private string _ValidationErrorMessage;
         #endregion Private fields
 
-        #region Internal Resources
-        private static string _scriptErrorValidationFullName = "Stop-PSFFunction -Message \"Invalid Name: {0} ! At least one '.' is required, to separate module from name\" -EnableException ${1} -Category InvalidArgument -FunctionName 'Set-PSFConfig' -ModuleName 'PSFramework'";
-        private static string _scriptErrorValidationName = "Stop-PSFFunction -Message \"Invalid Name: {0} ! Need to specify a legally namespaced name!\" -EnableException ${1} -Category InvalidArgument -FunctionName 'Set-PSFConfig' -ModuleName 'PSFramework'";
-        private static string _scriptErrorValidationValidation = "Stop-PSFFunction -Message \"Invalid validation name: {0}. Supported validations: {1}\" -EnableException ${2} -Category InvalidArgument -FunctionName 'Set-PSFConfig' -ModuleName 'PSFramework'";
-        private static string _updateError = "param ($Exception)\nStop-PSFFunction -Message \"Could not update configuration: {0}\" -EnableException ${1} -Category InvalidArgument -Exception $Exception -FunctionName 'Set-PSFConfig' -ModuleName 'PSFramework'";
-        private static string _updatePolicyForbids = "Stop-PSFFunction -Message \"Could not update configuration: {0} - The current settings have been enforced by policy!\" -EnableException ${1} -Category PermissionDenied -FunctionName 'Set-PSFConfig' -ModuleName 'PSFramework'";
-        #endregion Internal Resources
-
         #region Cmdlet methods
         /// <summary>
-        /// Implements the begin action of Set-PSFConfig
+        /// Implements the process action of Set-PSFConfig
         /// </summary>
-        protected override void BeginProcessing()
+        protected override void ProcessRecord()
         {
             if (!String.IsNullOrEmpty(Validation) && !ConfigurationHost.Validation.ContainsKey(Validation))
             {
-                InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationValidation, Validation, String.Join(", ", ConfigurationHost.Validation.Keys), EnableException.ToBool()));
-                _KillIt = true;
+                StopCommand(String.Format("Invalid validation name: {0}. Supported validations: {1}",Validation, String.Join(", ", ConfigurationHost.Validation.Keys)), null, Validation, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                 return;
             }
 
@@ -217,8 +203,7 @@ namespace PSFramework.Commands
                 _NameFull = FullName.Trim('.');
                 if (!_NameFull.Contains('.'))
                 {
-                    InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, FullName, EnableException.ToBool()));
-                    _KillIt = true;
+                    StopCommand($"Invalid Name: {FullName} ! At least one '.' is required, to separate module from name", null, FullName, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                     return;
                 }
 
@@ -239,8 +224,7 @@ namespace PSFramework.Commands
                     _NameFull = Name.Trim('.');
                     if (!_NameFull.Contains('.'))
                     {
-                        InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationFullName, Name, EnableException.ToBool()));
-                        _KillIt = true;
+                        StopCommand($"Invalid Name: {Name} ! At least one '.' is required, to separate module from name", null, Name, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                         return;
                     }
 
@@ -252,8 +236,7 @@ namespace PSFramework.Commands
 
             if (String.IsNullOrEmpty(_NameModule) || String.IsNullOrEmpty(_NameName))
             {
-                InvokeCommand.InvokeScript(String.Format(_scriptErrorValidationName, _NameFull, EnableException.ToBool()));
-                _KillIt = true;
+                StopCommand($"Invalid Name: {_NameFull} ! Need to specify a legally namespaced name!", null, _NameFull, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                 return;
             }
             #endregion Name Interpretation
@@ -267,15 +250,6 @@ namespace PSFramework.Commands
 
             // If the setting is already initialized, nothing should be done
             if (_Exists && _Config.Initialized && Initialize)
-                _KillIt = true;
-        }
-
-        /// <summary>
-        /// Implements the process action of Set-PSFConfig
-        /// </summary>
-        protected override void ProcessRecord()
-        {
-            if (_KillIt)
                 return;
 
             if (_Initialize)
@@ -321,8 +295,7 @@ namespace PSFramework.Commands
                 try { ApplyValue(oldValue); }
                 catch (Exception e)
                 {
-                    InvokeCommand.InvokeScript(true, ScriptBlock.Create(String.Format(_updateError, _NameFull, EnableException.ToBool())), null, e);
-                    _KillIt = true;
+                    StopCommand($"Could not update configuration: {_NameFull}", e, _NameFull, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                     return;
                 }
             }
@@ -343,8 +316,7 @@ namespace PSFramework.Commands
         {
             if (_PolicyEnforced)
             {
-                InvokeCommand.InvokeScript(String.Format(_updatePolicyForbids, _NameFull, EnableException.ToBool()));
-                _KillIt = true;
+                StopCommand($"Could not update configuration: {_NameFull} - The current settings have been enforced by policy!", null, _NameFull, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                 return;
             }
             ApplyCommonSettings();
@@ -358,8 +330,7 @@ namespace PSFramework.Commands
             }
             catch (Exception e)
             {
-                InvokeCommand.InvokeScript(true, ScriptBlock.Create(String.Format(_updateError, _NameFull, EnableException.ToBool())), null, e);
-                _KillIt = true;
+                StopCommand($"Could not update configuration: {_NameFull}", e, _NameFull, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                 return;
             }
         }
@@ -378,8 +349,7 @@ namespace PSFramework.Commands
         {
             if (_PolicyEnforced)
             {
-                InvokeCommand.InvokeScript(String.Format(_updatePolicyForbids, _NameFull, EnableException.ToBool()));
-                _KillIt = true;
+                StopCommand($"Could not update configuration: {_NameFull} - The current settings have been enforced by policy!", null, _NameFull, "Set-PSFConfig", "PSFramework", "SetPSFConfigCommand.cs", 0, null, EnableException.ToBool());
                 return;
             }
 
@@ -399,11 +369,7 @@ namespace PSFramework.Commands
             #region Validation
             if (!DisableValidation.ToBool() && (_Config.Validation != null))
             {
-                ScriptBlock tempValidation = ScriptBlock.Create(_Config.Validation.ToString());
-                //if ((tempValue != null) && ((tempValue as ICollection) != null))
-                //    tempValue = new object[1] { tempValue };
-
-                PSObject validationResult = tempValidation.Invoke(tempValue)[0];
+                PSObject validationResult = _Config.Validation.InvokeEx(true, tempValue, tempValue, null, true, true, new object[] { tempValue })[0];
                 if (!(bool)validationResult.Properties["Success"].Value)
                 {
                     _ValidationErrorMessage = (string)validationResult.Properties["Message"].Value;
@@ -417,11 +383,10 @@ namespace PSFramework.Commands
             if (!DisableHandler.ToBool() && (_Config.Handler != null))
             {
                 object handlerValue = tempValue;
-                ScriptBlock tempHandler = ScriptBlock.Create(_Config.Handler.ToString());
                 if ((tempValue != null) && ((tempValue as ICollection) != null))
                     handlerValue = new object[1] { tempValue };
 
-                tempHandler.Invoke(handlerValue);
+                _Config.Handler.InvokeEx(true, handlerValue, handlerValue, null, true, true, new object[] { handlerValue });
             }
             #endregion Handler
 

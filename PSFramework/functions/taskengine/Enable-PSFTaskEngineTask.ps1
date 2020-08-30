@@ -9,6 +9,9 @@
 	
 			Note:
 			Tasks are enabled by default. Use this function to re-enable a task disabled by Disable-PSFTaskEngineTask.
+	
+		.PARAMETER Name
+			Name of the task to enable.
 		
 		.PARAMETER Task
 			The task registered. Must be a task object returned by Get-PSFTaskEngineTask.
@@ -19,7 +22,10 @@
 			Enables the task named 'mymodule.maintenance'
 	#>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Enable-PSFTaskEngineTask')]
-	Param (
+	param (
+		[string[]]
+		$Name,
+		
 		[Parameter(ValueFromPipeline = $true, Mandatory = $true)]
 		[PSFramework.TaskEngine.PsfTask[]]
 		$Task
@@ -35,9 +41,22 @@
 		{
 			if (-not $item.Enabled)
 			{
-				Write-PSFMessage -Level Verbose -Message "Enabling task engine task: $($item.Name)" -Tag 'enable','taskengine','task'
+				Write-PSFMessage -Level Verbose -String 'Enable-PSFTaskEngineTask.Enable' -StringValues $item.Name -Tag 'enable', 'taskengine', 'task'
 				$item.Enabled = $true
 				$didSomething = $true
+			}
+		}
+		
+		foreach ($taskName in $Name)
+		{
+			foreach ($taskObject in Get-PSFTaskEngineTask -Name $taskName)
+			{
+				if (-not $taskObject.Enabled)
+				{
+					Write-PSFMessage -Level Verbose -String 'Enable-PSFTaskEngineTask.Enable' -StringValues $taskObject.Name -Tag 'enable', 'taskengine', 'task'
+					$taskObject.Enabled = $true
+					$didSomething = $true
+				}
 			}
 		}
 	}

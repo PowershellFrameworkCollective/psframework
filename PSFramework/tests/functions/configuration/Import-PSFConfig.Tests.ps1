@@ -32,8 +32,9 @@
 	}
 	
 	Describe "Integrity of imported data is verified" {
-		# V1 Configuration imported correctly
-		Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config1.json -Value @'
+		BeforeAll {
+			# V1 Configuration imported correctly
+			Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config1.json -Value @'
 {
     "FullName":  "import-psfconfig.phase1.setting1",
     "Type":  3,
@@ -42,27 +43,18 @@
     "Style":  "default"
 }
 '@
-		It "Should correctly import the configuration Json from file" {
-			Get-Content 'testdrive:\Import-PSFConfig.Phase1.Config1.json' | Select-String '"Version":  1' | Should -Not -BeNullOrEmpty
-			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config1.json
-			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1' | Should -Be 42
-			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1').GetType().FullName | Should -Be 'System.Int32'
-		}
-		# Simple Export files imported correctly
-		Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config2.json -Value @'
+			
+			# Simple Export files imported correctly
+			Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config2.json -Value @'
 {
     "FullName":  "import-psfconfig.phase1.setting2",
     "Version":  1,
     "Data":  23
 }
 '@
-		It "Should correctly import simple style configuration" {
-			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config2.json
-			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2' | Should -Be 23
-			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2').GetType().FullName | Should -Be 'System.Int32'
-		}
-		# Deferred Deserialization applies
-		Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config3.json -Value @'
+			
+			# Deferred Deserialization applies
+			Set-Content -Path testdrive:\Import-PSFConfig.Phase1.Config3.json -Value @'
 {
     "FullName":  "import-psfconfig.phase1.setting3",
     "Type":  12,
@@ -71,6 +63,21 @@
     "Style":  "Default"
 }
 '@
+		}
+		
+		It "Should correctly import the configuration Json from file" {
+			Get-Content 'testdrive:\Import-PSFConfig.Phase1.Config1.json' | Select-String '"Version":  1' | Should -Not -BeNullOrEmpty
+			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config1.json
+			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1' | Should -Be 42
+			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1').GetType().FullName | Should -Be 'System.Int32'
+		}
+		
+		It "Should correctly import simple style configuration" {
+			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config2.json
+			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2' | Should -Be 23
+			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2').GetType().FullName | Should -Be 'System.Int32'
+		}
+		
 		It "Should correctly defer deserialization until being explicitly requested" {
 			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config3.json
 			(Get-PSFConfig -FullName 'Import-PSFConfig.Phase1.Setting3').SafeValue.Name | Should -BeNullOrEmpty
@@ -200,12 +207,13 @@
 		}
 	}
 	Describe "The module cache feature import is working as designed" {
-		$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
-		$pathFileUserLocal = & $module { $path_FileUserLocal }
-		$pathFileUserShared = & $module { $path_FileUserShared }
-		$pathFileSystem = & $module { $path_FileSystem }
-		
-		$json1 = @'
+		BeforeAll {
+			$module = Get-Module PSFramework | Sort-Object Version -Descending | Select-Object -First 1
+			$pathFileUserLocal = & $module { $path_FileUserLocal }
+			$pathFileUserShared = & $module { $path_FileUserShared }
+			$pathFileSystem = & $module { $path_FileSystem }
+			
+			$json1 = @'
 {
     "FullName":  "Import-PSFConfig.phase3.Setting1",
     "Type":  3,
@@ -214,7 +222,7 @@
     "Style":  "Default"
 }
 '@
-		$json2 = @'
+			$json2 = @'
 {
     "FullName":  "Import-PSFConfig.phase3.Setting2",
     "Type":  3,
@@ -223,8 +231,9 @@
     "Style":  "Default"
 }
 '@
-		Set-Content -Path "$($pathFileUserLocal)\import-psfconfig-1.json" -Value $json1
-		Set-Content -Path "$($pathFileUserShared)\import-psfconfig-1.json" -Value $json2
+			Set-Content -Path "$($pathFileUserLocal)\import-psfconfig-1.json" -Value $json1
+			Set-Content -Path "$($pathFileUserShared)\import-psfconfig-1.json" -Value $json2
+		}
 		
 		# Import module cache works
 		It "Should import cached settings from the module cache" {
@@ -236,8 +245,9 @@
 	
 	# MetaJson Configuration Schema Validation
 	Describe "Imports successfully MetaJson Schema Configuration" {
-		#region Json Configuration Files
-		$json1 = @'
+		BeforeAll {
+			#region Json Configuration Files
+			$json1 = @'
 {
     "ModuleName":  "MetaJson",
     "Version":  1,
@@ -252,7 +262,7 @@
                 }
 }
 '@
-		$json2 = @'
+			$json2 = @'
 {
     "Version":  1,
     "Static":  {
@@ -266,7 +276,7 @@
                 }
 }
 '@
-		$json3 = @'
+			$json3 = @'
 {
     "Static":  {
                    "Setting7":  42
@@ -279,7 +289,7 @@
     "Version":  1
 }
 '@
-		$json4 = @'
+			$json4 = @'
 {
     "Static":  {
                    "Setting7":  23
@@ -288,7 +298,7 @@
     "Version":  1
 }
 '@
-		$json5 = @'
+			$json5 = @'
 {
     "Dynamic":  {
                    "%COMPUTERNAME%":  7
@@ -297,13 +307,14 @@
     "Version":  1
 }
 '@
-		Set-Content -Value $json1 -Path 'testdrive:\MetaJson1.json'
-		Set-Content -Value $json2 -Path 'testdrive:\MetaJson2.json'
-		Set-Content -Value $json3 -Path 'testdrive:\MetaJson3.json'
-		Set-Content -Value $json4 -Path 'testdrive:\MetaJson.include1.json'
-		$null = New-Item -Path 'testdrive:\' -Name $env:COMPUTERNAME -ItemType Directory
-		Set-Content -Value $json5 -Path "testdrive:\$($env:COMPUTERNAME)\MetaJson.include2.json"
-		#endregion Json Configuration Files
+			Set-Content -Value $json1 -Path 'testdrive:\MetaJson1.json'
+			Set-Content -Value $json2 -Path 'testdrive:\MetaJson2.json'
+			Set-Content -Value $json3 -Path 'testdrive:\MetaJson3.json'
+			Set-Content -Value $json4 -Path 'testdrive:\MetaJson.include1.json'
+			$null = New-Item -Path 'testdrive:\' -Name $env:COMPUTERNAME -ItemType Directory
+			Set-Content -Value $json5 -Path "testdrive:\$($env:COMPUTERNAME)\MetaJson.include2.json"
+			#endregion Json Configuration Files
+		}
 		
 		It "Should import a plain file import with Modulename correctly" {
 			{ Import-PSFConfig -Path 'testdrive:\MetaJson1.json' -Schema MetaJson -EnableException } | Should -Not -Throw

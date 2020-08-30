@@ -90,45 +90,11 @@
 		$RunspaceFilter
 	)
 	
-	$newName = $Name.ToLower()
-	$eventSubscription = New-Object PSFramework.Message.MessageEventSubscription
-	$eventSubscription.Name = $newName
-	$eventSubscription.ScriptBlock = $ScriptBlock
-	
-	if (Test-PSFParameterBinding -ParameterName MessageFilter)
+	process
 	{
-		$eventSubscription.MessageFilter = $MessageFilter
+		$properties = $PSBoundParameters | ConvertTo-PSFHashtable -Include Name, ScriptBlock, MessageFilter, ModuleNameFilter, FunctionNameFilter, TargetFilter, LevelFilter, TagFilter, RunspaceFilter
+		$eventSubscription = New-Object PSFramework.Message.MessageEventSubscription -Property $properties
+		
+		[PSFramework.Message.MessageHost]::Events[$Name] = $eventSubscription
 	}
-	
-	if (Test-PSFParameterBinding -ParameterName ModuleNameFilter)
-	{
-		$eventSubscription.ModuleNameFilter = $ModuleNameFilter
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName FunctionNameFilter)
-	{
-		$eventSubscription.FunctionNameFilter = $FunctionNameFilter
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName TargetFilter)
-	{
-		$eventSubscription.TargetFilter = $TargetFilter
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName LevelFilter)
-	{
-		$eventSubscription.LevelFilter = $LevelFilter
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName TagFilter)
-	{
-		$eventSubscription.TagFilter = $TagFilter
-	}
-	
-	if (Test-PSFParameterBinding -ParameterName RunspaceFilter)
-	{
-		$eventSubscription.RunspaceFilter = $RunspaceFilter
-	}
-	
-	[PSFramework.Message.MessageHost]::Events[$newName] = $eventSubscription
 }

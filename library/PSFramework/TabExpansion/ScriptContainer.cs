@@ -1,4 +1,5 @@
-﻿using PSFramework.Utility;
+﻿using PSFramework.Extension;
+using PSFramework.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,11 @@ namespace PSFramework.TabExpansion
         public TimeSpan LastResultsValidity = new TimeSpan(0);
 
         /// <summary>
+        /// Whether to execute the scriptblock in the global scope
+        /// </summary>
+        public bool Global;
+
+        /// <summary>
         /// Returns whether a new refresh of tab completion should be executed.
         /// </summary>
         public bool ShouldExecute
@@ -89,7 +95,7 @@ namespace PSFramework.TabExpansion
 
             if (info == null)
             {
-                IEnumerable<CallStackFrame> _callStack = Utility.UtilityHost.Callstack;
+                IEnumerable<CallStackFrame> _callStack = UtilityHost.Callstack;
 
                 object errorItem = null;
                 try
@@ -101,7 +107,7 @@ namespace PSFramework.TabExpansion
                 if (PSFCore.PSFCoreHost.DebugMode)
                 {
                     PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Callframe selected", Name), callerFrame);
-                    PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Script Callstack", Name), new Message.CallStack(Utility.UtilityHost.Callstack));
+                    PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Script Callstack", Name), new Message.CallStack(UtilityHost.Callstack));
                     if (errorItem != null)
                         PSFCore.PSFCoreHost.WriteDebug(String.Format("Script Container {0} | Error when selecting Callframe", Name), errorItem);
                 }
@@ -109,14 +115,19 @@ namespace PSFramework.TabExpansion
             if (info == null && callerFrame != null)
                 info = callerFrame.InvocationInfo;
 
-            // ScriptBlock scriptBlock = ScriptBlock.Create(ScriptBlock.ToString());
+            object[] arguments = null;
             if (info != null)
-                foreach (PSObject item in ScriptBlock.Invoke(info.MyCommand.Name, "", "", null, info.BoundParameters))
-                    results.Add((string)item.Properties["CompletionText"].Value);
+                arguments = new object[] { info.MyCommand.Name, "", "", null, info.BoundParameters };
             else
-                foreach (PSObject item in ScriptBlock.Invoke("<ScriptBlock>", "", "", null, new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)))
-                    results.Add((string)item.Properties["CompletionText"].Value);
+                arguments = new object[] { "<ScriptBlock>", "", "", null, new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase) };
 
+            ScriptBlock tempScriptBlock = ScriptBlock;
+            if (Global)
+                tempScriptBlock = ScriptBlock.Clone().ToGlobal();
+            
+            foreach (PSObject item in tempScriptBlock.Invoke(arguments))
+                results.Add((string)item.Properties["CompletionText"].Value);
+            
             return results.ToArray();
         }
     }

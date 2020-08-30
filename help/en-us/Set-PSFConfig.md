@@ -1,4 +1,4 @@
----
+﻿---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version: https://psframework.org/documentation/commands/PSFramework/Set-PSFConfig.html
@@ -230,7 +230,7 @@ Accept wildcard characters: False
 ### -Default
 Setting this parameter causes the system to treat this configuration as a default setting.
 If the configuration already exists, no changes will be performed.
-Useful in scenarios where for some reason it is not practical to automatically set defaults before loading userprofiles.
+Useful in scenarios where for some reason it is not practical to automatically set defaults before loading user profiles.
 
 ```yaml
 Type: SwitchParameter
@@ -414,7 +414,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

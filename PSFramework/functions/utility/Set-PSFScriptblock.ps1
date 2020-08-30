@@ -18,6 +18,10 @@
 	.PARAMETER Scriptblock
 		The scriptcode to register
 	
+	.PARAMETER Global
+		Whether the scriptblock should be invoked in the global context.
+		If defined, accessing the scriptblock will automatically globalize it before returning it.
+	
 	.EXAMPLE
 		PS C:\> Set-PSFScriptblock -Name 'MyModule.TestServer' -Scriptblock $Scriptblock
 	
@@ -37,17 +41,21 @@
 		
 		[Parameter(Position = 1, Mandatory = $true)]
 		[System.Management.Automation.ScriptBlock]
-		$Scriptblock
+		$Scriptblock,
+		
+		[switch]
+		$Global
 	)
 	process
 	{
 		if ([PSFramework.Utility.UtilityHost]::ScriptBlocks.ContainsKey($Name))
 		{
 			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Scriptblock = $Scriptblock
+			if ($Global.IsPresent) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Global = $Global }
 		}
 		else
 		{
-			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name] = New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock)
+			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name] = New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock, $Global)
 		}
 	}
 }

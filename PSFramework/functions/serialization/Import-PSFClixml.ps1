@@ -22,7 +22,7 @@
 		Imports the objects serialized to object.xml in the current folder.
 #>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Import-PSFClixml')]
-	Param (
+	param (
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[Alias('FullName')]
 		[string[]]
@@ -32,25 +32,21 @@
 		$Encoding = (Get-PSFConfigValue -FullName 'psframework.text.encoding.defaultread' -Fallback 'utf-8')
 	)
 	
-	begin
-	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug', 'start', 'param'
-	}
 	process
 	{
 		try { $resolvedPath = Resolve-PSFPath -Path $Path -Provider FileSystem }
-		catch { Stop-PSFFunction -Message "Failed to resolve path." -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $Path }
+		catch { Stop-PSFFunction -String 'Import-PSFClixml.Path.Resolution' -StringValues $Path -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $Path }
 		
 		foreach ($pathItem in $resolvedPath)
 		{
 			if ((Get-Item $pathItem).PSIsContainer)
 			{
-				Stop-PSFFunction -Message "$pathItem is not a file" -EnableException $true -Target $pathItem
+				Stop-PSFFunction -String 'Import-PSFClixml.Path.NotFile' -StringValues $pathItem -EnableException $true -Target $pathItem
 			}
-			Write-PSFMessage -Level Verbose -Message "Processing $($pathItem)" -Target $pathItem
+			Write-PSFMessage -Level Verbose -String 'Import-PSFClixml.Processing' -StringValues $pathItem -Target $pathItem
 			
 			[byte[]]$bytes = [System.IO.File]::ReadAllBytes($pathItem)
-				
+			
 			try { [PSFramework.Serialization.ClixmlSerializer]::FromByteCompressed($bytes) }
 			catch
 			{
@@ -64,7 +60,7 @@
 						try { [PSFramework.Serialization.ClixmlSerializer]::FromByte($bytes) }
 						catch
 						{
-							Stop-PSFFunction -Message "Failed to convert input object" -EnableException $true -Target $pathItem -Cmdlet $PSCmdlet
+							Stop-PSFFunction -String 'Import-PSFClixml.Conversion.Failed' -EnableException $true -Target $pathItem -Cmdlet $PSCmdlet
 						}
 					}
 				}

@@ -73,16 +73,16 @@
 					if (-not $parent) { $parentPath = Get-Location -ErrorAction Stop }
 					else { $parentPath = Resolve-Path $parent -ErrorAction Stop }
 				}
-				catch { Stop-PSFFunction -Message "Failed to resolve path" -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet }
+				catch { Stop-PSFFunction -String 'Resolve-PSFPath.Path.ParentExistsNot' -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet }
 				
 				if ($SingleItem -and (($parentPath | Measure-Object).Count -gt 1))
 				{
-					Stop-PSFFunction -Message "Could not resolve to a single parent path!" -EnableException $true -Cmdlet $PSCmdlet
+					Stop-PSFFunction -String 'Resolve-PSFPath.Path.MultipleParents' -EnableException $true -Cmdlet $PSCmdlet
 				}
 				
 				if ($Provider -and ($parentPath.Provider.Name -ne $Provider))
 				{
-					Stop-PSFFunction -Message "Resolved provider is $($parentPath.Provider.Name) when it should be $($Provider)" -EnableException $true -Cmdlet $PSCmdlet
+					Stop-PSFFunction -String 'Resolve-PSFPath.Path.WrongProvider' -StringValues $parentPath.Provider.Name, $Provider -EnableException $true -Cmdlet $PSCmdlet
 				}
 				
 				foreach ($parentItem in $parentPath)
@@ -93,16 +93,16 @@
 			else
 			{
 				try { $resolvedPaths = Resolve-Path $inputPath -ErrorAction Stop }
-				catch { Stop-PSFFunction -Message "Failed to resolve path" -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet }
+				catch { Stop-PSFFunction -String 'Resolve-PSFPath.Path.ExistsNot' -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet }
 				
 				if ($SingleItem -and (($resolvedPaths | Measure-Object).Count -gt 1))
 				{
-					Stop-PSFFunction -Message "Could not resolve to a single parent path!" -EnableException $true -Cmdlet $PSCmdlet
+					Stop-PSFFunction -String 'Resolve-PSFPath.Path.MultipleItems' -EnableException $true -Cmdlet $PSCmdlet
 				}
 				
 				if ($Provider -and ($resolvedPaths.Provider.Name -ne $Provider))
 				{
-					Stop-PSFFunction -Message "Resolved provider is $($resolvedPaths.Provider.Name) when it should be $($Provider)" -EnableException $true -Cmdlet $PSCmdlet
+					Stop-PSFFunction -String 'Resolve-PSFPath.Path.WrongProvider' -StringValues $Provider, $resolvedPaths.Provider.Name -EnableException $true -Cmdlet $PSCmdlet
 				}
 				
 				$resolvedPaths.ProviderPath

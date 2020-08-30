@@ -33,7 +33,27 @@ namespace PSFramework.Utility
         /// The way size objects are usually displayed
         /// </summary>
         public static SizeStyle SizeStyle = SizeStyle.Dynamic;
-        
+
+        /// <summary>
+        /// Size of each segment before the decimal seaparator when displaying numbers
+        /// </summary>
+        public static int NumberSegmentSize = 3;
+
+        /// <summary>
+        /// The seperator used inbetween each segment when displaying numbers
+        /// </summary>
+        public static string NumberSegmentSeparator = System.Globalization.CultureInfo.CurrentUICulture.NumberFormat.NumberGroupSeparator;
+
+        /// <summary>
+        /// The decimal seperator when displaying numbers
+        /// </summary>
+        public static string NumberDecimalSeparator = System.Globalization.CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+
+        /// <summary>
+        /// When displaying numbers, how many digits after the decimal seperator will be shown?
+        /// </summary>
+        public static int NumberDecimalDigits = 2;
+
         /// <summary>
         /// Tests whether a given string is the local host.
         /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!
@@ -68,11 +88,11 @@ namespace PSFramework.Utility
             {
                 if (Name == ".")
                     return true;
-                if (Name.ToLower() == "localhost")
+                if (string.Equals(Name, "localhost", StringComparison.InvariantCultureIgnoreCase))
                     return true;
-                if (Name.ToLower() == Environment.MachineName.ToLower())
+                if (string.Equals(Name, Environment.MachineName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
-                if (Name.ToLower() == (Environment.MachineName + "." + Environment.GetEnvironmentVariable("USERDNSDOMAIN")).ToLower())
+                if (string.Equals(Name, (Environment.MachineName + "." + Environment.GetEnvironmentVariable("USERDNSDOMAIN")), StringComparison.InvariantCultureIgnoreCase))
                     return true;
             }
             catch { }
@@ -385,6 +405,32 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Returns the private method on an object
+        /// </summary>
+        /// <param name="Name">The name of the method</param>
+        /// <param name="Instance">The object from which to read the method from</param>
+        /// <returns>The method sought</returns>
+        public static MethodInfo GetPrivateMethod(string Name, object Instance)
+        {
+            MethodInfo method = Instance.GetType().GetMethod(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (method == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateMethodNotFound", Name)), "Name");
+            return method;
+        }
+
+        /// <summary>
+        /// Executes a private method of an object
+        /// </summary>
+        /// <param name="Name">Name of the method to invoke</param>
+        /// <param name="Instance">The object whose method to run</param>
+        /// <param name="Arguments">Arguments to pass to the method</param>
+        /// <returns>Whatever the private method may return</returns>
+        public static object InvokePrivateMethod(string Name, object Instance, object[] Arguments)
+        {
+            return GetPrivateMethod(Name, Instance).Invoke(Instance, Arguments);
+        }
+
+        /// <summary>
         /// Returns the current callstack
         /// </summary>
         public static IEnumerable<CallStackFrame> Callstack
@@ -431,12 +477,18 @@ namespace PSFramework.Utility
         /// Imports a scriptblock into the current sessionstate, without affecting its language mode.
         /// Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
         /// </summary>
-        /// <param name="ScriptBlock">The code to localize</param>
-        public static void ImportScriptBlock(ScriptBlock ScriptBlock)
+        /// <param name="ScriptBlock">The code to localize.</param>
+        /// <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>
+        public static void ImportScriptBlock(ScriptBlock ScriptBlock, bool Global = false)
         {
             object context = GetExecutionContextFromTLS();
-            object internalSessionState = GetPrivateProperty("Internal", GetPrivateProperty("SessionState", context));
-            SetPrivateProperty("SessionStateInternal", ScriptBlock, internalSessionState);
+            object targetState;
+            if (Global)
+                targetState = GetPrivateProperty("TopLevelSessionState", context);
+            else
+                targetState = GetPrivateProperty("Internal", GetPrivateProperty("SessionState", context));
+
+            SetPrivateProperty("SessionStateInternal", ScriptBlock, targetState);
         }
     }
 }

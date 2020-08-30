@@ -707,4 +707,4 @@
 	#endregion Process resulting / reaching properties
 	
 	$properties.Keys | Sort-Object
-}
+} -Global

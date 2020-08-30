@@ -178,7 +178,7 @@ $configurationParameters = {
 	
 	$configurations = Get-PSFConfig -FullName "$configroot.*"
 	
-	$RuntimeParamDic = New-Object  System.Management.Automation.RuntimeDefinedParameterDictionary
+	$RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
 	
 	foreach ($config in $configurations)
 	{
@@ -247,4 +247,21 @@ $configuration_Settings = {
 	Set-PSFConfig -Module LoggingProvider -Name 'FileSystem.ExcludeTags' -Value @() -Initialize -Validation "stringarray" -Handler { if ([PSFramework.Logging.ProviderHost]::Providers['filesystem']) { [PSFramework.Logging.ProviderHost]::Providers['filesystem'].ExcludeTags = ($args[0] | Write-Output) } } -Description "Tag blacklist. Messages with these tags will not be logged"
 }
 
-Register-PSFLoggingProvider -Name "filesystem" -RegistrationEvent $registrationEvent -BeginEvent $begin_event -StartEvent $start_event -MessageEvent $message_Event -ErrorEvent $error_Event -EndEvent $end_event -FinalEvent $final_event -ConfigurationParameters $configurationParameters -ConfigurationScript $configurationScript -IsInstalledScript $isInstalledScript -InstallationScript $installationScript -InstallationParameters $installationParameters -ConfigurationSettings $configuration_Settings
+$paramRegisterPSFLoggingProvider = @{
+	Name				    = "filesystem"
+	RegistrationEvent	    = $registrationEvent
+	BeginEvent			    = $begin_event
+	StartEvent			    = $start_event
+	MessageEvent		    = $message_Event
+	ErrorEvent			    = $error_Event
+	EndEvent			    = $end_event
+	FinalEvent			    = $final_event
+	ConfigurationParameters = $configurationParameters
+	ConfigurationScript	    = $configurationScript
+	IsInstalledScript	    = $isInstalledScript
+	InstallationScript	    = $installationScript
+	InstallationParameters  = $installationParameters
+	ConfigurationSettings   = $configuration_Settings
+}
+
+Register-PSFLoggingProvider @paramRegisterPSFLoggingProvider

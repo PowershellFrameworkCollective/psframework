@@ -36,11 +36,11 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Name', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTypeAlias')]
 	Param (
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Name')]
+		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Name', ValueFromPipelineByPropertyName = $true)]
 		[string]
 		$AliasName,
 		
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Name')]
+		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Name', ValueFromPipelineByPropertyName = $true)]
 		[string]
 		$TypeName,
 		
@@ -64,9 +64,5 @@
 		{
 			$TypeAcceleratorType::Add($AliasName, $TypeName)
 		}
-	}
-	end
-	{
-	
 	}
 }

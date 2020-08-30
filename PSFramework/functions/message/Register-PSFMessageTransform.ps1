@@ -106,8 +106,8 @@
 	
 	process
 	{
-		if ($TargetType) { [PSFramework.Message.MessageHost]::TargetTransforms[$TargetType.ToLower()] = $ScriptBlock }
-		if ($ExceptionType) { [PSFramework.Message.MessageHost]::ExceptionTransforms[$ExceptionType.ToLower()] = $ScriptBlock }
+		if ($TargetType) { [PSFramework.Message.MessageHost]::TargetTransforms[$TargetType] = $ScriptBlock }
+		if ($ExceptionType) { [PSFramework.Message.MessageHost]::ExceptionTransforms[$ExceptionType] = $ScriptBlock }
 		
 		if ($TargetTypeFilter)
 		{

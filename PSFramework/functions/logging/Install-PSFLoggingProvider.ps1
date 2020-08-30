@@ -34,7 +34,7 @@
 			Installs a logging provider named 'eventlog'
 	#>
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Install-PSFLoggingProvider')]
-	Param (
+	param (
 		[Alias('Provider', 'ProviderName')]
 		[string]
 		$Name,
@@ -45,40 +45,30 @@
 	
 	dynamicparam
 	{
-		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
+		if ($Name -and ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
-			[PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()].InstallationParameters.Invoke()
+			[PSFramework.Logging.ProviderHost]::Providers[$Name].InstallationParameters.InvokeGlobal()
 		}
 	}
 	
-	begin
-	{
-		
-	}
 	process
 	{
-		if (Test-PSFFunctionInterrupt) { return }
-		
-		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name.ToLower())))
+		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
-			Stop-PSFFunction -Message "Provider $Name not found!" -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install'
+			Stop-PSFFunction -String 'Install-PSFLoggingProvider.Provider.NotFound' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name -Tag 'logging', 'provider', 'install'
 			return
 		}
 		
-		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name.ToLower()]
+		$provider = [PSFramework.Logging.ProviderHost]::Providers[$Name]
 		
-		if (-not ([System.Management.Automation.ScriptBlock]::Create($provider.IsInstalledScript).Invoke()))
+		if (-not $provider.IsInstalledScript.InvokeGlobal())
 		{
-			try { [System.Management.Automation.ScriptBlock]::Create($provider.InstallationScript).Invoke() }
+			try { $provider.InstallationScript.InvokeGlobal($PSBoundParameters) }
 			catch
 			{
-				Stop-PSFFunction -Message "Failed to install provider '$Name'" -EnableException $EnableException -Target $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'install'
+				Stop-PSFFunction -String 'Install-PSFLoggingProvider.Installation.Error' -StringValues $Name -EnableException $EnableException -Target $Name -ErrorRecord $_ -Tag 'logging', 'provider', 'install'
 				return
 			}
 		}
-	}
-	end
-	{
-		if (Test-PSFFunctionInterrupt) { return }
 	}
 }

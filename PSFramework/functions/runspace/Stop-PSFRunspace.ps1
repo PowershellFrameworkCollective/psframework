@@ -40,7 +40,7 @@
 		Additional information about the function.
 #>
 	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Stop-PSFRunspace')]
-	Param (
+	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
 		$Name,
@@ -60,24 +60,24 @@
 			# Ignore all output from Get-PSFRunspace - it'll be handled by the second loop
 			if ($item -eq "psframework.runspace.runspacecontainer") { continue }
 			
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item.ToLower()))
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces.ContainsKey($item))
 			{
 				if ($PSCmdlet.ShouldProcess($item, "Stopping Runspace"))
 				{
 					try
 					{
-						Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.ToLower())</c>" -Target $item.ToLower() -Tag "runspace", "stop"
-						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item.ToLower()].Stop()
+						Write-PSFMessage -Level Verbose -String 'Stop-PSFRunspace.Stopping' -StringValues ($item) -Target $item -Tag "runspace", "stop"
+						[PSFramework.Runspace.RunspaceHost]::Runspaces[$item].Stop()
 					}
 					catch
 					{
-						Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue -ErrorRecord $_
+						Stop-PSFFunction -String 'Stop-PSFRunspace.Stopping.Failed' -StringValues ($item) -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue -ErrorRecord $_
 					}
 				}
 			}
 			else
 			{
-				Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.ToLower())</c> | No runspace registered under this name!" -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "stop" -Target $item.ToLower() -Continue
+				Stop-PSFFunction -String 'Stop-PSFRunspace.UnknownRunspace' -StringValues ($item) -EnableException $EnableException -Category InvalidArgument -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue
 			}
 		}
 		
@@ -87,12 +87,12 @@
 			{
 				try
 				{
-					Write-PSFMessage -Level Verbose -Message "Stopping runspace: <c='em'>$($item.Name.ToLower())</c>" -Target $item -Tag "runspace", "stop"
+					Write-PSFMessage -Level Verbose -String 'Stop-PSFRunspace.Stopping' -StringValues $item.Name -Target $item -Tag "runspace", "stop"
 					$item.Stop()
 				}
 				catch
 				{
-					Stop-PSFFunction -Message "Failed to stop runspace: <c='em'>$($item.Name.ToLower())</c>" -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue -ErrorRecord $_
+					Stop-PSFFunction -String 'Stop-PSFRunspace.Stopping.Failed' -StringValues $item.Name -EnableException $EnableException -Tag "fail", "argument", "runspace", "stop" -Target $item -Continue -ErrorRecord $_
 				}
 			}
 		}

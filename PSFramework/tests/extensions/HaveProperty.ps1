@@ -108,4 +108,4 @@
 		}
 	}
 }
-Add-AssertionOperator -Name HaveProperty -Test $function:HaveProperty
+Add-ShouldOperator -Name HaveProperty -Test $function:HaveProperty

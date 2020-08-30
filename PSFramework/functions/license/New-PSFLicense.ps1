@@ -135,7 +135,7 @@
 		Description    = $Description
 		Parent		   = $Parent
 	}
-	if ($PSCmdlet.ShouldProcess("$($license.Product) $($license.ProductVersion) ($($license.LicenseName))", "Create License"))
+	if (Test-PSFShouldProcess -Action 'Create License' -Target $license -PSCmdlet $PSCmdlet)
 	{
 		if (-not ([PSFramework.License.LicenseHost]::Get($license)))
 		{

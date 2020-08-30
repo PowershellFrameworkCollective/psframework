@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.1.59'
+	ModuleVersion = '1.4.146'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -45,6 +45,7 @@
 		'Enable-PSFTaskEngineTask',
 		'Export-PSFClixml',
 		'Export-PSFConfig',
+		'Export-PSFModuleClass',
 		'Get-PSFCallback',
 		'Get-PSFConfig',
 		'Get-PSFConfigValue',
@@ -54,6 +55,7 @@
 		'Get-PSFLicense',
 		'Get-PSFLocalizedString',
 		'Get-PSFLoggingProvider',
+		'Get-PSFLoggingProviderInstance',
 		'Get-PSFMessageLevelModifier',
 		'Get-PSFPath',
 		'Get-PSFPipeline',
@@ -68,6 +70,7 @@
 		'Import-PSFCmdlet',
 		'Import-PSFConfig',
 		'Import-PSFLocalizedString',
+		'Import-PSFLoggingProvider',
 		'Import-PSFPowerShellDataFile',
 		'Install-PSFLoggingProvider',
 		'Invoke-PSFCommand',
@@ -98,6 +101,7 @@
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',
 		'Resolve-PSFPath',
+		'Select-PSFConfig',
 		'Select-PSFPropertyValue',
 		'Set-PSFDynamicContentObject',
 		'Set-PSFFeature',
@@ -113,6 +117,7 @@
 		'Stop-PSFRunspace',
 		'Test-PSFFeature',
 		'Test-PSFFunctionInterrupt',
+		'Test-PSFLanguageMode',
 		'Test-PSFParameterBinding',
 		'Test-PSFPowerShell',
 		'Test-PSFTaskEngineCache',
@@ -157,12 +162,13 @@
 		
 		#Support for PowerShellGet galleries.
 		PSData = @{
+			# Prerelease = 'preview3'
 			
 			# Tags applied to this module. These help with module discovery in online galleries.
 			Tags = @('scripting', 'infrastructure', 'logging', 'configuration', 'PSEdition_Core', 'PSEdition_Desktop', 'Linux', 'Mac')
 			
 			# A URL to the license for this module.
-			LicenseUri = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/LICENSE.md'
+			LicenseUri = 'https://github.com/PowershellFrameworkCollective/psframework/blob/master/LICENSE'
 			
 			# A URL to the main website for this project.
 			ProjectUri = 'http://psframework.org'

@@ -31,6 +31,7 @@
 	
 		Returns a list of all registered licenses for products that have commercial licenses and are libraries.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param (
@@ -49,11 +50,14 @@
 		$Manufacturer = "*"
 	)
 	
-	[PSFramework.License.LicenseHost]::Get() | Where-Object {
-		if ($_.Product -notlike $Filter) { return $false }
-		if ($_.Manufacturer -notlike $Manufacturer) { return $false }
-		if ($ProductType -and ($_.ProductType -notin $ProductType)) { return $false }
-		if ($licenseType -and -not ($_.LicenseType -band $LicenseType)) { return $false }
-		return $true
+	process
+	{
+		[PSFramework.License.LicenseHost]::Get() | Where-Object {
+			if ($_.Product -notlike $Filter) { return $false }
+			if ($_.Manufacturer -notlike $Manufacturer) { return $false }
+			if ($ProductType -and ($_.ProductType -notin $ProductType)) { return $false }
+			if ($licenseType -and -not ($_.LicenseType -band $LicenseType)) { return $false }
+			return $true
+		}
 	}
 }

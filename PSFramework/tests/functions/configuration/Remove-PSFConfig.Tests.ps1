@@ -21,7 +21,9 @@
 	
 	# Create a deletable setting and delete it
 	Describe "Basic configuration test for deletable configuration" {
-		Set-PSFConfig -Module Remove-PSFConfig -Name Test1 -Value 42 -AllowDelete
+		BeforeAll {
+			Set-PSFConfig -Module Remove-PSFConfig -Name Test1 -Value 42 -AllowDelete
+		}
 		
 		It "Should remove the configuration item from memory" {
 			Get-PSFConfigValue -FullName Remove-PSFConfig.Test1 | Should -Be 42
@@ -66,9 +68,12 @@
 	
 	# Ensure configuration deletion policy compliance
 	Describe "Verifying deletion policy compliance is met" {
-		$configPlain = Set-PSFConfig -Module Remove-PSFConfig -Name Test3 -Value 1 -PassThru
-		$configPolicy = Set-PSFConfig -Module Remove-PSFConfig -Name Test4 -Value 2 -AllowDelete -PassThru
-		$configPolicy.PolicyEnforced = $true
+		BeforeAll {
+			$configPlain = Set-PSFConfig -Module Remove-PSFConfig -Name Test3 -Value 1 -PassThru
+			$configPolicy = Set-PSFConfig -Module Remove-PSFConfig -Name Test4 -Value 2 -AllowDelete -PassThru
+			$configPolicy.PolicyEnforced = $true
+		}
+		
 		
 		It "Should refuse to delete a configuration setting not flagged for deletion" {
 			{ $configPlain | Remove-PSFConfig -Confirm:$false -WarningAction SilentlyContinue } | Should -Not -Throw

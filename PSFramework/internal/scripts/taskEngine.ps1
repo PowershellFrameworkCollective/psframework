@@ -7,7 +7,7 @@
 		while ($true)
 		{
 			# This portion is critical to gracefully closing the script
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].State -notlike "Running")
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -notlike "Running")
 			{
 				break
 			}
@@ -44,7 +44,7 @@
 	catch {  }
 	finally
 	{
-		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName.ToLower()].SignalStopped()
+		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].SignalStopped()
 	}
 }
 

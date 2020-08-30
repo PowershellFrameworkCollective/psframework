@@ -32,6 +32,14 @@
 		This test is only supported on Windows.
 		On other OS it will automatically succede and assume root privileges.
 	
+	.PARAMETER ComputerName
+		The computer on which to test local PowerShell conditions.
+		If this parameter is not specified, it tests the current PowerShell process and hosting OS.
+		Accepts established PowerShell sessions.
+	
+	.PARAMETER Credential
+		The credentials to use when connecting to a remote computer.
+	
 	.EXAMPLE
 		PS C:\> Test-PSFPowerShell -PSMinVersion 5.0
 	
@@ -70,88 +78,168 @@
 		$OperatingSystem,
 		
 		[switch]
-		$Elevated
+		$Elevated,
+		
+		[PSFComputer]
+		$ComputerName,
+		
+		[PSCredential]
+		$Credential
 	)
 	
 	begin
 	{
-		Write-PSFMessage -Level InternalComment -Message "Bound parameters: $($PSBoundParameters.Keys -join ", ")" -Tag 'debug','start','param'
+		$parameter = $PSBoundParameters | ConvertTo-PSFHashtable -Include ComputerName, Credential
 	}
 	process
 	{
-		#region PS Version Test
-		if ($PSMinVersion -and ($PSMinVersion -ge $PSVersionTable.PSVersion))
+		#region Local execution for performance reasons separate
+		if (-not $PSBoundParameters.ContainsKey('ComputerName'))
 		{
-			return $false
-		}
-		if ($PSMaxVersion -and ($PSMaxVersion -le $PSVersionTable.PSVersion))
-		{
-			return $false
-		}
-		#endregion PS Version Test
-		
-		#region PS Edition Test
-		if ($Edition -like "Desktop")
-		{
-			if ($PSVersionTable.PSEdition -eq "Core")
+			#region PS Version Test
+			if ($PSMinVersion -and ($PSMinVersion -ge $PSVersionTable.PSVersion))
 			{
 				return $false
 			}
-		}
-		if ($Edition -like "Core")
-		{
-			if ($PSVersionTable.PSEdition -ne "Core")
+			if ($PSMaxVersion -and ($PSMaxVersion -le $PSVersionTable.PSVersion))
 			{
 				return $false
 			}
-		}
-		#endregion PS Edition Test
-		
-		#region OS Test
-		if ($OperatingSystem)
-		{
-			switch ($OperatingSystem)
+			#endregion PS Version Test
+			
+			#region PS Edition Test
+			if ($Edition -like "Desktop")
 			{
-				"MacOS"
+				if ($PSVersionTable.PSEdition -eq "Core")
 				{
-					if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
-					if (-not $IsMacOS) { return $false }
+					return $false
 				}
-				"Linux"
+			}
+			if ($Edition -like "Core")
+			{
+				if ($PSVersionTable.PSEdition -ne "Core")
 				{
-					if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
-					if (-not $IsLinux) { return $false }
+					return $false
 				}
-				"Windows"
+			}
+			#endregion PS Edition Test
+			
+			#region OS Test
+			if ($OperatingSystem)
+			{
+				switch ($OperatingSystem)
 				{
-					if (($PSVersionTable.PSVersion.Major -ge 6) -and (-not $IsWindows))
+					"MacOS"
+					{
+						if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
+						if (-not $IsMacOS) { return $false }
+					}
+					"Linux"
+					{
+						if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
+						if (-not $IsLinux) { return $false }
+					}
+					"Windows"
+					{
+						if (($PSVersionTable.PSVersion.Major -ge 6) -and (-not $IsWindows))
+						{
+							return $false
+						}
+					}
+				}
+			}
+			#endregion OS Test
+			
+			#region Elevation
+			if ($Elevated)
+			{
+				if (($PSVersionTable.PSVersion.Major -lt 6) -or ($IsWindows))
+				{
+					$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+					$principal = New-Object Security.Principal.WindowsPrincipal $identity
+					if (-not $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))
 					{
 						return $false
 					}
 				}
 			}
+			#endregion Elevation
+			
+			return $true
 		}
-		#endregion OS Test
+		#endregion Local execution for performance reasons separate
 		
-		#region Elevation
-		if ($Elevated)
-		{
-			if (($PSVersionTable.PSVersion.Major -lt 6) -or ($IsWindows))
+		Invoke-PSFCommand @parameter -ScriptBlock {
+			#region PS Version Test
+			if ($PSMinVersion -and ($PSMinVersion -ge $PSVersionTable.PSVersion))
 			{
-				$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-				$principal = New-Object Security.Principal.WindowsPrincipal $identity
-				if (-not $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))
+				return $false
+			}
+			if ($PSMaxVersion -and ($PSMaxVersion -le $PSVersionTable.PSVersion))
+			{
+				return $false
+			}
+			#endregion PS Version Test
+			
+			#region PS Edition Test
+			if ($Edition -like "Desktop")
+			{
+				if ($PSVersionTable.PSEdition -eq "Core")
 				{
 					return $false
 				}
 			}
+			if ($Edition -like "Core")
+			{
+				if ($PSVersionTable.PSEdition -ne "Core")
+				{
+					return $false
+				}
+			}
+			#endregion PS Edition Test
+			
+			#region OS Test
+			if ($OperatingSystem)
+			{
+				switch ($OperatingSystem)
+				{
+					"MacOS"
+					{
+						if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
+						if (-not $IsMacOS) { return $false }
+					}
+					"Linux"
+					{
+						if ($PSVersionTable.PSVersion.Major -lt 6) { return $false }
+						if (-not $IsLinux) { return $false }
+					}
+					"Windows"
+					{
+						if (($PSVersionTable.PSVersion.Major -ge 6) -and (-not $IsWindows))
+						{
+							return $false
+						}
+					}
+				}
+			}
+			#endregion OS Test
+			
+			#region Elevation
+			if ($Elevated)
+			{
+				if (($PSVersionTable.PSVersion.Major -lt 6) -or ($IsWindows))
+				{
+					$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+					$principal = New-Object Security.Principal.WindowsPrincipal $identity
+					if (-not $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))
+					{
+						return $false
+					}
+				}
+			}
+			#endregion Elevation
+			
+			return $true
 		}
-		#endregion Elevation
-		
-		return $true
-	}
-	end
-	{
-	
 	}
 }

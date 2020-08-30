@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Management.Automation;
+using PSFramework.Utility;
 
 namespace PSFramework.Configuration
 {
@@ -24,7 +25,7 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The list of configuration definitions, controlling how configuration data is ingested.
         /// </summary>
-        public static ConcurrentDictionary<string, ScriptBlock> Schemata = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+        public static ConcurrentDictionary<string, PsfScriptBlock> Schemata = new ConcurrentDictionary<string, PsfScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Deletes a configuration setting in compliance with policy.
@@ -176,6 +177,19 @@ namespace PSFramework.Configuration
             ConfigurationValueType type = (ConfigurationValueType)Enum.Parse(typeof(ConfigurationValueType), TypeQualifiedPersistedValue.Substring(0, index), true);
             string valueString = TypeQualifiedPersistedValue.Substring(index + 1);
             return ConvertFromPersistedValue(valueString, type);
+        }
+
+        /// <summary>
+        /// Retrieve the configuration value only.
+        /// Returns null if the configuration entry does not exist.
+        /// </summary>
+        /// <param name="FullName">The full name of the configuration object of which to return the value</param>
+        /// <returns>The value of the configuration entry.</returns>
+        public static object GetConfigValue(string FullName)
+        {
+            if (!Configurations.ContainsKey(FullName))
+                return null;
+            return Configurations[FullName].Value;
         }
 
         #region Private methods

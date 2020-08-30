@@ -24,9 +24,11 @@
 	# Fallback value working as designed
 	# NotNull working as designed
 	Describe "General functionality test" {
-		Set-PSFConfig -Module Get-PSFConfigValue -Name Setting1 -Value 42
-		Set-PSFConfig -Module Get-PSFConfigValue -Name Setting2 -Value 23 -Validation integer
-		Set-PSFConfig -Module Get-PSFConfigValue -Name Setting2 -Value "5"
+		BeforeAll {
+			Set-PSFConfig -Module Get-PSFConfigValue -Name Setting1 -Value 42
+			Set-PSFConfig -Module Get-PSFConfigValue -Name Setting2 -Value 23 -Validation integer
+			Set-PSFConfig -Module Get-PSFConfigValue -Name Setting2 -Value "5"
+		}
 		
 		It "Should return the correct value" {
 			Get-PSFConfigValue -FullName 'Get-PSFConfigValue.Setting1' | Should -Be 42

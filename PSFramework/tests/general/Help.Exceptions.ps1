@@ -10,8 +10,10 @@ $global:FunctionHelpTestExceptions = @(
   "Sqlcollaborative.Dbatools.Connection.ManagementConnectionType[]"
 #>
 $global:HelpTestEnumeratedArrays = @(
-	"PSFramework.License.ProductType[]",
-	"PSFramework.Message.MessageLevel[]"
+	'PSFramework.License.ProductType[]'
+	'PSFramework.Message.MessageLevel[]'
+	'System.Management.Automation.PSLanguageMode[]'
+	'PSLanguageMode[]'
 )
 
 <#

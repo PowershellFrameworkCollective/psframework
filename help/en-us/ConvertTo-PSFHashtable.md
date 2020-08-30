@@ -1,4 +1,4 @@
----
+﻿---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version:
@@ -13,7 +13,7 @@ Converts an object into a hashtable.
 ## SYNTAX
 
 ```
-ConvertTo-PSFHashtable [-Include <String[]>] [-Exclude <String[]>] [-IncludeEmpty] [-Inherit]
+ConvertTo-PSFHashtable [-Include <String[]>] [-Exclude <String[]>] [-CaseSensitive] [-IncludeEmpty] [-Inherit]
  [-InputObject <PSObject[]>] [<CommonParameters>]
 ```
 
@@ -28,14 +28,14 @@ Optimized to selectively convert $PSBoundParameters for passing through paramete
 
 ## EXAMPLES
 
-### BEISPIEL 1
+### Example 1
 ```
 Get-ChildItem | ConvertTo-PSFHashtable
 ```
 
 Scans all items in the current path and converts those objects into hashtables.
 
-### BEISPIEL 2
+### Example 2
 ```
 $parameters = $PSBoundParameters | ConvertTo-PSFHashtable -Include ComputerName, Credential, Target -Inherit
 ```
@@ -79,7 +79,7 @@ Accept wildcard characters: False
 
 ### -IncludeEmpty
 By default, only properties on the input object are included.
-In order to force all properties defiend in -Include to be included, specify this switch.
+In order to force all properties defined in -Include to be included, specify this switch.
 Keys added through this have an empty ($null) value.
 
 ```yaml
@@ -97,7 +97,7 @@ Accept wildcard characters: False
 ### -Inherit
 By default, only properties on the input object are included.
 With this parameter, missing keys are substituted for by looking in the caller scope for variables with the same name.
-This is explictly designed to allow inheriting default parameter values when cloning $PSBoundParameters.
+This is explicitly designed to allow inheriting default parameter values when cloning $PSBoundParameters.
 
 ```yaml
 Type: SwitchParameter
@@ -126,8 +126,23 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -CaseSensitive
+Make Include and Exclude name-filtering case sensitive.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

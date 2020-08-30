@@ -64,7 +64,7 @@
 	{
 		if (([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0) -or ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0))
 		{
-			if ((Get-PSFRunspace -Name 'psframework.logging').State -notlike 'Running') { Start-PSFRunspace -Name 'psframework.logging' }
+			if ((Get-PSFRunspace -Name 'psframework.logging').State -notlike 'Running') { Start-PSFRunspace -Name 'psframework.logging' -NoMessage }
 		}
 		while ($Timeout.Value -gt (Get-Date))
 		{
