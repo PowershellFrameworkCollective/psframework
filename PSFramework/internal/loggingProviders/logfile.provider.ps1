@@ -126,8 +126,35 @@
 		)
 		
 		$basePath = Get-ConfigValue -Name 'LogRotatePath'
-		$minimumRetention = (Get-ConfigValue -Name 'LogRetentionTime') -as [PSFTimeSpan] -as [Timespan]
 		if (-not $basePath) { return }
+		
+		#region Resolve Paths
+		$scriptBlock = {
+			param (
+				[string]
+				$Match
+			)
+			
+			$hash = @{
+				'%date%' = (Get-Date -Format 'yyyy-MM-dd')
+				'%dayofweek%' = (Get-Date).DayOfWeek
+				'%day%'  = (Get-Date).Day
+				'%hour%' = (Get-Date).Hour
+				'%minute%' = (Get-Date).Minute
+				'%username%' = $env:USERNAME
+				'%userdomain%' = $env:USERDOMAIN
+				'%computername%' = $env:COMPUTERNAME
+				'%processid%' = $PID
+				'%logname%' = $logname
+			}
+			
+			$hash.$Match
+		}
+		
+		$basePath = [regex]::Replace($basePath, '%day%|%computername%|%hour%|%processid%|%date%|%username%|%dayofweek%|%minute%|%userdomain%|%logname%', $scriptBlock, 'IgnoreCase')
+		#endregion Resolve Paths
+		
+		$minimumRetention = (Get-ConfigValue -Name 'LogRetentionTime') -as [PSFTimeSpan] -as [Timespan]
 		if (-not $minimumRetention) { throw "No minimum retention defined" }
 		if ($minimumRetention.TotalSeconds -le 0) { throw "Minimum retention must be positive! Retention: $minimumRetention" }
 		
