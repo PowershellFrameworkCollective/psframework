@@ -83,6 +83,8 @@ namespace PSFramework.Logging
         /// </summary>
         public void UpdateInstances()
         {
+            foreach (ProviderInstance instance in Instances.Values)
+                instance.ImportConfig();
             if (!Instances.ContainsKey("Default"))
                 Instances["Default"] = new ProviderInstance(this, "Default");
 

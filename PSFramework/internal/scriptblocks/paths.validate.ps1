@@ -15,7 +15,7 @@ Set-PSFScriptblock -Name 'PSFramework.Validate.Path.Leaf' -Scriptblock {
 #region Path: File System
 Set-PSFScriptblock -Name 'PSFramework.Validate.FSPath' -Scriptblock {
 	if (-not (Test-Path -Path $_)) { return $false }
-	if ((Get-Item '.\Encoding Time.csv').PSProvider.Name -ne 'FileSystem') { return $false }
+	if ((Get-Item $_).PSProvider.Name -ne 'FileSystem') { return $false }
 	
 	$true
 } -Global

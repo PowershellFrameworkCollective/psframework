@@ -82,7 +82,10 @@ if ($importIndividualFiles)
 {
 	# Execute Preimport actions
 	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PreImport", "")
-	. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\preimport.ps1"
+	foreach ($path in (& "$ModuleRoot\internal\scripts\preimport.ps1")) {
+		[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("  $path", "")
+		. Import-ModuleFile -Path $path
+	}
 	
 	# Import all internal functions
 	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("InternalFunctions", "")
@@ -100,7 +103,10 @@ if ($importIndividualFiles)
 	
 	# Execute Postimport actions
 	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PostImport", "")
-	. Import-ModuleFile -Path "$($script:ModuleRoot)\internal\scripts\postimport.ps1"
+	foreach ($path in (& "$ModuleRoot\internal\scripts\postimport.ps1")) {
+		[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("  $path", "")
+		. Import-ModuleFile -Path $path
+	}
 	
 	# End it here, do not load compiled code below
 	return

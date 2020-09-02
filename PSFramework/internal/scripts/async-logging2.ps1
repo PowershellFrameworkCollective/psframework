@@ -63,11 +63,7 @@
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try
-				{
-					$___instance.ImportConfig()
-					& $___instance.StartCommand
-				}
+				try { & $___instance.StartCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
