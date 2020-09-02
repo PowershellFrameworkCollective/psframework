@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## 1.4.149 : 2020-09-02
+
+- Upd: New build tools, to increase convenience when importing into/building from internal source code repositories
+- Fix: Set-PSFLoggingProvider - default instances are not created
+- Fix: Validation Scriptblock: PSFramework.Validate.FSPath - validates correctly
+
 ## 1.4.146 : 2020-08-30
 
 - Major: Redesigned the entire logging system to support multi-instance providers and reduce complexity of building custom logging providers.
