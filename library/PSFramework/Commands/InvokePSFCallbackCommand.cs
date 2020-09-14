@@ -40,7 +40,7 @@ namespace PSFramework.Commands
         /// <summary>
         /// Information on the calling command, including name, module, file and line.
         /// </summary>
-        private Meta.CallerInfo _Caller;
+        private CallerInfo _Caller;
 
         /// <summary>
         /// script used to write horrible errors on screen
