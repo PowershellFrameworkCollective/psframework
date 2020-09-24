@@ -65,6 +65,12 @@ foreach ($command in $commands) {
     # The module-qualified command fails on Microsoft.PowerShell.Archive cmdlets
     $Help = Get-Help $commandName -ErrorAction SilentlyContinue
 	
+	Describe "Test command for $commandName " {
+		# We should not be using workflows so throw an error if we find one
+		It "should not contain CommandType of workflow" -TestCases @{ Command = $commandName } {
+            $commandName.CommandType | Should -Not -Be "Workflow" }
+	}
+
 	Describe "Test help for $commandName" {
         
 		# If help is not found, synopsis in auto-generated help is the syntax diagram
