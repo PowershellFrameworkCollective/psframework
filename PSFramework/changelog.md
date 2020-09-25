@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.4.150 : 2020-09-25
+
+- Fix: Invoke-PSFCallback ignores modulename filter.
+
 ## 1.4.149 : 2020-09-02
 
 - Upd: New build tools, to increase convenience when importing into/building from internal source code repositories

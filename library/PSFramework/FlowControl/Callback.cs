@@ -62,7 +62,7 @@ namespace PSFramework.FlowControl
         /// <returns>True if it applies, otherwise False</returns>
         public bool Applies(string ModuleName, string CommandName)
         {
-            if (!ModuleName.Equals(ModuleName, StringComparison.InvariantCultureIgnoreCase))
+            if (!ModuleName.Equals(this.ModuleName, StringComparison.InvariantCultureIgnoreCase))
                 return false;
             if ((Runspace != null) & (Runspace != System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId))
                 return false;
