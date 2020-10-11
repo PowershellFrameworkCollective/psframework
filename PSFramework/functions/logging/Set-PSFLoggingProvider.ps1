@@ -36,6 +36,12 @@
 		Messages from functions that match at least one entry noted here will NOT be logged.
 		Uses wildcard expressions.
 	
+	.PARAMETER IncludeRunspaces
+		Only messages that come from one of the defined runspaces will be logged.
+	
+	.PARAMETER ExcludeRunspaces
+		Messages that come from one of the defined runspaces will NOT be logged.
+	
 	.PARAMETER IncludeTags
 		Only messages containing the listed tags will be logged.
 		Exact match only, only a single match is required for a message to qualify.
@@ -109,6 +115,12 @@
 		
 		[string[]]
 		$ExcludeFunctions,
+		
+		[guid[]]
+		$IncludeRunspaces,
+		
+		[guid[]]
+		$ExcludeRunspaces,
 		
 		[string[]]
 		$IncludeTags,
@@ -226,6 +238,17 @@
 		{
 			if ($setProperty) { $provider.ExcludeFunctions = $ExcludeFunctions }
 			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeFunctions" -Value $ExcludeFunctions
+		}
+		
+		if (Test-PSFParameterBinding -ParameterName "IncludeRunspaces")
+		{
+			if ($setProperty) { $provider.IncludeRunspaces = $IncludeRunspaces }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeRunspaces" -Value $IncludeRunspaces
+		}
+		if (Test-PSFParameterBinding -ParameterName "ExcludeRunspaces")
+		{
+			if ($setProperty) { $provider.ExcludeRunspaces = $ExcludeRunspaces }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeRunspaces" -Value $ExcludeRunspaces
 		}
 		
 		if (Test-PSFParameterBinding -ParameterName "IncludeTags")

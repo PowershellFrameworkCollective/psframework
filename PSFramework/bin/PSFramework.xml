@@ -2346,6 +2346,16 @@
             List of tags to exclude. Messages with these tags will be ignored by this provider instance.
             </summary>
         </member>
+        <member name="P:PSFramework.Logging.Provider.IncludeRunspaces">
+            <summary>
+            List of runspaces to include. Only messages from one of these runspaces will be considered by this provider.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.ExcludeRunspaces">
+            <summary>
+            List of runspaces to exclude. Messages from these runspaces will be ignored by this provider.
+            </summary>
+        </member>
         <member name="P:PSFramework.Logging.Provider.MinLevel">
             <summary>
             The minimum level of message to log.
@@ -2570,6 +2580,16 @@
         <member name="P:PSFramework.Logging.ProviderInstance.ExcludeTags">
             <summary>
             List of tags to exclude. Messages with these tags will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.IncludeRunspaces">
+            <summary>
+            List of runspaces to include. Only messages from one of these runspaces will be considered by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.ExcludeRunspaces">
+            <summary>
+            List of runspaces to exclude. Messages from these runspaces will be ignored by this provider instance.
             </summary>
         </member>
         <member name="P:PSFramework.Logging.ProviderInstance.MinLevel">

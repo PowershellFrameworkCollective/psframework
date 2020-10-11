@@ -65,6 +65,8 @@ namespace PSFramework.Logging
             ExcludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeModules"));
             IncludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeFunctions"));
             ExcludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeFunctions"));
+            IncludeRunspaces = ToGuidList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeRunspaces"));
+            ExcludeRunspaces = ToGuidList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeRunspaces"));
             IncludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeTags"));
             ExcludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeTags"));
             IncludeWarning = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeWarning"));
@@ -93,6 +95,21 @@ namespace PSFramework.Logging
                 return DefaultValue;
             try { return (int)Value; }
             catch { return DefaultValue; }
+        }
+        private List<Guid> ToGuidList(object Entries)
+        {
+            List<Guid> tempList = new List<Guid>();
+
+            if (Entries == null)
+                return tempList;
+            object[] data = LanguagePrimitives.ConvertTo<object[]>(Entries);
+            foreach (object datum in data)
+            {
+                try { tempList.Add(LanguagePrimitives.ConvertTo<Guid>(datum)); }
+                catch { } // don't care about bad input
+            }
+
+            return tempList;
         }
         #endregion Constructor & Utils
 
@@ -193,6 +210,38 @@ namespace PSFramework.Logging
             }
         }
 
+        private List<Guid> _IncludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to include. Only messages from one of these runspaces will be considered by this provider instance.
+        /// </summary>
+        public List<Guid> IncludeRunspaces
+        {
+            get { return _IncludeRunspaces; }
+            set
+            {
+                if (value == null)
+                    _IncludeRunspaces.Clear();
+                else
+                    _IncludeRunspaces = value;
+            }
+        }
+
+        private List<Guid> _ExcludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to exclude. Messages from these runspaces will be ignored by this provider instance.
+        /// </summary>
+        public List<Guid> ExcludeRunspaces
+        {
+            get { return _ExcludeRunspaces; }
+            set
+            {
+                if (value == null)
+                    _ExcludeRunspaces.Clear();
+                else
+                    _ExcludeRunspaces = value;
+            }
+        }
+
         private int _MinLevel = 1;
         /// <summary>
         /// The minimum level of message to log.
@@ -270,6 +319,12 @@ namespace PSFramework.Logging
                 if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Entry.Runspace))
+                return false;
+            if (ExcludeRunspaces.Contains(Entry.Runspace))
+                return false;
+
             // Functions
             if (IncludeFunctions.Count > 0)
             {
@@ -321,6 +376,12 @@ namespace PSFramework.Logging
             foreach (string module in ExcludeModules)
                 if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
+
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Record.Runspace))
+                return false;
+            if (ExcludeRunspaces.Contains(Record.Runspace))
+                return false;
 
             // Functions
             if (IncludeFunctions.Count > 0)

@@ -165,6 +165,30 @@
 		$limit = (Get-Date).Subtract($minimumRetention)
 		Get-ChildItem -Path $basePath -Filter (Get-ConfigValue -Name 'LogRotateFilter') -Recurse:(Get-ConfigValue -Name 'LogRotateRecurse') -File | Where-Object LastWriteTime -LT $limit | Remove-Item -Force -ErrorAction Stop
 	}
+	
+	function Update-Mutex
+	{
+		[CmdletBinding()]
+		param ()
+		
+		$script:mutexName = Get-ConfigValue -Name 'MutexName'
+		if ($script:mutexName -and -not $script:mutex)
+		{
+			$script:mutex = New-Object System.Threading.Mutex($false, $script:mutexName)
+			Add-Member -InputObject $script:mutex -MemberType NoteProperty -Name Name -Value $script:mutexName
+		}
+		elseif ($script:mutexName -and $script:mutex.Name -ne $script:mutexName)
+		{
+			$script:mutex.Dispose()
+			$script:mutex = New-Object System.Threading.Mutex($false, $script:mutexName)
+			Add-Member -InputObject $script:mutex -MemberType NoteProperty -Name Name -Value $script:mutexName
+		}
+		elseif (-not $script:mutexName -and $script:mutex)
+		{
+			$script:mutex.Dispose()
+			$script:mutex = $null
+		}
+	}
 }
 
 #region Events
@@ -220,6 +244,7 @@ $start_event = {
 	}
 	
 	$script:encoding = Get-ConfigValue -Name 'Encoding'
+	Update-Mutex
 }
 
 $message_event = {
@@ -227,7 +252,9 @@ $message_event = {
 		$Message
 	)
 	
-	$Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message
+	if ($script:mutex) { $null = $script:mutex.WaitOne() }
+	try { $Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message }
+	finally { if ($script:mutex) { $script:mutex.ReleaseMutex() } }
 }
 
 $end_event = {
@@ -249,13 +276,14 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRetentionTime' -Value "30d" -Initialize -Validation timespan -Description "The minimum age for a logfile to be considered for deletion as part of logrotation"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value "*" -Initialize -Validation string -Description "A filter to apply to all files logrotated"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateRecurse' -Value $false -Initialize -Validation bool -Description "Whether the logrotate aspect should recursively look for files to logrotate"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MutexName' -Value '' -Initialize -Validation string -Description "Name of a mutex to use. Use this to handle parallel logging into the same file from multiple processes, by picking the same name in each process."
 }
 
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "logfile"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.LogFile'
-	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse'
+	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName'
 	FunctionDefinitions = $functionDefinitions
 	BeginEvent		   = $begin_event
 	StartEvent		   = $start_event

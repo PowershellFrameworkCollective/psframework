@@ -1,5 +1,12 @@
 ﻿# CHANGELOG
 
+## ???
+
+- New: Configuration Validation: guidarray - ensures only legal guids can be added
+- Upd: Logging - Added ability to filter by runspace id
+- Upd: LoggingProvider: logfile - Added new setting: MutexName - allows handling file access conflict if writing from multiple processes
+- Upd: Set-PSFLoggingProvider - Added `-IncludeRunspaces` and `-ExcludeRunspaces` parameters
+
 ## 1.4.150 : 2020-09-25
 
 - Fix: Invoke-PSFCallback ignores modulename filter.
