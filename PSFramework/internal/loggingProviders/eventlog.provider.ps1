@@ -10,6 +10,7 @@
 		if ($Message.Level -eq 'Warning') { $level = 'Warning' }
 		$errorTag = Get-ConfigValue -Name ErrorTag
 		if ($Message.Tags -contains $errorTag) { $level = 'Error' }
+		if ($Message.Level -eq 'Error') { $level = 'Error' }
 		
 		$eventID = switch ($level)
 		{

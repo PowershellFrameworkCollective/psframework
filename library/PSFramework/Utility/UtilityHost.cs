@@ -444,6 +444,14 @@ namespace PSFramework.Utility
                 catch { return _CallstackOld; }
             }
         }
+        
+        /// <summary>
+        /// Returns a user-friendly callstack representation that is a snapshot in time.
+        /// </summary>
+        public static Message.CallStack FriendlyCallstack
+        {
+            get { return new Message.CallStack(Callstack); }
+        }
 
         /// <summary>
         /// Returns the current callstack on PS4+

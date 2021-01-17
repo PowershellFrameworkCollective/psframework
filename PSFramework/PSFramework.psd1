@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.4.150'
+	ModuleVersion = '1.5.168'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -35,7 +35,8 @@
 	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')
 	
 	# Functions to export from this module
-	FunctionsToExport = @(
+	FunctionsToExport  = @(
+		'Add-PSFLoggingProviderRunspace',
 		'Clear-PSFResultCache',
 		'Compare-PSFArray',
 		'ConvertFrom-PSFArray',
@@ -97,6 +98,7 @@
 		'Remove-PSFAlias',
 		'Remove-PSFConfig',
 		'Remove-PSFLicense',
+		'Remove-PSFLoggingProviderRunspace',
 		'Remove-PSFMessageLevelModifier',
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',

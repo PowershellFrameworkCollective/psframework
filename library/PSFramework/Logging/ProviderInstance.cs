@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Management.Automation;
 using PSFramework.Utility;
@@ -65,11 +66,14 @@ namespace PSFramework.Logging
             ExcludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeModules"));
             IncludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeFunctions"));
             ExcludeFunctions = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeFunctions"));
+            IncludeRunspaces = ToGuidList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeRunspaces"));
+            ExcludeRunspaces = ToGuidList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeRunspaces"));
             IncludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeTags"));
             ExcludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeTags"));
             IncludeWarning = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeWarning"));
             MinLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MinLevel"), 1);
             MaxLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MaxLevel"), 9);
+            RequiresInclude = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.RequiresInclude"), false);
         }
 
         private List<string> ToStringList(object Entries)
@@ -80,12 +84,12 @@ namespace PSFramework.Logging
             List<string> strings = new List<string>();
             return LanguagePrimitives.ConvertTo(Entries, strings.GetType()) as List<string>;
         }
-        private bool ToBool(object Value)
+        private bool ToBool(object Value, bool Default = true)
         {
             if (Value == null)
-                return true;
+                return Default;
             try { return (bool)Value; }
-            catch { return true; }
+            catch { return Default; }
         }
         private int ToInt(object Value, int DefaultValue)
         {
@@ -94,9 +98,29 @@ namespace PSFramework.Logging
             try { return (int)Value; }
             catch { return DefaultValue; }
         }
+        private List<Guid> ToGuidList(object Entries)
+        {
+            List<Guid> tempList = new List<Guid>();
+
+            if (Entries == null)
+                return tempList;
+            object[] data = LanguagePrimitives.ConvertTo<object[]>(Entries);
+            foreach (object datum in data)
+            {
+                try { tempList.Add(LanguagePrimitives.ConvertTo<Guid>(datum)); }
+                catch { } // don't care about bad input
+            }
+
+            return tempList;
+        }
         #endregion Constructor & Utils
 
         #region Message filtering
+        /// <summary>
+        /// Whether any include rule must apply before the instance accepts a message.
+        /// </summary>
+        public bool RequiresInclude = false;
+
         private List<string> _IncludeModules = new List<string>();
         /// <summary>
         /// List of modules to include in the logging. Only messages generated from these modules will be considered by the provider instance.
@@ -193,6 +217,41 @@ namespace PSFramework.Logging
             }
         }
 
+        private List<Guid> _IncludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to include. Only messages from one of these runspaces will be considered by this provider instance.
+        /// </summary>
+        public List<Guid> IncludeRunspaces
+        {
+            get
+            {
+                return _IncludeRunspaces;
+            }
+            set
+            {
+                if (value == null)
+                    _IncludeRunspaces.Clear();
+                else
+                    _IncludeRunspaces = value;
+            }
+        }
+
+        private List<Guid> _ExcludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to exclude. Messages from these runspaces will be ignored by this provider instance.
+        /// </summary>
+        public List<Guid> ExcludeRunspaces
+        {
+            get { return _ExcludeRunspaces; }
+            set
+            {
+                if (value == null)
+                    _ExcludeRunspaces.Clear();
+                else
+                    _ExcludeRunspaces = value;
+            }
+        }
+
         private int _MinLevel = 1;
         /// <summary>
         /// The minimum level of message to log.
@@ -243,6 +302,8 @@ namespace PSFramework.Logging
         /// <returns>Whether it applies</returns>
         public bool MessageApplies(Message.LogEntry Entry)
         {
+            bool wasIncluded = false;
+
             // Level
             if (!IncludeWarning && (Entry.Level == Message.MessageLevel.Warning))
                 return false;
@@ -264,11 +325,26 @@ namespace PSFramework.Logging
 
                 if (!test)
                     return false;
+                wasIncluded = true;
             }
 
             foreach (string module in ExcludeModules)
                 if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
+
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Entry.Runspace))
+                return false;
+            else if (IncludeRunspaces.Count > 0)
+                wasIncluded = true;
+            if (ExcludeRunspaces.Contains(Entry.Runspace))
+                return false;
+            if (_DynamicRunspaceInclusion.ContainsKey(Entry.Runspace) && _DynamicRunspaceInclusion[Entry.Runspace].TimeRanges.Count > 0)
+            {
+                if (_DynamicRunspaceInclusion[Entry.Runspace].IsInRange(Entry.Timestamp))
+                    wasIncluded = true;
+                _DynamicRunspaceInclusion[Entry.Runspace].RemoveBefore(Entry.Timestamp);
+            }
 
             // Functions
             if (IncludeFunctions.Count > 0)
@@ -280,6 +356,7 @@ namespace PSFramework.Logging
 
                 if (!test)
                     return false;
+                wasIncluded = true;
             }
 
             foreach (string function in ExcludeFunctions)
@@ -291,11 +368,14 @@ namespace PSFramework.Logging
             {
                 if (IncludeTags.Except(Entry.Tags, StringComparer.InvariantCultureIgnoreCase).ToList().Count == IncludeTags.Count)
                     return false;
+                wasIncluded = true;
             }
 
             if (ExcludeTags.Except(Entry.Tags, StringComparer.InvariantCultureIgnoreCase).ToList().Count < ExcludeTags.Count)
                 return false;
 
+            if (RequiresInclude && !wasIncluded)
+                return false;
             return true;
         }
 
@@ -306,6 +386,8 @@ namespace PSFramework.Logging
         /// <returns>Whether it applies to the provider instance</returns>
         public bool MessageApplies(Message.PsfExceptionRecord Record)
         {
+            bool wasIncluded = false;
+
             // Modules
             if (IncludeModules.Count > 0)
             {
@@ -316,11 +398,25 @@ namespace PSFramework.Logging
 
                 if (!test)
                     return false;
+                wasIncluded = true;
             }
 
             foreach (string module in ExcludeModules)
                 if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
+
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Record.Runspace))
+                return false;
+            else if (IncludeRunspaces.Count > 0)
+                wasIncluded = true;
+            if (ExcludeRunspaces.Contains(Record.Runspace))
+                return false;
+            if (_DynamicRunspaceInclusion.ContainsKey(Record.Runspace) && _DynamicRunspaceInclusion[Record.Runspace].TimeRanges.Count > 0)
+            {
+                if (_DynamicRunspaceInclusion[Record.Runspace].IsInRange(Record.Timestamp))
+                    wasIncluded = true;
+            }
 
             // Functions
             if (IncludeFunctions.Count > 0)
@@ -332,6 +428,7 @@ namespace PSFramework.Logging
 
                 if (!test)
                     return false;
+                wasIncluded = true;
             }
 
             foreach (string function in ExcludeFunctions)
@@ -343,11 +440,14 @@ namespace PSFramework.Logging
             {
                 if (IncludeTags.Except(Record.Tags).ToList().Count == IncludeTags.Count)
                     return false;
+                wasIncluded = true;
             }
 
             if (ExcludeTags.Except(Record.Tags).ToList().Count < ExcludeTags.Count)
                 return false;
 
+            if (RequiresInclude && !wasIncluded)
+                return false;
             return true;
         }
         #endregion Message filtering
@@ -382,6 +482,26 @@ namespace PSFramework.Logging
         /// </summary>
         public FunctionInfo FinalCommand;
         #endregion Instance Module
+
+        private ConcurrentDictionary<Guid, TimeRangeContainer> _DynamicRunspaceInclusion = new ConcurrentDictionary<Guid, TimeRangeContainer>();
+        /// <summary>
+        /// Add a runspace ID to the list of included runspaces. This is threadsafe.
+        /// </summary>
+        /// <param name="Runspace">ID of the runspace to add.</param>
+        public void AddRunspace(Guid Runspace)
+        {
+            _DynamicRunspaceInclusion.TryAdd(Runspace, new TimeRangeContainer());
+            _DynamicRunspaceInclusion[Runspace].Start(DateTime.Now);
+        }
+        /// <summary>
+        /// Remove a runspace ID from the list of included runspaces. This is threadsafe.
+        /// </summary>
+        /// <param name="Runspace">The runspace to remove.</param>
+        public void RemoveRunspace(Guid Runspace)
+        {
+            if (_DynamicRunspaceInclusion.ContainsKey(Runspace))
+                _DynamicRunspaceInclusion[Runspace].End(DateTime.Now);
+        }
 
         /// <summary>
         /// The last 128 errors that happenend to the provider instance

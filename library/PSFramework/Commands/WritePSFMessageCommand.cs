@@ -436,7 +436,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 }
             }
 
-            if (Level != MessageLevel.Warning)
+            if (Level != MessageLevel.Warning && Level != MessageLevel.Error)
                 Level = ResolveLevel(Level);
             #endregion Perform Transforms
 
@@ -465,7 +465,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             LogEntryType channels = LogEntryType.None;
 
             #region Warning handling
-            if (Level == MessageLevel.Warning)
+            if (Level == MessageLevel.Warning || Level == MessageLevel.Error)
             {
                 if (!_silent)
                 {

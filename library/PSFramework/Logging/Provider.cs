@@ -135,6 +135,38 @@ namespace PSFramework.Logging
             }
         }
 
+        private List<Guid> _IncludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to include. Only messages from one of these runspaces will be considered by this provider.
+        /// </summary>
+        public List<Guid> IncludeRunspaces
+        {
+            get { return _IncludeRunspaces; }
+            set
+            {
+                if (value == null)
+                    _IncludeRunspaces.Clear();
+                else
+                    _IncludeRunspaces = value;
+            }
+        }
+
+        private List<Guid> _ExcludeRunspaces = new List<Guid>();
+        /// <summary>
+        /// List of runspaces to exclude. Messages from these runspaces will be ignored by this provider.
+        /// </summary>
+        public List<Guid> ExcludeRunspaces
+        {
+            get { return _ExcludeRunspaces; }
+            set
+            {
+                if (value == null)
+                    _ExcludeRunspaces.Clear();
+                else
+                    _ExcludeRunspaces = value;
+            }
+        }
+
         private int _MinLevel = 1;
         /// <summary>
         /// The minimum level of message to log.
@@ -212,6 +244,12 @@ namespace PSFramework.Logging
                 if (string.Equals(Entry.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Entry.Runspace))
+                return false;
+            if (ExcludeRunspaces.Contains(Entry.Runspace))
+                return false;
+
             // Functions
             if (IncludeFunctions.Count > 0)
             {
@@ -263,6 +301,12 @@ namespace PSFramework.Logging
             foreach (string module in ExcludeModules)
                 if (string.Equals(Record.ModuleName, module, StringComparison.InvariantCultureIgnoreCase))
                     return false;
+
+            // Runspaces
+            if (IncludeRunspaces.Count > 0 && !IncludeRunspaces.Contains(Record.Runspace))
+                return false;
+            if (ExcludeRunspaces.Contains(Record.Runspace))
+                return false;
 
             // Functions
             if (IncludeFunctions.Count > 0)

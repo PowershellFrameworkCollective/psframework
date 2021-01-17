@@ -10,6 +10,8 @@
 	'Assembly.ConfigurationHost.ConfigNotFound'				       = 'The configuration item {0} could not be found in the configuration system'
 	
 	# Utility
+	'Assembly.Size.ComparisonError'							       = 'Cannot compare a {0} to a {1}'
+	
 	'Assembly.UtilityHost.AliasNotFound'						   = 'Failed to find alias: {0}'
 	'Assembly.UtilityHost.AliasProtected'						   = 'The alias "{0}" is protected and cannot be removed!'
 	'Assembly.UtilityHost.AliasReadOnly'						   = 'The alias "{0}" is read only! To remove it, also specify the "-Force" parameter.'
