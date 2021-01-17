@@ -136,7 +136,7 @@
 		#region File - Computer Wide
 		if ($Scope -band 64) {
 			if (-not $Module) {
-				foreach ($file in Get-ChildItem -Path $script:path_FileSystem -Filter "psf_config_*.json") {
+				foreach ($file in Get-ChildItem -Path $script:path_FileSystem -Filter "psf_config_*.json" -ErrorAction Ignore) {
 					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
 						if (-not $Default) { $results[$item.FullName] = $item }
 						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
@@ -162,7 +162,7 @@
 		#region File - User Shared
 		if ($Scope -band 32) {
 			if (-not $Module) {
-				foreach ($file in Get-ChildItem -Path $script:path_FileUserShared -Filter "psf_config_*.json") {
+				foreach ($file in Get-ChildItem -Path $script:path_FileUserShared -Filter "psf_config_*.json" -ErrorAction Ignore) {
 					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
 						if (-not $Default) { $results[$item.FullName] = $item }
 						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
@@ -188,7 +188,7 @@
 		#region File - User Local
 		if ($Scope -band 16) {
 			if (-not $Module) {
-				foreach ($file in Get-ChildItem -Path $script:path_FileUserLocal -Filter "psf_config_*.json") {
+				foreach ($file in Get-ChildItem -Path $script:path_FileUserLocal -Filter "psf_config_*.json" -ErrorAction Ignore) {
 					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
 						if (-not $Default) { $results[$item.FullName] = $item }
 						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
