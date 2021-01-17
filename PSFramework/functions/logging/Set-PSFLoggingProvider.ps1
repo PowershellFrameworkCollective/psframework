@@ -72,6 +72,12 @@
 		- Critical: 1
 		The level "Warning" is not represented on this scale.
 	
+	.PARAMETER RequiresInclude
+		By default, messages will be written to a logging provider, unless a specific exclude rule was met or any include rule was not met.
+		That means, if no exclude and include rules exist at a given time, all messages will be written to the logging provider instance.
+		Setting this to true will instead require at least one include rule to exist - and be met - before logging a message.
+		This is designed for in particular for runspace-bound logging providers, which might at runtime swiftly gain or lose included runspaces.
+	
 	.PARAMETER ExcludeWarning
 		Whether to exclude warnings from the logging provider / instance.
 	
@@ -135,6 +141,9 @@
 		[ValidateRange(1, 9)]
 		[int]
 		$MaxLevel,
+		
+		[switch]
+		$RequiresInclude,
 		
 		[switch]
 		$ExcludeWarning,
@@ -276,6 +285,11 @@
 		{
 			if ($setProperty) { $provider.IncludeWarning = -not $ExcludeWarning }
 			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeWarning" -Value (-not $ExcludeWarning)
+		}
+		
+		# V2 Only
+		if (Test-PSFParameterBinding -ParameterName "RequiresInclude"){
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)RequiresInclude" -Value $RequiresInclude
 		}
 		#endregion Filter Configuration
 		

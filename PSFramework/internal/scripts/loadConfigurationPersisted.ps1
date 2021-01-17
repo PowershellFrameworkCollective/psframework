@@ -1,7 +1,7 @@
 ﻿if (-not [PSFramework.Configuration.ConfigurationHost]::ImportFromRegistryDone)
 {
 	# Read config from all settings
-	$config_hash = Read-PsfConfigPersisted -Scope 127
+	$config_hash = Read-PsfConfigPersisted -Scope 511
 	
 	foreach ($value in $config_hash.Values)
 	{

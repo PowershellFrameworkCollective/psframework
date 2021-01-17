@@ -63,6 +63,11 @@
         /// <summary>
         /// This message is a warning, sure sign something went badly wrong
         /// </summary>
-        Warning = 666
+        Warning = 666,
+
+        /// <summary>
+        /// This message is even more of a warning, sure sign something went really, really wrong
+        /// </summary>
+        Error = 667
     }
 }

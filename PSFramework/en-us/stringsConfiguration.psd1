@@ -24,6 +24,8 @@
 	
 	'Get-PSFConfigValue.NoValue'						  = "No Configuration Value available for {0}" # $FullName
 	
+	'Read-PsfConfigEnvironment.BadData'				      = 'Cannot import setting from registry: {0} - Error parsing: {1}' # $Name, $Value
+	
 	'Register-PSFConfig.NoRegistry'					      = "Cannot register configurations on non-windows machines to registry. Please specify a file-based scope" # 
 	'Register-PSFConfig.Type.NotSupported'			      = "Invalid Input, cannot export {0}, type not supported" # $Config.FullName
 	'Register-PSFConfig.Registering'					  = "Registering {0} for {1}" # $Config.FullName, $Scope
@@ -32,5 +34,5 @@
 	'Reset-PSFConfig.Resetting'						      = 'Reset to default value' # 
 	'Reset-PSFConfig.Resetting.Failed'				      = "Failed to reset the configuration item." # 
 	
-	'Unregister-PSFConfig.NoRegistry'					      = 'Cannot unregister configurations from registry on non-windows machines.' # 
+	'Unregister-PSFConfig.NoRegistry'					  = 'Cannot unregister configurations from registry on non-windows machines.' # 
 }

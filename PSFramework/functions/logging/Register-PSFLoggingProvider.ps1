@@ -291,6 +291,7 @@
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.IncludeWarning" -Value $true -Initialize -Validation "bool" -Description "Whether to log warning messages"
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.MinLevel" -Value 1 -Initialize -Validation "integer1to9" -Description "The minimum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
 			Set-PSFConfig -Module LoggingProvider -Name "$Name.MaxLevel" -Value 9 -Initialize -Validation "integer1to9" -Description "The maximum message level to include in logs. Lower means more important - eg: Verbose is level 5, Host is level 2. Levels range from 1 through 9, Warning level messages are not included in this scale."
+			Set-PSFConfig -Module LoggingProvider -Name "$Name.RequiresInclude" -Value $false -Initialize -Validation "bool" -Description "Whether any include rule must exist - and be met - before a message is accepted for logging"
 			
 			# Initialize custom config defined by logging provider
 			foreach ($property in $InstanceProperties)

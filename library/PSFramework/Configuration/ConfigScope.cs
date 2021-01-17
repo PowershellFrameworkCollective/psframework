@@ -41,6 +41,16 @@ namespace PSFramework.Configuration
         /// <summary>
         /// The configuration is stored as Json in the local computer config directory.
         /// </summary>
-        FileSystem = 64
+        FileSystem = 64,
+
+        /// <summary>
+        /// The configuration is stored in environment variables with full data syntax.
+        /// </summary>
+        Environment = 128,
+
+        /// <summary>
+        /// The configuration is stored in environment variables with simplified data syntax.
+        /// </summary>
+        EnvironmentSimple = 256
     }
 }

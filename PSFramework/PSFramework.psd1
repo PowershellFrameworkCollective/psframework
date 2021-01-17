@@ -35,7 +35,8 @@
 	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')
 	
 	# Functions to export from this module
-	FunctionsToExport = @(
+	FunctionsToExport  = @(
+		'Add-PSFLoggingProviderRunspace',
 		'Clear-PSFResultCache',
 		'Compare-PSFArray',
 		'ConvertFrom-PSFArray',
@@ -97,6 +98,7 @@
 		'Remove-PSFAlias',
 		'Remove-PSFConfig',
 		'Remove-PSFLicense',
+		'Remove-PSFLoggingProviderRunspace',
 		'Remove-PSFMessageLevelModifier',
 		'Reset-PSFConfig',
 		'Resolve-PSFDefaultParameterValue',

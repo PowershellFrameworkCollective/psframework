@@ -2,10 +2,22 @@
 
 ## ???
 
+- New: Command Add-PSFLoggingProviderRunspace : Adds a runspace to the list of included runspaces on a logging provider instance
+- New: Command Remove-PSFLoggingProviderRunspace : Removes a runspace from the list of included runspaces on a logging provider instance
 - New: Configuration Validation: guidarray - ensures only legal guids can be added
+- New: LoggingProvider: console - enables logging to the console screen
 - Upd: Logging - Added ability to filter by runspace id
+- Upd: Logging - Added level "Error", functionally identical to warning
+- Upd: LoggingProvider: eventlog - Messages with the new level "Error" will trigger an error event
 - Upd: LoggingProvider: logfile - Added new setting: MutexName - allows handling file access conflict if writing from multiple processes
+- Upd: LoggingProvider: logfile - Added new settings: JsonCompress, JsonString and JsonNoComma to better allow just how json logfiles are being created
+- Upd: LoggingProvider: splunk - Added new settings: Index, Source and SourceType
 - Upd: Set-PSFLoggingProvider - Added `-IncludeRunspaces` and `-ExcludeRunspaces` parameters
+- Upd: Set-PSFLoggingProvider - Added `-RequiresInclude` parameter, excluding all messages that match not at least one include rule.
+- Upd: Configuration Validation: bool - now accepts a switch parameter type as input
+- Upd: Import-PSFConfig - Add `-EnvironmentPrefix` and `-Simple` parameters, allowing import of configuration from environment variables.
+- Upd: Configuration - Automatically imports configuration from environment variables on module import.
+- Fix: LoggingProvider: sql - Fails to write to database due to hardcoded db name on insert (#444)
 
 ## 1.4.150 : 2020-09-25
 

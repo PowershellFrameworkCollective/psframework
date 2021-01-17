@@ -122,8 +122,25 @@
 		if ($Module) { $filename = "$($Module.ToLower())-$($ModuleVersion).json" }
 		else { $filename = "psf_config.json" }
 	}
-	process
-	{
+	process {
+		#region Environment - Simple
+		if ($Scope -band 256) {
+			foreach ($item in Read-PsfConfigEnvironment -Prefix PSF -Simple) {
+				if (-not $Default) { $results[$item.FullName] = $item }
+				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+			}
+		}
+		#endregion Environment - Simple
+		
+		#region Environment - Full
+		if ($Scope -band 128) {
+			foreach ($item in Read-PsfConfigEnvironment -Prefix PSFramework) {
+				if (-not $Default) { $results[$item.FullName] = $item }
+				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+			}
+		}
+		#endregion Environment - Full
+		
 		#region File - Computer Wide
 		if ($Scope -band 64)
 		{

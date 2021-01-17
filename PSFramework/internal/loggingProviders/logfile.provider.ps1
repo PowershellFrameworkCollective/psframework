@@ -76,8 +76,9 @@
 			#region Json
 			"Json"
 			{
-				if ($fileExists) { Add-Content -Path $Path -Value "," -Encoding $script:encoding }
-				$Message | ConvertTo-Json | Add-Content -Path $Path -NoNewline -Encoding $script:encoding
+				if ($fileExists -and -not $script:JsonSettings.JsonNoComma) { Add-Content -Path $Path -Value "," -Encoding $script:encoding }
+				if (-not $script:JsonSettings) { $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline -Encoding $script:encoding }
+				else { $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline -Encoding $script:encoding }
 			}
 			#endregion Json
 			#region XML
@@ -189,6 +190,27 @@
 			$script:mutex = $null
 		}
 	}
+	
+	function ConvertFrom-Enumeration {
+		[CmdletBinding()]
+		param (
+			[Parameter(ValueFromPipeline = $true)]
+			$InputObject
+		)
+		
+		process {
+			$data = @{ }
+			foreach ($property in $InputObject.PSObject.Properties) {
+				if ($property.Value -is [enum]) {
+					$data[$property.Name] = $property.Value -as [string]
+				}
+				else {
+					$data[$property.Name] = $property.Value
+				}
+			}
+			[pscustomobject]$data
+		}
+	}
 }
 
 #region Events
@@ -244,6 +266,12 @@ $start_event = {
 	}
 	
 	$script:encoding = Get-ConfigValue -Name 'Encoding'
+	
+	$script:JsonSettings = @{
+		JsonCompress = Get-ConfigValue -Name JsonCompress
+		JsonString   = Get-ConfigValue -Name JsonString
+		JsonNoComma = Get-ConfigValue -Name JsonNoComma
+	}
 	Update-Mutex
 }
 
@@ -277,13 +305,16 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value "*" -Initialize -Validation string -Description "A filter to apply to all files logrotated"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateRecurse' -Value $false -Initialize -Validation bool -Description "Whether the logrotate aspect should recursively look for files to logrotate"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MutexName' -Value '' -Initialize -Validation string -Description "Name of a mutex to use. Use this to handle parallel logging into the same file from multiple processes, by picking the same name in each process."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonCompress' -Value $false -Initialize -Validation bool -Description "Will compress the json entries, condensing each entry into a single line."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonString' -Value $false -Initialize -Validation bool -Description "Will convert all enumerated properties to string values when converting to json. This causes the level property to be 'Debug','Host', ... rather than 8,2,..."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoComma' -Value $false -Initialize -Validation bool -Description "Prevent adding commas between two json entries."
 }
 
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "logfile"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.LogFile'
-	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName'
+	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma'
 	FunctionDefinitions = $functionDefinitions
 	BeginEvent		   = $begin_event
 	StartEvent		   = $start_event
