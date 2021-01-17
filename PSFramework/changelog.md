@@ -1,11 +1,12 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.5.168 : 2021.01.17
 
 - New: Command Add-PSFLoggingProviderRunspace : Adds a runspace to the list of included runspaces on a logging provider instance
 - New: Command Remove-PSFLoggingProviderRunspace : Removes a runspace from the list of included runspaces on a logging provider instance
 - New: Configuration Validation: guidarray - ensures only legal guids can be added
 - New: LoggingProvider: console - enables logging to the console screen
+- New: Class PSFramework.Utility.PsfException - adds localization capability to exceptions
 - Upd: Logging - Added ability to filter by runspace id
 - Upd: Logging - Added level "Error", functionally identical to warning
 - Upd: LoggingProvider: eventlog - Messages with the new level "Error" will trigger an error event
@@ -17,6 +18,7 @@
 - Upd: Configuration Validation: bool - now accepts a switch parameter type as input
 - Upd: Import-PSFConfig - Add `-EnvironmentPrefix` and `-Simple` parameters, allowing import of configuration from environment variables.
 - Upd: Configuration - Automatically imports configuration from environment variables on module import.
+- Upd: UtilityHost.cs - Added a static property `FriendlyCallstack` returning the current script callstack as a snapshot.
 - Fix: LoggingProvider: sql - Fails to write to database due to hardcoded db name on insert (#444)
 
 ## 1.4.150 : 2020-09-25

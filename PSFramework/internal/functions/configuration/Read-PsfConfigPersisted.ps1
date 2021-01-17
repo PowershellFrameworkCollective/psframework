@@ -1,5 +1,4 @@
-﻿function Read-PsfConfigPersisted
-{
+﻿function Read-PsfConfigPersisted {
 <#
 	.SYNOPSIS
 		Reads configurations from persisted file / registry.
@@ -32,7 +31,7 @@
 #>
 	[OutputType([System.Collections.Hashtable])]
 	[CmdletBinding()]
-	Param (
+	param (
 		[PSFramework.Configuration.ConfigScope]
 		$Scope,
 		
@@ -49,11 +48,9 @@
 		$Default
 	)
 	
-	begin
-	{
+	begin {
 		#region Helper Functions
-		function New-ConfigItem
-		{
+		function New-ConfigItem {
 			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 			[CmdletBinding()]
 			param (
@@ -74,17 +71,16 @@
 			)
 			
 			[pscustomobject]@{
-				FullName      = $FullName
-				Value         = $Value
-				Type          = $Type
+				FullName	  = $FullName
+				Value		  = $Value
+				Type		  = $Type
 				KeepPersisted = $KeepPersisted
-				Enforced      = $Enforced
-				Policy        = $Policy
+				Enforced	  = $Enforced
+				Policy	      = $Policy
 			}
 		}
 		
-		function Read-Registry
-		{
+		function Read-Registry {
 			[CmdletBinding()]
 			param (
 				$Path,
@@ -97,18 +93,14 @@
 			
 			$common = 'PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider'
 			
-			foreach ($item in ((Get-ItemProperty -Path $Path -ErrorAction Ignore).PSObject.Properties | Where-Object Name -NotIn $common))
-			{
-				if ($item.Value -like "Object:*")
-				{
+			foreach ($item in ((Get-ItemProperty -Path $Path -ErrorAction Ignore).PSObject.Properties | Where-Object Name -NotIn $common)) {
+				if ($item.Value -like "Object:*") {
 					$data = $item.Value.Split(":", 2)
 					New-ConfigItem -FullName $item.Name -Type $data[0] -Value $data[1] -KeepPersisted -Enforced:$Enforced -Policy
 				}
-				else
-				{
+				else {
 					try { New-ConfigItem -FullName $item.Name -Value ([PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($item.Value)) -Policy }
-					catch
-					{
+					catch {
 						Write-PSFMessage -Level Warning -Message "Failed to load configuration from Registry: $($item.Name)" -ErrorRecord $_ -Target "$Path : $($item.Name)"
 					}
 				}
@@ -142,10 +134,16 @@
 		#endregion Environment - Full
 		
 		#region File - Computer Wide
-		if ($Scope -band 64)
-		{
-			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileSystem $filename)))
-			{
+		if ($Scope -band 64) {
+			if (-not $Module) {
+				foreach ($file in Get-ChildItem -Path $script:path_FileSystem -Filter "psf_config_*.json") {
+					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
+						if (-not $Default) { $results[$item.FullName] = $item }
+						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+					}
+				}
+			}
+			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileSystem $filename))) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -153,10 +151,8 @@
 		#endregion File - Computer Wide
 		
 		#region Registry - Computer Wide
-		if (($Scope -band 4) -and (-not $script:NoRegistry))
-		{
-			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineDefault))
-			{
+		if (($Scope -band 4) -and (-not $script:NoRegistry)) {
+			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineDefault)) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -164,10 +160,16 @@
 		#endregion Registry - Computer Wide
 		
 		#region File - User Shared
-		if ($Scope -band 32)
-		{
-			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserShared $filename)))
-			{
+		if ($Scope -band 32) {
+			if (-not $Module) {
+				foreach ($file in Get-ChildItem -Path $script:path_FileUserShared -Filter "psf_config_*.json") {
+					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
+						if (-not $Default) { $results[$item.FullName] = $item }
+						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+					}
+				}
+			}
+			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserShared $filename))) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -175,10 +177,8 @@
 		#endregion File - User Shared
 		
 		#region Registry - User Shared
-		if (($Scope -band 1) -and (-not $script:NoRegistry))
-		{
-			foreach ($item in (Read-Registry -Path $script:path_RegistryUserDefault))
-			{
+		if (($Scope -band 1) -and (-not $script:NoRegistry)) {
+			foreach ($item in (Read-Registry -Path $script:path_RegistryUserDefault)) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -186,10 +186,16 @@
 		#endregion Registry - User Shared
 		
 		#region File - User Local
-		if ($Scope -band 16)
-		{
-			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserLocal $filename)))
-			{
+		if ($Scope -band 16) {
+			if (-not $Module) {
+				foreach ($file in Get-ChildItem -Path $script:path_FileUserLocal -Filter "psf_config_*.json") {
+					foreach ($item in Read-PsfConfigFile -Path $file.FullName) {
+						if (-not $Default) { $results[$item.FullName] = $item }
+						elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
+					}
+				}
+			}
+			foreach ($item in (Read-PsfConfigFile -Path (Join-Path $script:path_FileUserLocal $filename))) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -197,10 +203,8 @@
 		#endregion File - User Local
 		
 		#region Registry - User Enforced
-		if (($Scope -band 2) -and (-not $script:NoRegistry))
-		{
-			foreach ($item in (Read-Registry -Path $script:path_RegistryUserEnforced -Enforced))
-			{
+		if (($Scope -band 2) -and (-not $script:NoRegistry)) {
+			foreach ($item in (Read-Registry -Path $script:path_RegistryUserEnforced -Enforced)) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
@@ -208,18 +212,15 @@
 		#endregion Registry - User Enforced
 		
 		#region Registry - System Enforced
-		if (($Scope -band 8) -and (-not $script:NoRegistry))
-		{
-			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineEnforced -Enforced))
-			{
+		if (($Scope -band 8) -and (-not $script:NoRegistry)) {
+			foreach ($item in (Read-Registry -Path $script:path_RegistryMachineEnforced -Enforced)) {
 				if (-not $Default) { $results[$item.FullName] = $item }
 				elseif (-not $results.ContainsKey($item.FullName)) { $results[$item.FullName] = $item }
 			}
 		}
 		#endregion Registry - System Enforced
 	}
-	end
-	{
+	end {
 		$results
 	}
 }

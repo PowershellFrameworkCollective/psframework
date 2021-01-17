@@ -194,7 +194,7 @@ namespace PSFramework.Utility
             {
                 return CompareTo(size);
             }
-            throw new ArgumentException(String.Format("Cannot compare a {0} to a {1}", typeof(Size).FullName, obj.GetType().FullName));
+            throw new PsfException("PSFramework.Assembly.Size.ComparisonError", null, typeof(Size).FullName, obj.GetType().FullName);
         }
 
         #region MathOperators
