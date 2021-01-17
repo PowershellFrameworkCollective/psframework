@@ -24,10 +24,10 @@
 	
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
-		(Get-Command Import-PSFConfig).ParameterSets.Name | Should -Be 'Path', 'ModuleName'
+		(Get-Command Import-PSFConfig).ParameterSets.Name | Should -Be 'Path', 'ModuleName', 'Environment'
 		foreach ($key in (Get-Command Import-PSFConfig).Parameters.Keys)
 		{
-			$key | Should -BeIn 'Path', 'ModuleName', 'ModuleVersion', 'Scope', 'Schema', 'IncludeFilter', 'ExcludeFilter', 'Peek', 'AllowDelete', 'PassThru', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+			$key | Should -BeIn 'Path', 'ModuleName', 'ModuleVersion', 'Scope', 'Schema', 'IncludeFilter', 'ExcludeFilter', 'Peek', 'AllowDelete', 'PassThru', 'EnvironmentPrefix', 'Simple', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
 		}
 	}
 	

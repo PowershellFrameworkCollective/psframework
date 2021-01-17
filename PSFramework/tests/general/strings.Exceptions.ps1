@@ -17,6 +17,7 @@ $exceptions['LegalSurplus'] = @(
 	'Assembly.ComputerManagement.SessionContainer.NoCimSessionKey'
 	'Assembly.ComputerManagement.SessionContainer.NoPSSessionKey'
 	'Assembly.ConfigurationHost.ConfigNotFound'
+	'Assembly.Size.ComparisonError'
 	'Assembly.UtilityHost.AliasNotFound'
 	'Assembly.UtilityHost.AliasProtected'
 	'Assembly.UtilityHost.AliasReadOnly'
