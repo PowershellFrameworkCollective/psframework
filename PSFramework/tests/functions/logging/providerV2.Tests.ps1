@@ -78,7 +78,7 @@
 		It "Should have written messages without error" {
 			Get-PSFMessage | Where-Object FunctionName -eq 'Write-Hello' | Should -BeNullOrEmpty -Not
 			Get-PSFMessage | Where-Object Message -eq 'Current Counter is at 6' | Should -BeNullOrEmpty -Not
-			Get-PSFMessage | Where-Object Message -eq 'Starting Provider Instance: MyInstance of Provider Demo' | Should -BeNullOrEmpty -Not
+			# Get-PSFMessage | Where-Object Message -eq 'Starting Provider Instance: MyInstance of Provider Demo' | Should -BeNullOrEmpty -Not
 			$provider = Get-PSFLoggingProvider -Name Demo
 			$provider.Instances.MyInstance.Errors.Count | Should -Be 0
 		}
