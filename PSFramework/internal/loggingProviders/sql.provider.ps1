@@ -55,7 +55,7 @@
                     $SqlInstance.ConnectionContext.Connect() # Try to connect to the database
                 }
 
-                $insertQuery = "INSERT INTO [LoggingDatabase].[dbo].[$SqlTable](Message, Level, TimeStamp, FunctionName, ModuleName, Tags, Runspace, ComputerName, TargetObject, [File], Line, ErrorRecord, CallStack)
+                $insertQuery = "INSERT INTO [$SqlDatabaseName].[dbo].[$SqlTable](Message, Level, TimeStamp, FunctionName, ModuleName, Tags, Runspace, ComputerName, TargetObject, [File], Line, ErrorRecord, CallStack)
                 VALUES (@Message, @Level, @TimeStamp, @FunctionName, @ModuleName, @Tags, @Runspace, @ComputerName, @TargetObject, @File, @Line, @ErrorRecord, @CallStack)"
                 Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabaseName -Query $insertQuery -SqlParameters $QueryParameters -EnableException
             }

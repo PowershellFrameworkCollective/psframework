@@ -10,7 +10,7 @@
 	}
 	try
 	{
-		if ($Value.GetType().FullName -ne "System.Boolean")
+		if ($Value.GetType().FullName -notin "System.Boolean", 'System.Management.Automation.SwitchParameter')
 		{
 			$Result.Message = "Not a boolean: $Value"
 			$Result.Success = $False
@@ -24,7 +24,7 @@
 		return $Result
 	}
 	
-	$Result.Value = $Value
+	$Result.Value = $Value -as [bool]
 	
 	return $Result
 }

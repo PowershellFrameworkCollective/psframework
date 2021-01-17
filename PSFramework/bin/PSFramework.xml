@@ -1418,6 +1418,16 @@
             The configuration is stored as Json in the local computer config directory.
             </summary>
         </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.Environment">
+            <summary>
+            The configuration is stored in environment variables with full data syntax.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.EnvironmentSimple">
+            <summary>
+            The configuration is stored in environment variables with simplified data syntax.
+            </summary>
+        </member>
         <member name="T:PSFramework.Configuration.ConfigurationHost">
             <summary>
             Host class providing static configuration settings that are constant across all runspaces within the process.
@@ -2346,6 +2356,16 @@
             List of tags to exclude. Messages with these tags will be ignored by this provider instance.
             </summary>
         </member>
+        <member name="P:PSFramework.Logging.Provider.IncludeRunspaces">
+            <summary>
+            List of runspaces to include. Only messages from one of these runspaces will be considered by this provider.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.Provider.ExcludeRunspaces">
+            <summary>
+            List of runspaces to exclude. Messages from these runspaces will be ignored by this provider.
+            </summary>
+        </member>
         <member name="P:PSFramework.Logging.Provider.MinLevel">
             <summary>
             The minimum level of message to log.
@@ -2542,6 +2562,11 @@
             Refreshes the filter and enablement settings from configuration
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.RequiresInclude">
+            <summary>
+            Whether any include rule must apply before the instance accepts a message.
+            </summary>
+        </member>
         <member name="P:PSFramework.Logging.ProviderInstance.IncludeModules">
             <summary>
             List of modules to include in the logging. Only messages generated from these modules will be considered by the provider instance.
@@ -2570,6 +2595,16 @@
         <member name="P:PSFramework.Logging.ProviderInstance.ExcludeTags">
             <summary>
             List of tags to exclude. Messages with these tags will be ignored by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.IncludeRunspaces">
+            <summary>
+            List of runspaces to include. Only messages from one of these runspaces will be considered by this provider instance.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.ExcludeRunspaces">
+            <summary>
+            List of runspaces to exclude. Messages from these runspaces will be ignored by this provider instance.
             </summary>
         </member>
         <member name="P:PSFramework.Logging.ProviderInstance.MinLevel">
@@ -2637,6 +2672,18 @@
             <summary>
             The function to use to execute the final phase
             </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.AddRunspace(System.Guid)">
+            <summary>
+            Add a runspace ID to the list of included runspaces. This is threadsafe.
+            </summary>
+            <param name="Runspace">ID of the runspace to add.</param>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.RemoveRunspace(System.Guid)">
+            <summary>
+            Remove a runspace ID from the list of included runspaces. This is threadsafe.
+            </summary>
+            <param name="Runspace">The runspace to remove.</param>
         </member>
         <member name="F:PSFramework.Logging.ProviderInstance.Errors">
             <summary>
@@ -3503,6 +3550,11 @@
         <member name="F:PSFramework.Message.MessageLevel.Warning">
             <summary>
             This message is a warning, sure sign something went badly wrong
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageLevel.Error">
+            <summary>
+            This message is even more of a warning, sure sign something went really, really wrong
             </summary>
         </member>
         <member name="T:PSFramework.Message.MessageLevelModifier">
@@ -6772,6 +6824,86 @@
             <summary>
             Operating System, CPU &amp; RAM
             </summary>
+        </member>
+        <member name="T:PSFramework.Utility.TimeRange">
+            <summary>
+            Container carrying a time range.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.TimeRange.Start">
+            <summary>
+            The start time of the time range
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.TimeRange.End">
+            <summary>
+            The end time of the time range
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.TimeRange.Duration">
+            <summary>
+            The total duration of the time range
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRange.#ctor">
+            <summary>
+            Create an empty time range
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRange.#ctor(System.DateTime)">
+            <summary>
+            Create a time range with the start filled in
+            </summary>
+            <param name="Start">The start time of the time range</param>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRange.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Create a fully filled out time range
+            </summary>
+            <param name="Start">The start time of the time range</param>
+            <param name="End">The end time of the time range</param>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRange.IsInRange(System.DateTime)">
+            <summary>
+            Checks whether a DateTime is within the defined start and end times.
+            </summary>
+            <param name="Timestamp">The timestamp to validate</param>
+            <returns>Whether the timestamp is within the defined start and end times</returns>
+        </member>
+        <member name="T:PSFramework.Utility.TimeRangeContainer">
+            <summary>
+            A management wrapper handlign a series of TimeRanges.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.TimeRangeContainer.TimeRanges">
+            <summary>
+            The stored time ranges
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRangeContainer.Start(System.DateTime)">
+            <summary>
+            Start a new time range
+            </summary>
+            <param name="Start">The starting point of the time range.</param>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRangeContainer.End(System.DateTime)">
+            <summary>
+            End the last open time range
+            </summary>
+            <param name="End">The end time of the time range</param>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRangeContainer.IsInRange(System.DateTime)">
+            <summary>
+            Tests, whether the input is within any of the stored ranges.
+            </summary>
+            <param name="Timestamp">The timestamp to test for being in range.</param>
+            <returns>Whether the timestamp actually is in any of the possible ranges.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.TimeRangeContainer.RemoveBefore(System.DateTime)">
+            <summary>
+            Removes all time ranges that have ended before the specified timestamp
+            </summary>
+            <param name="Timestamp">The delimiting timestamp</param>
         </member>
         <member name="T:PSFramework.Utility.TypeTransformationAttribute">
             <summary>

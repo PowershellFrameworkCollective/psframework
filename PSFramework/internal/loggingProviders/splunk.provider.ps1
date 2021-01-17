@@ -54,7 +54,16 @@
 			$unixEpochTime = [int]($Timestamp.ToUniversalTime() - $unixEpochStart).TotalSeconds
 			
 			# Create json object to send
-			$body = ConvertTo-Json -InputObject @{ event = $InputObject; host = $HostName; time = $unixEpochTime } -Compress
+			$eventData = @{
+				event = $InputObject
+				host  = $HostName
+				time = $unixEpochTime
+			}
+			if ($index = Get-ConfigValue -Name Index) { $eventData.index = $index }
+			if ($source = Get-ConfigValue -Name Source) { $eventData.source = $source }
+			if ($sourcetype = Get-ConfigValue -Name SourceType) { $eventData.sourcetype = $sourcetype }
+			
+			$body = ConvertTo-Json -InputObject $eventData -Compress
 			
 			# Only return if something went wrong, i.e. http response is not "success"
 			try { $null = Invoke-RestMethodCustom -Uri $uri -Method Post -Headers @{ Authorization = "Splunk $Token" } -Body $body -ErrorAction Stop -IgnoreCert:$(Get-ConfigValue -Name IgnoreCert) }
@@ -147,15 +156,18 @@ $configuration_Settings = {
 	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.Url' -Description 'The url to the Splunk http event collector. Example: https://localhost:8088/services/collector'
 	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.Token' -Description 'The token used to authenticate to the Splunk event collector.'
 	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.Properties' -Initialize -Value 'Timestamp', 'Message', 'Level', 'Tags', 'FunctionName', 'ModuleName', 'Runspace', 'Username', 'ComputerName', 'TargetObject', 'Data' -Description 'The properties to write to Splunk.'
-	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.LogName' -Initialize -Value 'Undefined' -Description 'Name associated with the task. Included in each entry, making it easier to reuse the same http event collector for multiple tasks.'
-	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.IgnoreCert' -Initialize -Value $false -Description 'Whether the server certificate should be validated or not.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.LogName' -Initialize -Value 'Undefined' -Validation string -Description 'Name associated with the task. Included in each entry, making it easier to reuse the same http event collector for multiple tasks.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.IgnoreCert' -Initialize -Value $false -Validation bool -Description 'Whether the server certificate should be validated or not.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.Index' -Initialize -Value '' -Validation string -Description 'The index to apply to all messages. Uses the splunk-defined default index if omitted.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.Source' -Initialize -Value '' -Validation string -Description 'Event source to add to all messages.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Splunk.SourceType' -Initialize -Value '' -Validation string -Description 'Event source type to add to all messages.'
 }
 
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "splunk"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.Splunk'
-	InstanceProperties = 'Url', 'Token', 'Properties', 'LogName', 'IgnoreCert'
+	InstanceProperties = 'Url', 'Token', 'Properties', 'LogName', 'IgnoreCert', 'Index', 'Source', 'SourceType'
 	MessageEvent	   = $message_Event
 	ConfigurationSettings = $configuration_Settings
 	FunctionDefinitions = $functionDefinitions

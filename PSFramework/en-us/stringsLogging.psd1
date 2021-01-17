@@ -1,4 +1,6 @@
 ﻿@{
+	'Add-PSFLoggingProviderRunspace.Instance.NotFound'	   = 'Unable to find logging provider instance {1} of provider {0}' # $ProviderName, $InstanceName
+	
 	'Import-PSFLoggingProvider.Import.Error'			   = "Error loading json data from {0}" # $effectivePath
 	'Import-PSFLoggingProvider.Datum.Error'			       = "Error processing logging provider entry" # 
 	
