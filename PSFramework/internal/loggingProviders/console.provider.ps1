@@ -3,7 +3,7 @@
 		$Message
 	)
 	$style = Get-ConfigValue -Name Style
-	$string = $style.Replace('%Time%',$Message.Timestamp.ToString('HH:mm:ss.fff')).Replace('%Date%',$Message.Timestamp.ToString('yyyy-MM-dd')).Replace('%Level%', $Message.Level).Replace('%Module%', $Message.ModuleName).Replace('%FunctionName%', $Message.FunctionName).Replace('%Line%', $Message.Line).Replace('%File%', $Message.Line).Replace('%Tags%', ($Message.Tags -join ",")).Replace('%Message%', $Message.LogMessage)
+	$string = $style.Replace('%Time%',$Message.Timestamp.ToString('HH:mm:ss.fff')).Replace('%Date%',$Message.Timestamp.ToString('yyyy-MM-dd')).Replace('%Level%', $Message.Level).Replace('%Module%', $Message.ModuleName).Replace('%FunctionName%', $Message.FunctionName).Replace('%Line%', $Message.Line).Replace('%File%', $Message.File).Replace('%Tags%', ($Message.Tags -join ",")).Replace('%Message%', $Message.LogMessage)
 	[System.Console]::WriteLine($string)
 }
 
