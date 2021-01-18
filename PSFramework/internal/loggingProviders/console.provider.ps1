@@ -8,7 +8,7 @@
 }
 
 $configuration_Settings = {
-	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Console.Style' -Description 'The style in which the message is printed. Supports several placeholders: %Message%, %Time%, %Date%, %Tags%, %Level%, %Module%, %FunctionName%, %Line%, %File%. Supports newline and tabs.'
+	Set-PSFConfig -Module 'PSFramework' -Name 'Logging.Console.Style' -Value '%Message%' -Initialize -Validation string -Description 'The style in which the message is printed. Supports several placeholders: %Message%, %Time%, %Date%, %Tags%, %Level%, %Module%, %FunctionName%, %Line%, %File%. Supports newline and tabs.'
 }
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "console"
