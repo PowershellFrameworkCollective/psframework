@@ -1,6 +1,11 @@
 ﻿# CHANGELOG
 
-## 1.5.168 : 2021.01.17
+## 1.5.170 : 2021-01-17
+
+- Fix: LoggingProvider console - error initializing configuration
+- Fix: LoggingProvider console - fails to properly insert the file into the message
+
+## 1.5.168 : 2021-01-17
 
 - New: Command Add-PSFLoggingProviderRunspace : Adds a runspace to the list of included runspaces on a logging provider instance
 - New: Command Remove-PSFLoggingProviderRunspace : Removes a runspace from the list of included runspaces on a logging provider instance
