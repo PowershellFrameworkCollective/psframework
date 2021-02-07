@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.5.171 : 2021-02-07
+
+- Upd: LoggingProvider azureloganalytics - added Tags & Data properties to uploaded data
+
 ## 1.5.170 : 2021-01-17
 
 - Fix: LoggingProvider console - error initializing configuration
