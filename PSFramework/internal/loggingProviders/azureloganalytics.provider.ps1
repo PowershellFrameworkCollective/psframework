@@ -1,6 +1,6 @@
 ﻿
 $FunctionDefinitions = {
-    Function Export-DataToAzure {
+	function Export-DataToAzure {
         <#
         .SYNOPSIS
             Function to send logging data to an Azure Workspace
@@ -8,11 +8,11 @@ $FunctionDefinitions = {
         .DESCRIPTION
             This function is the main function that takes a PSFMessage object to log in an Azure workspace via Rest API call.
 
-        .PARAMETER ObjectToProcess
+        .PARAMETER Message
             This is a PSFMessage object that will be converted to serialized to Json injected to an Azure workspace
 
         .EXAMPLE
-            Export-DataToAzure $objectToProcess
+            Export-DataToAzure -Message $objectToProcess
 
         .NOTES
             # Adapted from https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-data-collector-api
@@ -39,97 +39,99 @@ $FunctionDefinitions = {
             -----------------------------
             Set-PSFLoggingProvider -Name AzureLogAnalytics -InstanceName YourInstanceName -WorkspaceId "AzureWorkspaceId" -SharedKey "AzureWorkspaceSharedKey" -LogType "Message" -enabled $True
         #>
-
-        [cmdletbinding()]
-        Param(
-            [parameter(Mandatory = $True)]
-            $ObjectToProcess
-        )
-
-        begin {
-            # Grab the default configuration values for the logging provider
-            $WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
-            $SharedKey = Get-ConfigValue -Name 'SharedKey'
-            $LogType = Get-ConfigValue -Name 'LogType'
-        }
-
-        process {
-            # Create a custom PSObject and convert it to a Json object using UTF8 encoding
-            $loggingMessage = [PSCustomObject]@{
-                Message      = $ObjectToProcess.LogMessage
-                Timestamp    = $ObjectToProcess.TimeStamp.ToUniversalTime()
-                Level        = $ObjectToProcess.Level.ToString()
-                ComputerName = $ObjectToProcess.ComputerName
-                Runspace     = $ObjectToProcess.Runspace
-                UserName     = $ObjectToProcess.UserName
-                ModuleName   = $ObjectToProcess.ModuleName
-                FunctionName = $ObjectToProcess.FunctionName
-                File         = $ObjectToProcess.File
-                CallStack    = $ObjectToProcess.CallStack
-                TargetObject = $ObjectToProcess.TargetObject
-                ErrorRecord  = $ObjectToProcess.ErrorRecord
-            }
-
-            $bodyAsJson = ConvertTo-Json $loggingMessage
-            $body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
-
-            $restMethod = "POST"
-            $restContentType = "application/json"
-            $restResource = "/api/logs"
-            $date = [DateTime]::UtcNow.ToString("r")
-            $contentLength = $body.Length
-
-            $signatureArgs = @{
-                WorkspaceID     = $WorkspaceID
-                SharedKey       = $SharedKey
-                DateAndTime     = $date
-                ContentLength   = $contentLength
-                RestMethod      = $restMethod
-                RestContentType = $restContentType
-                RestResource    = $restResource
-            }
-
-            # Generate a signature needed to gain access to the Azure workspace
-            $signature = Get-LogSignature @signatureArgs
-
-            # RestAPI headers
-            $headers = @{
-                "Authorization"        = $signature
-                "Log-Type"             = $logType
-                "x-ms-date"            = $date
-                "time-generated-field" = "TimeStamp"
-            }
-
-            try {
-                $uri = "https://$($WorkspaceID).ods.opinsights.azure.com$($restResource)?api-version=2016-04-01"
-                $webResponse = Invoke-WebRequest -Uri $uri -Method $restMethod -ContentType $restContentType -Headers $headers -Body $body -UseBasicParsing
-                switch ($webResponse.StatusCode) {
-                    '400' {
-                        switch ($webResponse.StatusDescription) {
-                            'InactiveCustomer' { throw "Sucessful Post to Azure Workspace" }
-                            'InvalidApiVersion' { throw "The API version that you specified was not recognized by the service." }
-                            'InvalidCustomerId' { throw "The workspace ID specified is invalid." }
-                            'InvalidDataFormat' { throw "Invalid JSON was submitted. The response body might contain more information about how to resolve the error." }
-                            'InvalidLogType' { throw "The log type specified contained special characters or numerics." }
-                            'MissingApiVersion' { throw "The API version wasn’t specified." }
-                            'MissingContentType' { throw "The content type wasn’t specified." }
-                            'MissingLogType' { throw "The required value log type wasn’t specified." }
-                            'UnsupportedContentType' { throw "The content type was not set to application/json." }
-                        }
-                    }
-
-                    '403' { throw "The service failed to authenticate the request. Verify that the workspace ID and connection key are valid." }
-                    '404' { throw "Either the URL provided is incorrect, or the request is too large." }
-                    '429' { throw "The service is experiencing a high volume of data from your account. Please retry the request later." }
-                    '500' { throw "The service encountered an internal error. Please retry the request." }
-                    '503' { throw "The service currently is unavailable to receive requests. Please retry your request." }
-                }
-            }
-            catch { throw }
-        }
-    }
-
-    Function Get-LogSignature {
+		
+		[cmdletbinding()]
+		param (
+			[parameter(Mandatory = $True)]
+			$Message
+		)
+		
+		begin {
+			# Grab the default configuration values for the logging provider
+			$WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
+			$SharedKey = Get-ConfigValue -Name 'SharedKey'
+			$LogType = Get-ConfigValue -Name 'LogType'
+		}
+		
+		process {
+			# Create a custom PSObject and convert it to a Json object using UTF8 encoding
+			$loggingMessage = [PSCustomObject][ordered]@{
+				Message = $Message.LogMessage
+				Timestamp = $Message.TimeStamp.ToUniversalTime()
+				Level   = $Message.Level.ToString()
+				Tags    = $Message.Tags
+				Data = $Message.Data
+				ComputerName = $Message.ComputerName
+				Runspace = $Message.Runspace
+				UserName = $Message.UserName
+				ModuleName = $Message.ModuleName
+				FunctionName = $Message.FunctionName
+				File    = $Message.File
+				CallStack = $Message.CallStack
+				TargetObject = $Message.TargetObject
+				ErrorRecord = $Message.ErrorRecord
+			}
+			
+			$bodyAsJson = ConvertTo-Json $loggingMessage
+			$body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
+			
+			$restMethod = "POST"
+			$restContentType = "application/json"
+			$restResource = "/api/logs"
+			$date = [DateTime]::UtcNow.ToString("r")
+			$contentLength = $body.Length
+			
+			$signatureArgs = @{
+				WorkspaceID	    = $WorkspaceID
+				SharedKey	    = $SharedKey
+				DateAndTime	    = $date
+				ContentLength   = $contentLength
+				RestMethod	    = $restMethod
+				RestContentType = $restContentType
+				RestResource    = $restResource
+			}
+			
+			# Generate a signature needed to gain access to the Azure workspace
+			$signature = Get-LogSignature @signatureArgs
+			
+			# RestAPI headers
+			$headers = @{
+				"Authorization"	       = $signature
+				"Log-Type"			   = $logType
+				"x-ms-date"		       = $date
+				"time-generated-field" = "TimeStamp"
+			}
+			
+			try {
+				$uri = "https://$($WorkspaceID).ods.opinsights.azure.com$($restResource)?api-version=2016-04-01"
+				$webResponse = Invoke-WebRequest -Uri $uri -Method $restMethod -ContentType $restContentType -Headers $headers -Body $body -UseBasicParsing
+				switch ($webResponse.StatusCode) {
+					'400' {
+						switch ($webResponse.StatusDescription) {
+							'InactiveCustomer' { throw "Sucessful Post to Azure Workspace" }
+							'InvalidApiVersion' { throw "The API version that you specified was not recognized by the service." }
+							'InvalidCustomerId' { throw "The workspace ID specified is invalid." }
+							'InvalidDataFormat' { throw "Invalid JSON was submitted. The response body might contain more information about how to resolve the error." }
+							'InvalidLogType' { throw "The log type specified contained special characters or numerics." }
+							'MissingApiVersion' { throw "The API version wasn't specified." }
+							'MissingContentType' { throw "The content type wasn't specified." }
+							'MissingLogType' { throw "The required value log type wasn't specified." }
+							'UnsupportedContentType' { throw "The content type was not set to application/json." }
+						}
+					}
+					
+					'403' { throw "The service failed to authenticate the request. Verify that the workspace ID and connection key are valid." }
+					'404' { throw "Either the URL provided is incorrect, or the request is too large." }
+					'429' { throw "The service is experiencing a high volume of data from your account. Please retry the request later." }
+					'500' { throw "The service encountered an internal error. Please retry the request." }
+					'503' { throw "The service currently is unavailable to receive requests. Please retry your request." }
+				}
+			}
+			catch { throw }
+		}
+	}
+	
+	function Get-LogSignature {
         <#
     .SYNOPSIS
         Function for computing a signature to connect to the Azure workspace
@@ -144,7 +146,7 @@ $FunctionDefinitions = {
         This is the Azure workspace shared key.
 
     .PARAMETER DateAndTime
-        The name of a field in the data that contains the timestamp of the data item. If you specify a field then its contents are used for TimeGenerated. If this field isn’t specified, the default for TimeGenerated is the time that the message is ingested. The contents of the message field should follow the ISO 8601 format YYYY-MM-DDThh:mm:ssZ.
+        The name of a field in the data that contains the timestamp of the data item. If you specify a field then its contents are used for TimeGenerated. If this field isn't specified, the default for TimeGenerated is the time that the message is ingested. The contents of the message field should follow the ISO 8601 format YYYY-MM-DDThh:mm:ssZ.
 
     .PARAMETER ContentLength
         The content length of the object being injected to the Azure workspace table
@@ -165,63 +167,69 @@ $FunctionDefinitions = {
         Any request to the Log analytics HTTP Data Collector API must include the Authorization header.
         To authenticate a request, you must sign the request with either the primary or secondary key for the workspace that is making the request and pass that signature as part of the request.
     #>
-
-        [cmdletbinding()]
-        Param (
-            $WorkspaceID,
-            $SharedKey,
-            $DateAndTime,
-            $ContentLength,
-            $RestMethod,
-            $RestContentType,
-            $RestResource
-        )
-
-        process {
-            $xHeaders = "x-ms-date:" + $DateAndTime
-            $stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
-            $bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
-            $keyBytes = [Convert]::FromBase64String($sharedKey)
-            $sha256 = New-Object System.Security.Cryptography.HMACSHA256
-            $sha256.Key = $keyBytes
-            $computedHash = $sha256.ComputeHash($bytesToHash)
-            $encodedHash = [Convert]::ToBase64String($computedHash)
-            $authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
-            return $authorization
-        }
-    }
+		
+		[cmdletbinding()]
+		param (
+			$WorkspaceID,
+			
+			$SharedKey,
+			
+			$DateAndTime,
+			
+			$ContentLength,
+			
+			$RestMethod,
+			
+			$RestContentType,
+			
+			$RestResource
+		)
+		
+		process {
+			$xHeaders = "x-ms-date:" + $DateAndTime
+			$stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
+			$bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
+			$keyBytes = [Convert]::FromBase64String($sharedKey)
+			$sha256 = New-Object System.Security.Cryptography.HMACSHA256
+			$sha256.Key = $keyBytes
+			$computedHash = $sha256.ComputeHash($bytesToHash)
+			$encodedHash = [Convert]::ToBase64String($computedHash)
+			$authorization = 'SharedKey {0}:{1}' -f $WorkspaceID, $encodedHash
+			return $authorization
+		}
+	}
 }
 
 #region Events
 $message_event = {
-    param (
-        $Message
-    )
-
-    Export-DataToAzure -ObjectToProcess $Message
+	param (
+		$Message
+	)
+	
+	Export-DataToAzure -Message $Message
 }
 #endregion Events
 
 # Configuration values for the logging provider
 $configuration_Settings = {
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'string' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'string' -Description "SharedId for the Azure Workspace we are logging our data objects to."
-    Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'string' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'string' -Description "SharedId for the Azure Workspace we are logging our data objects to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
 }
 
 # Registered parameters for the logging provider.
 # ConfigurationDefaultValues are used for all instances of the azure logging provider
 $paramRegisterPSFAzureLogAnalyticsProvider = @{
-    Name                       = "AzureLogAnalytics"
-    Version2                   = $true
-    ConfigurationRoot          = 'PSFramework.Logging.AzureLogAnalytics'
-    InstanceProperties         = 'WorkspaceId', 'SharedKey', 'LogType'
-    MessageEvent               = $message_Event
-    ConfigurationSettings      = $configuration_Settings
-    FunctionDefinitions        = $functionDefinitions
-    ConfigurationDefaultValues = @{
-        LogType = 'Message'
-    }
+	Name			   = "AzureLogAnalytics"
+	Version2		   = $true
+	ConfigurationRoot  = 'PSFramework.Logging.AzureLogAnalytics'
+	InstanceProperties = 'WorkspaceId', 'SharedKey', 'LogType'
+	MessageEvent	   = $message_Event
+	ConfigurationSettings = $configuration_Settings
+	FunctionDefinitions = $functionDefinitions
+	ConfigurationDefaultValues = @{
+		LogType = 'Message'
+	}
 }
 
 # Register the Azure logging provider
