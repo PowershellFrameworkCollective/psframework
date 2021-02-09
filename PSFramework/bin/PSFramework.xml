@@ -6249,6 +6249,50 @@
             </summary>
             <param name="a">The size to convert</param>
         </member>
+        <member name="T:PSFramework.Utility.PsfException">
+            <summary>
+            Simple wrapper around Exception to integrate the PSFramework localization feature.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.PsfException.String">
+            <summary>
+            The full string representing the message
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.PsfException.StringValues">
+            <summary>
+            Any values to format into the message string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.PsfException.CallStack">
+            <summary>
+            The script callstack at the time this exception was generated.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.PsfException.Message">
+            <summary>
+            The localized message to show
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.PsfException.#ctor">
+            <summary>
+            Create an empty eception
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.PsfException.#ctor(System.String)">
+            <summary>
+            Create a simple exception including a message string
+            </summary>
+            <param name="String">The string representing the message</param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfException.#ctor(System.String,System.Exception,System.Object[])">
+            <summary>
+            Create a full exception object with all metadata
+            </summary>
+            <param name="String">The string representing the message</param>
+            <param name="InnerException">An inner exception to pass through</param>
+            <param name="StringValues">Any values to format into the message</param>
+        </member>
         <member name="T:PSFramework.Utility.PsfScriptBlock">
             <summary>
             Wrapper class around the traditional scriptblock class, extending its capabilities
@@ -7097,6 +7141,11 @@
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.UtilityHost.FriendlyCallstack">
+            <summary>
+            Returns a user-friendly callstack representation that is a snapshot in time.
             </summary>
         </member>
         <member name="P:PSFramework.Utility.UtilityHost._CallstackNew">

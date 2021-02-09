@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.5.172 : 2021-02-09
+
+- Fix: Write-PSFMessageProxy - fails with "Cannot overwrite variable" when writing to host
+
 ## 1.5.171 : 2021-02-07
 
 - Upd: LoggingProvider azureloganalytics - added Tags & Data properties to uploaded data
