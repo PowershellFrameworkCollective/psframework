@@ -217,10 +217,10 @@ namespace PSFramework.Commands
         /// Scriptblock that writes the host messages
         /// </summary>
         private static string _writeHostScript = @"
-param ( $___psframework__string, $NoNewLine )
+param ( $___psframework__string, $___psframework__NoNewLine )
 
-if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
-else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore -NoNewLine:$NoNewLine }
+if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore -NoNewLine:$___psframework__NoNewLine }
+else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore -NoNewLine:$___psframework__NoNewLine }
 ";
 
         /// <summary>
