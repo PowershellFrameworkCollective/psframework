@@ -49,16 +49,30 @@ namespace PSFramework.Utility
         public DateTime LastRetrieved { get; private set; }
 
         /// <summary>
+        /// A list of tags so the scriptblock can be found
+        /// </summary>
+        public List<string> Tag {get; set;}
+
+        /// <summary>
+        /// Full-text description of the scriptblock
+        /// </summary>
+        public string Description {get; set;}
+
+        /// <summary>
         /// Create a new scriptblock item by offering both name and code
         /// </summary>
         /// <param name="Name">The name of the scriptblock</param>
         /// <param name="ScriptBlock">The scriptblock</param>
         /// <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
-        public ScriptBlockItem(string Name, ScriptBlock ScriptBlock, bool Global = false)
+        /// <param name="Tag">An optional list of tags</param>
+        /// <param name="Description">An optional description</param>
+        public ScriptBlockItem(string Name, ScriptBlock ScriptBlock, bool Global = false, List<string> Tag = null, string Description = "")
         {
             this.Name = Name;
             this.ScriptBlock = ScriptBlock;
             this.Global = Global;
+            this.Tag = null == Tag ? new List<string>() : Tag;
+            this.Description = Description;
         }
     }
 }
