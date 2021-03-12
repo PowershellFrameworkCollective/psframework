@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Set-PSFScriptblock - added ability to specify tags & description to scriptblocks (@nyanhp ; #457)
+- Upd: Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
+
 ## 1.5.172 : 2021-02-09
 
 - Fix: Write-PSFMessageProxy - fails with "Cannot overwrite variable" when writing to host
