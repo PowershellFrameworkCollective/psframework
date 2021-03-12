@@ -70,7 +70,7 @@
 		{
 			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Scriptblock = $Scriptblock
 			if ($Global.IsPresent) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Global = $Global }
-			if (null -ne $Tag) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Tag = $Tag }
+			if ($null -ne $Tag) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Tag = $Tag }
 			if (-not [string]::IsNullOrWhiteSpace($Description)) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Description = $Description }
 		}
 		else
