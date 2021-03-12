@@ -6523,13 +6523,25 @@
             When the scriptblock has last been used
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+        <member name="P:PSFramework.Utility.ScriptBlockItem.Tag">
+            <summary>
+            A list of tags so the scriptblock can be found
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ScriptBlockItem.Description">
+            <summary>
+            Full-text description of the scriptblock
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean,System.Collections.Generic.List{System.String},System.String)">
             <summary>
             Create a new scriptblock item by offering both name and code
             </summary>
             <param name="Name">The name of the scriptblock</param>
             <param name="ScriptBlock">The scriptblock</param>
             <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
+            <param name="Tag">An optional list of tags</param>
+            <param name="Description">An optional description</param>
         </member>
         <member name="T:PSFramework.Utility.Size">
             <summary>
