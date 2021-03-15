@@ -28,6 +28,7 @@ $exceptions['LegalSurplus'] = @(
 	'Assembly.Validation.LanguageMode.BadMode'
 	'Assembly.Validation.LanguageMode.NotAScriptBlock'
 	'Assembly.Validation.UntrustedData'
+	'Assembly.Validation.ScriptBlock.IsNull'
 	'Clear-PSFResultCache.Clear'
 	'Configuration_ValidateLanguage'
 	'Configuration.Remove-PSFConfig.ShouldRemove'
