@@ -25,4 +25,5 @@
 	'Assembly.Validation.UntrustedData'						       = 'This data has been flagged as untrustworthy: {0}!'
 	'Assembly.Validation.LanguageMode.NotAScriptBlock'			   = 'The specified input was not detected as a scriptblock: {0}. Can only validate scriptblocks!'
 	'Assembly.Validation.LanguageMode.BadMode'					   = 'The specified script is in language mode {1} when only {0} is allowed.'
+	'Assembly.Validation.ScriptBlock.IsNull'					   = 'No validation scriptblock found!'
 }

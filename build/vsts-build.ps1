@@ -101,13 +101,33 @@ if ($AutoVersion)
 }
 #endregion Updating the Module Version
 
+#region Consolidate Language Files
+foreach ($language in 'en-US') {
+	$localization = @{ }
+	foreach ($languageFile in Get-ChildItem -Path "$($publishDir.FullName)\PSFramework\$language\*.psd1") {
+		$localization += Import-PowerShellDataFile -Path $languageFile.FullName
+	}
+	Remove-Item "$($publishDir.FullName)\PSFramework\$language\*.psd1"
+	
+	$wrapper = @'
+@{{
+{0}
+}}
+'@
+	$lines = foreach ($key in $localization.Keys | Sort-Object) {
+		"`t'{0}' = '{1}'" -f $key, ($localization[$key] -replace "'", "''")
+	}
+	$text = $wrapper -f ($lines -join "`n")
+	$encoding = [System.Text.UTF8Encoding]::new($true)
+	[System.IO.File]::WriteAllText("$($publishDir.FullName)\PSFramework\$language\strings.psd1", $text, $encoding)
+}
+#endregion Consolidate Language Files
+
 #region Publish
 if ($SkipPublish) { return }
 if ($LocalRepo)
 {
 	# Dependencies must go first
-	Write-Host "Creating Nuget Package for module: PSFramework"
-	New-PSMDModuleNugetPackage -ModulePath (Get-Module -Name PSFramework).ModuleBase -PackagePath .
 	Write-Host "Creating Nuget Package for module: PSFramework"
 	New-PSMDModuleNugetPackage -ModulePath "$($publishDir.FullName)\PSFramework" -PackagePath .
 }
