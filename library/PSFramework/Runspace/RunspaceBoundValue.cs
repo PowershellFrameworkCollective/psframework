@@ -14,7 +14,7 @@ namespace PSFramework.Runspace
     public class RunspaceBoundValue : IDisposable
     {
         /// <summary>
-        /// Whether the defautl value should be offered when asking from a runspace without custom settings
+        /// Whether the default value should be offered when asking from a runspace without custom settings
         /// </summary>
         public bool OfferDefaultValue = true;
 

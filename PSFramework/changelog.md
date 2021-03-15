@@ -2,8 +2,11 @@
 
 ## ???
 
-- Upd: Set-PSFScriptblock - added ability to specify tags & description to scriptblocks (@nyanhp ; #457)
-- Upd: Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
+- Upd: Command Set-PSFScriptblock - added ability to specify tags & description to scriptblocks (@nyanhp ; #457)
+- Upd: Command Set-PSFScriptblock - added parameter "-Local" to enable runspace-local scriptblock definition.
+- Upd: Command Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
+- Upd: Type ScriptBlockItem - added invocation methods for rich scriptblock-invocation
+- Fix: Command Set-PSFScriptblock - fails to set global to false on existing scriptblock
 
 ## 1.5.172 : 2021-02-09
 

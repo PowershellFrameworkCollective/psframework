@@ -47,6 +47,15 @@ namespace PSFramework.Runspace
             _Timer.Enabled = true;
         }
 
+        /// <summary>
+        /// Stops the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+        /// Should only be called when destroying the primary runspace.
+        /// </summary>
+        internal static void StopRbvTimer()
+        {
+            _Timer.Stop();
+        }
+
         private static void CleanupRunspaceBoundVariables(Object source, ElapsedEventArgs e)
         {
             foreach (RunspaceBoundValue value in _RunspaceBoundValues)

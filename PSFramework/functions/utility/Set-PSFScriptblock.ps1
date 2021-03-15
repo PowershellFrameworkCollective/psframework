@@ -21,6 +21,10 @@
 	.PARAMETER Global
 		Whether the scriptblock should be invoked in the global context.
 		If defined, accessing the scriptblock will automatically globalize it before returning it.
+	
+	.PARAMETER Local
+		Whether the scriptblock should be local to the current runspace.
+		If defined, each runspace must define its own instance of the scriptblock to use it.
 
 	.PARAMETER Tag
 		A list of tags to apply to a scriptblock. Used for easier filtering.
@@ -57,10 +61,15 @@
 		
 		[switch]
 		$Global,
-
+		
+		[switch]
+		$Local,
+		
+		[AllowEmptyCollection()]
 		[string[]]
 		$Tag,
-
+		
+		[AllowEmptyString()]
 		[string]
 		$Description
 	)
@@ -69,13 +78,14 @@
 		if ([PSFramework.Utility.UtilityHost]::ScriptBlocks.ContainsKey($Name))
 		{
 			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Scriptblock = $Scriptblock
-			if ($Global.IsPresent) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Global = $Global }
+			if (Test-PSFParameterBinding -ParameterName Global -BoundParameters $PSBoundParameters) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Global = $Global }
+			if (Test-PSFParameterBinding -ParameterName Local -BoundParameters $PSBoundParameters) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Local = $Local }
 			if ($null -ne $Tag) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Tag = $Tag }
-			if (-not [string]::IsNullOrWhiteSpace($Description)) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Description = $Description }
+			if (Test-PSFParameterBinding -ParameterName Description -BoundParameters $PSBoundParameters) { [PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name].Description = $Description }
 		}
 		else
 		{
-			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name] = New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock, $Global, $Tag, $Description)
+			[PSFramework.Utility.UtilityHost]::ScriptBlocks[$Name] = New-Object PSFramework.Utility.ScriptBlockItem($Name, $Scriptblock, $Global, $Local, $Tag, $Description)
 		}
 	}
 }

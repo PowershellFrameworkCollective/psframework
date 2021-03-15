@@ -25,6 +25,9 @@
 		Filter scriptblocks by their description using wildcard characters.
 		This can be further filtered by using a wildcard supporting string as -Name.
 	
+	.PARAMETER Container
+		Return the scriptblock container item rather than the scriptblock directly.
+	
 	.EXAMPLE
 		PS C:\> Get-PSFScriptblock -Name 'MyModule.TestServer'
 	
@@ -52,32 +55,36 @@
 		Returns scriptblock and meta information for all script blocks containing the
 		description '*Infrastructure Script*'.
 #>
-	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'Tag')]
-	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'Description')]
-	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'List')]
+	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'Search')]
+	[OutputType([PSFramework.Utility.ScriptBlockItem], ParameterSetName = 'Container')]
 	[OutputType([System.Management.Automation.ScriptBlock], ParameterSetName = 'Name')]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidDefaultValueForMandatoryParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Name')]
 	param (
-		[Parameter(ParameterSetName = 'List')]
-		[Parameter(ParameterSetName = 'Tag')]
-		[Parameter(ParameterSetName = 'Description')]
-		[Parameter(Mandatory = $true, ParameterSetName = 'Name', ValueFromPipeline = $true)]
+		[PsfArgumentCompleter('PSFramework.Utility.Scriptblock.Name')]
+		[Parameter(ParameterSetName = 'Search', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Name', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Container', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string[]]
 		$Name = '*',
 		
-		[Parameter(Mandatory = $true, ParameterSetName = 'List')]
+		[Parameter(ParameterSetName = 'Search')]
 		[switch]
 		$List,
 
-		[Parameter(Mandatory = $true, ParameterSetName = 'Description')]
+		[Parameter(ParameterSetName = 'Search')]
 		[string]
 		$Description,
-
-		[Parameter(Mandatory = $true, ParameterSetName = 'Tag')]
+		
+		[PsfArgumentCompleter('PSFramework.Utility.Scriptblock.Tag')]
+		[Parameter(ParameterSetName = 'Search')]
 		[string[]]
-		$Tag
+		$Tag,
+		
+		[Parameter(ParameterSetName = 'Container')]
+		[switch]
+		$Container
 	)
 	
 	begin
@@ -89,49 +96,44 @@
 	{
 		:main foreach ($nameText in $Name)
 		{
-			switch ($PSCmdlet.ParameterSetName)
-			{
-				'Name'
+			switch ($PSCmdlet.ParameterSetName) {
+				#region Retrieve by name
+				{ 'Name', 'Container' -contains $_ }
 				{
 					if ($sent -contains $nameText) { continue main }
 					$null = $sent.Add($nameText)
-					[PSFramework.Utility.UtilityHost]::ScriptBlocks[$nameText].ScriptBlock
+					$scriptBlock = [PSFramework.Utility.UtilityHost]::ScriptBlocks[$nameText]
+					if (-not $scriptBlock) { continue main }
+					# If not available in the current runspace, skip it
+					if (-not $scriptBlock.IsAvailable()) { continue main }
+					if ($Container) { $scriptBlock }
+					else { $scriptBlock.ScriptBlock }
 				}
-				'List'
+				#endregion Retrieve by name
+				#region Search by filters
+				'Search'
 				{
-					foreach ($item in $allItems)
-					{
+					foreach ($item in $allItems) {
+						# If not available in the current runspace, skip it
+						if (-not $item.IsAvailable()) { continue }
+						
 						if ($item.Name -notlike $nameText) { continue }
 						if ($sent -contains $item.Name) { continue }
-						$null = $sent.Add($item.Name)
-						$item
-					}
-				}
-				'Tag'
-				{
-					foreach ($t in $Tag)
-					{
-						foreach ($item in $allItems)
-						{
-							if ($item.Name -notlike $nameText) { continue }
-							if ($item.Tag -notcontains $t) { continue }
-							if ($sent -contains $item.Name) { continue }
-							$null = $sent.Add($item.Name)
-							$item
+						
+						if ($Tag) {
+							$found = $false
+							foreach ($tagString in $Tag) {
+								if ($item.Tag -contains $tagString) { $found = $true }
+							}
+							if (-not $found) { continue }
 						}
-					}
-				}
-				'Description'
-				{
-					foreach ($item in $allItems)
-					{
-						if ($item.Name -notlike $nameText) { continue }
-						if ($item.Description -notlike $Description) { continue }
-						if ($sent -contains $item.Name) { continue }
+						if ($Description -and $item.Description -notlike $Description) { continue }
+						
 						$null = $sent.Add($item.Name)
 						$item
 					}
 				}
+				#endregion Search by filters
 			}
 		}
 	}

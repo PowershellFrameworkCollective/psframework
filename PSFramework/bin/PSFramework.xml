@@ -4943,7 +4943,7 @@
         </member>
         <member name="F:PSFramework.Runspace.RunspaceBoundValue.OfferDefaultValue">
             <summary>
-            Whether the defautl value should be offered when asking from a runspace without custom settings
+            Whether the default value should be offered when asking from a runspace without custom settings
             </summary>
         </member>
         <member name="F:PSFramework.Runspace.RunspaceBoundValue.DefaultValue">
@@ -5111,6 +5111,12 @@
         <member name="M:PSFramework.Runspace.RunspaceHost.StartRbvTimer">
             <summary>
             Starts the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.StopRbvTimer">
+            <summary>
+            Stops the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+            Should only be called when destroying the primary runspace.
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -6508,9 +6514,22 @@
             The scriptblock stored
             </summary>
         </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.IsAvailable">
+            <summary>
+            Checks, whether the scriptblock is available in a given runspace.
+            </summary>
+            <returns>whether the scriptblock is available in the current runspace</returns>
+        </member>
         <member name="F:PSFramework.Utility.ScriptBlockItem.Global">
             <summary>
             Whether the scriptblock should be invoked as global scriptblock
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptBlockItem.Local">
+            <summary>
+            Whether the scriptblock is local to its respective runspace.
+            If set to true, each scriptblock will be unavailable to any runspace other than the one that defined it.
+            However, each runspace can define its own instance of a given scriptblock.
             </summary>
         </member>
         <member name="P:PSFramework.Utility.ScriptBlockItem.CountRetrieved">
@@ -6533,15 +6552,62 @@
             Full-text description of the scriptblock
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean,System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String},System.String)">
             <summary>
             Create a new scriptblock item by offering both name and code
             </summary>
             <param name="Name">The name of the scriptblock</param>
             <param name="ScriptBlock">The scriptblock</param>
             <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
+            <param name="Local">Whether the scriptblock is local to the current runspace only</param>
             <param name="Tag">An optional list of tags</param>
             <param name="Description">An optional description</param>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeGlobal(System.Object)">
+            <summary>
+            Invoke the Scriptblock rehomed to the global scope
+            </summary>
+            <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.Invoke(System.Object[])">
+            <summary>
+            Invoke the Scriptblock as configured
+            </summary>
+            <param name="args">The value - if any - to offer as argument for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Boolean,System.Object,System.Object,System.Object,System.Boolean,System.Boolean,System.Object[])">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Object,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="Value">The value to offer as argument / input for the scriptblock</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
         </member>
         <member name="T:PSFramework.Utility.Size">
             <summary>
