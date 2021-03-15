@@ -77,8 +77,8 @@
 			"Json"
 			{
 				if ($fileExists -and -not $script:JsonSettings.JsonNoComma) { Add-Content -Path $Path -Value "," -Encoding $script:encoding }
-				if (-not $script:JsonSettings) { $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline -Encoding $script:encoding }
-				else { $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline -Encoding $script:encoding }
+				if (-not $script:JsonSettings) { $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline:$(-not $script:JsonSettings.JsonNoComma) -Encoding $script:encoding }
+				else { $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline:$(-not $script:JsonSettings.JsonNoComma) -Encoding $script:encoding }
 			}
 			#endregion Json
 			#region XML

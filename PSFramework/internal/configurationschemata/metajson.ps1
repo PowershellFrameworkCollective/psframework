@@ -53,6 +53,12 @@
 		{
 			$Result["$($moduleName)$(Resolve-V1String -String $property.Name)"] = Resolve-V1String -String $property.Value
 		}
+		foreach ($property in $NodeData.Tree.PSObject.Properties) {
+			Resolve-V1Tree -Property $property -Result $Result -BaseElement @()
+		}
+		foreach ($property in $NodeData.DynamicTree.PSObject.Properties) {
+			Resolve-V1Tree -Property $property -Result $Result -BaseElement @() -Dynamic $true
+		}
 		#endregion Import Resources
 		
 		#region Import included / linked configuration files
@@ -128,6 +134,33 @@
 		}
 		
 		[regex]::Replace($String, $script:envDataNamesRGX, $scriptblock)
+	}
+	
+	function Resolve-V1Tree {
+		[CmdletBinding()]
+		param (
+			$Property,
+			
+			[Hashtable]
+			$Result,
+			
+			[bool]
+			$Dynamic,
+			
+			[AllowEmptyCollection()]
+			[string[]]
+			$BaseElement
+		)
+		
+		if ($Property.TypeNameOfValue -eq 'System.Management.Automation.PSCustomObject') {
+			foreach ($propertyObject in $Property.Value.PSObject.Properties) {
+				Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement (@($BaseElement) + @($Property.Name))
+			}
+			return
+		}
+		$name = (@($BaseElement) + @($Property.Name)) -join "."
+		if ($Dynamic) { $Result[(Resolve-V1String -String $name)] = Resolve-V1String -String $Property.Value }
+		else { $Result[$name] = $Property.Value }
 	}
 	#endregion Utility Function
 	

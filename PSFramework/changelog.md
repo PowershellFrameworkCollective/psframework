@@ -6,7 +6,9 @@
 - Upd: Command Set-PSFScriptblock - added parameter "-Local" to enable runspace-local scriptblock definition.
 - Upd: Command Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
 - Upd: Type ScriptBlockItem - added invocation methods for rich scriptblock-invocation
+- Upd: ConfigurationSchema metaJson - added Tree & DynamicTree nodes for more userfriendly authoring
 - Fix: Command Set-PSFScriptblock - fails to set global to false on existing scriptblock
+- Fix: LoggingProvider logfile - fails to add a new line in json files when specifying the -JsonNoComma option.
 
 ## 1.5.172 : 2021-02-09
 
