@@ -152,15 +152,34 @@
 			$BaseElement
 		)
 		
-		if ($Property.TypeNameOfValue -eq 'System.Management.Automation.PSCustomObject') {
-			foreach ($propertyObject in $Property.Value.PSObject.Properties) {
-				Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement (@($BaseElement) + @($Property.Name))
-			}
+		if ($Property.TypeNameOfValue -ne 'System.Management.Automation.PSCustomObject') {
+			$name = (@($BaseElement) + @($Property.Name)) -join "."
+			if ($Dynamic) { $Result[(Resolve-V1String -String $name)] = Resolve-V1String -String $Property.Value }
+			else { $Result[$name] = $Property.Value }
 			return
 		}
-		$name = (@($BaseElement) + @($Property.Name)) -join "."
-		if ($Dynamic) { $Result[(Resolve-V1String -String $name)] = Resolve-V1String -String $Property.Value }
-		else { $Result[$name] = $Property.Value }
+		
+		if ($Property.Value.'!Condition') {
+			$conditionSet = $null
+			if ($Property.Value.'!ConditionSet') {
+				$module, $name = $Property.Value.'!ConditionSet' -split ' ', 2
+				$conditionSet = Get-PSFFilterConditionSet -Module $module -Name $name | Select-Object -First 1
+			}
+			else {
+				$conditionSet = Get-PSFFilterConditionSet -Module PSFramework -Name Environment
+			}
+			if (-not $conditionSet) { throw "Unable to resolve Condition Set: $($Property.Value.'!ConditionSet')" }
+			$filter = New-PSFFilter -Expression $Property.Value.'!Condition' -ConditionSet $conditionSet
+			if (-not $filter.Evaluate()) { return }
+		}
+		
+		foreach ($propertyObject in $Property.Value.PSObject.Properties) {
+			if ($propertyObject.Name -eq '!Condition') { continue }
+			if ($propertyObject.Name -eq '!ConditionSet') { continue }
+			
+			if ($Property.Value.'!Condition') { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement $BaseElement }
+			else { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement (@($BaseElement) + @($Property.Name)) }
+		}
 	}
 	#endregion Utility Function
 	
