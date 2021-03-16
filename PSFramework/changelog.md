@@ -1,7 +1,8 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.6.181 (2021-03-17)
 
+- New: Component: Filter - adds the ability to define userfriendly, safe filter expression syntaxes
 - Upd: Command Set-PSFScriptblock - added ability to specify tags & description to scriptblocks (@nyanhp ; #457)
 - Upd: Command Set-PSFScriptblock - added parameter "-Local" to enable runspace-local scriptblock definition.
 - Upd: Command Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
