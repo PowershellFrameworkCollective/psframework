@@ -1,20 +1,22 @@
-﻿function Get-PSFFilterCondition
-{
+﻿function Get-PSFFilterCondition {
+	[OutputType([PSFramework.Filter.Condition])]
 	[CmdletBinding()]
 	Param (
-	
+		[string]
+		$Module = '*',
+		
+		[string]
+		$Name = '*',
+		
+		[System.Version]
+		$Version,
+		
+		[switch]
+		$AllVersions
 	)
 	
-	begin
-	{
-		
-	}
 	process
 	{
-	
-	}
-	end
-	{
-	
+		$script:filterContainer.FindCondition($Module, $Name, $Version, $AllVersions)
 	}
 }

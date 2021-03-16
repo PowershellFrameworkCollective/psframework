@@ -7,6 +7,7 @@
 - Upd: Command Get-PSFScriptblock - added ability to search by tags & description (@nyanhp ; #457)
 - Upd: Type ScriptBlockItem - added invocation methods for rich scriptblock-invocation
 - Upd: ConfigurationSchema metaJson - added Tree & DynamicTree nodes for more userfriendly authoring
+- Upd: Module layout - updated build process to improve import speed somewhat
 - Fix: Command Set-PSFScriptblock - fails to set global to false on existing scriptblock
 - Fix: LoggingProvider logfile - fails to add a new line in json files when specifying the -JsonNoComma option.
 

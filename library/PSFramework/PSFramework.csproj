@@ -56,6 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
+    <Compile Include="Filter\Condition.cs" />
+    <Compile Include="Filter\ConditionSet.cs" />
+    <Compile Include="Filter\ConditionSetWrapper.cs" />
+    <Compile Include="Filter\ConditionType.cs" />
+    <Compile Include="Filter\ConditionWrapper.cs" />
+    <Compile Include="Filter\Expression.cs" />
+    <Compile Include="Filter\FilterContainer.cs" />
+    <Compile Include="Filter\ModuleWrapper.cs" />
     <Compile Include="FlowControl\CallbackException.cs" />
     <Compile Include="Commands\ConvertToPSFHashtableCommand.cs" />
     <Compile Include="Commands\InvokePSFProtectedCommand.cs" />
