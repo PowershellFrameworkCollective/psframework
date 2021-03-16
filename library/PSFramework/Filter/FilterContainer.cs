@@ -115,7 +115,7 @@ namespace PSFramework.Filter
 
             List<ConditionSet> conditionSets = new List<ConditionSet>();
             ModuleWrapper module = Content[Module];
-            if (!module.Conditions.ContainsKey(Name))
+            if (!module.ConditionSets.ContainsKey(Name))
                 return null;
             ConditionSetWrapper conditionSetWrapper = module.ConditionSets[Name];
 

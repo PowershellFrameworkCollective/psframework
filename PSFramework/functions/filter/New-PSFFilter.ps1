@@ -52,10 +52,12 @@
 		$ConditionSet,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Name')]
+		[PsfArgumentCompleter('PSFramework.Filter.SetModule')]
 		[string]
 		$SetModule,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Name')]
+		[PsfArgumentCompleter('PSFramework.Filter.SetName')]
 		[string]
 		$SetName
 	)
@@ -70,7 +72,7 @@
 		}
 		if ($ConditionSet) { $conditionSetObject = $ConditionSet }
 		
-		try { New-Object PSFramework.Filter.Expression($Expression, $conditionSetObject) }
-		catch { throw }
+		try { New-Object PSFramework.Filter.Expression($Expression, @($conditionSetObject)[0]) }
+		catch { $PSCmdlet.ThrowTerminatingError($_) }
 	}
 }

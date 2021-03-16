@@ -68,11 +68,13 @@
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'ExpressionName')]
 		[Parameter(ParameterSetName = 'Filter')]
+		[PsfArgumentCompleter('PSFramework.Filter.SetModule')]
 		[string]
 		$SetModule,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'ExpressionName')]
 		[Parameter(ParameterSetName = 'Filter')]
+		[PsfArgumentCompleter('PSFramework.Filter.SetName')]
 		[string]
 		$SetName
 	)

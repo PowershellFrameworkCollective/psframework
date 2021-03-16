@@ -42,6 +42,7 @@
 		$ConditionSet,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Name')]
+		[PsfArgumentCompleter('PSFramework.Filter.SetModule')]
 		[string]
 		$SetModule,
 		
