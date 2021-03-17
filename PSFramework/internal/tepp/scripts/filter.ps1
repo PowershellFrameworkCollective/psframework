@@ -16,5 +16,5 @@ Register-PSFTeppScriptblock -Name "PSFramework.Filter.SetName" -ScriptBlock {
 	$module = '*'
 	if ($fakeBoundParameters.Module) { $module = $fakeBoundParameters.Module }
 	if ($fakeBoundParameters.SetModule) { $module = $fakeBoundParameters.SetModule }
-	(Get-PSFFilterCondition -Module $module).Name | Select-Object -Unique
+	(Get-PSFFilterConditionSet -Module $module).Name | Select-Object -Unique
 } -Global
