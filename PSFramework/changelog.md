@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Command Get-PSFFilterCondition - added parameter `-SetName` to allow searching for filter conditions assigned to a specific Condition Set.
+- Fix: Tab Completion for Filter Condition Set names completes condition names.
+
 ## 1.6.181 (2021-03-17)
 
 - New: Component: Filter - adds the ability to define userfriendly, safe filter expression syntaxes
