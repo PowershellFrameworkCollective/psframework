@@ -1,14 +1,16 @@
 ﻿@{
-	'Validate.FSPath'			   = 'The specified input is not an existing filesystem path: {0}'
-	'Validate.FSPath.File'		   = 'The specified input is not a path to an existing file: {0}'
-	'Validate.FSPath.FileOrParent' = 'The specified input is not a path to an existing file, nor does its parent folder exist: {0}'
-	'Validate.FSPath.Folder'	   = 'The specified input is not a path to an existing folder: {0}'
-	'Validate.Path'			       = 'The specified input is not an existing path: {0}'
-	'Validate.Path.Container'	   = 'The specified input is not an existing container path (e.g: Folder): {0}'
-	'Validate.Path.Leaf'		   = 'The specified input is not an existing leaf path (e.g: File): {0}'
-	'Validate.Uri.Absolute'	       = 'The specified input is not an absolute uri: {0}'
-	'Validate.Uri.Absolute.File'   = 'The specified input is not an absolute uri pointing at a file: {0}'
-	'Validate.Uri.Absolute.Https'  = 'The specified input is not an absolute uri pointing at a weblink (https://...): {0}'
+	'Validate.Filter.ConditionName' = 'Invalid filter name: {0}. Make sure the name specified only consists of numbers, letters and underscores (and equals neither 0 or 1)!'
 	
-	'Validate.TimeSpan.Positive'   = 'The specified input is not a timespan with a value greater than 0: {0}'
+	'Validate.FSPath'			    = 'The specified input is not an existing filesystem path: {0}'
+	'Validate.FSPath.File'		    = 'The specified input is not a path to an existing file: {0}'
+	'Validate.FSPath.FileOrParent'  = 'The specified input is not a path to an existing file, nor does its parent folder exist: {0}'
+	'Validate.FSPath.Folder'	    = 'The specified input is not a path to an existing folder: {0}'
+	'Validate.Path'				    = 'The specified input is not an existing path: {0}'
+	'Validate.Path.Container'	    = 'The specified input is not an existing container path (e.g: Folder): {0}'
+	'Validate.Path.Leaf'		    = 'The specified input is not an existing leaf path (e.g: File): {0}'
+	'Validate.Uri.Absolute'		    = 'The specified input is not an absolute uri: {0}'
+	'Validate.Uri.Absolute.File'    = 'The specified input is not an absolute uri pointing at a file: {0}'
+	'Validate.Uri.Absolute.Https'   = 'The specified input is not an absolute uri pointing at a weblink (https://...): {0}'
+	
+	'Validate.TimeSpan.Positive'    = 'The specified input is not a timespan with a value greater than 0: {0}'
 }

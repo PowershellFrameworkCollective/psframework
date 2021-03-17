@@ -73,5 +73,10 @@ foreach ($file in (Get-ChildItem -Path "$($moduleRoot)\internal\scriptblocks\*.p
 	$file.FullName
 }
 
+# Load Filters
+foreach ($file in (Get-ChildItem -Path "$($moduleRoot)\internal\filter\*.ps1")) {
+	$file.FullName
+}
+
 # Finally register the license
 "$($moduleRoot)\internal\scripts\license.ps1"

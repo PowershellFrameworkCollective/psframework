@@ -9,6 +9,13 @@
 	# Configuration
 	'Assembly.ConfigurationHost.ConfigNotFound'				       = 'The configuration item {0} could not be found in the configuration system'
 	
+	# Filter
+	'Assembly.Filter.InvalidName'								   = 'Invalid filter name: {0}. Make sure the name specified only consists of numbers, letters and underscores (and equals neither 0 or 1)!'
+	'Assembly.Filter.ConditionSet.Required'					       = 'No Condition Set provided! Either permanently assign a set to the expression or specify it as a parameter!'
+	'Assembly.Filter.NoCondition'								   = 'Cannot evaluate a filter expression without any conditions!'
+	'Assembly.Filter.Condition.NotInSet'						   = 'The condition {0} cannot be found in the provided condition set {1}. Conditions included in that set: {2}'
+	'Assembly.Filter.Expression.SyntaxError'					   = 'Error parsing expression! {0}'
+	
 	# Utility
 	'Assembly.Size.ComparisonError'							       = 'Cannot compare a {0} to a {1}'
 	

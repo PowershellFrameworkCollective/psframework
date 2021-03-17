@@ -53,6 +53,12 @@
 		{
 			$Result["$($moduleName)$(Resolve-V1String -String $property.Name)"] = Resolve-V1String -String $property.Value
 		}
+		foreach ($property in $NodeData.Tree.PSObject.Properties) {
+			Resolve-V1Tree -Property $property -Result $Result -BaseElement @()
+		}
+		foreach ($property in $NodeData.DynamicTree.PSObject.Properties) {
+			Resolve-V1Tree -Property $property -Result $Result -BaseElement @() -Dynamic $true
+		}
 		#endregion Import Resources
 		
 		#region Import included / linked configuration files
@@ -128,6 +134,52 @@
 		}
 		
 		[regex]::Replace($String, $script:envDataNamesRGX, $scriptblock)
+	}
+	
+	function Resolve-V1Tree {
+		[CmdletBinding()]
+		param (
+			$Property,
+			
+			[Hashtable]
+			$Result,
+			
+			[bool]
+			$Dynamic,
+			
+			[AllowEmptyCollection()]
+			[string[]]
+			$BaseElement
+		)
+		
+		if ($Property.TypeNameOfValue -ne 'System.Management.Automation.PSCustomObject') {
+			$name = (@($BaseElement) + @($Property.Name)) -join "."
+			if ($Dynamic) { $Result[(Resolve-V1String -String $name)] = Resolve-V1String -String $Property.Value }
+			else { $Result[$name] = $Property.Value }
+			return
+		}
+		
+		if ($Property.Value.'!Condition') {
+			$conditionSet = $null
+			if ($Property.Value.'!ConditionSet') {
+				$module, $name = $Property.Value.'!ConditionSet' -split ' ', 2
+				$conditionSet = Get-PSFFilterConditionSet -Module $module -Name $name | Select-Object -First 1
+			}
+			else {
+				$conditionSet = Get-PSFFilterConditionSet -Module PSFramework -Name Environment
+			}
+			if (-not $conditionSet) { throw "Unable to resolve Condition Set: $($Property.Value.'!ConditionSet')" }
+			$filter = New-PSFFilter -Expression $Property.Value.'!Condition' -ConditionSet $conditionSet
+			if (-not $filter.Evaluate()) { return }
+		}
+		
+		foreach ($propertyObject in $Property.Value.PSObject.Properties) {
+			if ($propertyObject.Name -eq '!Condition') { continue }
+			if ($propertyObject.Name -eq '!ConditionSet') { continue }
+			
+			if ($Property.Value.'!Condition') { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement $BaseElement }
+			else { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement (@($BaseElement) + @($Property.Name)) }
+		}
 	}
 	#endregion Utility Function
 	
