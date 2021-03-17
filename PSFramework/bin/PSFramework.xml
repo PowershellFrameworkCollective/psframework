@@ -994,6 +994,248 @@
             </summary>
             <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
         </member>
+        <member name="T:PSFramework.Filter.Condition">
+            <summary>
+            An individual filter condition.
+            Building block of a PSFramework filter expression.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.Condition.Name">
+            <summary>
+            Name of the condition. The String used within the expression.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.Condition.Module">
+            <summary>
+            Name of the module owning the condition.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.Condition.Version">
+            <summary>
+            Version of the condition. Multiple versions can coexist.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.Condition.ScriptBlock">
+            <summary>
+            The actual script-code that is run when evaluating this condition
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.Condition.Type">
+            <summary>
+            What kind of condition is this?
+            Static conditions are evaluated once only and are generally used for environment-conditions that are unlikely to change at runtime (e.g.: Operating System, PowerShell Version, runtime environment).
+            Dynamic conditions are evaluated each time they are invoked.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Filter.Condition.#ctor(System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Version,PSFramework.Filter.ConditionType)">
+            <summary>
+            Create a new condition.
+            </summary>
+            <param name="Name">Name of the condition</param>
+            <param name="Module">Name of the module owning the condition</param>
+            <param name="ScriptBlock">The scriptblock that evaluates the condition</param>
+            <param name="Version">The version of the condition</param>
+            <param name="Type">The type of the condition</param>
+        </member>
+        <member name="M:PSFramework.Filter.Condition.Invoke(System.Object)">
+            <summary>
+            Evaluate the condition.
+            This will run the stored scriptblock unless it is a static condition and has previously been invoked.
+            </summary>
+            <param name="Argument">An argument to pass to the scriptblock, available inside as $_</param>
+            <returns>Whether the condition is met or not.</returns>
+        </member>
+        <member name="M:PSFramework.Filter.Condition.ToString">
+            <summary>
+            Simple string representation of the condition
+            </summary>
+            <returns>The name of the condition</returns>
+        </member>
+        <member name="T:PSFramework.Filter.ConditionSet">
+            <summary>
+            A set of conditions that can be applied to expressions.
+            A filter expression can only contain conditions defined in the ConditionSet assigned.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.ConditionSet.Name">
+            <summary>
+            Name of the condition set
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.ConditionSet.Module">
+            <summary>
+            The module defining the condition set
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.ConditionSet.Version">
+            <summary>
+            Version of the condition set.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.ConditionSet.Conditions">
+            <summary>
+            Returns the list of conditions included in the set.
+            Mostly for display purposes.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.ConditionSet.ConditionTable">
+            <summary>
+            The conditions contained within the condition set
+            </summary>
+        </member>
+        <member name="M:PSFramework.Filter.ConditionSet.#ctor(System.String,System.String,System.Version,System.Collections.Generic.List{PSFramework.Filter.Condition})">
+            <summary>
+            Create a new condition set
+            </summary>
+            <param name="Name">Name of the set</param>
+            <param name="Module">Module under which the condition set is defined</param>
+            <param name="Version">Version of the set</param>
+            <param name="Conditions">Conditions to include in the set.</param>
+        </member>
+        <member name="M:PSFramework.Filter.ConditionSet.ToString">
+            <summary>
+            Default string representation.
+            </summary>
+            <returns>The name of the condition set</returns>
+        </member>
+        <member name="T:PSFramework.Filter.ConditionType">
+            <summary>
+            What kind of condition is it?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.ConditionType.Static">
+            <summary>
+            The condition is static - its value needs only be processed once.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.ConditionType.Dynamic">
+            <summary>
+            The condition is dynamic - its value may change and should be evaluated each time.
+            May accept arguments.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Filter.Expression">
+            <summary>
+            Stores a filter expression and executes it as needed.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.Expression.ExpressionString">
+            <summary>
+            The filter expression string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Filter.Expression.ConditionSet">
+            <summary>
+            The ConditionSet under which this expression will be executed.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.Expression.Conditions">
+            <summary>
+            Name of the conditions that make up this expression
+            </summary>
+        </member>
+        <member name="M:PSFramework.Filter.Expression.#ctor(System.String,PSFramework.Filter.ConditionSet)">
+            <summary>
+            Create a new expression object based off a filter expression.
+            </summary>
+            <param name="Expression">The filter expression that will be evaluated</param>
+            <param name="ConditionSet">The condition set under which the expression will be evaluated. Every condition used in the expression must be part of this set.</param>
+        </member>
+        <member name="M:PSFramework.Filter.Expression.Evaluate(System.Object,PSFramework.Filter.ConditionSet)">
+            <summary>
+            Evaluates the filter expression.
+            </summary>
+            <param name="Argument">Optional argument, in case the conditions are designed to evaluate a specific object</param>
+            <param name="ConditionSet">Optional argument, in case the ConditionSet was not specified at creation time.</param>
+            <returns>Whether the expression is true or not</returns>
+        </member>
+        <member name="M:PSFramework.Filter.Expression.Clone">
+            <summary>
+            Clones the existing expression
+            </summary>
+            <returns>A clone of the current expression object</returns>
+        </member>
+        <member name="T:PSFramework.Filter.FilterContainer">
+            <summary>
+            A container object designed to hold all the stored conditions and condition sets included in a runspace.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Filter.FilterContainer.Filters">
+            <summary>
+            Returns the filter data for the current runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.FindCondition(System.String,System.String,System.Version,System.Boolean)">
+            <summary>
+            Retrieve registered conditions based on the information provided
+            </summary>
+            <param name="Module">The modulename to filter by.</param>
+            <param name="Name">The condition name to filter by.</param>
+            <param name="Version">The version number to select.</param>
+            <param name="AllVersions">Return all versions of a given condition</param>
+            <returns>All conditions matching the search criteria.</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.GetCondition(System.String,System.String,System.Version,System.Boolean)">
+            <summary>
+            Retrieve registered conditions based on the information provided
+            </summary>
+            <param name="Module">The modulename to filter by.</param>
+            <param name="Name">The condition name to filter by.</param>
+            <param name="Version">The version number to select.</param>
+            <param name="AllVersions">Return all versions of a given condition</param>
+            <returns>All conditions matching the search criteria.</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.FindConditionSet(System.String,System.String,System.Version,System.Boolean)">
+            <summary>
+            Retrieve registered condition sets based on the information provided
+            </summary>
+            <param name="Module">The modulename to filter by.</param>
+            <param name="Name">The conditionset name to filter by.</param>
+            <param name="Version">The version number to select.</param>
+            <param name="AllVersions">Return all versions of a given conditionset</param>
+            <returns>All condition sets matching the search criteria.</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.GetConditionSet(System.String,System.String,System.Version,System.Boolean)">
+            <summary>
+            Retrieve registered condition sets based on the information provided
+            </summary>
+            <param name="Module">The modulename to select.</param>
+            <param name="Name">The condition name to select.</param>
+            <param name="Version">The version number to select.</param>
+            <param name="AllVersions">Return all versions of a given condition</param>
+            <returns>All conditions matching the search criteria.</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.AddCondition(System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Version,PSFramework.Filter.ConditionType)">
+            <summary>
+            Create a new condition.
+            </summary>
+            <param name="Name">Name of the condition</param>
+            <param name="Module">Name of the module owning the condition</param>
+            <param name="ScriptBlock">The scriptblock that evaluates the condition</param>
+            <param name="Version">The version of the condition</param>
+            <param name="Type">The type of the condition</param>
+            <returns>The newly created condition</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.AddConditionSet(System.String,System.String,System.Version,System.Collections.Generic.List{PSFramework.Filter.Condition})">
+            <summary>
+            Create a new condition set
+            </summary>
+            <param name="Name">Name of the set</param>
+            <param name="Module">Module under which the condition set is defined</param>
+            <param name="Version">Version of the set</param>
+            <param name="Conditions">Conditions to include in the set.</param>
+            <returns>The newly created condition set</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.AddConditionSet(System.String,System.String,System.Version,PSFramework.Filter.Condition[])">
+            <summary>
+            Create a new condition set
+            </summary>
+            <param name="Name">Name of the set</param>
+            <param name="Module">Module under which the condition set is defined</param>
+            <param name="Version">Version of the set</param>
+            <param name="Conditions">Conditions to include in the set.</param>
+            <returns>The newly created condition set</returns>
+        </member>
         <member name="T:PSFramework.FlowControl.CallbackException">
             <summary>
             A custom exception, including the callback that failed
@@ -4943,7 +5185,7 @@
         </member>
         <member name="F:PSFramework.Runspace.RunspaceBoundValue.OfferDefaultValue">
             <summary>
-            Whether the defautl value should be offered when asking from a runspace without custom settings
+            Whether the default value should be offered when asking from a runspace without custom settings
             </summary>
         </member>
         <member name="F:PSFramework.Runspace.RunspaceBoundValue.DefaultValue">
@@ -5111,6 +5353,12 @@
         <member name="M:PSFramework.Runspace.RunspaceHost.StartRbvTimer">
             <summary>
             Starts the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.StopRbvTimer">
+            <summary>
+            Stops the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
+            Should only be called when destroying the primary runspace.
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -6508,9 +6756,22 @@
             The scriptblock stored
             </summary>
         </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.IsAvailable">
+            <summary>
+            Checks, whether the scriptblock is available in a given runspace.
+            </summary>
+            <returns>whether the scriptblock is available in the current runspace</returns>
+        </member>
         <member name="F:PSFramework.Utility.ScriptBlockItem.Global">
             <summary>
             Whether the scriptblock should be invoked as global scriptblock
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptBlockItem.Local">
+            <summary>
+            Whether the scriptblock is local to its respective runspace.
+            If set to true, each scriptblock will be unavailable to any runspace other than the one that defined it.
+            However, each runspace can define its own instance of a given scriptblock.
             </summary>
         </member>
         <member name="P:PSFramework.Utility.ScriptBlockItem.CountRetrieved">
@@ -6523,13 +6784,72 @@
             When the scriptblock has last been used
             </summary>
         </member>
-        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+        <member name="P:PSFramework.Utility.ScriptBlockItem.Tag">
+            <summary>
+            A list of tags so the scriptblock can be found
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ScriptBlockItem.Description">
+            <summary>
+            Full-text description of the scriptblock
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String},System.String)">
             <summary>
             Create a new scriptblock item by offering both name and code
             </summary>
             <param name="Name">The name of the scriptblock</param>
             <param name="ScriptBlock">The scriptblock</param>
             <param name="Global">Whether the scriptblock should be invoked as global scriptblock</param>
+            <param name="Local">Whether the scriptblock is local to the current runspace only</param>
+            <param name="Tag">An optional list of tags</param>
+            <param name="Description">An optional description</param>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeGlobal(System.Object)">
+            <summary>
+            Invoke the Scriptblock rehomed to the global scope
+            </summary>
+            <param name="Value">The value - if any - to offer as argument / input for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.Invoke(System.Object[])">
+            <summary>
+            Invoke the Scriptblock as configured
+            </summary>
+            <param name="args">The value - if any - to offer as argument for the scriptblock</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Boolean,System.Object,System.Object,System.Object,System.Boolean,System.Boolean,System.Object[])">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="DollerUnder">The value to make available as $_</param>
+            <param name="Input">The value to make available to $input</param>
+            <param name="ScriptThis">The value to make available as $this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <param name="Args">The value to make available as $args</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptBlockItem.InvokeEx(System.Object,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Do a rich invocation of the scriptblock
+            </summary>
+            <param name="Value">The value to offer as argument / input for the scriptblock</param>
+            <param name="UseLocalScope">Whether a new scope should be created for this</param>
+            <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
+            <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
+            <returns>Whatever output this scriptblock generates</returns>
         </member>
         <member name="T:PSFramework.Utility.Size">
             <summary>

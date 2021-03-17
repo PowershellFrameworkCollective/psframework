@@ -77,7 +77,9 @@ namespace PSFramework.Validation
         protected override void ValidateElement(object element)
         {
             if (element == null)
-                throw new ValidationMetadataException(String.Format(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.Generic.ArgumentIsEmpty", null)));
+                throw new ValidationMetadataException(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.Generic.ArgumentIsEmpty", null));
+            if (ScriptBlock == null)
+                throw new ValidationMetadataException(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.ScriptBlock.IsNull", null));
 
             object result = ScriptBlock.DoInvokeReturnAsIs(true, 2, element, null, null, new object[] { element });
             

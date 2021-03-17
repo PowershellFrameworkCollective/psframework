@@ -55,6 +55,7 @@ namespace PSFramework.PSFCore
                 return;
 
             // De-Initiialization logic goes here
+            Runspace.RunspaceHost.StopRbvTimer();
 
             _Initialized = false;
         }

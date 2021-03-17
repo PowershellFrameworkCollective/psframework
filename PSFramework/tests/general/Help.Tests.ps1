@@ -103,9 +103,8 @@ foreach ($command in $commands) {
 					$parameterHelp.Description.Text | Should -Not -BeNullOrEmpty
 				}
                 
-                $codeMandatory = $parameter.IsMandatory.toString()
-				It "help for $parameterName parameter in $commandName has correct Mandatory value" -TestCases @{ parameterHelp = $parameterHelp; codeMandatory = $codeMandatory } {
-					$parameterHelp.Required | Should -Be $codeMandatory
+                It "help for $parameterName parameter in $commandName has correct Mandatory value" -TestCases @{ parameterHelp = $parameterHelp; parameterName = $parameterName; command = $command } {
+					($parameterHelp.Required -eq "true") | Should -BeIn $command.ParameterSets.parameters.Where{ $_.Name -eq $parameterName }.IsMandatory
 				}
                 
                 if ($HelpTestSkipParameterType[$commandName] -contains $parameterName) { continue }
