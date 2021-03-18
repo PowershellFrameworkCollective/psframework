@@ -53,13 +53,9 @@
 	
 	process {
 		$conditionSetObject = $null
-		if ($SetModule) {
-			$conditionSetObject = $script:filterContainer.GetConditionSet($SetModule, $SetName)
-			if (-not $conditionSetObject) {
-				Invoke-PsfTerminatingException -Message "Unable to find condition set $SetName in module $SetModule" -ErrorId 'ConditionSetNotFound' -Category InvalidArgument -TargetObject $SetName -Cmdlet $PSCmdlet
-			}
+		if ($SetModule -or $ConditionSet) {
+			$conditionSetObject = Resolve-PsfFilterConditionSet -ConditionSet $ConditionSet -SetModule $SetModule -SetName $SetName -Cmdlet $PSCmdlet
 		}
-		if ($ConditionSet) { $conditionSetObject = $ConditionSet }
 		
 		try { $filter = New-Object PSFramework.Filter.Expression($Expression, $conditionSetObject) }
 		catch { return $false }

@@ -1098,6 +1098,12 @@
             </summary>
             <returns>The name of the condition set</returns>
         </member>
+        <member name="M:PSFramework.Filter.ConditionSet.Add(PSFramework.Filter.Condition)">
+            <summary>
+            Add a condition object to the condition set.
+            </summary>
+            <param name="Condition">The condition object to add</param>
+        </member>
         <member name="T:PSFramework.Filter.ConditionType">
             <summary>
             What kind of condition is it?
@@ -1235,6 +1241,18 @@
             <param name="Version">Version of the set</param>
             <param name="Conditions">Conditions to include in the set.</param>
             <returns>The newly created condition set</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.Add(PSFramework.Filter.Condition)">
+            <summary>
+            Add a predefined condition object to the container
+            </summary>
+            <param name="Condition">The condition object to add</param>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.Add(PSFramework.Filter.ConditionSet)">
+            <summary>
+            Add a predefined condition set object to the container
+            </summary>
+            <param name="ConditionSet">The condition set object to add</param>
         </member>
         <member name="T:PSFramework.FlowControl.CallbackException">
             <summary>
