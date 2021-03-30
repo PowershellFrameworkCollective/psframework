@@ -15,6 +15,10 @@
 		The name of the condition to retrieve.
 		Defaults to '*'
 	
+	.PARAMETER SetName
+		The name of the condition set the condition is assigned to.
+		Allows searching by assignment.
+	
 	.PARAMETER Version
 		Retrieve a specific version of the filter condition.
 		By default, the latest version only is returned.
@@ -43,6 +47,10 @@
 		[string]
 		$Name = '*',
 		
+		[PsfArgumentCompleter('PSFramework.Filter.SetName')]
+		[string]
+		$SetName,
+		
 		[Parameter(ParameterSetName = 'Version')]
 		[System.Version]
 		$Version,
@@ -52,8 +60,14 @@
 		$AllVersions
 	)
 	
-	process
-	{
-		$script:filterContainer.FindCondition($Module, $Name, $Version, $AllVersions)
+	process {
+		if ($SetName) {
+			Get-PSFFilterConditionSet -Module $Module -Name $SetName | ForEach-Object {
+				$_.ConditionTable.Values | Where-Object Name -Like $Name
+			}
+		}
+		else {
+			$script:filterContainer.FindCondition($Module, $Name, $Version, $AllVersions)
+		}
 	}
 }
