@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: ConfigurationSchema metaJson - Added support for weblinks to configuration files
+- Upd: ConfigurationSchema metaJson - Added support for direct json string input
+- Upd: ConfigurationSchema metaJson - Added support for psd1 files
+
 ## 1.6.181 (2021-03-17)
 
 - New: Component: Filter - adds the ability to define userfriendly, safe filter expression syntaxes

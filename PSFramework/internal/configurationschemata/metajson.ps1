@@ -31,12 +31,23 @@
 			$Path,
 			
 			[Hashtable]
-			$Result
+			$Result,
+			
+			[string]
+			$Type,
+			
+			[Hashtable]
+			$Settings
 		)
 		
 		Write-PSFMessage -String 'Configuration.Schema.MetaJson.ProcessFile' -StringValues $Path -ModuleName PSFramework
 		
-		$basePath = Split-Path -Path $Path
+		$basePath = switch ($Type) {
+			'file' { Split-Path -Path $Path }
+			'weblink' { $Path -replace '/[^/]+?$' }
+			default { $null }
+		}
+		
 		if ($NodeData.ModuleName) { $moduleName = "{0}." -f $NodeData.ModuleName }
 		else { $moduleName = "" }
 		
@@ -62,40 +73,43 @@
 		#endregion Import Resources
 		
 		#region Import included / linked configuration files
-		foreach ($include in $NodeData.Include)
+		:includes foreach ($include in $NodeData.Include)
 		{
 			$resolvedInclude = Resolve-V1String -String $include
 			$uri = [uri]$resolvedInclude
-			if ($uri.IsAbsoluteUri)
-			{
-				try
-				{
-					$newData = Get-Content $resolvedInclude -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
-				}
-				catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $resolvedInclude -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -Cmdlet $script:cmdlet }
-				try
-				{
-					$null = Read-V1Node -NodeData $newData -Result $Result -Path $resolvedInclude
-					continue
-				}
-				catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.NestedError' -StringValues $resolvedInclude -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -Cmdlet $script:cmdlet }
-			}
 			
-			$joinedPath = Join-Path -Path $basePath -ChildPath ($resolvedInclude -replace '^\.\\', '\')
-			try { $resolvedIncludeNew = Resolve-PSFPath -Path $joinedPath -Provider FileSystem -SingleItem }
-			catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ResolveFile' -StringValues $joinedPath -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -Cmdlet $script:cmdlet }
+			# Skip relative paths if we do not have a base path to place it relative to
+			if (-not $uri.IsAbsoluteUri -and -not $basePath) { continue }
+			#region Calculate the new include path
+			if ($uri.IsAbsoluteUri) { $includePath = $resolvedInclude }
+			else {
+				$includePath = switch ($Type) {
+					'file'
+					{
+						$joinedPath = Join-Path -Path $basePath -ChildPath ($resolvedInclude -replace '^\.\\', '\')
+						try { Resolve-PSFPath -Path $joinedPath -Provider FileSystem -SingleItem }
+						catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ResolveFile' -StringValues $joinedPath -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -ContinueLabel includes -Cmdlet $script:cmdlet }
+					}
+					'weblink'
+					{
+						$newPath = $basePath
+						$relParts = $resolvedInclude -split "/"
+						foreach ($part in $relParts) {
+							if ($part -eq '..') { $newPath = $newPath -replace '/[^/]+$' }
+							else { $newPath = $newPath, $part -join '/' }
+						}
+						$newPath
+					}
+				}
+			}
+			#endregion Calculate the new include path
 			
-			try
-			{
-				$newData = Get-Content $resolvedIncludeNew -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+			$newSettings = $Settings | ConvertTo-PSFHashtable -Include ExcludeFilter, IncludeFilter
+			try { $configData = Import-PSFConfig -Path $includePath -Peek @newSettings -Schema MetaJson -EnableException $true -ErrorAction Stop }
+			catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ExecuteInclude.Error' -StringValues $includePath -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -ContinueLabel includes -Cmdlet $script:cmdlet }
+			foreach ($configDatum in $configData) {
+				$Result[$configDatum.FullName] = $configDatum.Value
 			}
-			catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $resolvedIncludeNew -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -Cmdlet $script:cmdlet }
-			try
-			{
-				$null = Read-V1Node -NodeData $newData -Result $Result -Path $resolvedIncludeNew
-				continue
-			}
-			catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.NestedError' -StringValues $resolvedIncludeNew -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -Cmdlet $script:cmdlet }
 		}
 		#endregion Import included / linked configuration files
 		
@@ -152,32 +166,35 @@
 			$BaseElement
 		)
 		
-		if ($Property.TypeNameOfValue -ne 'System.Management.Automation.PSCustomObject') {
+		if ($Property.TypeNameOfValue -notin 'System.Management.Automation.PSCustomObject', 'System.Collections.Hashtable') {
 			$name = (@($BaseElement) + @($Property.Name)) -join "."
 			if ($Dynamic) { $Result[(Resolve-V1String -String $name)] = Resolve-V1String -String $Property.Value }
 			else { $Result[$name] = $Property.Value }
 			return
 		}
 		
-		if ($Property.Value.'!Condition') {
+		$value = $Property.Value
+		if ($value -is [System.Collections.Hashtable]) { $value = [pscustomobject]$value }
+		
+		if ($value.'!Condition') {
 			$conditionSet = $null
-			if ($Property.Value.'!ConditionSet') {
-				$module, $name = $Property.Value.'!ConditionSet' -split ' ', 2
+			if ($value.'!ConditionSet') {
+				$module, $name = $value.'!ConditionSet' -split ' ', 2
 				$conditionSet = Get-PSFFilterConditionSet -Module $module -Name $name | Select-Object -First 1
 			}
 			else {
 				$conditionSet = Get-PSFFilterConditionSet -Module PSFramework -Name Environment
 			}
-			if (-not $conditionSet) { throw "Unable to resolve Condition Set: $($Property.Value.'!ConditionSet')" }
-			$filter = New-PSFFilter -Expression $Property.Value.'!Condition' -ConditionSet $conditionSet
+			if (-not $conditionSet) { throw "Unable to resolve Condition Set: $($value.'!ConditionSet')" }
+			$filter = New-PSFFilter -Expression $value.'!Condition' -ConditionSet $conditionSet
 			if (-not $filter.Evaluate()) { return }
 		}
 		
-		foreach ($propertyObject in $Property.Value.PSObject.Properties) {
+		foreach ($propertyObject in $value.PSObject.Properties) {
 			if ($propertyObject.Name -eq '!Condition') { continue }
 			if ($propertyObject.Name -eq '!ConditionSet') { continue }
 			
-			if ($Property.Value.'!Condition') { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement $BaseElement }
+			if ($value.'!Condition') { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement $BaseElement }
 			else { Resolve-V1Tree -Property $propertyObject -Result $Result -Dynamic $Dynamic -BaseElement (@($BaseElement) + @($Property.Name)) }
 		}
 	}
@@ -193,18 +210,70 @@
 	#endregion Utility Computation
 	
 	#region Accessing Content
-	try { $resolvedPath = Resolve-PSFPath -Path $Resource -Provider FileSystem -SingleItem }
-	catch
-	{
-		Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ResolveFile' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
-		return
-	}
-	
-	try { $importData = Get-Content -Path $resolvedPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop }
-	catch
-	{
-		Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
-		return
+	$resourceUri = [uri]$Resource
+	switch ($resourceUri.Scheme) {
+		#region Weblink
+		{ $_ -in 'http', 'https' }
+		{
+			try { $importData = Invoke-WebRequest -Uri $Resource -UseBasicParsing -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop }
+			catch {
+				Stop-PSFFunction -String 'Configuration.Schema.MetaJson.WebError' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
+				return
+			}
+			$resolvedPath = $Resource
+			$resourceType = 'weblink'
+		}
+		#endregion Weblink
+		#region File
+		'file'
+		{
+			try { $resolvedPath = Resolve-PSFPath -Path $Resource -Provider FileSystem -SingleItem }
+			catch {
+				Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ResolveFile' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
+				return
+			}
+			
+			switch -regex ($resolvedPath) {
+				'\.psd1$'
+				{
+					try { $importData = [pscustomobject](Import-PSFPowerShellDataFile -Path $resolvedPath -ErrorAction Stop) }
+					catch {
+						Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidPsd1' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
+						return
+					}
+					if ($importData.Static -is [hashtable]) { $importData.Static = [pscustomobject]$importData.Static }
+					if ($importData.Object -is [hashtable]) { $importData.Object = [pscustomobject]$importData.Object }
+					if ($importData.Dynamic -is [hashtable]) { $importData.Dynamic = [pscustomobject]$importData.Dynamic }
+					if ($importData.Tree -is [hashtable]) { $importData.Tree = [pscustomobject]$importData.Tree }
+					if ($importData.DynamicTree -is [hashtable]) { $importData.DynamicTree = [pscustomobject]$importData.DynamicTree }
+				}
+				default
+				{
+					try { $importData = Get-Content -Path $resolvedPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop }
+					catch {
+						Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
+						return
+					}
+				}
+			}
+			
+			$resourceType = 'file'
+		}
+		#endregion File
+		#region Straight Json
+		default
+		{
+			try {
+				$importData = $Resource | ConvertFrom-Json -ErrorAction Stop
+				$resolvedPath = ''
+				$resourceType = 'Json'
+			}
+			catch {
+				Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet
+				return
+			}
+		}
+		#endregion Straight Json
 	}
 	#endregion Accessing Content
 	
@@ -212,7 +281,7 @@
 	{
 		1
 		{
-			$configurationHash = Read-V1Node -NodeData $importData -Path $resolvedPath -Result @{ }
+			$configurationHash = Read-V1Node -NodeData $importData -Path $resolvedPath -Type $resourceType -Result @{ } -Settings $Settings
 			$configurationItems = $configurationHash.Keys | ForEach-Object {
 				[pscustomobject]@{
 					FullName = $_
