@@ -78,5 +78,14 @@ namespace PSFramework.Filter
         {
             return Name;
         }
+
+        /// <summary>
+        /// Add a condition object to the condition set.
+        /// </summary>
+        /// <param name="Condition">The condition object to add</param>
+        public void Add(Condition Condition)
+        {
+            ConditionTable[Condition.Name] = Condition;
+        }
     }
 }

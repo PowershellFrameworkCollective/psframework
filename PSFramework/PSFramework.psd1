@@ -36,6 +36,7 @@
 	
 	# Functions to export from this module
 	FunctionsToExport  = @(
+		'Add-PSFFilterCondition'
 		'Add-PSFLoggingProviderRunspace'
 		'Clear-PSFresultCache'
 		'Compare-PSFArray'
