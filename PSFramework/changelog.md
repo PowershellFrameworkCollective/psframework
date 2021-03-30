@@ -4,6 +4,9 @@
 
 - Upd: Command Get-PSFFilterCondition - added parameter `-SetName` to allow searching for filter conditions assigned to a specific Condition Set.
 - Upd: Type FilterContainer - added `Add()` method, enabling submitting pre-created conditions and condition sets
+- Upd: ConfigurationSchema metaJson - Added support for weblinks to configuration files
+- Upd: ConfigurationSchema metaJson - Added support for direct json string input
+- Upd: ConfigurationSchema metaJson - Added support for psd1 files
 - Fix: Tab Completion for Filter Condition Set names completes condition names.
 
 ## 1.6.181 (2021-03-17)
