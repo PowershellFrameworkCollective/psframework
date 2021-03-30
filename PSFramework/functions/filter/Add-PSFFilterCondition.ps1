@@ -16,6 +16,9 @@
 	.PARAMETER SetName
 		Name of the Condition Set to which to add to.
 	
+	.PARAMETER Condition
+		The condition object to add to the Condition Set.
+	
 	.PARAMETER Name
 		Name of the Condition to add to the Condition Set.
 	
@@ -25,7 +28,7 @@
 	
 	.EXAMPLE
 		PS C:\> Add-PSFFilterCondition -ConditionSet $barFilter -Name 'FromCellar'
-	
+		
 		Adds the Condition "FromCellar" to the Condition Set stored in $barFilter.
 		The Condition is chosen from the same module as the the Condition Set.
 #>
