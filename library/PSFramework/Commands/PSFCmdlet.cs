@@ -206,6 +206,16 @@ return
         }
 
         /// <summary>
+        /// Checks whether a certain feature flag applies or not to the current execution.
+        /// </summary>
+        /// <param name="Name">The name of the feature to check.</param>
+        /// <returns>Whether the flag is enabled</returns>
+        public bool TestFeature(string Name)
+        {
+            return Feature.FeatureHost.ReadFlag(Name, GetCallerInfo().CallerModule);
+        }
+
+        /// <summary>
         /// Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
         /// </summary>
         /// <param name="Message">The message to write</param>

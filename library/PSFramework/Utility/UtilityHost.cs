@@ -431,6 +431,52 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Execute a constructor for the specified type, creating a new instance of it.
+        /// It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
+        /// May have side-effects when used on types that do significant logic in their constructors even when they fail.
+        /// </summary>
+        /// <param name="Type">The type to create an instance of.</param>
+        /// <param name="Arguments">Arguments to pass to the constructor.</param>
+        /// <param name="Flags">Search flags selecting the constructor. Defaults to both public and private.</param>
+        /// <returns>The created instance of the type</returns>
+        public static object InvokeConstructor(Type Type, object[] Arguments, BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+        {
+            if (Type == null)
+                throw new ArgumentNullException("Type cannot be null!");
+            if (Arguments == null)
+                Arguments = new object[0];
+
+            Exception error = null;
+
+            ConstructorInfo[] constructors = Type.GetConstructors(Flags);
+            foreach (ConstructorInfo constructor in constructors)
+            {
+                if (constructor.GetParameters().Length != Arguments.Length)
+                    continue;
+
+                try { return constructor.Invoke(Arguments); }
+                catch (Exception e) { error = e; }
+            }
+
+            if (error == null)
+                throw new ArgumentException($"No valid constructor found for {Type.FullName} accepting {Arguments.Length} arguments");
+            throw error;
+        }
+
+        /// <summary>
+        /// Execute a constructor for the specified type, creating a new instance of it.
+        /// It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
+        /// May have side-effects when used on types that do significant logic in their constructors even when they fail.
+        /// </summary>
+        /// <param name="Arguments">Arguments to pass to the constructor.</param>
+        /// <param name="Flags">Search flags selecting the constructor. Defaults to both public and private.</param>
+        /// <returns>The created instance of the type</returns>
+        public static T InvokeConstructor<T>(object[] Arguments, BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+        {
+            return (T)InvokeConstructor(typeof(T), Arguments, Flags);
+        }
+
+        /// <summary>
         /// Returns the current callstack
         /// </summary>
         public static IEnumerable<CallStackFrame> Callstack

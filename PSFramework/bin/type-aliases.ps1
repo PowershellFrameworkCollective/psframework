@@ -5,7 +5,7 @@ $TypeAliasTable = @{
 	PSFComputerParameter    = "PSFramework.Parameter.ComputerParameter"
 	PSFDateTime			    = "PSFramework.Parameter.DateTimeParameter"
 	PSFDateTimeParameter    = "PSFramework.Parameter.DateTimeParameter"
-	PsfDynamicTransform     = 'PSFramework.Utility.DynamicTransformationAttribute'
+	PsfDynamicTransform	    = 'PSFramework.Utility.DynamicTransformationAttribute'
 	PSFEncoding			    = "PSFramework.Parameter.EncodingParameter"
 	PSFEncodingParameter    = "PSFramework.Parameter.EncodingParameter"
 	PSFNumber			    = 'PSFramework.Utility.Number'
@@ -16,6 +16,7 @@ $TypeAliasTable = @{
 	PSFTimeSpanParameter    = "PSFramework.Parameter.TimeSpanParameter"
 	PsfValidateLanguageMode = "PSFramework.Validation.PsfValidateLanguageMode"
 	PSFValidatePattern	    = "PSFramework.Validation.PsfValidatePatternAttribute"
+	PSFValidatePSVersion    = "PSFramework.Validation.PsfValidatePSVersion"
 	PSFValidateScript	    = "PSFramework.Validation.PsfValidateScriptAttribute"
 	PSFValidateSet		    = "PSFramework.Validation.PsfValidateSetAttribute"
 }
