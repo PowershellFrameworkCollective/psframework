@@ -6,6 +6,7 @@
 - New: Validation Attribute PsfValidatePSVersion - ensures parameters are only used in the correct version
 - Upd: Command Get-PSFFilterCondition - added parameter `-SetName` to allow searching for filter conditions assigned to a specific Condition Set.
 - Upd: Command New-PSFTeppCompletionResult - is now a public command
+- Upd: LoggingProvider logfile - added options `MoveOnFinal` and `CopyOnFinal` that allow shipping the finalized logs to a destinaiton path.
 - Upd: Type FilterContainer - added `Add()` method, enabling submitting pre-created conditions and condition sets
 - Upd: ConfigurationSchema metaJson - Added support for weblinks to configuration files
 - Upd: ConfigurationSchema metaJson - Added support for direct json string input

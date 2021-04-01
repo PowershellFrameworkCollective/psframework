@@ -1,6 +1,5 @@
 ﻿$functionDefinitions = {
-	function Get-LogFilePath
-	{
+	function Get-LogFilePath {
 		[CmdletBinding()]
 		param (
 			
@@ -34,8 +33,7 @@
 		[regex]::Replace($path, '%day%|%computername%|%hour%|%processid%|%date%|%username%|%dayofweek%|%minute%|%userdomain%|%logname%', $scriptBlock, 'IgnoreCase')
 	}
 	
-	function Write-LogFileMessage
-	{
+	function Write-LogFileMessage {
 		[CmdletBinding()]
 		param (
 			[Parameter(ValueFromPipeline = $true)]
@@ -57,15 +55,13 @@
 		)
 		
 		$parent = Split-Path $Path
-		if (-not (Test-Path $parent))
-		{
+		if (-not (Test-Path $parent)) {
 			$null = New-Item $parent -ItemType Directory -Force
 		}
 		$fileExists = Test-Path $Path
 		
 		#region Type-Based Output
-		switch ($FileType)
-		{
+		switch ($FileType) {
 			#region Csv
 			"Csv"
 			{
@@ -93,8 +89,7 @@
 			{
 				[xml]$xml = $message | ConvertTo-Html -Fragment
 				
-				if ((-not $fileExists) -and $IncludeHeader)
-				{
+				if ((-not $fileExists) -and $IncludeHeader) {
 					$xml.table.tr[0].OuterXml | Add-Content -Path $Path -Encoding $script:encoding
 				}
 				
@@ -119,8 +114,7 @@
 		#endregion Type-Based Output
 	}
 	
-	function Invoke-LogRotate
-	{
+	function Invoke-LogRotate {
 		[CmdletBinding()]
 		param (
 			
@@ -167,25 +161,21 @@
 		Get-ChildItem -Path $basePath -Filter (Get-ConfigValue -Name 'LogRotateFilter') -Recurse:(Get-ConfigValue -Name 'LogRotateRecurse') -File | Where-Object LastWriteTime -LT $limit | Remove-Item -Force -ErrorAction Stop
 	}
 	
-	function Update-Mutex
-	{
+	function Update-Mutex {
 		[CmdletBinding()]
 		param ()
 		
 		$script:mutexName = Get-ConfigValue -Name 'MutexName'
-		if ($script:mutexName -and -not $script:mutex)
-		{
+		if ($script:mutexName -and -not $script:mutex) {
 			$script:mutex = New-Object System.Threading.Mutex($false, $script:mutexName)
 			Add-Member -InputObject $script:mutex -MemberType NoteProperty -Name Name -Value $script:mutexName
 		}
-		elseif ($script:mutexName -and $script:mutex.Name -ne $script:mutexName)
-		{
+		elseif ($script:mutexName -and $script:mutex.Name -ne $script:mutexName) {
 			$script:mutex.Dispose()
 			$script:mutex = New-Object System.Threading.Mutex($false, $script:mutexName)
 			Add-Member -InputObject $script:mutex -MemberType NoteProperty -Name Name -Value $script:mutexName
 		}
-		elseif (-not $script:mutexName -and $script:mutex)
-		{
+		elseif (-not $script:mutexName -and $script:mutex) {
 			$script:mutex.Dispose()
 			$script:mutex = $null
 		}
@@ -211,17 +201,57 @@
 			[pscustomobject]$data
 		}
 	}
+	
+	function Move-LogFile {
+		[CmdletBinding()]
+		param (
+			
+		)
+		
+		$destinationPath = Get-ConfigValue -Name 'MoveOnFinal'
+		if (-not $destinationPath) { return }
+		
+		if (-not (Test-Path $destinationPath)) { throw "Final log destination not found: $destinationPath" }
+		$folder = Get-Item -Path $destinationPath
+		if (-not $folder.PSIsContainer) { throw "Final log destination is not a folder: $destinationPath" }
+		
+		foreach ($filePath in $script:logPathList.Keys) {
+			if (-not (Test-Path -Path $filePath)) { continue }
+			
+			Move-Item -Path $filePath -Destination $folder.FullName -Force -ErrorAction Stop
+		}
+	}
+	
+	function Copy-LogFile {
+		[CmdletBinding()]
+		param (
+			
+		)
+		
+		$destinationPath = Get-ConfigValue -Name 'CopyOnFinal'
+		if (-not $destinationPath) { return }
+		
+		if (-not (Test-Path $destinationPath)) { throw "Final log destination not found: $destinationPath" }
+		$folder = Get-Item -Path $destinationPath
+		if (-not $folder.PSIsContainer) { throw "Final log destination is not a folder: $destinationPath" }
+		
+		foreach ($filePath in $script:logPathList.Keys) {
+			if (-not (Test-Path -Path $filePath)) { continue }
+			
+			Copy-Item -Path $filePath -Destination $folder.FullName -Force -ErrorAction Stop
+		}
+	}
 }
 
 #region Events
 $begin_event = {
 	$script:lastRotate = (Get-Date).AddMinutes(-10)
+	$script:logPathList = @{ }
 }
 
 $start_event = {
 	$script:logfile_headers = Get-ConfigValue -Name 'Headers' | ForEach-Object {
-		switch ($_)
-		{
+		switch ($_) {
 			'Tags'
 			{
 				@{
@@ -241,13 +271,11 @@ $start_event = {
 				@{
 					Name	   = 'Timestamp'
 					Expression = {
-						if (Get-ConfigValue -Name 'UTC')
-						{
+						if (Get-ConfigValue -Name 'UTC') {
 							if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp.ToUniversalTime() }
 							else { $_.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name 'TimeFormat')) }
 						}
-						else
-						{
+						else {
 							if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp }
 							else { $_.Timestamp.ToString((Get-ConfigValue -Name 'TimeFormat')) }
 						}
@@ -264,13 +292,15 @@ $start_event = {
 		CsvDelimiter  = Get-ConfigValue -Name 'CsvDelimiter'
 		Path		  = Get-LogFilePath
 	}
+	# Cache path for final move action
+	$script:logPathList[$script:logfile_paramWriteLogFileMessage.Path] = $script:logfile_paramWriteLogFileMessage.Path
 	
 	$script:encoding = Get-ConfigValue -Name 'Encoding'
 	
 	$script:JsonSettings = @{
 		JsonCompress = Get-ConfigValue -Name JsonCompress
 		JsonString   = Get-ConfigValue -Name JsonString
-		JsonNoComma = Get-ConfigValue -Name JsonNoComma
+		JsonNoComma  = Get-ConfigValue -Name JsonNoComma
 	}
 	Update-Mutex
 }
@@ -287,6 +317,11 @@ $message_event = {
 
 $end_event = {
 	Invoke-LogRotate
+}
+
+$final_event = {
+	Move-LogFile
+	Copy-LogFile
 }
 #endregion Events
 
@@ -308,18 +343,21 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonCompress' -Value $false -Initialize -Validation bool -Description "Will compress the json entries, condensing each entry into a single line."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonString' -Value $false -Initialize -Validation bool -Description "Will convert all enumerated properties to string values when converting to json. This causes the level property to be 'Debug','Host', ... rather than 8,2,..."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoComma' -Value $false -Initialize -Validation bool -Description "Prevent adding commas between two json entries."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MoveOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to move logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CopyOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to copy logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
 }
 
 $paramRegisterPSFLoggingProvider = @{
 	Name			   = "logfile"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.LogFile'
-	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma'
+	InstanceProperties = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma', 'MoveOnFinal', 'CopyOnFinal'
 	FunctionDefinitions = $functionDefinitions
 	BeginEvent		   = $begin_event
 	StartEvent		   = $start_event
 	MessageEvent	   = $message_event
 	EndEvent		   = $end_event
+	FinalEvent		   = $final_event
 	ConfigurationDefaultValues = @{
 		IncludeHeader = $true
 		Headers	      = 'ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username'
