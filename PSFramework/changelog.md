@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.6.193 (2021-04-01)
 
 - New: Command Set-PSFObjectOrder - sort objects with custom properties processing
 - New: Validation Attribute PsfValidatePSVersion - ensures parameters are only used in the correct version
