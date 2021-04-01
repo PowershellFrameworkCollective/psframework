@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.6.181'
+	ModuleVersion = '1.6.193'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -36,6 +36,7 @@
 	
 	# Functions to export from this module
 	FunctionsToExport  = @(
+		'Add-PSFFilterCondition'
 		'Add-PSFLoggingProviderRunspace'
 		'Clear-PSFresultCache'
 		'Compare-PSFArray'
@@ -86,6 +87,7 @@
 		'New-PSFMessageLevelModifier'
 		'New-PSFSessionContainer'
 		'New-PSFSupportPackage'
+		'New-PSFTeppCompletionResult'
 		'Register-PSFCallback'
 		'Register-PSFConfig'
 		'Register-PSFConfigSchema'
@@ -140,13 +142,14 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
-		'ConvertTo-PSFHashtable',
-		'Invoke-PSFCallback',
-		'Invoke-PSFProtectedCommand',
-		'Remove-PSFNull',
-		'Select-PSFObject',
-		'Set-PSFConfig',
-		'Test-PSFShouldProcess',
+		'ConvertTo-PSFHashtable'
+		'Invoke-PSFCallback'
+		'Invoke-PSFProtectedCommand'
+		'Remove-PSFNull'
+		'Select-PSFObject'
+		'Set-PSFConfig'
+		'Set-PSFObjectOrder'
+		'Test-PSFShouldProcess'
 		'Write-PSFMessage'
 	)
 	
@@ -155,8 +158,9 @@
 	
 	# Aliases to export from this module
 	AliasesToExport = @(
-		'Get-LastResult',
-		'glr',
+		'Get-LastResult'
+		'glr'
+		'Sort-PSFObject'
 		'Was-Bound'
 	)
 	

@@ -181,5 +181,27 @@ namespace PSFramework.Filter
         {
             return AddConditionSet(Module, Name, Version, new List<Condition>(Conditions));
         }
+
+        /// <summary>
+        /// Add a predefined condition object to the container
+        /// </summary>
+        /// <param name="Condition">The condition object to add</param>
+        public void Add(Condition Condition)
+        {
+            if (!Content.ContainsKey(Condition.Module))
+                Content[Condition.Module] = new ModuleWrapper(Condition.Module);
+            Content[Condition.Module].Add(Condition);
+        }
+
+        /// <summary>
+        /// Add a predefined condition set object to the container
+        /// </summary>
+        /// <param name="ConditionSet">The condition set object to add</param>
+        public void Add(ConditionSet ConditionSet)
+        {
+            if (!Content.ContainsKey(ConditionSet.Module))
+                Content[ConditionSet.Module] = new ModuleWrapper(ConditionSet.Module);
+            Content[ConditionSet.Module].Add(ConditionSet);
+        }
     }
 }

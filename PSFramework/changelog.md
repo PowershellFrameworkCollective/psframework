@@ -1,5 +1,20 @@
 ﻿# CHANGELOG
 
+## 1.6.193 (2021-04-01)
+
+- New: Command Set-PSFObjectOrder - sort objects with custom properties processing
+- New: Validation Attribute PsfValidatePSVersion - ensures parameters are only used in the correct version
+- Upd: Command Get-PSFFilterCondition - added parameter `-SetName` to allow searching for filter conditions assigned to a specific Condition Set.
+- Upd: Command New-PSFTeppCompletionResult - is now a public command
+- Upd: LoggingProvider logfile - added options `MoveOnFinal` and `CopyOnFinal` that allow shipping the finalized logs to a destinaiton path.
+- Upd: Type FilterContainer - added `Add()` method, enabling submitting pre-created conditions and condition sets
+- Upd: ConfigurationSchema metaJson - Added support for weblinks to configuration files
+- Upd: ConfigurationSchema metaJson - Added support for direct json string input
+- Upd: ConfigurationSchema metaJson - Added support for psd1 files
+- Upd: PSFCmdlet - Added method TestFeature(), integrating the feature component into the class.
+- Fix: Tab Completion for Filter Condition Set names completes condition names.
+- Fix: PsfValidateScript - Errors are now handled gracefully and can be surfaced to the user by using "{2}" in the error message.
+
 ## 1.6.181 (2021-03-17)
 
 - New: Component: Filter - adds the ability to define userfriendly, safe filter expression syntaxes

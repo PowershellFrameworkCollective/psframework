@@ -52,6 +52,96 @@
             </summary>
             <param name="error">The error to terminate with</param>
         </member>
+        <member name="T:PSFramework.Commands.SortPSFObjectCommand">
+            <summary>
+            Custom implementation of Sort-Object with PS7+ capabilities and custom property parsing
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Stable">
+            <summary>
+            Gets or sets a value indicating whether a stable sort is required.
+            </summary>
+            <value></value>
+            <remarks>
+            Items that are duplicates according to the sort algorithm will appear
+            in the same relative order in a stable sort.
+            </remarks>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Descending">
+            <summary>
+            Gets or sets a value indicating whether the sort order is descending.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Unique">
+            <summary>
+            Gets or sets a value indicating whether the sort filters out any duplicate objects.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Top">
+            <summary>
+            Gets or sets the number of items to return in a Top N sort.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Bottom">
+            <summary>
+            Gets or sets the number of items to return in a Bottom N sort.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.InputObject">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Property">
+            <summary>
+            Gets or Sets the Properties that would be used for Grouping, Sorting and Comparison.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.Culture">
+            <summary>
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:PSFramework.Commands.SortPSFObjectCommand.CaseSensitive">
+            <summary>
+            </summary>
+            <value></value>
+        </member>
+        <member name="F:PSFramework.Commands.SortPSFObjectCommand._NonclonedProperties">
+            <summary>
+            List of properties to NOT clone into the hashtable used against Select-Object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SortPSFObjectCommand._PS7Properties">
+            <summary>
+            List of properties that require at least PowerShell V7
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SortPSFObjectCommand._Pipeline">
+            <summary>
+            The pipeline that is wrapped around Select-Object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.SortPSFObjectCommand._VarName">
+            <summary>
+            Name of the temporary variable created in the caller scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SortPSFObjectCommand.BeginProcessing">
+            <summary>
+            Execute begin step
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SortPSFObjectCommand.ProcessRecord">
+            <summary>
+            Execute process step
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SortPSFObjectCommand.EndProcessing">
+            <summary>
+            Execute end step
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
             <summary>
             Implements the ConvertTo-PSFHashtable command
@@ -260,6 +350,13 @@
             </summary>
             <param name="Level">How many levels to peek into the callstack</param>
             <returns>The caller information of the specified level</returns>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.TestFeature(System.String)">
+            <summary>
+            Checks whether a certain feature flag applies or not to the current execution.
+            </summary>
+            <param name="Name">The name of the feature to check.</param>
+            <returns>Whether the flag is enabled</returns>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
             <summary>
@@ -1098,6 +1195,12 @@
             </summary>
             <returns>The name of the condition set</returns>
         </member>
+        <member name="M:PSFramework.Filter.ConditionSet.Add(PSFramework.Filter.Condition)">
+            <summary>
+            Add a condition object to the condition set.
+            </summary>
+            <param name="Condition">The condition object to add</param>
+        </member>
         <member name="T:PSFramework.Filter.ConditionType">
             <summary>
             What kind of condition is it?
@@ -1235,6 +1338,18 @@
             <param name="Version">Version of the set</param>
             <param name="Conditions">Conditions to include in the set.</param>
             <returns>The newly created condition set</returns>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.Add(PSFramework.Filter.Condition)">
+            <summary>
+            Add a predefined condition object to the container
+            </summary>
+            <param name="Condition">The condition object to add</param>
+        </member>
+        <member name="M:PSFramework.Filter.FilterContainer.Add(PSFramework.Filter.ConditionSet)">
+            <summary>
+            Add a predefined condition set object to the container
+            </summary>
+            <param name="ConditionSet">The condition set object to add</param>
         </member>
         <member name="T:PSFramework.FlowControl.CallbackException">
             <summary>
@@ -4935,6 +5050,34 @@
             </summary>
             <returns>The string representation of these properties</returns>
         </member>
+        <member name="T:PSFramework.Parameter.SortParameter">
+            <summary>
+            Input parser for wrapping around Sort-Object
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.SortParameter.Value">
+            <summary>
+            The value passed to Sort-Object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.SortParameter.#ctor(System.String)">
+            <summary>
+            Parse Input strings
+            </summary>
+            <param name="Property">The string to parse as property to sort by</param>
+        </member>
+        <member name="M:PSFramework.Parameter.SortParameter.#ctor(System.Object)">
+            <summary>
+            Any other input is passed straight through
+            </summary>
+            <param name="InputObject">The input object to pass through</param>
+        </member>
+        <member name="M:PSFramework.Parameter.SortParameter.ToString">
+            <summary>
+            Returns the string representation of the resultant sort property
+            </summary>
+            <returns>Some text</returns>
+        </member>
         <member name="T:PSFramework.Parameter.TimeSpanParameter">
             <summary>
             Parameter class for interpreting timespans
@@ -5093,6 +5236,11 @@
         <member name="F:PSFramework.PSFCore.PSFCoreHost.DebugData">
             <summary>
             The data storage containing the debug messages.
+            </summary>
+        </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.PSVersion">
+            <summary>
+            Reliably access the PowerShell Version
             </summary>
         </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
@@ -7458,6 +7606,27 @@
             <param name="Arguments">Arguments to pass to the method</param>
             <returns>Whatever the private method may return</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor(System.Type,System.Object[],System.Reflection.BindingFlags)">
+            <summary>
+            Execute a constructor for the specified type, creating a new instance of it.
+            It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
+            May have side-effects when used on types that do significant logic in their constructors even when they fail.
+            </summary>
+            <param name="Type">The type to create an instance of.</param>
+            <param name="Arguments">Arguments to pass to the constructor.</param>
+            <param name="Flags">Search flags selecting the constructor. Defaults to both public and private.</param>
+            <returns>The created instance of the type</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor``1(System.Object[],System.Reflection.BindingFlags)">
+            <summary>
+            Execute a constructor for the specified type, creating a new instance of it.
+            It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
+            May have side-effects when used on types that do significant logic in their constructors even when they fail.
+            </summary>
+            <param name="Arguments">Arguments to pass to the constructor.</param>
+            <param name="Flags">Search flags selecting the constructor. Defaults to both public and private.</param>
+            <returns>The created instance of the type</returns>
+        </member>
         <member name="P:PSFramework.Utility.UtilityHost.Callstack">
             <summary>
             Returns the current callstack
@@ -7579,6 +7748,40 @@
             </summary>
             <param name="regexPattern">Pattern string to match</param>
             <exception cref="T:System.ArgumentException">for invalid arguments</exception>
+        </member>
+        <member name="T:PSFramework.Validation.PsfValidatePSVersion">
+            <summary>
+            Validation attribute that ensures a parameter is only used in a given PS Version
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidatePSVersion.Version">
+            <summary>
+            The minimum version required
+            </summary>
+        </member>
+        <member name="F:PSFramework.Validation.PsfValidatePSVersion.FeatureName">
+            <summary>
+            The name of the feature that can override this test
+            </summary>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidatePSVersion.ValidateElement(System.Object)">
+            <summary>
+            Validation routine used by the engine
+            </summary>
+            <param name="element">The object to validate does not matter and is ignored.</param>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidatePSVersion.#ctor(System.String)">
+            <summary>
+            Create a new validation attribute with a preconfigured minimum version
+            </summary>
+            <param name="MinimumVersion">The minimum version required</param>
+        </member>
+        <member name="M:PSFramework.Validation.PsfValidatePSVersion.#ctor(System.String,System.String)">
+            <summary>
+            Create a new validation attribute with a preconfigured minimum version
+            </summary>
+            <param name="MinimumVersion">The minimum version required</param>
+            <param name="FeatureName">An optional featureflag that can override this validation</param>
         </member>
         <member name="T:PSFramework.Validation.PsfValidateScriptAttribute">
             <summary>

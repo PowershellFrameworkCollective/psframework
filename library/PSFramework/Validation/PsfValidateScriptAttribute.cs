@@ -22,7 +22,7 @@ namespace PSFramework.Validation
             }
             set { _ErrorMessage = value; }
         }
-        private string _ErrorMessage = "Cannot accept {0}, specify any of the following values: '{1}'";
+        private string _ErrorMessage = "Cannot accept {0}, specify an input that tests true against: {{ {1} }}";
 
         /// <summary>
         /// The stored localized string to use for error messages
@@ -81,12 +81,20 @@ namespace PSFramework.Validation
             if (ScriptBlock == null)
                 throw new ValidationMetadataException(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.ScriptBlock.IsNull", null));
 
-            object result = ScriptBlock.DoInvokeReturnAsIs(true, 2, element, null, null, new object[] { element });
+            Exception exception = null;
+            object result = null;
+            try { result = ScriptBlock.DoInvokeReturnAsIs(true, 2, element, null, null, new object[] { element }); }
+            catch (Exception e)
+            {
+                exception = e;
+                if (e.InnerException != null && e.GetType() == typeof(System.Reflection.TargetInvocationException))
+                    exception = e.InnerException;
+            }
             
             if (!LanguagePrimitives.IsTrue(result))
             {
                 var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {{ {1} }}" : ErrorMessage;
-                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock));
+                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock, exception.Message));
             }
         }
 
