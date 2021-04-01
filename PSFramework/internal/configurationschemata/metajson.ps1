@@ -105,7 +105,7 @@
 			#endregion Calculate the new include path
 			
 			$newSettings = $Settings | ConvertTo-PSFHashtable -Include ExcludeFilter, IncludeFilter
-			try { $configData = Import-PSFConfig -Path $includePath -Peek @newSettings -Schema MetaJson -EnableException $true -ErrorAction Stop }
+			try { $configData = Import-PSFConfig -Path $includePath -Peek @newSettings -Schema MetaJson -EnableException -ErrorAction Stop }
 			catch { Stop-PSFFunction -String 'Configuration.Schema.MetaJson.ExecuteInclude.Error' -StringValues $includePath -EnableException $script:EnableException -ModuleName PSFramework -ErrorRecord $_ -Continue -ContinueLabel includes -Cmdlet $script:cmdlet }
 			foreach ($configDatum in $configData) {
 				$Result[$configDatum.FullName] = $configDatum.Value

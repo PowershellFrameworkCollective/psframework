@@ -18,6 +18,8 @@
 	'Configuration.Schema.MetaJson.InvalidJson'		      = 'Failed to access json content from: {0}'
 	'Configuration.Schema.MetaJson.UnknownVersion'	      = 'Unknown version "{1}" in: {0}'
 	'Configuration.Schema.MetaJson.NestedError'		      = 'An error happened when importing config file {0}'
+	'Configuration.Schema.MetaJson.ExecuteInclude.Error'  = 'Error loading include configuration file: {0}'
+	'Configuration.Schema.MetaJson.InvalidPsd1'		      = 'Error reading file {0} - ensure it is a valid psd1'
 	
 	'Export-PSFConfig.ToRegistry'						  = "Cannot export modulecache to registry! Please pick a file scope for your export destination" # 
 	'Export-PSFConfig.Write.Error'					      = "Failed to export to file" #
