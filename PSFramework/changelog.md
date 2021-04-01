@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## 1.6.195 (2021-04-01)
+
+- Fix: PsfValidateScript - unhandled error if test fails without scriptblock generating an exception
+- Fix: New-PSFFilter - hang & error if not providing any Filter Condition Set information
+
 ## 1.6.193 (2021-04-01)
 
 - New: Command Set-PSFObjectOrder - sort objects with custom properties processing
