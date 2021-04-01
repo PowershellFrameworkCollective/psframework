@@ -1,11 +1,11 @@
-﻿function global:New-PSFTeppCompletionResult
+﻿function New-PSFTeppCompletionResult
 {
     <#
         .SYNOPSIS
-            Generates a completion result for dbatools internal tab completion.
+            Generates a completion result for psframework internal tab completion.
         
         .DESCRIPTION
-            Generates a completion result for dbatools internal tab completion.
+            Generates a completion result for psframework internal tab completion.
         
         .PARAMETER CompletionText
             The text to propose.
@@ -78,5 +78,3 @@
 		return New-Object System.Management.Automation.CompletionResult($CompletionText, $listItemToUse, $CompletionResultType, $toolTipToUse.Trim())
 	}
 }
-
-(Get-Item Function:\New-PSFTeppCompletionResult).Visibility = "Private"

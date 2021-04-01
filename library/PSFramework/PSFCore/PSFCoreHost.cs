@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
+using System.Management.Automation;
+using PSFramework.Utility;
 
 namespace PSFramework.PSFCore
 {
@@ -117,5 +116,32 @@ namespace PSFramework.PSFCore
         /// </summary>
         public static readonly Utility.LimitedConcurrentQueue<DebugData> DebugData = new Utility.LimitedConcurrentQueue<DebugData>(DebugQueueSize);
         #endregion Debug Mode
+
+        /// <summary>
+        /// Reliably access the PowerShell Version
+        /// </summary>
+        public static Version PSVersion
+        {
+            get
+            {
+                if (_PSVersion.Major == 0)
+                {
+                    object contextFromTls = UtilityHost.GetExecutionContextFromTLS();
+                    SessionState state = (SessionState)UtilityHost.GetPrivateProperty("SessionState", contextFromTls);
+                    Hashtable versionTable = (Hashtable)state.PSVariable.GetValue("PSVersionTable");
+                    try { _PSVersion = (Version)versionTable["PSVersion"]; }
+                    catch
+                    {
+                        _PSVersion = new Version(
+                            (int)UtilityHost.GetPublicProperty("Major", versionTable["PSVersion"]),
+                            (int)UtilityHost.GetPublicProperty("Minor", versionTable["PSVersion"]),
+                            (int)UtilityHost.GetPublicProperty("Patch", versionTable["PSVersion"])
+                            );
+                    }
+                }
+                return _PSVersion;
+            }
+        }
+        private static Version _PSVersion = new Version();
     }
 }
