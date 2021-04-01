@@ -62,8 +62,11 @@
 		$SetName
 	)
 	
-	process{
-		$conditionSetObject = Resolve-PsfFilterConditionSet -ConditionSet $ConditionSet -SetModule $SetModule -SetName $SetName -Cmdlet $PSCmdlet
+	process {
+		$conditionSetObject = $null
+		if ($ConditionSet -or $SetName) {
+			$conditionSetObject = Resolve-PsfFilterConditionSet -ConditionSet $ConditionSet -SetModule $SetModule -SetName $SetName -Cmdlet $PSCmdlet
+		}
 		
 		try { New-Object PSFramework.Filter.Expression($Expression, $conditionSetObject) }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
