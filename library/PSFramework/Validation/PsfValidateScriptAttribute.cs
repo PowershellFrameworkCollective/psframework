@@ -94,7 +94,7 @@ namespace PSFramework.Validation
             if (!LanguagePrimitives.IsTrue(result))
             {
                 var errorMessageFormat = String.IsNullOrEmpty(ErrorMessage) ? "Error executing validation script: {0} against {{ {1} }}" : ErrorMessage;
-                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock, exception.Message));
+                throw new ValidationMetadataException(String.Format(errorMessageFormat, element, ScriptBlock, exception?.Message));
             }
         }
 

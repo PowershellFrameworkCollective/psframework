@@ -58,7 +58,7 @@
 		}
 		if ($ConditionSet) { $conditionSetObject = $ConditionSet }
 		if (-not $conditionSetObject) {
-			Invoke-PsfTerminatingException -Message "Unable to find condition set" -ErrorId 'ConditionSetNotFound' -Category InvalidArgument -Cmdlet $Cmdlet
+			Invoke-PsfTerminatingException -Message "Unable to find condition set" -ErrorId 'ConditionSetNotFound' -Category InvalidArgument -Cmdlet $Cmdlet -TargetObject $null
 		}
 		$conditionSetObject
 	}
