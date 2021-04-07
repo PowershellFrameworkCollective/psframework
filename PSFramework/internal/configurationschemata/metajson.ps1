@@ -210,10 +210,17 @@
 	#endregion Utility Computation
 	
 	#region Accessing Content
-	$resourceUri = [uri]$Resource
-	switch ($resourceUri.Scheme) {
+	try {
+		$null = Resolve-PSFPath -Path $Resource -Provider FileSystem -SingleItem
+		$resourceType = 'File'
+	}
+	catch {
+		if ($Resource -match '^https{0,1}://') { $resourceType = 'weblink' }
+		else { $resourceType = 'Json' }
+	}
+	switch ($resourceType) {
 		#region Weblink
-		{ $_ -in 'http', 'https' }
+		'weblink'
 		{
 			try { $importData = Invoke-WebRequest -Uri $Resource -UseBasicParsing -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop }
 			catch {
@@ -221,7 +228,6 @@
 				return
 			}
 			$resolvedPath = $Resource
-			$resourceType = 'weblink'
 		}
 		#endregion Weblink
 		#region File
@@ -256,8 +262,6 @@
 					}
 				}
 			}
-			
-			$resourceType = 'file'
 		}
 		#endregion File
 		#region Straight Json
@@ -266,7 +270,6 @@
 			try {
 				$importData = $Resource | ConvertFrom-Json -ErrorAction Stop
 				$resolvedPath = ''
-				$resourceType = 'Json'
 			}
 			catch {
 				Stop-PSFFunction -String 'Configuration.Schema.MetaJson.InvalidJson' -StringValues $Resource -ModuleName PSFramework -FunctionName 'Schema: MetaJson' -EnableException $EnableException -ErrorRecord $_ -Cmdlet $script:cmdlet

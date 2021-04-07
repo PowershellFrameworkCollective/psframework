@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## 1.6.197 (2021-04-07)
+
+- Fix: Validateion Scripts - FileSystem validations fail incorrectly on hidden paths (#476)
+- Fix: ConfigurationSchema metaJson - Relative Path detection broken (#475)
+
 ## 1.6.195 (2021-04-01)
 
 - Fix: PsfValidateScript - unhandled error if test fails without scriptblock generating an exception

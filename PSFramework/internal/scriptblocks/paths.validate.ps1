@@ -15,14 +15,14 @@ Set-PSFScriptblock -Name 'PSFramework.Validate.Path.Leaf' -Scriptblock {
 #region Path: File System
 Set-PSFScriptblock -Name 'PSFramework.Validate.FSPath' -Scriptblock {
 	if (-not (Test-Path -Path $_)) { return $false }
-	if ((Get-Item $_).PSProvider.Name -ne 'FileSystem') { return $false }
+	if ((Get-Item $_ -Force).PSProvider.Name -ne 'FileSystem') { return $false }
 	
 	$true
 } -Global
 
 Set-PSFScriptblock -Name 'PSFramework.Validate.FSPath.File' -Scriptblock {
 	if (-not (Test-Path -Path $_)) { return $false }
-	if ((Get-Item $_).PSProvider.Name -ne 'FileSystem') { return $false }
+	if ((Get-Item $_ -Force).PSProvider.Name -ne 'FileSystem') { return $false }
 	
 	Test-Path -Path $_ -PathType Leaf
 } -Global
@@ -34,7 +34,7 @@ Set-PSFScriptblock -Name 'PSFramework.Validate.FSPath.FileOrParent' -Scriptblock
 
 Set-PSFScriptblock -Name 'PSFramework.Validate.FSPath.Folder' -Scriptblock {
 	if (-not (Test-Path -Path $_)) { return $false }
-	if ((Get-Item $_).PSProvider.Name -ne 'FileSystem') { return $false }
+	if ((Get-Item $_ -Force).PSProvider.Name -ne 'FileSystem') { return $false }
 	
 	Test-Path -Path $_ -PathType Container
 } -Global
