@@ -42,9 +42,9 @@
 		# If launched in JEA Endpoint, Import-PowerShellDataFile is unavailable due to a bug
 		# It is important to check the initial sessionstate, as the module's current state will be 'FullLanguage' instead.
 		# Import-PowerShellDataFile is also unavailable before PowerShell v5
-		if (($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
+		if (([runspace]::DefaultRunspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
 		{
-			foreach ($resolvedPath in ($Path | Resolve-PSFPath -Provider FileSystem | Select-Object -Unique))
+			foreach ($resolvedPath in ($Path | Resolve-PSFPath -Provider FileSystem | Sort-Object -Unique))
 			{
 				Invoke-Expression (Get-Content -Path $resolvedPath -Raw)
 			}
