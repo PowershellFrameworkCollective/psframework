@@ -1,8 +1,9 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.6.201 (2021-05-06)
 
-- Fix: Stop-PSFFunction - exception without message if using strings
+- Fix: Set-PSFFeature - removed input validation due to runtime issue.
+- Fix: Stop-PSFFunction - exception without message if using strings.
 - Fix: Detection when running in a JEA endpoint.
 
 ## 1.6.198 (2021-04-12)
