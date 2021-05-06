@@ -23,7 +23,7 @@
 	[OutputType([bool])]
 	[CmdletBinding()]
 	param (
-		[PsfValidateSet(TabCompletion = 'PSFramework.Feature.Name')]
+		#[PsfValidateSet(TabCompletion = 'PSFramework.Feature.Name')]
 		[parameter(Mandatory = $true)]
 		[string]
 		$Name,

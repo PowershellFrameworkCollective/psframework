@@ -283,7 +283,12 @@
 	}
 	else
 	{
-		$exception = New-Object System.Exception($Message)
+        if ($String) {
+            if ($StringValues) { $exception = New-Object System.Exception(([PSFramework.Localization.LocalizationHost]::Read("$ModuleName.$String", $StringValues))) }
+            else { $exception = New-Object System.Exception(([PSFramework.Localization.LocalizationHost]::Read("$ModuleName.$String"))) }
+        }
+		else { $exception = New-Object System.Exception($Message) }
+
 		$records += New-Object System.Management.Automation.ErrorRecord($Exception, "$($ModuleName)_$FunctionName", $Category, $Target)
 		
 		# Manage Debugging
