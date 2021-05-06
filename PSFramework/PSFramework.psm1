@@ -5,7 +5,7 @@ if ($PSFramework_DebugVerbose) { [PSFramework.PSFCore.PSFCoreHost]::VerboseDebug
 
 [PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Starting Import","")
 
-if (($ExecutionContext.Host.Runspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
+if (([runspace]::DefaultRunspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
 {
 	# This is considered safe, as you should not be using unsafe localization resources in a constrained endpoint
 	$script:ModuleVersion = (Invoke-Expression (Get-Content -Path "$($script:ModuleRoot)\PSFramework.psd1" -Raw)).ModuleVersion

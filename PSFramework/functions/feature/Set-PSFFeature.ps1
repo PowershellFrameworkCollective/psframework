@@ -35,7 +35,7 @@
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-		[PsfValidateSet(TabCompletion = 'PSFramework.Feature.Name')]
+		#[PsfValidateSet(TabCompletion = 'PSFramework.Feature.Name')]
 		[string]
 		$Name,
 		
