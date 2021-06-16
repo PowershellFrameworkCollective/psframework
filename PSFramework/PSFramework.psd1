@@ -5,7 +5,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.6.201'
+	ModuleVersion = '1.6.205'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -26,10 +26,10 @@
 	PowerShellVersion = '3.0'
 	
 	# Assemblies that must be loaded prior to importing this module
-	RequiredAssemblies = @("bin\PSFramework.dll")
+	# RequiredAssemblies = @("bin\PSFramework.dll")
 	
 	# Type files (.ps1xml) to be loaded when importing this module
-	TypesToProcess = @('xml\PSFramework.Types.ps1xml')
+	# TypesToProcess = @('xml\PSFramework.Types.ps1xml')
 	
 	# Format files (.ps1xml) to be loaded when importing this module
 	FormatsToProcess = @('xml\PSFramework.Format.ps1xml')

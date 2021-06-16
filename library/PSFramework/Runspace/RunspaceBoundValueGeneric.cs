@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace PSFramework.Runspace
 {
@@ -20,7 +17,7 @@ namespace PSFramework.Runspace
         /// <summary>
         /// The values available on a "per runspace" basis
         /// </summary>
-        public new Dictionary<Guid, T> Values = new Dictionary<Guid, T>();
+        public new ConcurrentDictionary<Guid, T> Values = new ConcurrentDictionary<Guid, T>();
 
         /// <summary>
         /// The value to offer or set, specific per runspace from which it is called

@@ -3,7 +3,7 @@
 if ($PSFramework_DebugMode) { [PSFramework.PSFCore.PSFCoreHost]::DebugMode = $true }
 if ($PSFramework_DebugVerbose) { [PSFramework.PSFCore.PSFCoreHost]::VerboseDebug = $true }
 
-[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Starting Import","")
+# [PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Starting Import","")
 
 if (([runspace]::DefaultRunspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5))
 {
@@ -41,7 +41,7 @@ if (($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.OS -like "*Wind
 if (Test-Path (Join-Path (Resolve-Path -Path "$($script:ModuleRoot)\..") '.git')) { $importIndividualFiles = $true }
 if ("<was not compiled>" -eq '<was not compiled>') { $importIndividualFiles = $true }
 
-[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Finished Pre-Import Config", "DotSource: $script:doDotSource | Individual Files: $importIndividualFiles")
+# [PSFramework.PSFCore.PSFCoreHost]::WriteDebug("Finished Pre-Import Config", "DotSource: $script:doDotSource | Individual Files: $importIndividualFiles")
 
 function Import-ModuleFile
 {
@@ -81,9 +81,9 @@ function Import-ModuleFile
 if ($importIndividualFiles)
 {
 	# Execute Preimport actions
-	[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PreImport", "")
+	# [PSFramework.PSFCore.PSFCoreHost]::WriteDebug("PreImport", "")
 	foreach ($path in (& "$ModuleRoot\internal\scripts\preimport.ps1")) {
-		[PSFramework.PSFCore.PSFCoreHost]::WriteDebug("  $path", "")
+		# [PSFramework.PSFCore.PSFCoreHost]::WriteDebug("  $path", "")
 		. Import-ModuleFile -Path $path
 	}
 	

@@ -1,5 +1,12 @@
 ﻿# CHANGELOG
 
+## 1.6.205 (2021-06-16)
+
+- Upd: Get-PSFUserChoice - new parameter `-Vertical` which will present options in a vertical, numbered list instead.
+- Fix: Module cannot be used in PSv4 or older
+- Fix: Join-PSFPath - fails to normalize path separators correctly on some OS (#488)
+- Fix: Concurrent access to runspace-bound variables is now threadsafe and will no longer risk state corruption.
+
 ## 1.6.201 (2021-05-06)
 
 - Fix: Set-PSFFeature - removed input validation due to runtime issue.

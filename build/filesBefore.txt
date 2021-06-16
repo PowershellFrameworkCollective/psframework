@@ -1,5 +1,6 @@
 # List all files that are loaded in the postimport.ps1
 # In the order they are loaded during postimport
 
+bin\assembly.ps1
 internal\scripts\environment.ps1
 internal\scripts\teppCoreCode.ps1
