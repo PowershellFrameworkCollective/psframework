@@ -55,6 +55,12 @@
 		{
 			$defaultSeparator = [System.IO.Path]::DirectorySeparatorChar
 			$altSeparator = [System.IO.Path]::AltDirectorySeparatorChar
+            # Alt Directory Separator Char is not reliable on all platforms
+            if ($defaultSeparator -eq $altSeparator)
+            {
+                if ($defaultSeparator -eq '\') { $altSeparator = '/' }
+                else { $altSeparator = '\' }
+            }
 			$resultingPath = $resultingPath.Replace($altSeparator, $defaultSeparator)
 		}
 		

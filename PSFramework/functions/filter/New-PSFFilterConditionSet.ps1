@@ -56,7 +56,8 @@
 		Defines a new Condition Set named Alcohols in the module Bartender.
 		Adds the four newly created Coditions straight to the Set.
 #>
-	[OutputType([PSFramework.Filter.ConditionSet])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
+    [OutputType([PSFramework.Filter.ConditionSet])]
 	[CmdletBinding(DefaultParameterSetName = 'default')]
 	param (
 		[Parameter(Mandatory = $true)]

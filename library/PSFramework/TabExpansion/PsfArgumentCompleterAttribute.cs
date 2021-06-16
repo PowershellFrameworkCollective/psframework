@@ -3,6 +3,62 @@ using System.Management.Automation;
 
 namespace PSFramework.TabExpansion
 {
+#if PS4
+    /// <summary>
+    /// Allows integrating PSFramework tab expansion by attribute, rather than command.
+    /// </summary>
+    public class PsfArgumentCompleterAttribute : Attribute
+    {
+        /// <summary>
+        /// Create an argument completer offering but the name of the registered completion
+        /// </summary>
+        /// <param name="Completion">The completion scriptblock to use to provide completion information</param>
+        public PsfArgumentCompleterAttribute(string Completion)
+        {
+            
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock)
+        {
+
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        /// <param name="Global">Whether to execute the scriptblock in the global context.</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, bool Global)
+        {
+
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        /// <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name)
+        {
+
+        }
+
+        /// <summary>
+        /// Create an argument completer offering a scriptblock that is supposed to produce completion data.
+        /// </summary>
+        /// <param name="ScriptBlock">The scriptblock to use for completion data generation</param>
+        /// <param name="Name">The name to assign to this completion. Must be unique per scriptblock</param>
+        /// <param name="Global">Whether to execute the scriptblock in the global context.</param>
+        public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name, bool Global)
+        {
+
+        }
+    }
+#else
     /// <summary>
     /// Allows integrating PSFramework tab expansion by attribute, rather than command.
     /// </summary>
@@ -62,4 +118,5 @@ namespace PSFramework.TabExpansion
 
         }
     }
+#endif
 }

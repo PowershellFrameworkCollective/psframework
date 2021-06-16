@@ -40,6 +40,7 @@
 		Creates a filter object around the "OSWindows -or EnvAzurePipelines" expression.
 		It then attaches the latest version of the Environment ConditionSet from within the PSFramework module.
 #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	[OutputType([PSFramework.Filter.Expression])]
 	[CmdletBinding(DefaultParameterSetName = 'default')]
 	param (

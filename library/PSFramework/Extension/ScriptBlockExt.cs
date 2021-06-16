@@ -40,8 +40,14 @@ namespace PSFramework.Extension
         /// <returns>A clone of the scriptblock with the languagemode intact</returns>
         public static ScriptBlock Clone(this ScriptBlock ScriptBlock)
         {
-            ScriptBlock newBlock = (ScriptBlock)UtilityHost.InvokePrivateMethod("Clone", ScriptBlock, null);
-            UtilityHost.SetPrivateProperty("LanguageMode", newBlock, UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock));
+            ScriptBlock newBlock = null;
+            if (PSFCore.PSFCoreHost.PSVersion.Major >= 5)
+            {
+                newBlock = (ScriptBlock)UtilityHost.InvokePrivateMethod("Clone", ScriptBlock, null);
+                UtilityHost.SetPrivateProperty("LanguageMode", newBlock, UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock));
+            }
+            else
+                newBlock = (ScriptBlock)UtilityHost.InvokePrivateMethod("Clone", ScriptBlock, new object[] { false });
             return newBlock;
         }
 

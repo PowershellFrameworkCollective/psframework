@@ -28,6 +28,7 @@
     
             Returns a CompletionResult with the text and tooltip 'master'
     #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	param (
 		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true, Mandatory = $true, ValueFromPipeline = $true)]
 		[ValidateNotNullOrEmpty()]

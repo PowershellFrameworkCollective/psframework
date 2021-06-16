@@ -81,5 +81,8 @@
 				$conditionSetObject.Add($conditionObject)
 			}
 		}
+        foreach ($conditionObject in $Condition) {
+            $conditionSetObject.Add($conditionObject)
+        }
 	}
 }
