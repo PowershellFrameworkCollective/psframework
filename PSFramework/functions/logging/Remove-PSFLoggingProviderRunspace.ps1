@@ -24,7 +24,8 @@
 	
 		Removes the current runspace from the list of included runspaces on the logfile instance "UpdateTask".
 #>
-	[CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
+    [CmdletBinding()]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]
