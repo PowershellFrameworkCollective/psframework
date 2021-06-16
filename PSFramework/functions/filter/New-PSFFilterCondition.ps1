@@ -45,7 +45,8 @@
 		Creates a condition named "HasTemp" that is part of the MyModule module.
 		When executed, it will validate, whether the temp folder exists.
 #>
-	[OutputType([PSFramework.Filter.Condition])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
+    [OutputType([PSFramework.Filter.Condition])]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]

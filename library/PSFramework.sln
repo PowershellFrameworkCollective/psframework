@@ -1,22 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31409.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSFramework", "PSFramework\PSFramework.csproj", "{D07E0143-2198-4CF2-AF90-BF008A8EC685}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		PS4|Any CPU = PS4|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.PS4|Any CPU.ActiveCfg = PS4|Any CPU
+		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.PS4|Any CPU.Build.0 = PS4|Any CPU
 		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D07E0143-2198-4CF2-AF90-BF008A8EC685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {647DEEEB-FCCF-48FE-8D5A-7C7C33220FE6}
 	EndGlobalSection
 EndGlobal

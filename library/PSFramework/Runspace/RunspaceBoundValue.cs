@@ -1,6 +1,7 @@
 ﻿using PSFramework.Utility;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Management.Automation.Runspaces;
 using System.Text;
@@ -26,7 +27,7 @@ namespace PSFramework.Runspace
         /// <summary>
         /// The values available on a "per runspace" basis
         /// </summary>
-        public Dictionary<Guid, object> Values = new Dictionary<Guid, object>();
+        public ConcurrentDictionary<Guid, object> Values = new ConcurrentDictionary<Guid, object>();
 
         /// <summary>
         /// The value to offer or set, specific per runspace from which it is called
@@ -60,9 +61,10 @@ namespace PSFramework.Runspace
             ICollection<System.Management.Automation.Runspaces.Runspace> runspaces = UtilityHost.GetRunspaces();
             ICollection<Guid> runspaceIDs = (ICollection<Guid>)runspaces.Select(o => o.InstanceId);
 
+            object temp;
             foreach (Guid ID in IDs)
                 if (!runspaceIDs.Contains(ID))
-                    Values.Remove(ID);
+                    Values.TryRemove(ID, out temp);
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace PSFramework.Runspace
         /// </summary>
         public void Dispose()
         {
-            Values = new Dictionary<Guid, object>();
+            Values = new ConcurrentDictionary<Guid, object>();
             DefaultValue = null;
             RunspaceHost._RunspaceBoundValues.Remove(this);
         }
