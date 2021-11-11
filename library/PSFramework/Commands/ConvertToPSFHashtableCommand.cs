@@ -11,7 +11,7 @@ namespace PSFramework.Commands
     /// <summary>
     /// Implements the ConvertTo-PSFHashtable command
     /// </summary>
-    [Cmdlet("ConvertTo", "PSFHashtable")]
+    [Cmdlet("ConvertTo", "PSFHashtable", DefaultParameterSetName = "filter")]
     [OutputType(new Type[] { typeof(Hashtable) })]
     public class ConvertToPSFHashtableCommand : PSCmdlet
     {
@@ -19,13 +19,13 @@ namespace PSFramework.Commands
         /// <summary>
         /// The properties to include explicitly
         /// </summary>
-        [Parameter()]
+        [Parameter(ParameterSetName = "filter")]
         public string[] Include = new string[0];
 
         /// <summary>
         /// Any properties to exclude explicitly
         /// </summary>
-        [Parameter()]
+        [Parameter(ParameterSetName = "filter")]
         public string[] Exclude = new string[0];
 
         /// <summary>
@@ -59,11 +59,31 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter(ValueFromPipeline = true)]
         public PSObject[] InputObject;
+
+        /// <summary>
+        /// Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
+        /// </summary>
+        [Parameter(ParameterSetName = "reference")]
+        public string ReferenceCommand;
         #endregion Parameters
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
 
         #region Cmdlet Methods
+        /// <summary>
+        /// Initialize command, resolving the ReferenceCommand if specified
+        /// </summary>
+        protected override void BeginProcessing()
+        {
+            if (String.IsNullOrEmpty(ReferenceCommand))
+                return;
+
+            CommandInfo info = InvokeCommand.GetCommand(ReferenceCommand, CommandTypes.Function | CommandTypes.Cmdlet | CommandTypes.Alias);
+            if (info == null)
+                throw new CommandNotFoundException($"Unable to find command: {ReferenceCommand}");
+            Include = info.Parameters.Keys.ToArray();
+        }
+
         /// <summary>
         /// Implements the basic processing logic to convert objects to hashtables
         /// </summary>

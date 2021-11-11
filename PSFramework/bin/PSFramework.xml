@@ -184,6 +184,16 @@
             The actual items to convert
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ReferenceCommand">
+            <summary>
+            Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
+            <summary>
+            Initialize command, resolving the ReferenceCommand if specified
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.ProcessRecord">
             <summary>
             Implements the basic processing logic to convert objects to hashtables
