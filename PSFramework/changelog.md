@@ -1,5 +1,15 @@
 ﻿# CHANGELOG
 
+## ???
+
+- New: Command: New-PSFThrottle - Create a throttle object, used to not exceed a certain rate of executions per time interval.
+- Upd: ConvertTo-PSFHashtable - add `-Remap` parameter, allowing the user to rename keys in the return hashtable
+- Upd: Invoke-PSFProtectedCommand - added `-Level` parameter to control, at which level messages are being generated
+- Upd: Invoke-PSFProtectedCommand - added `-ErrorEvent` parameter, allowing to include conditional logic if the protected command fails
+- Upd: Logging Provider: SQL - added "Schema" option, allowing to pick the database schema to write to
+- Fix: Module cannot be used in PSv5.0
+- Fix: Select-PSFObject cannot be used in a JEA endpoint
+
 ## 1.6.205 (2021-06-16)
 
 - Upd: Get-PSFUserChoice - new parameter `-Vertical` which will present options in a vertical, numbered list instead.

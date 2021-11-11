@@ -1,7 +1,7 @@
 ﻿using PSFramework.Parameter;
 using PSFramework.Utility;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -104,6 +104,18 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public ScriptBlock RetryCondition;
+
+        /// <summary>
+        /// Code to execute if giving up in failure
+        /// </summary>
+        [Parameter()]
+        public ScriptBlock ErrorEvent;
+
+        /// <summary>
+        /// The message level at which to generate non-error messages written by this cmdlet
+        /// </summary>
+        [Parameter()]
+        public Message.MessageLevel Level = Message.MessageLevel.SomewhatVerbose;
         #endregion Parameters
 
         #region Private Fields
@@ -212,10 +224,10 @@ return
                 test = PSCmdlet.ShouldProcess(LanguagePrimitives.ConvertTo<string>(Target), _Message);
 
             if (test)
-                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Confirmed", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Confirmed", new object[] { _Message }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
             else
             {
-                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Denied", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Denied", new object[] { _Message }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
                 return;
             }
 
@@ -227,7 +239,7 @@ return
                 try
                 {
                     var result = PSCmdlet.InvokeCommand.InvokeScript(false, ScriptBlock, null, null);
-                    WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Success", new object[] { _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
+                    WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Success", new object[] { _Message }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
                     if (result != null && result.Count > 0)
                         WriteObject(result, true);
                     return;
@@ -259,7 +271,7 @@ return
                         return;
                     }
                 }
-                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Retry", new object[] { countAttempted, (RetryCount + 1), _Message }), Message.MessageLevel.SomewhatVerbose, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Retry", new object[] { countAttempted, (RetryCount + 1), _Message }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
                 Thread.Sleep(RetryWait);
             }
             
@@ -268,9 +280,27 @@ return
 
         private void Terminate(Exception error)
         {
+            ErrorEventAction();
             ScriptBlock errorBlock = ScriptBlock.Create(_ErrorScript);
             object[] arguments = new object[] { _ErrorMessage, error, Target, Continue, ContinueLabel, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, PSCmdlet, EnableException };
             PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);
+        }
+
+        private void ErrorEventAction()
+        {
+            if (ErrorEvent == null)
+                return;
+            Hashtable table = new Hashtable();
+            try {
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
+                table["Result"] = PSCmdlet.InvokeCommand.InvokeScript(false, ErrorEvent, null, null);
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent.Success", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target, table);
+            }
+            catch (Exception e)
+            {
+                table["Error"] = e;
+                WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent.Failed", new object[] { _Message, Target, e.Message }), Message.MessageLevel.Warning, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target, table);
+            }
         }
     }
 }

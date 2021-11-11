@@ -48,6 +48,13 @@ namespace PSFramework.Commands
         public SwitchParameter Inherit;
 
         /// <summary>
+        /// Remap individual keys in the hashtable provided.
+        /// Effectively renames entries in the hashtable.
+        /// </summary>
+        [Parameter()]
+        public Hashtable Remap;
+
+        /// <summary>
         /// The actual items to convert
         /// </summary>
         [Parameter(ValueFromPipeline = true)]
@@ -101,6 +108,17 @@ namespace PSFramework.Commands
                     if (IncludeEmpty.ToBool())
                         foreach (string name in Include.Where(o => !result.ContainsKey(o)))
                             result[name] = null;
+                }
+                if (Remap != null)
+                {
+                    foreach (string key in Remap.Keys)
+                    {
+                        if (result.ContainsKey(key))
+                        {
+                            result[Remap[key]] = result[key];
+                            result.Remove(key);
+                        }
+                    }
                 }
 
                 WriteObject(result);

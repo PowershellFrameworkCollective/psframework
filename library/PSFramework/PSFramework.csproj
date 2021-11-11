@@ -187,6 +187,7 @@
     <Compile Include="Utility\Size.cs" />
     <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
+    <Compile Include="Utility\Throttle.cs" />
     <Compile Include="Utility\TimeRange.cs" />
     <Compile Include="Utility\TimeRangeContainer.cs" />
     <Compile Include="Utility\TypeTransformationAttribute.cs" />

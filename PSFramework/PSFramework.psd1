@@ -88,6 +88,7 @@
 		'New-PSFSessionContainer'
 		'New-PSFSupportPackage'
 		'New-PSFTeppCompletionResult'
+		'New-PSFThrottle'
 		'Register-PSFCallback'
 		'Register-PSFConfig'
 		'Register-PSFConfigSchema'
