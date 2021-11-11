@@ -38,6 +38,7 @@ $exceptions['LegalSurplus'] = @(
 	'Clear-PSFResultCache.Clear'
 	'Configuration_ValidateLanguage'
 	'Configuration.Remove-PSFConfig.ShouldRemove'
+	'PSFramework.Configuration.Remove-PSFConfig.ShouldRemove'
 	'FlowControl.Invoke-PSFProtectedCommand.Confirmed'
 	'FlowControl.Invoke-PSFProtectedCommand.Denied'
 	'FlowControl.Invoke-PSFProtectedCommand.Failed'
