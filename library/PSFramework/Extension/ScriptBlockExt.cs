@@ -41,7 +41,8 @@ namespace PSFramework.Extension
         public static ScriptBlock Clone(this ScriptBlock ScriptBlock)
         {
             ScriptBlock newBlock = null;
-            if (PSFCore.PSFCoreHost.PSVersion.Major >= 5)
+            Version minVersion = new Version(5, 1);
+            if (PSFCore.PSFCoreHost.PSVersion >= minVersion)
             {
                 newBlock = (ScriptBlock)UtilityHost.InvokePrivateMethod("Clone", ScriptBlock, null);
                 UtilityHost.SetPrivateProperty("LanguageMode", newBlock, UtilityHost.GetPrivateProperty("LanguageMode", ScriptBlock));

@@ -173,9 +173,25 @@
             Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Remap">
+            <summary>
+            Remap individual keys in the hashtable provided.
+            Effectively renames entries in the hashtable.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.InputObject">
             <summary>
             The actual items to convert
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ReferenceCommand">
+            <summary>
+            Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
+            <summary>
+            Initialize command, resolving the ReferenceCommand if specified
             </summary>
         </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.ProcessRecord">
@@ -259,6 +275,16 @@
             <summary>
             Only when this scriptblock returns $true will it try again.
             The scriptblock receives argument: The exception object.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.ErrorEvent">
+            <summary>
+            Code to execute if giving up in failure
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.Level">
+            <summary>
+            The message level at which to generate non-error messages written by this cmdlet
             </summary>
         </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
@@ -7335,6 +7361,44 @@
         <member name="F:PSFramework.Utility.SupportData.Environment">
             <summary>
             Operating System, CPU &amp; RAM
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.Throttle">
+            <summary>
+            Class implementing a throttling mechanism / watcher
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.Throttle.Limit">
+            <summary>
+            The maximum number of slots per interval
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.Throttle.Interval">
+            <summary>
+            The interval over which slots are limited
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Throttle.Count">
+            <summary>
+            The number of slots currently taken
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Create a new throttle object
+            </summary>
+            <param name="Limit">How many slots are available per interval?</param>
+            <param name="Interval">hat is the interval over which slots are measured?</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Obtain an execution slots from the throttle
+            </summary>
+            <param name="Timeout">How long are you willing to wait for a slot before giving up?</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.Purge">
+            <summary>
+            Clean up any expired slots
             </summary>
         </member>
         <member name="T:PSFramework.Utility.TimeRange">
