@@ -75,7 +75,7 @@
 				#region Try removing all items specified
 				foreach ($item in $Config)
 				{
-					if (-not (Test-PSFShouldProcess -ActionString 'PSFramework.Configuration.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
+					if (-not (Test-PSFShouldProcess -ActionString 'Configuration.Remove-PSFConfig.ShouldRemove' -Target $item.FullName)) { continue }
 					try { $result = [PSFramework.Configuration.ConfigurationHost]::DeleteConfiguration($item.FullName) }
 					catch { Stop-PSFFunction -String Configuration.Remove-PSFConfig.InvalidConfiguration -StringValues $item.FullName -EnableException ($ErrorActionPreference -eq 'Stop') -Continue -Cmdlet $PSCmdlet -ErrorRecord $_ }
 					
