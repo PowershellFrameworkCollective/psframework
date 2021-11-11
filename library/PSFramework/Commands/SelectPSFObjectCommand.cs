@@ -189,7 +189,7 @@ namespace PSFramework.Commands
 
             // Set the list of parameters to a variable in the caller scope, so it can be splatted
             this.SessionState.PSVariable.Set("__PSFramework_SelectParam", clonedBoundParameters);
-            ScriptBlock scriptCommand = ScriptBlock.Create("Select-Object @__PSFramework_SelectParam");
+            ScriptBlock scriptCommand = ScriptBlock.Create("Microsoft.PowerShell.Utility\\Select-Object @__PSFramework_SelectParam");
             _Pipeline = scriptCommand.GetSteppablePipeline(MyInvocation.CommandOrigin);
             
             if (_NoAdjustment)
