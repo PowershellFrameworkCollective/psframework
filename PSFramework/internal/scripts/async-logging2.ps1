@@ -28,7 +28,7 @@
 					
 					try
 					{
-						$ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.BeginEvent, $null, $null)
+						$null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.BeginEvent, $null, $null)
 						$___provider.Initialized = $true
 					}
 					catch { $___provider.Errors.Push($_) }
@@ -45,7 +45,7 @@
 				
 				try
 				{
-					& $___instance.BeginCommand
+					$null = & $___instance.BeginCommand
 					$___instance.Initialized = $true
 				}
 				catch { $___instance.Errors.Enqueue($_)}
@@ -58,12 +58,12 @@
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
+				try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try { & $___instance.StartCommand }
+				try { $null = & $___instance.StartCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
@@ -72,7 +72,7 @@
 			while ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0)
 			{
 				$Entry = $null
-				[PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
+				$null = [PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
 				if ($Entry)
 				{
 					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
@@ -80,7 +80,7 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
+							try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
@@ -89,7 +89,7 @@
 					{
 						if ($___instance.MessageApplies($Entry))
 						{
-							try { & $___instance.MessageCommand $Entry }
+							try { $null = & $___instance.MessageCommand $Entry }
 							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
@@ -102,7 +102,7 @@
 			while ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0)
 			{
 				$Record = $null
-				[PSFramework.Message.LogHost]::OutQueueError.TryDequeue([ref]$Record)
+				$null = [PSFramework.Message.LogHost]::OutQueueError.TryDequeue([ref]$Record)
 				
 				if ($Record)
 				{
@@ -111,7 +111,7 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.ErrorEvent, $null, $Record) }
+							try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.ErrorEvent, $null, $Record) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
@@ -120,7 +120,7 @@
 					{
 						if ($___instance.MessageApplies($Record))
 						{
-							try { & $___instance.ErrorCommand $Record }
+							try { $null = & $___instance.ErrorCommand $Record }
 							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
@@ -132,12 +132,12 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
+				try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try { & $___instance.EndCommand }
+				try { $null = & $___instance.EndCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion End Event
@@ -147,14 +147,14 @@
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized($true))
 			{
 				if ($___provider.Enabled) { continue }
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
+				try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
 				$___provider.Initialized = $false
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances($true))
 			{
 				if ($___instance.Enabled) { continue }
-				try { & $___instance.FinalCommand }
+				try { $null = & $___instance.FinalCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 				$___instance.Initialized = $false
 			}
@@ -179,12 +179,12 @@
 			#region Start Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
+				try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.StartEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try { & $___instance.StartCommand }
+				try { $null = & $___instance.StartCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion Start Event
@@ -193,7 +193,7 @@
 			while ([PSFramework.Message.LogHost]::OutQueueLog.Count -gt 0)
 			{
 				$Entry = $null
-				[PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
+				$null = [PSFramework.Message.LogHost]::OutQueueLog.TryDequeue([ref]$Entry)
 				if ($Entry)
 				{
 					[PSFramework.Logging.ProviderHost]::LoggingState = 'Writing'
@@ -201,7 +201,7 @@
 					{
 						if ($___provider.MessageApplies($Entry))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
+							try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Entry) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
@@ -210,7 +210,7 @@
 					{
 						if ($___instance.MessageApplies($Entry))
 						{
-							try { & $___instance.MessageCommand $Entry }
+							try { $null = & $___instance.MessageCommand $Entry }
 							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
@@ -222,7 +222,7 @@
 			while ([PSFramework.Message.LogHost]::OutQueueError.Count -gt 0)
 			{
 				$Record = $null
-				[PSFramework.Message.LogHost]::OutQueueError.TryDequeue([ref]$Record)
+				$null = [PSFramework.Message.LogHost]::OutQueueError.TryDequeue([ref]$Record)
 				
 				if ($Record)
 				{
@@ -231,7 +231,7 @@
 					{
 						if ($___provider.MessageApplies($Record))
 						{
-							try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Record) }
+							try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.MessageEvent, $null, $Record) }
 							catch { $___provider.Errors.Push($_) }
 						}
 					}
@@ -240,7 +240,7 @@
 					{
 						if ($___instance.MessageApplies($Record))
 						{
-							try { & $___instance.ErrorCommand $Record }
+							try { $null = & $___instance.ErrorCommand $Record }
 							catch { $___instance.Errors.Enqueue($_) }
 						}
 					}
@@ -251,12 +251,12 @@
 			#region End Event
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 			{
-				try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
+				try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.EndEvent, $null, $null) }
 				catch { $___provider.Errors.Push($_) }
 			}
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
-				try { & $___instance.EndCommand }
+				try { $null = & $___instance.EndCommand }
 				catch { $___instance.Errors.Enqueue($_) }
 			}
 			#endregion End Event
@@ -266,12 +266,12 @@
 		#region Final Event
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())
 		{
-			try { $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
+			try { $null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.FinalEvent, $null, $null) }
 			catch { $___provider.Errors.Push($_) }
 		}
 		foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 		{
-			try { & $___instance.FinalCommand }
+			try { $null = & $___instance.FinalCommand }
 			catch { $___instance.Errors.Enqueue($_) }
 		}
 		
