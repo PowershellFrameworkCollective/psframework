@@ -1,5 +1,12 @@
 ﻿# CHANGELOG
 
+## ???
+
+- New: Configuration Validation: Secret - accepts either a PSCredential, a SecureString or a string, stores the secret as a PSCredential (#508)
+- Upd: Logging Provider: Azure Log Analytics - added TimeFormat option to define, just how exactly timestamps are being logged
+- Upd: Logging Provider: Azure Log Analytics - added Headers option to define, which properties (in which order) are being logged (#507)
+- Upd: Logging Provider: Azure Log Analytics - WorkspaceID & SharedKey now updated to use the secret validation, supporting SecureString or Credential objects in addition to plaintext string (#508)
+
 ## 1.6.214 (2021-11-11)
 
 - New: Command: New-PSFThrottle - Create a throttle object, used to not exceed a certain rate of executions per time interval.
