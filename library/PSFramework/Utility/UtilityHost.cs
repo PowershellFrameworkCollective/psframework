@@ -374,6 +374,20 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Returns the value of a private static field on a type
+        /// </summary>
+        /// <param name="StaticType">The type to pick from</param>
+        /// <param name="Name">The name of the field to retrieve</param>
+        /// <returns>The value of the field content (may be null)</returns>
+        public static object GetPrivateStaticField(Type StaticType, string Name)
+        {
+            FieldInfo field = StaticType.GetField(Name, BindingFlags.Static | BindingFlags.NonPublic);
+            if (field == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound", Name)), "Name");
+            return field.GetValue(null);
+        }
+
+        /// <summary>
         /// Returns the value of a private field on an object
         /// </summary>
         /// <param name="Name">The name of the field</param>

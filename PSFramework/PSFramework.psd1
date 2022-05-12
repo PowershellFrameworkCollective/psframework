@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
 	
 	# Script module or binary module file associated with this manifest
 	RootModule = 'PSFramework.psm1'
@@ -197,10 +196,3 @@
 		
 	} # End of PrivateData hashtable
 }
-
-
-
-
-
-
-
