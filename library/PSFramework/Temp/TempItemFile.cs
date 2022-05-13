@@ -23,6 +23,11 @@ namespace PSFramework.Temp
         public override bool Exists => (new FileInfo(Path)).Exists;
 
         /// <summary>
+        /// The provider implementing this temp item
+        /// </summary>
+        public new string ProviderName => "File";
+
+        /// <summary>
         /// The full path to the file
         /// </summary>
         public string Path;

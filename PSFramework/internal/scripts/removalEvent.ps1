@@ -1,5 +1,8 @@
 ﻿#region Handle Module Removal
 $PSF_OnRemoveScript = {
+	# Clear all temp items
+	$script:tempItems.Clear()
+	
 	# Stop all managed runspaces ONLY on the main runspace's termination
 	if ([runspace]::DefaultRunspace.Id -eq 1)
 	{
@@ -14,5 +17,5 @@ $PSF_OnRemoveScript = {
 	[PSFramework.FlowControl.CallbackHost]::RemoveRunspaceOwned()
 }
 $ExecutionContext.SessionState.Module.OnRemove += $PSF_OnRemoveScript
-Register-EngineEvent -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -Action $PSF_OnRemoveScript
+$null = Register-EngineEvent -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -Action $PSF_OnRemoveScript -SupportEvent
 #endregion Handle Module Removal

@@ -58,5 +58,21 @@ namespace PSFramework.Meta
 
             CallerLine = Frame.Position.EndLineNumber;
         }
+
+
+
+        /// <summary>
+        /// Returns the caller CallStackFrame item
+        /// </summary>
+        /// <param name="Level">How many levels to peek into the callstack</param>
+        /// <returns>Returns the caller CallStackFrame item</returns>
+        public static CallerInfo GetCaller(int Level = 0)
+        {
+            IEnumerable<CallStackFrame> callStack = Utility.UtilityHost.Callstack;
+            CallStackFrame callerFrame = null;
+            if (callStack.Count() > Level)
+                callerFrame = callStack.ElementAt(Level);
+            return new CallerInfo(callerFrame);
+        }
     }
 }

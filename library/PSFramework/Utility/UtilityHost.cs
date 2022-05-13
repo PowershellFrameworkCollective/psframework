@@ -537,6 +537,16 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Get information on whoever called your PowerShell code
+        /// </summary>
+        /// <param name="Level">How many levels to go down the script callstack</param>
+        /// <returns>Metadata describing who called</returns>
+        public static Meta.CallerInfo GetCallerInfo(int Level = 1)
+        {
+            return Meta.CallerInfo.GetCaller(Level);
+        }
+
+        /// <summary>
         /// Stored scriptblocks that can be retrieved on demand anywhere within the process
         /// </summary>
         public static ConcurrentDictionary<string, ScriptBlockItem> ScriptBlocks = new ConcurrentDictionary<string, ScriptBlockItem>(StringComparer.InvariantCultureIgnoreCase);

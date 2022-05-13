@@ -4417,6 +4417,13 @@
             </summary>
             <param name="Frame">The frame to parse</param>
         </member>
+        <member name="M:PSFramework.Meta.CallerInfo.GetCaller(System.Int32)">
+            <summary>
+            Returns the caller CallStackFrame item
+            </summary>
+            <param name="Level">How many levels to peek into the callstack</param>
+            <returns>Returns the caller CallStackFrame item</returns>
+        </member>
         <member name="T:PSFramework.Meta.PipelineCommand">
             <summary>
             Information object for a command on the pipeline
@@ -6220,6 +6227,11 @@
             The module that owns the item
             </summary>
         </member>
+        <member name="F:PSFramework.Temp.TempItem.ProviderName">
+            <summary>
+            The name of the provider implementing this
+            </summary>
+        </member>
         <member name="M:PSFramework.Temp.TempItem.Delete">
             <summary>
             Remove the temporary item. Must remove itself from the Parent's list once completed.
@@ -6258,11 +6270,6 @@
             The list of temp item providers
             </summary>
         </member>
-        <member name="F:PSFramework.Temp.TempItemContainer._Timer">
-            <summary>
-            Timer that tries to maintain the schedule on temp items with a timeout.
-            </summary>
-        </member>
         <member name="M:PSFramework.Temp.TempItemContainer.#ctor">
             <summary>
             Create a default container for temporary items
@@ -6273,19 +6280,14 @@
             Remove all temp items, cleaning up behind yourself
             </summary>
         </member>
+        <member name="P:PSFramework.Temp.TempItemContainer.ClearAll">
+            <summary>
+            Property to trick the exiting event to respect it
+            </summary>
+        </member>
         <member name="M:PSFramework.Temp.TempItemContainer.ClearExpired">
             <summary>
             Remove all temp items that are bveyond their timeout
-            </summary>
-        </member>
-        <member name="M:PSFramework.Temp.TempItemContainer.StartTimer">
-            <summary>
-            Starts the scheduler to handle TempItems that have a timeout
-            </summary>
-        </member>
-        <member name="M:PSFramework.Temp.TempItemContainer.StopTimer">
-            <summary>
-            Stops the scheduler to handle TempItems that have a timeout
             </summary>
         </member>
         <member name="M:PSFramework.Temp.TempItemContainer.Get(System.String,System.String)">
@@ -6309,6 +6311,11 @@
         <member name="P:PSFramework.Temp.TempItemDirectory.Exists">
             <summary>
             Whether the directory still exists
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemDirectory.ProviderName">
+            <summary>
+            The provider implementing this temp item
             </summary>
         </member>
         <member name="F:PSFramework.Temp.TempItemDirectory.Path">
@@ -6345,6 +6352,11 @@
             Whether the file still exists
             </summary>
         </member>
+        <member name="P:PSFramework.Temp.TempItemFile.ProviderName">
+            <summary>
+            The provider implementing this temp item
+            </summary>
+        </member>
         <member name="F:PSFramework.Temp.TempItemFile.Path">
             <summary>
             The full path to the file
@@ -6377,11 +6389,6 @@
         <member name="P:PSFramework.Temp.TempItemGeneric.Exists">
             <summary>
             Whether the temp item even exists.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Temp.TempItemGeneric.ProviderName">
-            <summary>
-            The name of the provider implementing this
             </summary>
         </member>
         <member name="F:PSFramework.Temp.TempItemGeneric.ExistsScript">
@@ -8008,6 +8015,13 @@
             <summary>
             Returns the current callstack on PS3
             </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetCallerInfo(System.Int32)">
+            <summary>
+            Get information on whoever called your PowerShell code
+            </summary>
+            <param name="Level">How many levels to go down the script callstack</param>
+            <returns>Metadata describing who called</returns>
         </member>
         <member name="F:PSFramework.Utility.UtilityHost.ScriptBlocks">
             <summary>

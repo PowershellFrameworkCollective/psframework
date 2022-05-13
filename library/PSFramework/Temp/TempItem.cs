@@ -34,6 +34,11 @@ namespace PSFramework.Temp
         public string Module;
 
         /// <summary>
+        /// The name of the provider implementing this
+        /// </summary>
+        public string ProviderName;
+
+        /// <summary>
         /// Remove the temporary item. Must remove itself from the Parent's list once completed.
         /// </summary>
         public abstract void Delete();

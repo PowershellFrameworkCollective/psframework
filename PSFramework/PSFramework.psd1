@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.6.214'
+	ModuleVersion = '1.7.226'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -67,6 +67,7 @@
 		'Get-PSFScriptblock'
 		'Get-PSFTaskEngineCache'
 		'Get-PSFTaskEngineTask'
+		'Get-PSFTempItem'
 		'Get-PSFTypeSerializationData'
 		'Get-PSFUserChoice'
 		'Import-PSFClixml'
@@ -86,6 +87,9 @@
 		'New-PSFMessageLevelModifier'
 		'New-PSFSessionContainer'
 		'New-PSFSupportPackage'
+		'New-PSFTempDirectory'
+		'New-PSFTempFile'
+		'New-PSFTempItem'
 		'New-PSFTeppCompletionResult'
 		'New-PSFThrottle'
 		'Register-PSFCallback'
@@ -100,6 +104,7 @@
 		'Register-PSFRunspace'
 		'Register-PSFSessionObjectType'
 		'Register-PSFTaskEngineTask'
+		'Register-PSFTempProvider'
 		'Register-PSFTeppArgumentCompleter'
 		'Register-PSFTeppScriptblock'
 		'Register-PSFTypeSerializationData'
@@ -108,6 +113,7 @@
 		'Remove-PSFLicense'
 		'Remove-PSFLoggingProviderRunspace'
 		'Remove-PSFMessageLevelModifier'
+		'Remove-PSFTempItem'
 		'Reset-PSFConfig'
 		'Resolve-PSFDefaultParameterValue'
 		'Resolve-PSFPath'

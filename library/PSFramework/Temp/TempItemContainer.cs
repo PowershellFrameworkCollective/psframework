@@ -1,11 +1,7 @@
 ﻿using PSFramework.Utility;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Timers;
-using System.Threading.Tasks;
 
 namespace PSFramework.Temp
 {
@@ -26,16 +22,11 @@ namespace PSFramework.Temp
         public Dictionary<string, TempItemProvider> Providers { get; set; } = new Dictionary<string, TempItemProvider>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// Timer that tries to maintain the schedule on temp items with a timeout.
-        /// </summary>
-        private Timer _Timer;
-
-        /// <summary>
         /// Create a default container for temporary items
         /// </summary>
         public TempItemContainer()
         {
-
+            
         }
 
         /// <summary>
@@ -55,30 +46,6 @@ namespace PSFramework.Temp
             List<TempItem> toClear = Items.Where(o => o.Timeout != null && o.Timeout < DateTime.Now).ToList();
             foreach (TempItem item in toClear)
                 item.Delete();
-        }
-
-        /// <summary>
-        /// Starts the scheduler to handle TempItems that have a timeout
-        /// </summary>
-        public void StartTimer()
-        {
-            _Timer = new Timer();
-            _Timer.Interval = 60000;
-            _Timer.Elapsed += ClearExpiredEvent;
-            _Timer.Enabled = true;
-        }
-
-        /// <summary>
-        /// Stops the scheduler to handle TempItems that have a timeout
-        /// </summary>
-        public void StopTimer()
-        {
-            _Timer.Enabled = false;
-        }
-
-        private static void ClearExpiredEvent(Object source, ElapsedEventArgs e)
-        {
-            ((TempItemContainer)source).ClearExpired();
         }
 
         /// <summary>

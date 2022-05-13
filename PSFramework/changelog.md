@@ -1,7 +1,8 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.7.226 (2022-05-13)
 
+- New: Component: Temp Item - simplifies creation and lifecycle management of temporary items - files, folders, ...
 - New: Configuration Validation: Secret - accepts either a PSCredential, a SecureString or a string, stores the secret as a PSCredential (#508)
 - New: ScriptBlock: PSFramework.Validate.SafeName - ensures input only consists of letters, numbers, dots, underscores and dashes
 - Upd: Command: Import-PSFPowerShellDataFile - added support for json files
@@ -10,6 +11,8 @@
 - Upd: Logging Provider: Azure Log Analytics - added Headers option to define, which properties (in which order) are being logged (#507)
 - Upd: Logging Provider: Azure Log Analytics - WorkspaceID & SharedKey now updated to use the secret validation, supporting SecureString or Credential objects in addition to plaintext string (#508)
 - Upd: Type: UtilityHost - added public static method: GetPrivateStaticField
+- Upd: Type: utilityHost - added public static method: GetCallerInfo to get information on whoever called your command
+- Upd: Removal-Event has been hidden from Get-Job
 - Fix: Memory leak that would affect long-running processes that utilize runspaces
 
 ## 1.6.214 (2021-11-11)

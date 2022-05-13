@@ -19,6 +19,11 @@ namespace PSFramework.Temp
         public override bool Exists => (new DirectoryInfo(Path)).Exists;
 
         /// <summary>
+        /// The provider implementing this temp item
+        /// </summary>
+        public new string ProviderName => "Directory";
+
+        /// <summary>
         /// The full path to the directory
         /// </summary>
         public string Path;

@@ -20,11 +20,6 @@ namespace PSFramework.Temp
         public override bool Exists => LanguagePrimitives.ConvertTo<bool>(ExistsScript.Invoke(Data, CreationData));
 
         /// <summary>
-        /// The name of the provider implementing this
-        /// </summary>
-        public string ProviderName;
-
-        /// <summary>
         /// Scriptblock verifying the existence of the item
         /// </summary>
         public ScriptBlock ExistsScript;
@@ -95,6 +90,9 @@ namespace PSFramework.Temp
                 ExistsScript = provider.ExistsScript;
                 DeleteScript = provider.DeleteScript;
             }
+
+            if (Parent != null)
+                Parent.Items.Add(this);
         }
     }
 }
