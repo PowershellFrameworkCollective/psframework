@@ -59,7 +59,7 @@ namespace PSFramework.Runspace
             // Store IDs first, so parallel access is not an issue and a new value gets accidentally discarded
             Guid[] IDs = Values.Keys.ToArray();
             ICollection<System.Management.Automation.Runspaces.Runspace> runspaces = UtilityHost.GetRunspaces();
-            ICollection<Guid> runspaceIDs = (ICollection<Guid>)runspaces.Select(o => o.InstanceId);
+            IEnumerable<Guid> runspaceIDs = (IEnumerable<Guid>)runspaces.Select(o => o.InstanceId);
 
             object temp;
             foreach (Guid ID in IDs)

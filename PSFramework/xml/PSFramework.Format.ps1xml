@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
 <Configuration>
+	<SelectionSets>
+		<SelectionSet>
+			<Name>PSFramework.Temp.TempItem</Name>
+			<Types>
+				<TypeName>PSFramework.Temp.TempItemDirectory</TypeName>
+				<TypeName>PSFramework.Temp.TempItemFile</TypeName>
+				<TypeName>PSFramework.Temp.TempItemGeneric</TypeName>
+            </Types>
+        </SelectionSet>
+    </SelectionSets>
+	
 	<Controls>
         <Control>
             <Name>Configuration-GroupingFormat</Name>
@@ -542,6 +553,41 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
+		
+		<!-- PSFramework.Temp.TempItem -->
+        <View>
+            <Name>PSFramework.Temp.TempItem</Name>
+            <ViewSelectedBy>
+  				<SelectionSetName>PSFramework.Temp.TempItem</SelectionSetName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>ProviderName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Module</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Path</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
 		
         <!-- PSFramework.Utility.PsfScriptBlock -->
         <View>

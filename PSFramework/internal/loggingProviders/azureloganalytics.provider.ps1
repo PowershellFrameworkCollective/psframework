@@ -48,31 +48,16 @@ $FunctionDefinitions = {
 		
 		begin {
 			# Grab the default configuration values for the logging provider
-			$WorkspaceID = Get-ConfigValue -Name 'WorkspaceId'
-			$SharedKey = Get-ConfigValue -Name 'SharedKey'
+			$WorkspaceID = Get-ConfigValue -Name 'WorkspaceId' | Resolve-Secret
+			$SharedKey = Get-ConfigValue -Name 'SharedKey' | Resolve-Secret
 			$LogType = Get-ConfigValue -Name 'LogType'
 		}
 		
 		process {
 			# Create a custom PSObject and convert it to a Json object using UTF8 encoding
-			$loggingMessage = [PSCustomObject][ordered]@{
-				Message = $Message.LogMessage
-				Timestamp = $Message.TimeStamp.ToUniversalTime()
-				Level   = $Message.Level.ToString()
-				Tags    = $Message.Tags
-				Data = $Message.Data
-				ComputerName = $Message.ComputerName
-				Runspace = $Message.Runspace
-				UserName = $Message.UserName
-				ModuleName = $Message.ModuleName
-				FunctionName = $Message.FunctionName
-				File    = $Message.File
-				CallStack = $Message.CallStack
-				TargetObject = $Message.TargetObject
-				ErrorRecord = $Message.ErrorRecord
-			}
+			$loggingMessage = $Message | Microsoft.PowerShell.Utility\Select-Object $script:ala_headers
 			
-			$bodyAsJson = ConvertTo-Json $loggingMessage
+			$bodyAsJson = ConvertTo-Json $loggingMessage -Compress
 			$body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
 			
 			$restMethod = "POST"
@@ -198,9 +183,60 @@ $FunctionDefinitions = {
 			return $authorization
 		}
 	}
+	
+	function Resolve-Secret {
+		[CmdletBinding()]
+		param (
+			[Parameter(ValueFromPipeline = $true)]
+			$Secret
+		)
+		process {
+			if ($Secret -is [string]) {
+				return $Secret
+			}
+			if ($Secret -is [securestring]) {
+				$cred = New-Object PSCredential('whatever', $Secret)
+				return $cred.GetNetworkCredential().Password
+			}
+			if ($Secret -is [pscredential]) {
+				$Secret.GetNetworkCredential().Password
+			}
+		}
+	}
 }
 
 #region Events
+$start_event = {
+	$script:ala_headers = Get-ConfigValue -Name 'Headers' | ForEach-Object {
+		switch ($_) {
+			'Message'
+			{
+				@{
+					Name	   = 'Message'
+					Expression = { $_.LogMessage }
+				}
+			}
+			'Timestamp'
+			{
+				@{
+					Name	   = 'Timestamp'
+					Expression = {
+						if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp.ToUniversalTime() }
+						else { $_.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name 'TimeFormat')) }
+					}
+				}
+			}
+			'Level'
+			{
+				@{
+					Name = 'Level'
+					Expression = { $_.Level -as [string] }
+				}
+			}
+			default { $_ }
+		}
+	}
+}
 $message_event = {
 	param (
 		$Message
@@ -212,9 +248,11 @@ $message_event = {
 
 # Configuration values for the logging provider
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'string' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'string' -Description "SharedId for the Azure Workspace we are logging our data objects to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'secret' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'secret' -Description "SharedId for the Azure Workspace we are logging our data objects to."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.TimeFormat' -Value "" -Initialize -Validation 'string' -Description "Format timestamps will be written with."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Validation 'stringarray' -Description "The properties of the message to log."
 }
 
 # Registered parameters for the logging provider.
@@ -223,12 +261,13 @@ $paramRegisterPSFAzureLogAnalyticsProvider = @{
 	Name			   = "AzureLogAnalytics"
 	Version2		   = $true
 	ConfigurationRoot  = 'PSFramework.Logging.AzureLogAnalytics'
-	InstanceProperties = 'WorkspaceId', 'SharedKey', 'LogType'
+	InstanceProperties = 'WorkspaceId', 'SharedKey', 'LogType', 'TimeFormat', 'Headers'
 	MessageEvent	   = $message_Event
 	ConfigurationSettings = $configuration_Settings
 	FunctionDefinitions = $functionDefinitions
 	ConfigurationDefaultValues = @{
 		LogType = 'Message'
+		Headers = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord'
 	}
 }
 
