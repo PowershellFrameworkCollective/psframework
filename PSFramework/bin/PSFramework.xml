@@ -5434,6 +5434,11 @@
             The value to offer or set, specific per runspace from which it is called
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RunspaceBoundValueGeneric`1.PurgeExpired">
+            <summary>
+            Removes all value entries whose corresponding Runspace has been destroyed
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RunspaceBoundValueGeneric`1.#ctor">
             <summary>
             Create an empty runspace bound value object
@@ -6278,11 +6283,6 @@
         <member name="M:PSFramework.Temp.TempItemContainer.Clear">
             <summary>
             Remove all temp items, cleaning up behind yourself
-            </summary>
-        </member>
-        <member name="P:PSFramework.Temp.TempItemContainer.ClearAll">
-            <summary>
-            Property to trick the exiting event to respect it
             </summary>
         </member>
         <member name="M:PSFramework.Temp.TempItemContainer.ClearExpired">

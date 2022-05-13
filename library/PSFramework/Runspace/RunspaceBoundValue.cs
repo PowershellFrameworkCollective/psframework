@@ -57,7 +57,7 @@ namespace PSFramework.Runspace
         public void PurgeExpired()
         {
             // Store IDs first, so parallel access is not an issue and a new value gets accidentally discarded
-            Guid[] IDs = Values.Keys.ToArray();
+            Guid[] IDs = Values.Keys.ToList().ToArray();
             ICollection<System.Management.Automation.Runspaces.Runspace> runspaces = UtilityHost.GetRunspaces();
             IEnumerable<Guid> runspaceIDs = (IEnumerable<Guid>)runspaces.Select(o => o.InstanceId);
 
