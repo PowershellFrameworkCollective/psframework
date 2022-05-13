@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using PSFramework.Utility;
 
 namespace PSFramework.Runspace
 {
@@ -43,6 +46,22 @@ namespace PSFramework.Runspace
         #pragma warning disable 0649
         private readonly T _NullValue;
         #pragma warning restore 0649
+
+        /// <summary>
+        /// Removes all value entries whose corresponding Runspace has been destroyed
+        /// </summary>
+        public new void PurgeExpired()
+        {
+            // Store IDs first, so parallel access is not an issue and a new value gets accidentally discarded
+            Guid[] IDs = Values.Keys.ToList().ToArray();
+            ICollection<System.Management.Automation.Runspaces.Runspace> runspaces = UtilityHost.GetRunspaces();
+            IEnumerable<Guid> runspaceIDs = (IEnumerable<Guid>)runspaces.Select(o => o.InstanceId);
+
+            T temp;
+            foreach (Guid ID in IDs)
+                if (!runspaceIDs.Contains(ID))
+                    Values.TryRemove(ID, out temp);
+        }
 
         /// <summary>
         /// Create an empty runspace bound value object

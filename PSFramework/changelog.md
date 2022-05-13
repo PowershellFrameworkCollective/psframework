@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.7.227 (2022-05-13)
+
+- Fix: Memory leak that would affect long-running processes that utilize runspaces (extended)
+
 ## 1.7.226 (2022-05-13)
 
 - New: Component: Temp Item - simplifies creation and lifecycle management of temporary items - files, folders, ...
