@@ -4417,6 +4417,13 @@
             </summary>
             <param name="Frame">The frame to parse</param>
         </member>
+        <member name="M:PSFramework.Meta.CallerInfo.GetCaller(System.Int32)">
+            <summary>
+            Returns the caller CallStackFrame item
+            </summary>
+            <param name="Level">How many levels to peek into the callstack</param>
+            <returns>Returns the caller CallStackFrame item</returns>
+        </member>
         <member name="T:PSFramework.Meta.PipelineCommand">
             <summary>
             Information object for a command on the pipeline
@@ -6190,6 +6197,296 @@
             Task had an error
             </summary>
         </member>
+        <member name="T:PSFramework.Temp.TempItem">
+            <summary>
+            A temporary item
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItem.Type">
+            <summary>
+            What kind of item is this?
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItem.Exists">
+            <summary>
+            Does the item still exist?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.Timeout">
+            <summary>
+            When will this temporary item expire?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.Name">
+            <summary>
+            Name of the item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.Module">
+            <summary>
+            The module that owns the item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.ProviderName">
+            <summary>
+            The name of the provider implementing this
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItem.Delete">
+            <summary>
+            Remove the temporary item. Must remove itself from the Parent's list once completed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.Parent">
+            <summary>
+            Parent container
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItem.LastError">
+            <summary>
+            The last error that happened to the TempItem.
+            Usually errors when trying to run Delete()
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItem.ToString">
+            <summary>
+            String representation of this object
+            </summary>
+            <returns>some text</returns>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemContainer">
+            <summary>
+            Container unit for temporary items.
+            Ensures keeping track of and disposing any and all temporary items.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemContainer.Items">
+            <summary>
+            List of all temporary items registered
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemContainer.Providers">
+            <summary>
+            The list of temp item providers
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemContainer.#ctor">
+            <summary>
+            Create a default container for temporary items
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemContainer.Clear">
+            <summary>
+            Remove all temp items, cleaning up behind yourself
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemContainer.ClearAll">
+            <summary>
+            Property to trick the exiting event to respect it
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemContainer.ClearExpired">
+            <summary>
+            Remove all temp items that are bveyond their timeout
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemContainer.Get(System.String,System.String)">
+            <summary>
+            Returns all temp items that meet the module and name condition (using wildcard evaluation)
+            </summary>
+            <param name="Module">Module to search by</param>
+            <param name="Name">Name of the TempItem to search by</param>
+            <returns>A list of TempItems matching the search patterns.</returns>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemDirectory">
+            <summary>
+            A temporary directory, that shall be deleted in due time
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemDirectory.Type">
+            <summary>
+            The fact that this is a file
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemDirectory.Exists">
+            <summary>
+            Whether the directory still exists
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemDirectory.ProviderName">
+            <summary>
+            The provider implementing this temp item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemDirectory.Path">
+            <summary>
+            The full path to the directory
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemDirectory.Delete">
+            <summary>
+            Delete the directory and remove it from the list of temporary items
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemDirectory.#ctor(System.String,System.String,System.String,PSFramework.Temp.TempItemContainer)">
+            <summary>
+            Create a new temporary directory object (directory itself is not created)
+            </summary>
+            <param name="Name">Name of the temp directory</param>
+            <param name="Module">Name of the module owning the temp directory</param>
+            <param name="Path">Path to the temporary directory</param>
+            <param name="Parent">The parent container.</param>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemFile">
+            <summary>
+            A temporary file, that shall be deleted in due time
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemFile.Type">
+            <summary>
+            The fact that this is a file
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemFile.Exists">
+            <summary>
+            Whether the file still exists
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemFile.ProviderName">
+            <summary>
+            The provider implementing this temp item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemFile.Path">
+            <summary>
+            The full path to the file
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemFile.Delete">
+            <summary>
+            Delete the file and remove it from the list of temporary items
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemFile.#ctor(System.String,System.String,System.String,PSFramework.Temp.TempItemContainer)">
+            <summary>
+            Create a new temporary file object (file itself is not created)
+            </summary>
+            <param name="Name">Name of the temp file</param>
+            <param name="Module">Name of the module owning the temp file</param>
+            <param name="Path">Path to the temporary file</param>
+            <param name="Parent">The parent container.</param>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemGeneric">
+            <summary>
+            A generic temporary item. Implementation logic provided by temporary item providers.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemGeneric.Type">
+            <summary>
+            This is a generic one. Yay.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Temp.TempItemGeneric.Exists">
+            <summary>
+            Whether the temp item even exists.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemGeneric.ExistsScript">
+            <summary>
+            Scriptblock verifying the existence of the item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemGeneric.DeleteScript">
+            <summary>
+            Scriptblock deleting the temporary item.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemGeneric.Data">
+            <summary>
+            Data that differentiates this item from others using the same provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemGeneric.CreationData">
+            <summary>
+            Data that was returned when running the creation scriptblock
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemGeneric.Delete">
+            <summary>
+            Kill it with fire.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemGeneric.ToString">
+            <summary>
+            String representation of this object
+            </summary>
+            <returns>some text</returns>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemGeneric.#ctor(System.String,System.String,System.String,System.Collections.Hashtable,PSFramework.Temp.TempItemContainer,System.Object)">
+            <summary>
+            Creates a generic temporary item
+            </summary>
+            <param name="Name">Name of the temp item</param>
+            <param name="Module">Name of the module owning the temp item</param>
+            <param name="ProviderName">Name of the provider offering the implementation logic of this item</param>
+            <param name="Data">Data defining this temp item</param>
+            <param name="Parent">The parent container of this item</param>
+            <param name="CreationData">Data that was returned when running the creation scriptblock</param>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemProvider">
+            <summary>
+            Extensibility tool, providing logic to custom-deploy temporary items
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemProvider.Name">
+            <summary>
+            Name of the provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemProvider.CreationScript">
+            <summary>
+            Scriptblock to execute as you create the temporary item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemProvider.ExistsScript">
+            <summary>
+            Scriptblock verifying the existence of the item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemProvider.DeleteScript">
+            <summary>
+            Scriptblock deleting the temporary item.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Temp.TempItemProvider.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Create a new TempItemProvider
+            </summary>
+            <param name="Name">Name of the provider</param>
+            <param name="CreationScript">Scriptblock to execute as you create the temporary item</param>
+            <param name="ExistsScript">Scriptblock verifying the existence of the item</param>
+            <param name="DeleteScript">Scriptblock deleting the temporary item.</param>
+        </member>
+        <member name="T:PSFramework.Temp.TempItemType">
+            <summary>
+            What kind of temp item is the object?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemType.File">
+            <summary>
+            A regular file
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemType.Directory">
+            <summary>
+            A regular folder / directory
+            </summary>
+        </member>
+        <member name="F:PSFramework.Temp.TempItemType.Generic">
+            <summary>
+            A generic item type
+            </summary>
+        </member>
         <member name="T:PSFramework.Utility.DynamicContentDictionary">
             <summary>
             A dynamic content object that implements a dictionary
@@ -7637,6 +7934,14 @@
             <param name="Name">The name of the property to retrieve</param>
             <returns>The value of the property content (may be null)</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticField(System.Type,System.String)">
+            <summary>
+            Returns the value of a private static field on a type
+            </summary>
+            <param name="StaticType">The type to pick from</param>
+            <param name="Name">The name of the field to retrieve</param>
+            <returns>The value of the field content (may be null)</returns>
+        </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetPrivateField(System.String,System.Object)">
             <summary>
             Returns the value of a private field on an object
@@ -7710,6 +8015,13 @@
             <summary>
             Returns the current callstack on PS3
             </summary>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetCallerInfo(System.Int32)">
+            <summary>
+            Get information on whoever called your PowerShell code
+            </summary>
+            <param name="Level">How many levels to go down the script callstack</param>
+            <returns>Metadata describing who called</returns>
         </member>
         <member name="F:PSFramework.Utility.UtilityHost.ScriptBlocks">
             <summary>

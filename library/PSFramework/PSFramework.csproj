@@ -171,6 +171,13 @@
     <Compile Include="TaskEngine\PsfTask.cs" />
     <Compile Include="TaskEngine\TaskHost.cs" />
     <Compile Include="TaskEngine\TaskState.cs" />
+    <Compile Include="Temp\TempItem.cs" />
+    <Compile Include="Temp\TempItemContainer.cs" />
+    <Compile Include="Temp\TempItemDirectory.cs" />
+    <Compile Include="Temp\TempItemFile.cs" />
+    <Compile Include="Temp\TempItemGeneric.cs" />
+    <Compile Include="Temp\TempItemProvider.cs" />
+    <Compile Include="Temp\TempItemType.cs" />
     <Compile Include="Utility\DynamicContentDictionary.cs" />
     <Compile Include="Utility\DynamicContentList.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />

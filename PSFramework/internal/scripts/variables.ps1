@@ -31,3 +31,6 @@ Register-PSFFeature -Name 'PSFramework.Sort-PSFObject.IgnoreVersionError' -Owner
 
 # The main runspace-local host used for the Filter feature
 $script:filterContainer = [PSFramework.Filter.FilterContainer]::Filters
+
+# Container for temp items
+$script:tempItems = [PSFramework.Temp.TempItemContainer]::new()

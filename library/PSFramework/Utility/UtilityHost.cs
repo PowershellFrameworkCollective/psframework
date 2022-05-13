@@ -374,6 +374,20 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Returns the value of a private static field on a type
+        /// </summary>
+        /// <param name="StaticType">The type to pick from</param>
+        /// <param name="Name">The name of the field to retrieve</param>
+        /// <returns>The value of the field content (may be null)</returns>
+        public static object GetPrivateStaticField(Type StaticType, string Name)
+        {
+            FieldInfo field = StaticType.GetField(Name, BindingFlags.Static | BindingFlags.NonPublic);
+            if (field == null)
+                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivatePropertyNotFound", Name)), "Name");
+            return field.GetValue(null);
+        }
+
+        /// <summary>
         /// Returns the value of a private field on an object
         /// </summary>
         /// <param name="Name">The name of the field</param>
@@ -520,6 +534,16 @@ namespace PSFramework.Utility
                 MethodInfo method = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger.GetType().GetMethod("GetCallStack", BindingFlags.NonPublic | BindingFlags.Instance);
                 return (IEnumerable<CallStackFrame>)method.Invoke(System.Management.Automation.Runspaces.Runspace.DefaultRunspace.Debugger, null);
             }
+        }
+
+        /// <summary>
+        /// Get information on whoever called your PowerShell code
+        /// </summary>
+        /// <param name="Level">How many levels to go down the script callstack</param>
+        /// <returns>Metadata describing who called</returns>
+        public static Meta.CallerInfo GetCallerInfo(int Level = 1)
+        {
+            return Meta.CallerInfo.GetCaller(Level);
         }
 
         /// <summary>
