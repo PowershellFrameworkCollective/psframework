@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.7.235 (2022-06-04)
 
 - New: Command: Clear-PSFMessage - Clears the in-memory log of the message system.
 - New: Configuration Setting: PSFramework.Runspace.RunspaceBoundValue.CleanupInterval - The interval at which Runspace-Bound Variables will be cleaned up, deleting values associated with expired runspaces.
