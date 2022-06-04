@@ -1,5 +1,16 @@
 ﻿# CHANGELOG
 
+## 1.7.235 (2022-06-04)
+
+- New: Command: Clear-PSFMessage - Clears the in-memory log of the message system.
+- New: Configuration Setting: PSFramework.Runspace.RunspaceBoundValue.CleanupInterval - The interval at which Runspace-Bound Variables will be cleaned up, deleting values associated with expired runspaces.
+- Upd: Type: UtilityHost - added public static method: InvokePrivateStaticMethod
+- Upd: Command: Join-PSFPath - added alias `ChildPath` to parameter `Path` (#525)
+- Upd: Command: Set-PSFLoggingProvider - added `-Wait` parameter to have the ommand wait until the provider is fully initialized
+- Upd: Logging Provider: logfile - improved performance (x5) and prevented other processes from blocking write access to file
+- Fix: Logging Provider: logfile - Type Json would ignore the `JsonString` setting
+- Fix: Memory leak that would affect long-running processes that utilize runspaces (#523; @adamdriscoll)
+
 ## 1.7.227 (2022-05-13)
 
 - Fix: Memory leak that would affect long-running processes that utilize runspaces (extended)
@@ -15,7 +26,7 @@
 - Upd: Logging Provider: Azure Log Analytics - added Headers option to define, which properties (in which order) are being logged (#507)
 - Upd: Logging Provider: Azure Log Analytics - WorkspaceID & SharedKey now updated to use the secret validation, supporting SecureString or Credential objects in addition to plaintext string (#508)
 - Upd: Type: UtilityHost - added public static method: GetPrivateStaticField
-- Upd: Type: utilityHost - added public static method: GetCallerInfo to get information on whoever called your command
+- Upd: Type: UtilityHost - added public static method: GetCallerInfo to get information on whoever called your command
 - Upd: Removal-Event has been hidden from Get-Job
 - Fix: Memory leak that would affect long-running processes that utilize runspaces
 

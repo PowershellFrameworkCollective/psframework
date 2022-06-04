@@ -445,6 +445,18 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Executes a static private method of a type
+        /// </summary>
+        /// <param name="StaticType">The type containing the method</param>
+        /// <param name="Name">The name of the method to invoke</param>
+        /// <param name="Arguments">The arguments to pass to the method</param>
+        /// <returns>The result of the method invoked</returns>
+        public static object InvokePrivateStaticMethod(Type StaticType, string Name, object[] Arguments)
+        {
+            return GetPrivateStaticMethod(StaticType, Name).Invoke(null, Arguments);
+        }
+
+        /// <summary>
         /// Execute a constructor for the specified type, creating a new instance of it.
         /// It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
         /// May have side-effects when used on types that do significant logic in their constructors even when they fail.

@@ -16,6 +16,21 @@ namespace PSFramework.Runspace
         public static int StopTimeoutSeconds = 30;
 
         /// <summary>
+        /// The interval (in milliseonds) in which Runspace-Bound Values will be leaned up
+        /// </summary>
+        public static int RbvCleanupInterval
+        {
+            get => _RbvCleanupInterval;
+            set
+            {
+                _RbvCleanupInterval = value;
+                StopRbvTimer();
+                StartRbvTimer();
+            }
+        }
+        private static int _RbvCleanupInterval = 900000;
+
+        /// <summary>
         /// The dictionary containing the definitive list of unique Runspace
         /// </summary>
         public static ConcurrentDictionary<string, RunspaceContainer> Runspaces = new ConcurrentDictionary<string, RunspaceContainer>(StringComparer.InvariantCultureIgnoreCase);
@@ -57,6 +72,14 @@ namespace PSFramework.Runspace
         }
 
         private static void CleanupRunspaceBoundVariables(Object source, ElapsedEventArgs e)
+        {
+            PurgeAllRunspaceBoundVariables();
+        }
+
+        /// <summary>
+        /// Purge all RBVs of datasets from all expired runspaces
+        /// </summary>
+        public static void PurgeAllRunspaceBoundVariables()
         {
             foreach (RunspaceBoundValue value in _RunspaceBoundValues)
                 value.PurgeExpired();

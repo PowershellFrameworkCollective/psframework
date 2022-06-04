@@ -54,7 +54,7 @@ namespace PSFramework.Runspace
         /// <summary>
         /// Removes all value entries whose corresponding Runspace has been destroyed
         /// </summary>
-        public void PurgeExpired()
+        public virtual void PurgeExpired()
         {
             // Store IDs first, so parallel access is not an issue and a new value gets accidentally discarded
             Guid[] IDs = Values.Keys.ToList().ToArray();

@@ -35,6 +35,7 @@
 		$Path,
 		
 		[Parameter(ValueFromRemainingArguments = $true)]
+		[Alias('ChildPath')]
 		[string[]]
 		$Child,
 		

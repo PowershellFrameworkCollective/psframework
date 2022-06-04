@@ -46,42 +46,49 @@
 			$FileType,
 			
 			[string]
-			$Path,
-			
-			[string]
 			$CsvDelimiter,
 			
 			$MessageItem
 		)
-		
-		$parent = Split-Path $Path
-		if (-not (Test-Path $parent)) {
-			$null = New-Item $parent -ItemType Directory -Force
-		}
-		$fileExists = Test-Path $Path
 		
 		#region Type-Based Output
 		switch ($FileType) {
 			#region Csv
 			"Csv"
 			{
-				if ((-not $fileExists) -and $IncludeHeader) { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Set-Content -Path $Path -Encoding $script:encoding }
-				else { $Message | ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter | Select-Object -Skip 1 | Add-Content -Path $Path -Encoding $script:encoding }
+				if ($script:firstEntry) {
+					if ($script:csvConverter) { $null = $sript:csvConverter.End() }
+					$script:csvConverter = { ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter }.GetSteppablePipeline()
+					$script:csvConverter.Begin($true)
+				}
+				$converted = $script:csvConverter.Process($Message)
+				if ($script:firstEntry) {
+					if ($IncludeHeader) { $script:writer.WriteLine($converted[0]) }
+					$script:writer.WriteLine($converted[1])
+				}
+				else { $script:writer.WriteLine($converted[0]) }
 			}
 			#endregion Csv
 			#region Json
 			"Json"
 			{
-				if ($fileExists -and -not $script:JsonSettings.JsonNoComma) { Add-Content -Path $Path -Value "," -Encoding $script:encoding }
-				if (-not $script:JsonSettings) { $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline:$(-not $script:JsonSettings.JsonNoComma) -Encoding $script:encoding }
-				else { $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress | Add-Content -Path $Path -NoNewline:$(-not $script:JsonSettings.JsonNoComma) -Encoding $script:encoding }
+				if (-not $script:JsonSettings.JsonString) { $data = $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress }
+				else { $data = $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress }
+				
+				if (-not $script:JsonSettings.JsonNoComma) {
+					$script:writer.WriteLine(",")
+					$script:writer.Write($data)
+				}
+				else {
+					$script:writer.WriteLine($data)
+				}
 			}
 			#endregion Json
 			#region XML
 			"XML"
 			{
 				[xml]$xml = $message | ConvertTo-Xml -NoTypeInformation
-				$xml.Objects.InnerXml | Add-Content -Path $Path -Encoding $script:encoding
+				$script:writer.WriteLine($xml.Objects.InnerXml)
 			}
 			#endregion XML
 			#region Html
@@ -89,11 +96,10 @@
 			{
 				[xml]$xml = $message | ConvertTo-Html -Fragment
 				
-				if ((-not $fileExists) -and $IncludeHeader) {
-					$xml.table.tr[0].OuterXml | Add-Content -Path $Path -Encoding $script:encoding
+				if ($script:firstEntry -and $IncludeHeader) {
+					$script:writer.WriteLine($xml.table.tr[0].OuterXml)
 				}
-				
-				$xml.table.tr[1].OuterXml | Add-Content -Path $Path -Encoding $script:encoding
+				$script:writer.WriteLine($xml.table.tr[1].OuterXml)
 			}
 			#endregion Html
 			#region CMTrace
@@ -107,11 +113,13 @@
 				
 				$format = '<![LOG[{0}]LOG]!><time="{1:HH:mm:ss.fff}+000" date="{1:MM-dd-yyyy}" component="{6}:{2} > {7}" context="{3}" type="{4}" thread="{5}" file="{6}:{2} > {7}">'
 				$line = $format -f $MessageItem.LogMessage, $MessageItem.Timestamp, $MessageItem.Line, $MessageItem.TargetObject, $cType, $MessageItem.Runspace, $fileEntry, $MessageItem.FunctionName
-				$line | Add-Content -Path $Path -Encoding $script:encoding
+				$script:writer.WriteLine($line)
 			}
 			#endregion CMTrace
 		}
 		#endregion Type-Based Output
+		
+		$script:firstEntry = $false
 	}
 	
 	function Invoke-LogRotate {
@@ -247,9 +255,14 @@
 $begin_event = {
 	$script:lastRotate = (Get-Date).AddMinutes(-10)
 	$script:logPathList = @{ }
+	$script:currentPath = ''
+	$script:writer = $null
+	$script:firstEntry = $true
 }
 
 $start_event = {
+	Update-Mutex
+	
 	$script:logfile_headers = Get-ConfigValue -Name 'Headers' | ForEach-Object {
 		switch ($_) {
 			'Tags'
@@ -285,24 +298,41 @@ $start_event = {
 			default { $_ }
 		}
 	}
+	$script:encoding = Get-ConfigValue -Name 'Encoding'
+	$newPath = Get-LogFilePath
+	if ($newPath -ne $script:currentPath) {
+		if ($script:writer) {
+			$null = $script:writer.End()
+			$script:writer = $null
+		}
+		
+		$script:currentPath = $newPath
+		$parent = Split-Path $newPath
+		if (-not (Test-Path $parent)) {
+			$null = New-Item $parent -ItemType Directory -Force
+		}
+		
+		$script:firstEntry = $true
+		$shareMode = [System.IO.FileShare]::Read
+		if ($script:mutex) { $shareMode = [System.IO.FileShare]::ReadWrite }
+		$stream = [System.IO.FileStream]::new($script:currentPath, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, $shareMode)
+		$script:writer = [System.IO.StreamWriter]::new($stream)
+		$script:writer.Encoding = [PSFramework.Parameter.EncodingParameter]$script:encoding
+	}
 	
 	$script:logfile_paramWriteLogFileMessage = @{
 		IncludeHeader = Get-ConfigValue -Name 'IncludeHeader'
 		FileType	  = Get-ConfigValue -Name 'FileType'
 		CsvDelimiter  = Get-ConfigValue -Name 'CsvDelimiter'
-		Path		  = Get-LogFilePath
 	}
 	# Cache path for final move action
-	$script:logPathList[$script:logfile_paramWriteLogFileMessage.Path] = $script:logfile_paramWriteLogFileMessage.Path
-	
-	$script:encoding = Get-ConfigValue -Name 'Encoding'
+	$script:logPathList[$script:currentPath] = $script:currentPath
 	
 	$script:JsonSettings = @{
 		JsonCompress = Get-ConfigValue -Name JsonCompress
 		JsonString   = Get-ConfigValue -Name JsonString
 		JsonNoComma  = Get-ConfigValue -Name JsonNoComma
 	}
-	Update-Mutex
 }
 
 $message_event = {
@@ -310,18 +340,39 @@ $message_event = {
 		$Message
 	)
 	
-	if ($script:mutex) { $null = $script:mutex.WaitOne() }
+	if ($script:mutex) {
+		$null = $script:mutex.WaitOne()
+		# Set to end of file, in case another process wrote
+		$script:writer.BaseStream.Position = $script:writer.BaseStream.Length
+	}
 	try { $Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message }
-	finally { if ($script:mutex) { $script:mutex.ReleaseMutex() } }
+	finally {
+		$script:writer.Flush()
+		if ($script:mutex) { $script:mutex.ReleaseMutex() }
+	}
 }
 
 $end_event = {
+	if ($script:mutex) {
+		$null = $script:mutex.WaitOne()
+	}
+	$script:writer.Flush()
 	Invoke-LogRotate
+	if ($script:mutex) { $script:mutex.ReleaseMutex() }
 }
 
 $final_event = {
+	if ($script:mutex) {
+		$null = $script:mutex.WaitOne()
+	}
+	if ($script:writer) {
+		$null = $script:writer.Close()
+		$script:writer = $null
+	}
+	
 	Move-LogFile
 	Copy-LogFile
+	if ($script:mutex) { $script:mutex.ReleaseMutex() }
 }
 #endregion Events
 
