@@ -3511,6 +3511,11 @@
             </summary>
             <returns>All messages logged this session.</returns>
         </member>
+        <member name="M:PSFramework.Message.LogHost.ClearLog">
+            <summary>
+            Clears the current in-memory log
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.LogHost.WriteErrorEntry(System.Management.Automation.ErrorRecord[],System.String,System.String,System.Collections.Generic.List{System.String},System.DateTime,System.String,System.Guid,System.String)">
             <summary>
             Write an error record to the log
@@ -5526,6 +5531,11 @@
             The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RunspaceHost.RbvCleanupInterval">
+            <summary>
+            The interval (in milliseonds) in which Runspace-Bound Values will be leaned up
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RunspaceHost.Runspaces">
             <summary>
             The dictionary containing the definitive list of unique Runspace
@@ -5545,6 +5555,11 @@
             <summary>
             Stops the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
             Should only be called when destroying the primary runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.PurgeAllRunspaceBoundVariables">
+            <summary>
+            Purge all RBVs of datasets from all expired runspaces
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -7974,6 +7989,15 @@
             <param name="Instance">The object whose method to run</param>
             <param name="Arguments">Arguments to pass to the method</param>
             <returns>Whatever the private method may return</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.InvokePrivateStaticMethod(System.Type,System.String,System.Object[])">
+            <summary>
+            Executes a static private method of a type
+            </summary>
+            <param name="StaticType">The type containing the method</param>
+            <param name="Name">The name of the method to invoke</param>
+            <param name="Arguments">The arguments to pass to the method</param>
+            <returns>The result of the method invoked</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor(System.Type,System.Object[],System.Reflection.BindingFlags)">
             <summary>

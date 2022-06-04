@@ -37,7 +37,8 @@
 	FunctionsToExport  = @(
 		'Add-PSFFilterCondition'
 		'Add-PSFLoggingProviderRunspace'
-		'Clear-PSFresultCache'
+		'Clear-PSFMessage'
+		'Clear-PSFResultCache'
 		'Compare-PSFArray'
 		'ConvertFrom-PSFArray'
 		'ConvertFrom-PSFClixml'
