@@ -167,6 +167,15 @@ namespace PSFramework.Message
         }
 
         /// <summary>
+        /// Clears the current in-memory log
+        /// </summary>
+        public static void ClearLog()
+        {
+            LogEntries = new ConcurrentQueue<LogEntry>();
+            ErrorRecords = new ConcurrentQueue<PsfExceptionRecord>();
+        }
+
+        /// <summary>
         /// Write an error record to the log
         /// </summary>
         /// <param name="Record">The actual error record as powershell wrote it</param>

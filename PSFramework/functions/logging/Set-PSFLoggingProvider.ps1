@@ -81,6 +81,11 @@
 	.PARAMETER ExcludeWarning
 		Whether to exclude warnings from the logging provider / instance.
 	
+	.PARAMETER Wait
+		Whether to have the command wait until the provider instance is provisioned and ready to handle messages.
+		By default, the asynchroneous nature of the logging system my cause a slight delay, that in some instances could lead to missing the first few messages.
+		Enables the logging runspace if disabled, may timeout (30 seconds) in extreme-load situations caused by other runspaces.
+	
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
@@ -147,6 +152,9 @@
 		
 		[switch]
 		$ExcludeWarning,
+		
+		[switch]
+		$Wait,
 		
 		[switch]
 		$EnableException
@@ -300,6 +308,20 @@
 			elseif ($provider.Instances[$InstanceName])
 			{
 				$provider.Instances[$InstanceName].Enabled = $Enabled
+			}
+		}
+	}
+	end {
+		if (Test-PSFFunctionInterrupt) { return }
+		if (-not $Wait) { return }
+		
+		$limit = (Get-Date).AddSeconds(30)
+		Start-PSFRunspace -Name 'psframework.logging' -NoMessage
+		while ($Enabled -ne (Get-PSFLoggingProviderInstance -ProviderName $Name -Name $InstanceName).Enabled) {
+			Start-Sleep -Milliseconds 200
+			if ((Get-Date) -gt $limit) {
+				Write-PSFMessage -Level Warning -String 'Set-PSFLoggingProvider.Wait.Timeout' -StringValues $Name, $InstanceName
+				break
 			}
 		}
 	}
