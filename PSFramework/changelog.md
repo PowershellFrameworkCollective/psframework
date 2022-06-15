@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## 1.7.237 (2022-06-15)
+
+- Upd: Tab Expansion - now supports custom tooltips for completion results by returning hashtables with a `Text` and a `ToolTip` key
+- Upd: Command: Invoke-PSFProtectedCommand - updated the `-ErrorEvent` script to receive one argument - the error of what went wrong.
+
 ## 1.7.235 (2022-06-04)
 
 - New: Command: Clear-PSFMessage - Clears the in-memory log of the message system.
