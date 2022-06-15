@@ -48,6 +48,11 @@ namespace PSFramework.TabExpansion
         public string[] LastResult = new string[0];
 
         /// <summary>
+        /// The completion data for the values the last search returned
+        /// </summary>
+        public object[] LastCompletion = new object[0];
+
+        /// <summary>
         /// How long are previous values valid, before a new execution becomes necessary.
         /// </summary>
         public TimeSpan LastResultsValidity = new TimeSpan(0);

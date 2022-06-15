@@ -280,20 +280,23 @@ return
 
         private void Terminate(Exception error)
         {
-            ErrorEventAction();
+            ErrorEventAction(error);
             ScriptBlock errorBlock = ScriptBlock.Create(_ErrorScript);
             object[] arguments = new object[] { _ErrorMessage, error, Target, Continue, ContinueLabel, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, PSCmdlet, EnableException };
             PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);
         }
 
-        private void ErrorEventAction()
+        private void ErrorEventAction(Exception error)
         {
             if (ErrorEvent == null)
                 return;
             Hashtable table = new Hashtable();
+            object errorRecord = error;
+            if (error is RuntimeException)
+                errorRecord = ((RuntimeException)error).ErrorRecord;
             try {
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
-                table["Result"] = PSCmdlet.InvokeCommand.InvokeScript(false, ErrorEvent, null, null);
+                table["Result"] = PSCmdlet.InvokeCommand.InvokeScript(false, ErrorEvent, null, errorRecord);
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent.Success", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target, table);
             }
             catch (Exception e)
