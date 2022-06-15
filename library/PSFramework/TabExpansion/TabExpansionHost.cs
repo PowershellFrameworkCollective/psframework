@@ -183,6 +183,32 @@ function New-PSFTeppCompletionResult
 	}
 }
 
+function ConvertTo-TeppCompletionEntry {
+	[CmdletBinding()]
+	param (
+		[Parameter(ValueFromPipeline = $true)]
+		[AllowNull()]
+		$InputObject
+	)
+
+	process {
+		foreach ($entry in $InputObject) {
+			if ($null -eq $entry) { continue }
+
+			if ($entry.Text -and $entry.ToolTip) {
+				if ($entry -is [hashtable]) { [PSCustomObject]$entry }
+				else { $entry }
+				continue
+			}
+
+			[PSCustomObject]@{
+				Text = $entry -as [string]
+				ToolTip = $entry -as [string]
+			}
+		}
+	}
+}
+
 $start = Get-Date
 $scriptContainer = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[""<name>""]
 if ($scriptContainer.ShouldExecute)
@@ -192,23 +218,25 @@ if ($scriptContainer.ShouldExecute)
 	$innerScript = $scriptContainer.InnerScriptBlock
     [PSFramework.Utility.UtilityHost]::ImportScriptBlock($innerScript)
 	# Use Write-Output to enumerate arrays properly, avoids trouble with persisting cached results
-	try { $items = $innerScript.Invoke() | Write-Output
-}
+	try { $items = $innerScript.Invoke() | ConvertTo-TeppCompletionEntry }
 	catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
 			
-	foreach ($item in ($items | Where-Object { ""$_"" -like ""$wordToComplete*""} | Sort-Object))
+	foreach ($item in ($items | Where-Object Text -like ""$wordToComplete*"" | Sort-Object Text))
 	{
-		New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip
 	}
 
 	$scriptContainer.LastDuration = (Get-Date) - $start
-	if ($items) { $scriptContainer.LastResult = $items }
+	if ($items) {
+		$scriptContainer.LastResult = $items.Text
+		$scriptContainer.LastCompletion = $items
+	}
 }
 else
 {
-	foreach ($item in ($scriptContainer.LastResult | Where-Object { ""$_"" -like ""$wordToComplete*""} | Sort-Object))
+	foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -like ""$wordToComplete*"" | Sort-Object Text))
 	{
-		New-PSFTeppCompletionResult -CompletionText $item -ToolTip $item
+		New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip
 	}
 }
 ";

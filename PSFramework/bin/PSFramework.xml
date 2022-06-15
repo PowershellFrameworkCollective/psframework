@@ -5856,6 +5856,11 @@
             The values the last search returned
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastCompletion">
+            <summary>
+            The completion data for the values the last search returned
+            </summary>
+        </member>
         <member name="F:PSFramework.TabExpansion.ScriptContainer.LastResultsValidity">
             <summary>
             How long are previous values valid, before a new execution becomes necessary.
