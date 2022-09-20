@@ -2766,6 +2766,11 @@
             Whether to include warning messages in the log
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.Provider.IncludeError">
+            <summary>
+            Whether to include error messages in the log
+            </summary>
+        </member>
         <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.LogEntry)">
             <summary>
             Tests whether a log entry applies to the provider instance
@@ -3005,6 +3010,11 @@
         <member name="F:PSFramework.Logging.ProviderInstance.IncludeWarning">
             <summary>
             Whether to include warning messages in the log
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.IncludeError">
+            <summary>
+            Whether to include error messages in the log
             </summary>
         </member>
         <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.LogEntry)">
@@ -3791,6 +3801,11 @@
         <member name="F:PSFramework.Message.MessageHost.EnableMessageBreadcrumbs">
             <summary>
             Include the entire callstack in the verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.NoColor">
+            <summary>
+            Whether the console messages should be written with only one color, rather than respecting color tags
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.PrefixValueError">

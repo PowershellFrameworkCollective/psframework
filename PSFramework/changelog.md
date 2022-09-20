@@ -1,5 +1,15 @@
 ﻿# CHANGELOG
 
+## 1.7.244 (2022-09-20)
+
+- New: Configuration `PSFramework.Message.Style.NoColor` - Disables color output of messages on screen, for compatibility with custom hosts that do not implement NoNewLine on host messages.
+- Upd: Command: Set-PSFLoggingProvider - Added `-ExcludeError` parameter to also support excluding error-level messages
+- Fix: Logging Provider: logfile - Critical bug preventing CSV logging in some common situations
+- Fix: Logging Provider: logfile - Encoding would not be applied correctly
+- Fix: Logging Provider: logfile - Changing the path of an enabled logging provider fails
+- Fix: Logging Provider: logfile - When writing CSV, resuming writing to an existing logfile would add the headers again
+- Fix: Write-PSFMessage - The `Prefix` configuration settings were not respected when writing messages to the console
+
 ## 1.7.237 (2022-06-15)
 
 - Upd: Tab Expansion - now supports custom tooltips for completion results by returning hashtables with a `Text` and a `ToolTip` key

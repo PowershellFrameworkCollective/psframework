@@ -717,10 +717,19 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     case MessageLevel.Host:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
                         break;
-                    case MessageLevel.Significant | MessageLevel.Critical:
+                    case MessageLevel.Significant:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
                         break;
-                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
+                    case MessageLevel.Critical:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
+                        break;
+                    case MessageLevel.Verbose:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
+                        break;
+                    case MessageLevel.VeryVerbose:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
+                        break;
+                    case MessageLevel.SomewhatVerbose:
                         _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
                         break;
                     case MessageLevel.Warning:
@@ -728,6 +737,9 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                             _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
                         else
                             _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
+                        break;
+                    case MessageLevel.Error:
+                        _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
                         break;
                     default:
                         break;
@@ -760,6 +772,9 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
         /// <returns>The message to return</returns>
         private string GetMessageColor()
         {
+            if (MessageHost.NoColor)
+                return GetMessage();
+
             if (!String.IsNullOrEmpty(_messageColor))
                 return _messageColor;
 
@@ -781,19 +796,31 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                 switch (Level)
                 {
                     case MessageLevel.Host:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueHost, _message);
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueHost, _messageColor);
                         break;
-                    case MessageLevel.Significant | MessageLevel.Critical:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _message);
+                    case MessageLevel.Significant:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _messageColor);
                         break;
-                    case MessageLevel.Verbose | MessageLevel.VeryVerbose | MessageLevel.SomewhatVerbose:
-                        _message = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _message);
+                    case MessageLevel.Critical:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueSignificant, _messageColor);
+                        break;
+                    case MessageLevel.Verbose:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _messageColor);
+                        break;
+                    case MessageLevel.VeryVerbose:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _messageColor);
+                        break;
+                    case MessageLevel.SomewhatVerbose:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueVerbose, _messageColor);
                         break;
                     case MessageLevel.Warning:
                         if (Tag != null && Tag.Contains("error", StringComparer.InvariantCultureIgnoreCase))
-                            _message = string.Format("{0}{1}", MessageHost.PrefixValueError, _message);
+                            _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueError, _messageColor);
                         else
-                            _message = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _message);
+                            _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueWarning, _messageColor);
+                        break;
+                    case MessageLevel.Error:
+                        _messageColor = string.Format("{0}{1}", MessageHost.PrefixValueError, _messageColor);
                         break;
                     default:
                         break;

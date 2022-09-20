@@ -71,6 +71,7 @@ namespace PSFramework.Logging
             IncludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeTags"));
             ExcludeTags = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.ExcludeTags"));
             IncludeWarning = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeWarning"));
+            IncludeError = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeError"));
             MinLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MinLevel"), 1);
             MaxLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MaxLevel"), 9);
             RequiresInclude = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.RequiresInclude"), false);
@@ -296,6 +297,11 @@ namespace PSFramework.Logging
         public bool IncludeWarning = true;
 
         /// <summary>
+        /// Whether to include error messages in the log
+        /// </summary>
+        public bool IncludeError = true;
+
+        /// <summary>
         /// Tests whether a log entry applies to the provider instance
         /// </summary>
         /// <param name="Entry">The Entry to validate</param>
@@ -307,7 +313,9 @@ namespace PSFramework.Logging
             // Level
             if (!IncludeWarning && (Entry.Level == Message.MessageLevel.Warning))
                 return false;
-            if (((_MinLevel != 1) || (_MaxLevel != 9)) && (Entry.Level != Message.MessageLevel.Warning))
+            if (!IncludeError && (Entry.Level == Message.MessageLevel.Error))
+                return false;
+            if (((_MinLevel != 1) || (_MaxLevel != 9)) && (Entry.Level != Message.MessageLevel.Warning) && (Entry.Level != Message.MessageLevel.Error))
             {
                 if (Entry.Level < (Message.MessageLevel)_MinLevel)
                     return false;

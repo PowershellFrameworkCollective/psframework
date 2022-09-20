@@ -33,6 +33,19 @@
 		[regex]::Replace($path, '%day%|%computername%|%hour%|%processid%|%date%|%username%|%dayofweek%|%minute%|%userdomain%|%logname%', $scriptBlock, 'IgnoreCase')
 	}
 	
+	function Test-EmptyFile {
+		[CmdletBinding()]
+		param (
+			$Path
+		)
+
+		$file = Get-Item -LiteralPath $Path -ErrorAction Ignore
+		if (-not $file) { return $false }
+
+		$firstLine = Get-Content -LiteralPath $file.FullName -TotalCount 1
+		-not $firstLine
+	}
+
 	function Write-LogFileMessage {
 		[CmdletBinding()]
 		param (
@@ -56,14 +69,23 @@
 			#region Csv
 			"Csv"
 			{
+				if (-not $CsvDelimiter) {
+					$CsvDelimiter = ','
+				}
+
 				if ($script:firstEntry) {
-					if ($script:csvConverter) { $null = $sript:csvConverter.End() }
+					if ($script:csvConverter) {
+						$null = $script:csvConverter.End()
+						$script:csvConverter = $null
+					}
+				}
+				if (-not $script:csvConverter) {
 					$script:csvConverter = { ConvertTo-Csv -NoTypeInformation -Delimiter $CsvDelimiter }.GetSteppablePipeline()
 					$script:csvConverter.Begin($true)
 				}
 				$converted = $script:csvConverter.Process($Message)
 				if ($script:firstEntry) {
-					if ($IncludeHeader) { $script:writer.WriteLine($converted[0]) }
+					if ($IncludeHeader -and (Test-EmptyFile -Path $script:currentPath)) { $script:writer.WriteLine($converted[0]) }
 					$script:writer.WriteLine($converted[1])
 				}
 				else { $script:writer.WriteLine($converted[0]) }
@@ -302,7 +324,7 @@ $start_event = {
 	$newPath = Get-LogFilePath
 	if ($newPath -ne $script:currentPath) {
 		if ($script:writer) {
-			$null = $script:writer.End()
+			$null = $script:writer.Close()
 			$script:writer = $null
 		}
 		
@@ -316,8 +338,8 @@ $start_event = {
 		$shareMode = [System.IO.FileShare]::Read
 		if ($script:mutex) { $shareMode = [System.IO.FileShare]::ReadWrite }
 		$stream = [System.IO.FileStream]::new($script:currentPath, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, $shareMode)
-		$script:writer = [System.IO.StreamWriter]::new($stream)
-		$script:writer.Encoding = [PSFramework.Parameter.EncodingParameter]$script:encoding
+		try { $script:writer = [System.IO.StreamWriter]::new($stream, ([PSFramework.Parameter.EncodingParameter]$script:encoding)) }
+		catch { $script:writer = [System.IO.StreamWriter]::new($stream) }
 	}
 	
 	$script:logfile_paramWriteLogFileMessage = @{
