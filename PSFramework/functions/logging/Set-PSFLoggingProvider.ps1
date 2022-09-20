@@ -81,6 +81,9 @@
 	.PARAMETER ExcludeWarning
 		Whether to exclude warnings from the logging provider / instance.
 	
+	.PARAMETER ExcludeError
+		Whether to exclude errors from the logging provider / instance.
+	
 	.PARAMETER Wait
 		Whether to have the command wait until the provider instance is provisioned and ready to handle messages.
 		By default, the asynchroneous nature of the logging system my cause a slight delay, that in some instances could lead to missing the first few messages.
@@ -152,6 +155,9 @@
 		
 		[switch]
 		$ExcludeWarning,
+		
+		[switch]
+		$ExcludeError,
 		
 		[switch]
 		$Wait,
@@ -293,6 +299,11 @@
 		{
 			if ($setProperty) { $provider.IncludeWarning = -not $ExcludeWarning }
 			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeWarning" -Value (-not $ExcludeWarning)
+		}
+		if (Test-PSFParameterBinding -ParameterName "ExcludeError")
+		{
+			if ($setProperty) { $provider.IncludeError = -not $ExcludeError }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeError" -Value (-not $ExcludeError)
 		}
 		
 		# V2 Only
