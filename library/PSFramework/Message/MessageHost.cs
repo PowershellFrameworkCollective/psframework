@@ -97,6 +97,11 @@ namespace PSFramework.Message
         public static bool EnableMessageBreadcrumbs = false;
 
         /// <summary>
+        /// Whether the console messages should be written with only one color, rather than respecting color tags
+        /// </summary>
+        public static bool NoColor = false;
+
+        /// <summary>
         /// Define the message prefix value for the critical level
         /// </summary>
         public static string PrefixValueError = "##vso[task.logissue type=error;]";
