@@ -210,7 +210,7 @@ $start_event = {
 				Name = 'Data'
 				Expression = {
 					if (-not $_.Data) { return 'null' }
-					$_.Data | ConvertTo-Json
+					$_.Data | ConvertTo-Json -Compress
 				}
 			}
 		}
