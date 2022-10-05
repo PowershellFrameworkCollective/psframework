@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.7.245 (2022-10-05)
+
+- Fix: Logging Provider: sql - fails to log (#546)
+
 ## 1.7.244 (2022-09-20)
 
 - New: Configuration `PSFramework.Message.Style.NoColor` - Disables color output of messages on screen, for compatibility with custom hosts that do not implement NoNewLine on host messages.
