@@ -1,5 +1,36 @@
 ﻿$FunctionDefinitions = {
-	
+	function Get-DatabaseConnection {
+		[CmdletBinding()]
+		param ()
+
+		if (-not $script:connections) {
+			$script:connections = @{ }
+		}
+
+		# Connection already established
+		if ($script:cfgServer.ConnectionContext) {
+			$server = $script:cfgServer
+		}
+		elseif ($script:connections[$script:cfgServer]) {
+			$server = $script:connections[$script:cfgServer]
+		}
+		else {
+			$param = @{
+				SqlInstance = $script:cfgServer
+			}
+			$credential = Get-ConfigValue -Name 'Credential'
+			if ($credential) { $param.SqlCredential = $Credential }
+			try { $server = Connect-DbaInstance @param -ErrorAction Stop }
+			catch { throw }
+			$script:connections[$script:cfgServer] = $server
+		}
+		if (-not $server.ConnectionContext.IsOpen) {
+			try { $server.ConnectionContext.Connect() }
+			catch { throw }
+		}
+		$server
+	}
+
 	function Export-DataToSql {
         <#
         .SYNOPSIS
@@ -31,12 +62,9 @@
 			$insertQuery = Get-Query -Parameters $queryParameters
 			
 			try {
-				$SqlInstance = Connect-DbaInstance -SqlInstance $script:cfgServer
-				if ($SqlInstance.ConnectionContext.IsOpen -ne 'True') {
-					$SqlInstance.ConnectionContext.Connect() # Try to connect to the database
-				}
+				$sqlInstance = Get-DatabaseConnection
 				
-				Invoke-DbaQuery -SqlInstance $SqlInstance -Database $script:cfgDatabase -Query $insertQuery -SqlParameters $queryParameters -EnableException
+				Invoke-DbaQuery -SqlInstance $sqlInstance -Database $script:cfgDatabase -Query $insertQuery -SqlParameters $queryParameters -EnableException
 			}
 			catch { throw }
 		}
@@ -86,29 +114,22 @@ VALUES ($($propAdd -join ','))
 		
 		
 		begin {
-			
 			# set instance and database name variables
-			$Credential = Get-ConfigValue -Name 'Credential'
-			$SqlServer = Get-ConfigValue -Name 'SqlServer'
 			$SqlTable = Get-ConfigValue -Name 'Table'
 			$SqlDatabaseName = Get-ConfigValue -Name 'Database'
 			$SqlSchema = Get-ConfigValue -Name 'Schema'
 			if (-not $SqlSchema) { $SqlSchema = 'dbo' }
 			
-			$parameters = @{
-				SqlInstance = $SqlServer
-			}
-			if ($Credential) { $parameters.SqlCredential = $Credential }
 		}
 		process {
 			try {
-				$dbaconnection = Connect-DbaInstance @parameters
+				$dbaconnection = Get-DatabaseConnection
 				if (-NOT (Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -eq $SqlDatabaseName)) {
 					$database = New-DbaDatabase -SqlInstance $dbaconnection -Name $SqlDatabaseName
 				}
 				if (-NOT ($database.Tables | Where-Object Name -eq $SqlTable)) {
 					$createtable = "CREATE TABLE $SqlTable (Message VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), Username VARCHAR(max), TargetObject VARCHAR(max), [File] VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max), [Data] VARCHAR(max))"
-					Invoke-dbaquery -SQLInstance $SqlServer -Database $SqlDatabaseName -query $createtable
+					Invoke-dbaquery -SQLInstance $dbaconnection -Database $SqlDatabaseName -Query $createtable
 				}
 			}
 			catch {
@@ -154,6 +175,8 @@ $isInstalled_script = {
 #endregion Installation
 #region Events
 $begin_event = {
+	$script:cfgServer = Get-ConfigValue -Name 'SqlServer'
+
 	New-DefaultSqlDatabaseAndTable
 }
 $start_event = {
