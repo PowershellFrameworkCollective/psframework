@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.7.246 (2022-10-06)
+
+- Fix: Logging Provider: sql - occasional error during logging due to connection pool running out of capacity (#546)
+
 ## 1.7.245 (2022-10-05)
 
 - Fix: Logging Provider: sql - fails to log (#546)
