@@ -128,7 +128,7 @@ VALUES ($($propAdd -join ','))
 					$database = New-DbaDatabase -SqlInstance $dbaconnection -Name $SqlDatabaseName
 				}
 				if (-NOT ($database.Tables | Where-Object Name -eq $SqlTable)) {
-					$createtable = "CREATE TABLE $SqlTable (Message VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), Username VARCHAR(max), TargetObject VARCHAR(max), [File] VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max), [Data] VARCHAR(max))"
+					$createtable = "CREATE TABLE $SqlSchema.$SqlTable (Message VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), Username VARCHAR(max), TargetObject VARCHAR(max), [File] VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max), [Data] VARCHAR(max))"
 					Invoke-dbaquery -SQLInstance $dbaconnection -Database $SqlDatabaseName -Query $createtable
 				}
 			}

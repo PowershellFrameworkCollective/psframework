@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.7.247 (2022-10-13)
+
+- Fix: Logging Provider: sql - does not respect the schema when creating a new table
+
 ## 1.7.246 (2022-10-06)
 
 - Fix: Logging Provider: sql - occasional error during logging due to connection pool running out of capacity (#546)
