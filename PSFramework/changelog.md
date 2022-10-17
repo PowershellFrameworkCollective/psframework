@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## 1.7.249 (2022-10-17)
+
+- New: Command Disable-PSFConsoleInterrupt - Prevents the use of CTRL+C from interrupting the console.
+- New: Command Enable-PSFConsoleInterrupt - Re-enables the use of CTRL+C to interrupt the console.
+
 ## 1.7.247 (2022-10-13)
 
 - Fix: Logging Provider: sql - does not respect the schema when creating a new table
