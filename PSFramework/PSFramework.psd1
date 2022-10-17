@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.7.247'
+	ModuleVersion = '1.7.249'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -43,7 +43,9 @@
 		'ConvertFrom-PSFArray'
 		'ConvertFrom-PSFClixml'
 		'ConvertTo-PSFClixml'
+		'Disable-PSFConsoleInterrupt'
 		'Disable-PSFTaskEngineTask'
+		'Enable-PSFConsoleInterrupt'
 		'Enable-PSFTaskEngineTask'
 		'Export-PSFClixml'
 		'Export-PSFConfig'
