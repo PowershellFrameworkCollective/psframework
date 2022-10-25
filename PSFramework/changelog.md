@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Stop-PSFFunction - `-AlwaysWarning` will be respected when explicitly bound to false.
+- Upd: Stop-PSFFunction - added `-Level` parameter to support customizing the level of the log message.
+
 ## 1.7.249 (2022-10-17)
 
 - New: Command Disable-PSFConsoleInterrupt - Prevents the use of CTRL+C from interrupting the console.
