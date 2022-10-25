@@ -80,10 +80,11 @@
 		If you specify such an object, it becomes simple to actually figure out, just where things failed at.
 	
 	.PARAMETER AlwaysWarning
-		Ensures the command always writes a warning, no matter what.
+		Ensures the command always writes a visible warning, no matter what.
 		by default, when -EnableException is set to $true it will hide the warning instead.
 		You can enable this to always be on for your module by setting the feature flag: PSFramework.Stop-PSFFunction.ShowWarning
 		For more information on feature flags, see "Get-Help Set-PSFFeature -Detailed"
+		Note: When changing the level of the message using the -Level parameter, this applies to the new level as well.
 	
 	.PARAMETER Continue
 		This will cause the function to call continue while not running with exceptions enabled (-EnableException).
@@ -105,6 +106,12 @@
 		When not throwing an exception and not calling continue, Stop-PSFFunction signals the calling command to stop.
 		In some cases you may want to signal a step or more further up the chain (notably from helper functions within a function).
 		This parameter allows you to add additional steps up the callstack that it will notify.
+
+	.PARAMETER Level
+		The level the associated message should be written at.
+		This affects the log entry as well as the visibility of the message (for example 'Verbose' would not be shown by default).
+		Defaults to: Warning
+		Possible levels: Critical (1), Important / Output / Host (2), Significant (3), VeryVerbose (4), Verbose (5), SomewhatVerbose (6), System (7), Debug (8), InternalComment (9), Warning (666), Error (667)
 	
 	.EXAMPLE
 		Stop-PSFFunction -Message "Foo failed bar!" -EnableException $EnableException -ErrorRecord $_
@@ -187,7 +194,10 @@
 		$Cmdlet,
 		
 		[int]
-		$StepsUpward = 0
+		$StepsUpward = 0,
+
+		[PSFramework.Message.MessageLevel]
+		$Level = 'Warning'
 	)
 	
 	if ($Cmdlet) { $myCmdlet = $Cmdlet }
@@ -241,9 +251,11 @@
 	$records = @()
 	$showWarning = $AlwaysWarning
 	if (-not $showWarning) { $showWarning = Test-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -ModuleName $ModuleName }
+	# Explicitly bound should always win, even if -AlwaysWarning:$false
+	if (Test-PSFParameterBinding -ParameterName AlwaysWarning) { $showWarning = $AlwaysWarning }
 	
 	$paramWritePSFMessage = @{
-		Level				     = 'Warning'
+		Level				     = $Level
 		EnableException		     = $EnableException
 		FunctionName			 = $FunctionName
 		Target				     = $Target
