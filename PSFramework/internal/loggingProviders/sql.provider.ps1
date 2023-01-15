@@ -50,35 +50,35 @@
             -----------------------------
             Set-PSFLoggingProvider -Name sql -InstanceName sqlloginstance -Enabled $true
         #>
-		
+
 		[cmdletbinding()]
 		param (
 			[parameter(Mandatory = $True)]
 			$ObjectToProcess
 		)
-		
+
 		process {
 			$queryParameters = @($script:converter.Process($ObjectToProcess))[0]
 			$insertQuery = Get-Query -Parameters $queryParameters
-			
+
 			try {
 				$sqlInstance = Get-DatabaseConnection
-				
+
 				Invoke-DbaQuery -SqlInstance $sqlInstance -Database $script:cfgDatabase -Query $insertQuery -SqlParameters $queryParameters -EnableException
 			}
 			catch { throw }
 		}
 	}
-	
+
 	function Get-Query {
 		[CmdletBinding()]
 		param (
 			[hashtable]
 			$Parameters
 		)
-		
+
 		if ($script:insertQuery) { return $script:insertQuery }
-		
+
 		$properties = $Parameters.Keys
 		$propSquared = foreach ($property in $properties) {
 			"[$property]"
@@ -86,14 +86,14 @@
 		$propAdd = foreach ($property in $properties) {
 			"@$property"
 		}
-		
+
 		$script:insertQuery = @"
 INSERT INTO [$script:cfgDatabase].[$script:cfgSchema].[$script:cfgTable]($($propSquared -join ','))
 VALUES ($($propAdd -join ','))
 "@
 		$script:insertQuery
 	}
-	
+
 	function New-DefaultSqlDatabaseAndTable {
         <#
         .SYNOPSIS
@@ -105,21 +105,21 @@ VALUES ($($propAdd -join ','))
         .EXAMPLE
             None
         #>
-		
+
 		[cmdletbinding()]
 		param (
 		)
-		
+
 		# need to use dba tools to create the database and credentials for connecting.
-		
-		
+
+
 		begin {
 			# set instance and database name variables
 			$SqlTable = Get-ConfigValue -Name 'Table'
 			$SqlDatabaseName = Get-ConfigValue -Name 'Database'
 			$SqlSchema = Get-ConfigValue -Name 'Schema'
 			if (-not $SqlSchema) { $SqlSchema = 'dbo' }
-			
+
 		}
 		process {
 			try {
@@ -146,10 +146,10 @@ $installationParameters = {
 	$parameterAttribute = New-Object System.Management.Automation.ParameterAttribute
 	$parameterAttribute.ParameterSetName = '__AllParameterSets'
 	$attributesCollection.Add($parameterAttribute)
-	
+
 	$validateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute('CurrentUser', 'AllUsers')
 	$attributesCollection.Add($validateSetAttribute)
-	
+
 	$RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
 	$results.Add("Scope", $RuntimeParam)
 	$results
@@ -159,13 +159,13 @@ $installation_script = {
 	param (
 		$BoundParameters
 	)
-	
+
 	$paramInstallModule = @{
 		Name = 'dbatools'
 	}
 	if ($BoundParameters.Scope) { $paramInstallModule['Scope'] = $BoundParameters.Scope }
 	elseif (-not (Test-PSFPowerShell -Elevated)) { $paramInstallModule['Scope'] = 'CurrentUser' }
-	
+
 	Install-Module @paramInstallModule
 }
 
@@ -203,7 +203,7 @@ $start_event = {
 		$changePending = $true
 	}
 	if (-not $changePending) { return }
-	
+
 	$script:sql_headers = switch ($script:cfgHeaders) {
 		'Tags'
 		{
@@ -214,6 +214,7 @@ $start_event = {
 		}
 		'Message' { @{ Name = 'Message'; Expression = { $_.LogMessage } } }
 		'Level' { @{ Name = 'Level'; Expression = { $_.Level -as [string] } } }
+		'Line' { @{ Name = 'Line'; Expression = {$_.Line -as [string] } } }
 		'Runspace' { @{ Name = 'Runspace'; Expression = { $_.Runspace -as [string] } } }
 		'TargetObject' { @{ Name = 'TargetObject'; Expression = { $_.TargetObject -as [string] } } }
 		'ErrorRecord' { @{ Name = 'ErrorRecord'; Expression = { $_.ErrorRecord -as [string] } } }
@@ -239,7 +240,7 @@ $start_event = {
 		}
 		default { $_ }
 	}
-	
+
 	if ($script:converter) {
 		$null = $script:converter.End()
 		$script:converter = $null
@@ -247,7 +248,7 @@ $start_event = {
 	# Cache the conversion logic once as a steppable pipeline to avoid having to do it
 	$script:converter = { Microsoft.PowerShell.Utility\Select-Object $script:sql_headers | PSFramework\ConvertTo-PSFHashtable }.GetSteppablePipeline()
 	$script:converter.Begin($true)
-	
+
 	$script:insertQuery = ''
 }
 
@@ -255,7 +256,7 @@ $message_event = {
 	param (
 		$Message
 	)
-	
+
 	Export-DataToSql -ObjectToProcess $Message
 }
 
@@ -268,7 +269,7 @@ $end_event = {
 
 # Action that is performed when stopping the logging script.
 $final_event = {
-	
+
 }
 #endregion Events
 
@@ -302,7 +303,7 @@ $paramRegisterPSFSqlProvider = @{
 		'Database' = "LoggingDatabase"
 		'Table'    = "LoggingTable"
 		'Schema'   = 'dbo'
-		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord'
+		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord'
 	}
 }
 
