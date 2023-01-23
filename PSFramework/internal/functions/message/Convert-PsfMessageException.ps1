@@ -43,11 +43,11 @@
 	
 	if ([PSFramework.Message.MessageHost]::ExceptionTransforms.ContainsKey($typeName))
 	{
-		$scriptBlock = [PSFramework.Message.MessageHost]::ExceptionTransforms[$typeName]
+		$scriptBlock = [PsfScriptBlock][PSFramework.Message.MessageHost]::ExceptionTransforms[$typeName]
 		try
 		{
-			$tempException = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $Exception)
-			return $tempException
+			$ExecutionContext.InvokeCommand.InvokeScript($false, $scriptBlock.ToGlobal(), $null, $Exception)
+			return
 		}
 		catch
 		{
@@ -60,8 +60,8 @@
 	{
 		try
 		{
-			$tempException = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($transform.ScriptBlock.ToString())), $null, $Exception)
-			return $tempException
+			$ExecutionContext.InvokeCommand.InvokeScript($false, ([PsfScriptBlock]$transform.ScriptBlock).ToGlobal(), $null, $Exception)
+			return
 		}
 		catch
 		{

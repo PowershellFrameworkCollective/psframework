@@ -50,6 +50,10 @@
 		[string[]]
 		$LiteralPath,
 
+		[ValidateSet('Classic', 'Safe', 'Unsafe')]
+		[string]
+		$Psd1Mode = 'Classic',
+
 		[switch]
 		$Unsafe
 	)
@@ -88,6 +92,46 @@
 					$pair.Value = ConvertTo-Hashtable -InputObject $pair.Value
 				}
 				$hashtable
+			}
+		}
+		
+		function Read-PowerShellDataFile {
+			[CmdletBinding()]
+			param (
+				[string]
+				$LiteralPath,
+				[string]
+				$Mode,
+				$Cmdlet
+			)
+
+			$errors = $null
+			$ast = [System.Management.Automation.Language.Parser]::ParseFile($LiteralPath, [ref] $null, [ref] $errors)
+
+			if ($errors) {
+				Stop-PSFFunction -String 'Import-PSFPowerShellDataFile.Error.Syntax' -StringValues $LiteralPath -EnableException $true -Cmdlet $Cmdlet -Target $LiteralPath
+			}
+
+			switch ($Mode) {
+				'Classic' {
+					$hashAst = $ast.Find({ $args[0] -is [System.Management.Automation.Language.HashtableAst]}, $false)
+					if (-not $hashAst) {
+						Write-PSFMessage -String 'Import-PSFPowerShellDataFile.Error.NoHashtable' -StringValues $LiteralPath
+						Write-Error ((Get-PSFLocalizedString -Module PSFramework -Name 'Import-PSFPowerShellDataFile.Error.NoHashtable') -f $LiteralPath)
+						return
+					}
+					try { $hashAst.SafeGetValue() }
+					catch {
+						Write-PSFMessage -String 'Import-PSFPowerShellDataFile.Error.Unsafe' -StringValues $LiteralPath -ErrorRecord $_
+						$Cmdlet.WriteError($_)
+					}
+				}
+				'Safe' {
+
+				}
+				'Unsafe' {
+
+				}
 			}
 		}
 		#endregion Functions

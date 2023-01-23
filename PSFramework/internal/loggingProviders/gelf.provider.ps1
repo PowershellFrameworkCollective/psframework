@@ -65,8 +65,12 @@ $installationParameters = {
 	$validateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute('CurrentUser', 'AllUsers')
 	$attributesCollection.Add($validateSetAttribute)
 	
-	$RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
-	$results.Add("Scope", $RuntimeParam)
+	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
+	$results.Add("Scope", $runtimeParam)
+
+	$attributesCollection2 = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter("Repository", [string], $attributesCollection2)
+	$results.Add("Repository", $runtimeParam2)
 	$results
 }
 
@@ -80,6 +84,8 @@ $installation_script = {
 	}
 	if ($BoundParameters.Scope) { $paramInstallModule['Scope'] = $BoundParameters.Scope }
 	elseif (-not (Test-PSFPowerShell -Elevated)) { $paramInstallModule['Scope'] = 'CurrentUser' }
+	if ($BoundParameters.Repository) { $paramInstallModule['Repository'] = $BoundParameters.Repository }
+	else { $paramInstallModule['Repository'] = Get-PSFConfigValue -FullName 'PSFramework.System.DefaultRepository' -Fallback 'PSGallery' }
 	
 	Install-Module @paramInstallModule
 }

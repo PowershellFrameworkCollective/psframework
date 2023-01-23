@@ -25,10 +25,6 @@
 		$Value
 	)
 	
-	begin
-	{
-		
-	}
 	process
 	{
 		$index = $Value.IndexOf(":")
@@ -56,19 +52,14 @@
 			"array"
 			{
 				if ($content -eq "") { return, @() }
-				$tempArray = @()
-				foreach ($item in ($content -split "þþþ"))
+				$tempArray = foreach ($item in ($content -split "þþþ"))
 				{
-					$tempArray += Convert-PsfConfigValue -Value $item
+					Convert-PsfConfigValue -Value $item
 				}
 				return, $tempArray
 			}
 			
 			default { throw "Unknown type identifier" }
 		}
-	}
-	end
-	{
-	
 	}
 }

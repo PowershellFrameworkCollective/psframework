@@ -44,11 +44,11 @@
 	
 	begin
 	{
-		$data = @()
+		$data = [System.Collections.ArrayList]@()
 	}
 	process
 	{
-		$data += $InputObject
+		$null = $data.Add($InputObject)
 	}
 	end
 	{
@@ -58,26 +58,26 @@
 			{
 				if ($NoCompression)
 				{
-					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToByte($data, $Depth) }
-					else { [PSFramework.Serialization.ClixmlSerializer]::ToByte($data) }
+					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToByte($data.ToArray(), $Depth) }
+					else { [PSFramework.Serialization.ClixmlSerializer]::ToByte($data.ToArray()) }
 				}
 				else
 				{
-					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToByteCompressed($data, $Depth) }
-					else { [PSFramework.Serialization.ClixmlSerializer]::ToByteCompressed($data) }
+					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToByteCompressed($data.ToArray(), $Depth) }
+					else { [PSFramework.Serialization.ClixmlSerializer]::ToByteCompressed($data.ToArray()) }
 				}
 			}
 			else
 			{
 				if ($NoCompression)
 				{
-					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToString($data, $Depth) }
-					else { [PSFramework.Serialization.ClixmlSerializer]::ToString($data) }
+					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToString($data.ToArray(), $Depth) }
+					else { [PSFramework.Serialization.ClixmlSerializer]::ToString($data.ToArray()) }
 				}
 				else
 				{
-					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToStringCompressed($data, $Depth) }
-					else { [PSFramework.Serialization.ClixmlSerializer]::ToStringCompressed($data) }
+					if ($Depth) { [PSFramework.Serialization.ClixmlSerializer]::ToStringCompressed($data.ToArray(), $Depth) }
+					else { [PSFramework.Serialization.ClixmlSerializer]::ToStringCompressed($data.ToArray()) }
 				}
 			}
 		}

@@ -44,6 +44,7 @@
 		'ConvertFrom-PSFClixml'
 		'ConvertTo-PSFClixml'
 		'Disable-PSFConsoleInterrupt'
+		'Disable-PSFLoggingProvider'
 		'Disable-PSFTaskEngineTask'
 		'Enable-PSFConsoleInterrupt'
 		'Enable-PSFTaskEngineTask'

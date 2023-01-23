@@ -37,7 +37,7 @@
 	{
 		foreach ($item in $Name)
 		{
-			[PSFramework.Utility.DynamicContentObject]::Get($Name)
+			[PSFramework.Utility.DynamicContentObject]::Get($item)
 		}
 	}
 }

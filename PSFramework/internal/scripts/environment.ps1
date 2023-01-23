@@ -90,6 +90,13 @@ else
 	}
 }
 
+$script:path_temp = $env:TEMP
+if (-not $script:path_temp) {
+	$script:path_temp = Join-Path -Path $script:path_LocalAppData -ChildPath Temp
+	if ((-not (Test-Path -Path $script:path_temp)) -and (Test-Path -Path $script:path_LocalAppData)) {
+		$null = New-Item -Path $script:path_temp -ItemType Directory -Force -ErrorAction Ignore
+	}
+}
 #endregion Special Paths
 #endregion Paths
 
