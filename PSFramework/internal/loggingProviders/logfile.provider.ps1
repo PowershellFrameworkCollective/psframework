@@ -370,6 +370,7 @@ $message_event = {
 	try { $Message | Select-Object $script:logfile_headers | Write-LogFileMessage @script:logfile_paramWriteLogFileMessage -MessageItem $Message }
 	finally {
 		$script:writer.Flush()
+		$script:writer.BaseStream.Flush()
 		if ($script:mutex) { $script:mutex.ReleaseMutex() }
 	}
 }

@@ -2,8 +2,25 @@
 
 ## ???
 
+- New: Type PsfErrorRecord - a custom error record type to provide better and easier error records.
+- Upd: Tab Completion - added support for ListItemText property on results
 - Upd: Stop-PSFFunction - `-AlwaysWarning` will be respected when explicitly bound to false.
 - Upd: Stop-PSFFunction - added `-Level` parameter to support customizing the level of the log message.
+- Upd: Type Callstack - added methods to select a subset and customize the string representation.
+- Upd: ConvertTo-PSFClixml - improved performance when processing a large number of objects.
+- Upd: Various minor performance improvements
+- Upd: Logging Provider: GELF - supports specifying the repository to use when installing the required module
+- Upd: Logging Provider: SQL - supports specifying the repository to use when installing the required module
+- Upd: build logic - Added option to compile PSFramework.dll as part of the included build logic
+- Fix: Set-PSFLoggingProvider - losing messages though using `-Wait` parameter
+- Fix: Logging Provider: AzureLogAnalytics - headers are not respected
+- Fix: Logging Provider: SQL - stops trying to create table to log to if it already exists
+- Fix: Logging Provider: SQL - prevented SQL Injection via Table Name or Schema Name
+- Fix: Logging Provider: logfile - does not flush messages in time during scheduled task
+- Fix: Get-PSFDynamicContentObject - retrieving more than one DCO at a time fails
+- Fix: Stop-PSFFunction - prevented CLM escape through exception or target transformation.
+- Fix: Get-PSFPath - fails to resolve temp path when imported into a JEA endpoint
+- Fix: Tab Completion - fails to complete in StrictMode
 
 ## 1.7.249 (2022-10-17)
 

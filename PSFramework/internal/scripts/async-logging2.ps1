@@ -15,24 +15,24 @@
 			if (-not ([PSFramework.Message.LogHost]::LoggingEnabled)) { break }
 			
 			# Create instances as needed on cycle begin
+			[PSFramework.Logging.ProviderHost]::NextCycle()
 			[PSFramework.Logging.ProviderHost]::UpdateAllInstances()
 			
 			#region Manage Begin Event
 			#region V1 providers
 			foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetEnabled())
 			{
-				if (-not $___provider.Initialized)
+				if ($___provider.Initialized) { continue }
+				
+				[PSFramework.Logging.ProviderHost]::LoggingState = 'Initializing'
+				$___provider.LocalizeEvents()
+				
+				try
 				{
-					[PSFramework.Logging.ProviderHost]::LoggingState = 'Initializing'
-					$___provider.LocalizeEvents()
-					
-					try
-					{
-						$null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.BeginEvent, $null, $null)
-						$___provider.Initialized = $true
-					}
-					catch { $___provider.Errors.Push($_) }
+					$null = $ExecutionContext.InvokeCommand.InvokeScript($false, $___provider.BeginEvent, $null, $null)
+					$___provider.Initialized = $true
 				}
+				catch { $___provider.Errors.Push($_) }
 			}
 			#endregion V1 providers
 			

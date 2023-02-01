@@ -114,5 +114,57 @@ namespace PSFramework.Logging
             foreach (Provider prov in Providers.Values.Where(o => (o as ProviderV2) != null))
                 ((ProviderV2)prov).UpdateInstances();
         }
+
+        #region Waiting for the Cycle
+        /// <summary>
+        /// Used to indicate a new logging cycle occured. Switches between 1 and 0
+        /// </summary>
+        private static int _CycleIndicator
+        {
+            get
+            {
+                lock (_CycleLock)
+                {
+                    return _cycleIndicator;
+                }
+            }
+            set
+            {
+                lock ( _CycleLock)
+                {
+                    _cycleIndicator = value;
+                }
+            }
+        }
+        private static int _cycleIndicator;
+        private static object _CycleLock = 42;
+
+        /// <summary>
+        /// Wait for the next logging cycle to begin
+        /// </summary>
+        /// <param name="Timeout">Up to how long to wait</param>
+        /// <exception cref="TimeoutException">Took too long</exception>
+        public static void WaitNextCycle(DateTime Timeout)
+        {
+            int currentCycle = _CycleIndicator;
+            while (currentCycle == _CycleIndicator)
+            {
+                System.Threading.Thread.Sleep(250);
+                if (Timeout < DateTime.Now)
+                    throw new TimeoutException();
+            }
+        }
+
+        /// <summary>
+        /// Indicate the next cycle started
+        /// </summary>
+        public static void NextCycle()
+        {
+            if (_CycleIndicator == 0)
+                _CycleIndicator = 1;
+            else
+                _CycleIndicator = 0;
+        }
+        #endregion Waiting for the Cycle
     }
 }

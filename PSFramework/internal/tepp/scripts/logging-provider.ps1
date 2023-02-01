@@ -13,3 +13,11 @@ Register-PSFTeppScriptblock -Name 'PSFramework-logging-instance-name' -ScriptBlo
 	}
 	(Get-PSFLoggingProviderInstance).Name | Select-Object -Unique
 } -Global
+
+Register-PSFTeppScriptblock -Name 'PSFramework-logging-instance-name2' -ScriptBlock {
+	if ($fakeBoundParameters.Name)
+	{
+		return (Get-PSFLoggingProviderInstance -ProviderName $fakeBoundParameters.ProviderName).Name
+	}
+	(Get-PSFLoggingProviderInstance).Name | Select-Object -Unique
+} -Global

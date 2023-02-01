@@ -128,6 +128,7 @@
     <None Include="Meta\IsSafeValueVisitor.cs" />
     <Compile Include="Meta\PipelineCommand.cs" />
     <Compile Include="Meta\Pipeline.cs" />
+    <Compile Include="Meta\PsfErrorRecord.cs" />
     <Compile Include="Meta\PSTraceSource.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />

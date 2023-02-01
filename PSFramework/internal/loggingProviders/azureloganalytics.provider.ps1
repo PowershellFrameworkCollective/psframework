@@ -1,7 +1,7 @@
 ﻿
 $FunctionDefinitions = {
 	function Export-DataToAzure {
-        <#
+		<#
         .SYNOPSIS
             Function to send logging data to an Azure Workspace
 
@@ -67,11 +67,11 @@ $FunctionDefinitions = {
 			$contentLength = $body.Length
 			
 			$signatureArgs = @{
-				WorkspaceID	    = $WorkspaceID
-				SharedKey	    = $SharedKey
-				DateAndTime	    = $date
+				WorkspaceID     = $WorkspaceID
+				SharedKey       = $SharedKey
+				DateAndTime     = $date
 				ContentLength   = $contentLength
-				RestMethod	    = $restMethod
+				RestMethod      = $restMethod
 				RestContentType = $restContentType
 				RestResource    = $restResource
 			}
@@ -81,9 +81,9 @@ $FunctionDefinitions = {
 			
 			# RestAPI headers
 			$headers = @{
-				"Authorization"	       = $signature
-				"Log-Type"			   = $logType
-				"x-ms-date"		       = $date
+				"Authorization"        = $signature
+				"Log-Type"             = $logType
+				"x-ms-date"            = $date
 				"time-generated-field" = "TimeStamp"
 			}
 			
@@ -117,7 +117,7 @@ $FunctionDefinitions = {
 	}
 	
 	function Get-LogSignature {
-        <#
+		<#
     .SYNOPSIS
         Function for computing a signature to connect to the Azure workspace
 
@@ -209,27 +209,24 @@ $FunctionDefinitions = {
 $start_event = {
 	$script:ala_headers = Get-ConfigValue -Name 'Headers' | ForEach-Object {
 		switch ($_) {
-			'Message'
-			{
+			'Message' {
 				@{
-					Name	   = 'Message'
+					Name       = 'Message'
 					Expression = { $_.LogMessage }
 				}
 			}
-			'Timestamp'
-			{
+			'Timestamp' {
 				@{
-					Name	   = 'Timestamp'
+					Name       = 'Timestamp'
 					Expression = {
 						if (-not (Get-ConfigValue -Name 'TimeFormat')) { $_.Timestamp.ToUniversalTime() }
 						else { $_.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name 'TimeFormat')) }
 					}
 				}
 			}
-			'Level'
-			{
+			'Level' {
 				@{
-					Name = 'Level'
+					Name       = 'Level'
 					Expression = { $_.Level -as [string] }
 				}
 			}
@@ -258,13 +255,14 @@ $configuration_Settings = {
 # Registered parameters for the logging provider.
 # ConfigurationDefaultValues are used for all instances of the azure logging provider
 $paramRegisterPSFAzureLogAnalyticsProvider = @{
-	Name			   = "AzureLogAnalytics"
-	Version2		   = $true
-	ConfigurationRoot  = 'PSFramework.Logging.AzureLogAnalytics'
-	InstanceProperties = 'WorkspaceId', 'SharedKey', 'LogType', 'TimeFormat', 'Headers'
-	MessageEvent	   = $message_Event
-	ConfigurationSettings = $configuration_Settings
-	FunctionDefinitions = $functionDefinitions
+	Name                       = "AzureLogAnalytics"
+	Version2                   = $true
+	ConfigurationRoot          = 'PSFramework.Logging.AzureLogAnalytics'
+	InstanceProperties         = 'WorkspaceId', 'SharedKey', 'LogType', 'TimeFormat', 'Headers'
+	StartEvent                 = $start_event
+	MessageEvent               = $message_Event
+	ConfigurationSettings      = $configuration_Settings
+	FunctionDefinitions        = $functionDefinitions
 	ConfigurationDefaultValues = @{
 		LogType = 'Message'
 		Headers = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord'
