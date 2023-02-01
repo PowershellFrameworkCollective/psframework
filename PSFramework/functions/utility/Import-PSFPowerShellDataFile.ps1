@@ -100,8 +100,10 @@
 			param (
 				[string]
 				$LiteralPath,
+
 				[string]
 				$Mode,
+
 				$Cmdlet
 			)
 
@@ -114,7 +116,7 @@
 
 			switch ($Mode) {
 				'Classic' {
-					$hashAst = $ast.Find({ $args[0] -is [System.Management.Automation.Language.HashtableAst]}, $false)
+					$hashAst = $ast.Find({ $args[0] -is [System.Management.Automation.Language.HashtableAst] }, $false)
 					if (-not $hashAst) {
 						Write-PSFMessage -String 'Import-PSFPowerShellDataFile.Error.NoHashtable' -StringValues $LiteralPath
 						Write-Error ((Get-PSFLocalizedString -Module PSFramework -Name 'Import-PSFPowerShellDataFile.Error.NoHashtable') -f $LiteralPath)
@@ -127,11 +129,112 @@
 					}
 				}
 				'Safe' {
+					if (-not (Test-AstSafety -Ast $ast)) {
+						Write-PSFMessage -String 'Import-PSFPowerShellDataFile.Error.Unsafe' -StringValues $LiteralPath
+						Write-Error ((Get-PSFLocalizedString -Module PSFramework -Name 'Import-PSFPowerShellDataFile.Error.Unsafe') -f $LiteralPath)
+						return
+					}
 
+					Invoke-UnsafeDocumentFile -Path $LiteralPath
 				}
 				'Unsafe' {
-
+					Invoke-UnsafeDocumentFile -Path $LiteralPath
 				}
+			}
+		}
+
+		function Test-AstSafety {
+			[OutputType([bool])]
+			[CmdletBinding()]
+			param (
+				$Ast
+			)
+
+			$saveAstTypes = @(
+				'ArrayExpressionAst'
+				'CommandExpressionAst'
+				'ConstantExpressionAst'
+				'HashtableAst'
+				'NamedBlockAst'
+				'PipelineAst'
+				'ScriptBlockAst'
+				'StatementBlockAst'
+				'StringConstantExpressionAst'
+				'VariableExpressionAst'
+			)
+
+			$astElements = $Ast.FindAll({ $true }, $true)
+			$groupedAstElements = $astElements | Group-Object { $_.GetType().Name }
+
+			# Any not explicitly allowed AST elements are bad
+			if ($groupedAstElements | Where-Object Name -NotIn $saveAstTypes) {
+				return $false
+			}
+
+			# Some types are only allowed once
+			$limited = @(
+				'NamedBlockAst'
+				'ScriptBlockAst'
+			)
+			if ($groupedAstElements | Where-Object { $_.Name -in $limited -and $_.Count -gt 1 }) {
+				return $false
+			}
+
+			# The base Level may only contain hashtables, or a single array containing only hashtables
+			$badStatements = $Ast.EndBlock.Statements | Where-Object {
+				-not $_.PipelineElements -or
+				$_.PipelineElements.Count -gt 2 -or
+				$_.PipelineElements[0].Expression -isnot [System.Management.Automation.Language.HashtableAst]
+			}
+
+			if (
+				$Ast.EndBlock.Statements.Count -eq 1 -and
+				$Ast.EndBlock.Statements[0] -is [System.Management.Automation.Language.PipelineAst] -and
+				$Ast.EndBlock.Statements[0].PipelineElements.Count -eq 1 -and
+				$Ast.Endblock.Statements[0].PipelineElements[0] -is [System.Management.Automation.Language.CommandExpressionAst] -and
+				$Ast.EndBlock.Statements[0].PipelineElements[0].Expression.GetType() -eq [System.Management.Automation.Language.ArrayExpressionAst]
+			) {
+				$arrayExpression = $Ast.EndBlock.Statements[0].PipelineElements[0].Expression
+				$badStatements = $arrayExpression.SubExpression.Statements | Where-Object {
+					$_ -isnot [System.Management.Automation.Language.PipelineAst] -or
+					$_.PipelineElements.Count -gt 1 -or
+					$_.PipelineElements[0].Expression -isnot [System.Management.Automation.Language.HashtableAst]
+				}
+			}
+
+			if ($badStatements) { return $false }
+
+			$true
+		}
+
+		function Invoke-UnsafeDocumentFile {
+			[CmdletBinding()]
+			param (
+				[string]
+				$Path
+			)
+			$filePath = Join-Path -Path (Get-PSFPath -Name Temp) -ChildPath "psf_temp-$(Get-Random).ps1"
+			try {
+				Copy-Item -LiteralPath $Path -Destination $filePath
+				if ($PSVersionTable.PSVersion.Major -lt 5) {
+					& $filePath
+				}
+				else {
+					$scriptblock = [ScriptBlock]::Create("& `"$filePath`"")
+					$executionContextInternal = [PSFramework.Utility.UtilityHost]::GetExecutionContextFromTLS()
+					$everConstrained = [PSFramework.Utility.UtilityHost]::GetPrivateStaticProperty(
+						$executionContextInternal.GetType(),
+						"HasEverUsedConstrainedLanguage"
+					)
+					if ($everConstrained) {
+						[PSFramework.Utility.UtilityHost]::SetPrivateProperty("LanguageMode", $scriptblock, [System.Management.Automation.PSLanguageMode]::ConstrainedLanguage)
+					}
+					$psfScript = [PsfScriptBlock]$scriptblock
+					$psfScript.InvokeGlobal($null) | Write-Output
+				}
+			}
+			finally {
+				Remove-Item -Path $filePath -Force -ErrorAction Ignore
 			}
 		}
 		#endregion Functions
@@ -139,12 +242,14 @@
 		# If launched in JEA Endpoint, Import-PowerShellDataFile is unavailable due to a bug
 		# It is important to check the initial sessionstate, as the module's current state will be 'FullLanguage' instead.
 		# Import-PowerShellDataFile is also unavailable before PowerShell v5
-		$backUpMode = $Unsafe -or ([runspace]::DefaultRunspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or ($PSVersionTable.PSVersion.Major -lt 5)
-		
-		if ($PSVersionTable.PSVersion.Major) {
-			$executionContextInternal = [PSFramework.Utility.UtilityHost]::GetExecutionContextFromTLS()
-			$everConstrained = [PSFramework.Utility.UtilityHost]::GetPrivateStaticProperty($executionContextInternal.GetType(), "HasEverUsedConstrainedLanguage")
-		}
+		if ($Unsafe) { $Psd1Mode = 'Unsafe' }
+		if (
+			$Psd1Mode -eq 'Classic' -and
+			(
+				([runspace]::DefaultRunspace.InitialSessionState.LanguageMode -eq 'NoLanguage') -or
+				($PSVersionTable.PSVersion.Major -lt 5)
+			)
+		) { $Psd1Mode = 'Safe' }
 	}
 	process {
 		$resolvedPaths = $LiteralPath
@@ -168,25 +273,7 @@
 
 				#region Default / psd1
 				default {
-					if ($backUpMode) {
-						$filePath = Join-Path -Path (Get-PSFPath -Name Temp) -ChildPath "psf_temp-$(Get-Random).ps1"
-						Copy-Item -LiteralPath $resolvedPath -Destination $filePath
-						if ($PSVersionTable.PSVersion.Major -lt 5) {
-							& $filePath
-						}
-						else {
-							$scriptblock = [ScriptBlock]::Create("& `"$filePath`"")
-							if ($everConstrained) {
-								[PSFramework.Utility.UtilityHost]::SetPrivateProperty("LanguageMode", $scriptblock, [System.Management.Automation.PSLanguageMode]::ConstrainedLanguage)
-							}
-							$psfScript = [PsfScriptBlock]$scriptblock
-							$psfScript.InvokeGlobal($null) | Write-Output
-							# $psfScriptBlock.InvokeGlobal($null) | Write-Output
-						}
-
-						Remove-Item -Path $filePath
-					}
-					else { Import-PowerShellDataFile -LiteralPath $resolvedPath }
+					Read-PowerShellDataFile -LiteralPath $resolvedPath -Mode $Psd1Mode -Cmdlet $PSCmdlet
 				}
 				#endregion Default / psd1
 			}
