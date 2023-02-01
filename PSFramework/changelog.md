@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.7.268 (2023-02-01)
 
 - New: Type PsfErrorRecord - a custom error record type to provide better and easier error records.
 - Upd: Tab Completion - added support for ListItemText property on results
@@ -14,6 +14,7 @@
 - Upd: build logic - Added option to compile PSFramework.dll as part of the included build logic
 - Fix: Set-PSFLoggingProvider - losing messages though using `-Wait` parameter
 - Fix: Logging Provider: AzureLogAnalytics - headers are not respected
+- Fix: Logging Provider: SQL - does not includes `Line` by default (thanks @ashdar ; #564)
 - Fix: Logging Provider: SQL - stops trying to create table to log to if it already exists
 - Fix: Logging Provider: SQL - prevented SQL Injection via Table Name or Schema Name
 - Fix: Logging Provider: logfile - does not flush messages in time during scheduled task
