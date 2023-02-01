@@ -1,4 +1,4 @@
-﻿$FunctionDefinitions = {
+$FunctionDefinitions = {
 	function Get-DatabaseConnection {
 		[CmdletBinding()]
 		param ()
@@ -322,7 +322,7 @@ $paramRegisterPSFSqlProvider = @{
 		'Database' = "LoggingDatabase"
 		'Table'    = "LoggingTable"
 		'Schema'   = 'dbo'
-		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord'
+		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord'
 	}
 }
 
