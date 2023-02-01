@@ -1,4 +1,4 @@
-$FunctionDefinitions = {
+﻿$FunctionDefinitions = {
 	function Get-DatabaseConnection {
 		[CmdletBinding()]
 		param ()
