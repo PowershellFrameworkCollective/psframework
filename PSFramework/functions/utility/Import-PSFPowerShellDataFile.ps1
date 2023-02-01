@@ -20,7 +20,22 @@
 		The path from which to load the data file.
 		In opposite to the Path parameter, input here will not be interpreted.
 
+	.PARAMETER Psd1Mode
+		How psd1 files should be parsed.
+		Available modes:
+		- Classic: Only safe documents will be executed, and only the first hashtable will be processed.
+          This option is only available on PowerShell v5 or later. In older versions, this mode is automatically
+		  converted to "Safe"
+	  	- Safe: Only safe documents without executable code are processed, but any number of hashtables
+		  will be processed. At the root level of the document, only hashtables or an array containing only
+		  hashtables may exist.
+		- Unsafe: Psd1 file is basically processed as if it were a ps1 file.
+		Both safe and unsafe modes respect Constrained Language Mode.
+
+		Defaults to "Classic"
+
 	.PARAMETER Unsafe
+		This parameter has been deprecated and should no longer be used. Use "-Psd1Mode Unsafe" instead.
 		Disables the protective value of Import-PowerShellDataFile.
 		This effectively runs the provided powershell scriptfile as untrusted scriptfile, no matter the environment.
 		By default, Import-PowerShellDataFile would only process the first hashtable, while unsafe mode allows files with multiple hashtables or more dynamic content.

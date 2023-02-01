@@ -1,4 +1,8 @@
 ﻿@{
+	'Import-PSFPowerShellDataFile.Error.NoHashtable' = 'File contains no hashtable: {0}' # $LiteralPath
+	'Import-PSFPowerShellDataFile.Error.Syntax' = 'File has an invalid PowerShell syntax: {0}' # $LiteralPath
+	'Import-PSFPowerShellDataFile.Error.Unsafe' = 'File is not safe to execute: {0}' # $LiteralPath
+
 	'New-PSFSupportPackage.Header'			      = @"
 Gathering information...
 Will write the final output to: {0}
