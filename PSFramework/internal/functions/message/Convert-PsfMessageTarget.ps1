@@ -43,11 +43,11 @@
 	
 	if ([PSFramework.Message.MessageHost]::TargetTransforms.ContainsKey($typeName))
 	{
-		$scriptBlock = [PSFramework.Message.MessageHost]::TargetTransforms[$typeName]
+		$scriptBlock = [PsfScriptblock][PSFramework.Message.MessageHost]::TargetTransforms[$typeName]
 		try
 		{
-			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($scriptBlock.ToString())), $null, $Target)
-			return $tempTarget
+			$ExecutionContext.InvokeCommand.InvokeScript($false, $scriptBlock.ToGlobal(), $null, $Target)
+			return
 		}
 		catch
 		{
@@ -60,8 +60,8 @@
 	{
 		try
 		{
-			$tempTarget = $ExecutionContext.InvokeCommand.InvokeScript($false, ([scriptblock]::Create($transform.ScriptBlock.ToString())), $null, $Target)
-			return $tempTarget
+			$ExecutionContext.InvokeCommand.InvokeScript($false, ([PsfScriptblock]$transform.ScriptBlock).ToGlobal(), $null, $Target)
+			return
 		}
 		catch
 		{

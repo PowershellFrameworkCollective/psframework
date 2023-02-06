@@ -3,7 +3,7 @@
 		$Value
 	)
 	
-	$Result = New-Object PSOBject -Property @{
+	$Result = [PSCustomObject]@{
 		Success = $True
 		Value = $null
 		Message = ""

@@ -328,12 +328,8 @@
 		
 		$limit = (Get-Date).AddSeconds(30)
 		Start-PSFRunspace -Name 'psframework.logging' -NoMessage
-		while ($Enabled -ne (Get-PSFLoggingProviderInstance -ProviderName $Name -Name $InstanceName).Enabled) {
-			Start-Sleep -Milliseconds 200
-			if ((Get-Date) -gt $limit) {
-				Write-PSFMessage -Level Warning -String 'Set-PSFLoggingProvider.Wait.Timeout' -StringValues $Name, $InstanceName
-				break
-			}
-		}
+		try { [PSFramework.Logging.ProviderHost]::WaitNextCycle($limit) }
+		catch { Write-PSFMessage -Level Warning -String 'Set-PSFLoggingProvider.Wait.Timeout' -StringValues $Name, $InstanceName }
+		Start-Sleep -Milliseconds 500
 	}
 }

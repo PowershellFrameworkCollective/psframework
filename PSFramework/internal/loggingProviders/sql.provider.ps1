@@ -86,6 +86,13 @@
 		$propAdd = foreach ($property in $properties) {
 			"@$property"
 		}
+
+		if ($script:cfgTable -match '\[|\]|\(|\)| ') {
+			throw "Invalid Table name: $script:cfgTable"
+		}
+		if ($script:cfgSchema -match '\[|\]|\(|\)| ') {
+			throw "Invalid Schema name: $script:cfgSchema"
+		}
 		
 		$script:insertQuery = @"
 INSERT INTO [$script:cfgDatabase].[$script:cfgSchema].[$script:cfgTable]($($propSquared -join ','))
@@ -120,11 +127,18 @@ VALUES ($($propAdd -join ','))
 			$SqlSchema = Get-ConfigValue -Name 'Schema'
 			if (-not $SqlSchema) { $SqlSchema = 'dbo' }
 			
+			if ($SqlTable -match '\[|\]|\(|\)| ') {
+				throw "Invalid Table name: $SqlTable"
+			}
+			if ($SqlSchema -match '\[|\]|\(|\)| ') {
+				throw "Invalid Schema name: $SqlSchema"
+			}
 		}
 		process {
 			try {
 				$dbaconnection = Get-DatabaseConnection
-				if (-NOT (Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -eq $SqlDatabaseName)) {
+				$database = Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -eq $SqlDatabaseName
+				if (-NOT $database) {
 					$database = New-DbaDatabase -SqlInstance $dbaconnection -Name $SqlDatabaseName
 				}
 				if (-NOT ($database.Tables | Where-Object Name -eq $SqlTable)) {
@@ -150,8 +164,12 @@ $installationParameters = {
 	$validateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute('CurrentUser', 'AllUsers')
 	$attributesCollection.Add($validateSetAttribute)
 	
-	$RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
-	$results.Add("Scope", $RuntimeParam)
+	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
+	$results.Add("Scope", $runtimeParam)
+
+	$attributesCollection2 = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter("Repository", [string], $attributesCollection2)
+	$results.Add("Repository", $runtimeParam2)
 	$results
 }
 
@@ -165,6 +183,8 @@ $installation_script = {
 	}
 	if ($BoundParameters.Scope) { $paramInstallModule['Scope'] = $BoundParameters.Scope }
 	elseif (-not (Test-PSFPowerShell -Elevated)) { $paramInstallModule['Scope'] = 'CurrentUser' }
+	if ($BoundParameters.Repository) { $paramInstallModule['Repository'] = $BoundParameters.Repository }
+	else { $paramInstallModule['Repository'] = Get-PSFConfigValue -FullName 'PSFramework.System.DefaultRepository' -Fallback 'PSGallery' }
 	
 	Install-Module @paramInstallModule
 }
@@ -302,7 +322,7 @@ $paramRegisterPSFSqlProvider = @{
 		'Database' = "LoggingDatabase"
 		'Table'    = "LoggingTable"
 		'Schema'   = 'dbo'
-		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord'
+		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord'
 	}
 }
 

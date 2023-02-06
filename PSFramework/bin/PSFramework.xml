@@ -2913,6 +2913,23 @@
             Updates all V2 provider instances, creating new ones depending on configuration.
             </summary>
         </member>
+        <member name="P:PSFramework.Logging.ProviderHost._CycleIndicator">
+            <summary>
+            Used to indicate a new logging cycle occured. Switches between 1 and 0
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.WaitNextCycle(System.DateTime)">
+            <summary>
+            Wait for the next logging cycle to begin
+            </summary>
+            <param name="Timeout">Up to how long to wait</param>
+            <exception cref="T:System.TimeoutException">Took too long</exception>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.NextCycle">
+            <summary>
+            Indicate the next cycle started
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.ProviderInstance">
             <summary>
             Active instance of a logging provider
@@ -3017,6 +3034,11 @@
             Whether to include error messages in the log
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.NotAfter">
+            <summary>
+            Deadline after which no more messages can be accepted. Used during the logging provider disablement workflow and should not be used outside that.
+            </summary>
+        </member>
         <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.LogEntry)">
             <summary>
             Tests whether a log entry applies to the provider instance
@@ -3077,6 +3099,13 @@
             Remove a runspace ID from the list of included runspaces. This is threadsafe.
             </summary>
             <param name="Runspace">The runspace to remove.</param>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.Drain(System.Boolean)">
+            <summary>
+            Wait until all applicable messages have been processed, then disable this instance.
+            </summary>
+            <param name="WaitForFinalize">Wait until the the final block of the instance has been executed.</param>
+            <exception cref="T:System.TimeoutException">Will not wait longer than five minutes to drain messages.</exception>
         </member>
         <member name="F:PSFramework.Logging.ProviderInstance.Errors">
             <summary>
@@ -3167,11 +3196,40 @@
             The entries that make up the callstack
             </summary>
         </member>
+        <member name="F:PSFramework.Message.CallStack.DefaultEntryJoinSequence">
+            <summary>
+            The string sequence used to join callstack entries by default.
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.CallStack.ToString">
             <summary>
             String representation of the callstack copy
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.ToString(System.String)">
+            <summary>
+            String representation of the callstack copy
+            </summary>
+            <param name="JoinBy">By what the individual lines should be joined</param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.GetSubStack(System.Int32)">
+            <summary>
+            Picks a subset of the total callstack
+            </summary>
+            <param name="Start">The starting index to work from. Anything larger than 0 means skipping the innermost entries of the stack.</param>
+            <returns>A pared-down callstack</returns>
+            <exception cref="T:System.IndexOutOfRangeException">When the starting index is larger than the number of entries available.</exception>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.GetSubStack(System.Int32,System.Int32)">
+            <summary>
+            Picks a subset of the total callstack
+            </summary>
+            <param name="Start">The starting index to work from. Anything larger than 0 means skipping the innermost entries of the stack.</param>
+            <param name="Count">How many entries should be included after the start index.</param>
+            <returns>A pared-down callstack</returns>
+            <exception cref="T:System.IndexOutOfRangeException">When the starting index is larger than the number of entries available.</exception>
         </member>
         <member name="M:PSFramework.Message.CallStack.#ctor">
             <summary>
@@ -4566,6 +4624,65 @@
             The actual PowerShell internal pipeline object
             </summary>
         </member>
+        <member name="T:PSFramework.Meta.PsfErrorRecord">
+            <summary>
+            A customized error record class, enabling write access to a few properties usually only readable
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.Management.Automation.ErrorRecord,System.Exception)">
+            <summary>
+            Create an error record based off another record
+            </summary>
+            <param name="Record">The record to wrap</param>
+            <param name="ReplaceParent">Replace the original exception with your own exception</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+            <summary>
+            Create an error record based off an exception
+            </summary>
+            <param name="Error">The exception to wrap</param>
+            <param name="ErrorId">An ID to attach to the error</param>
+            <param name="Category">What kind of error happened</param>
+            <param name="TargetObject">The target of the operation that failed</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+            <summary>
+            Create a new error record, based off a message.
+            </summary>
+            <param name="Message">The message to build the error record around</param>
+            <param name="Category">What kind of error happened</param>
+            <param name="ErrorId">An ID to attach to the error</param>
+            <param name="Target">The target of the operation that failed</param>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.InvocationInfo">
+            <summary>
+            Information about the context where the error happened
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.ScriptStackTrace">
+            <summary>
+            The Stack Trace when things went bad
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.FullyQualifiedErrorId">
+            <summary>
+            Identify the error by its own, grand ID
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.SetStackTrace(PSFramework.Message.CallStack)">
+            <summary>
+            Applies a specified CallStack to the error record
+            </summary>
+            <param name="Callstack">The Callstack object to write</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.GetException(System.String,System.Management.Automation.ErrorCategory)">
+            <summary>
+            Generate a new exception object from a message and an error category
+            </summary>
+            <param name="Message">The message to wrap into an exception</param>
+            <param name="Category">The category of the error, determining the exception type</param>
+            <returns>An exception</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation
@@ -5932,6 +6049,11 @@
             <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
             <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
             <param name="PassThru">Parameter is ignored. Needed to have a second signature that returns the script container.</param>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.SimpleCompletionScript">
+            <summary>
+            The script used for providing tabcompletion for completers using the simplified notation.
+            </summary>
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
             <summary>

@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Management.Automation;
 using PSFramework.Utility;
+using PSFramework.Message;
 
 namespace PSFramework.Logging
 {
@@ -46,7 +47,6 @@ namespace PSFramework.Logging
             this.Provider = Provider;
 
             ImportConfig();
-            ProviderHost.InitializeProviderInstance(this);
         }
 
         /// <summary>
@@ -57,9 +57,6 @@ namespace PSFramework.Logging
             string configRoot = $"LoggingProvider.{Provider.Name}";
             if (!String.IsNullOrEmpty(Name) && !String.Equals(Name, "Default", StringComparison.InvariantCultureIgnoreCase))
                 configRoot = configRoot + $".{Name}";
-
-            // Enabled
-            Enabled = LanguagePrimitives.IsTrue(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.Enabled"));
 
             // Includes & Excludes
             IncludeModules = ToStringList(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.IncludeModules"));
@@ -75,6 +72,15 @@ namespace PSFramework.Logging
             MinLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MinLevel"), 1);
             MaxLevel = ToInt(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.MaxLevel"), 9);
             RequiresInclude = ToBool(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.RequiresInclude"), false);
+
+            if (null == Module)
+            {
+                ProviderHost.InitializeProviderInstance(this);
+                if (Errors.Count == 0)
+                    Enabled = LanguagePrimitives.IsTrue(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.Enabled"));
+            }
+            else
+                Enabled = LanguagePrimitives.IsTrue(Configuration.ConfigurationHost.GetConfigValue($"{configRoot}.Enabled"));
         }
 
         private List<string> ToStringList(object Entries)
@@ -302,6 +308,11 @@ namespace PSFramework.Logging
         public bool IncludeError = true;
 
         /// <summary>
+        /// Deadline after which no more messages can be accepted. Used during the logging provider disablement workflow and should not be used outside that.
+        /// </summary>
+        public DateTime? NotAfter;
+
+        /// <summary>
         /// Tests whether a log entry applies to the provider instance
         /// </summary>
         /// <param name="Entry">The Entry to validate</param>
@@ -309,6 +320,10 @@ namespace PSFramework.Logging
         public bool MessageApplies(Message.LogEntry Entry)
         {
             bool wasIncluded = false;
+
+            // Expired
+            if (NotAfter != null && NotAfter < Entry.Timestamp)
+                return false;
 
             // Level
             if (!IncludeWarning && (Entry.Level == Message.MessageLevel.Warning))
@@ -395,6 +410,10 @@ namespace PSFramework.Logging
         public bool MessageApplies(Message.PsfExceptionRecord Record)
         {
             bool wasIncluded = false;
+
+            // Expired
+            if (NotAfter != null && NotAfter < Record.Timestamp)
+                return false;
 
             // Modules
             if (IncludeModules.Count > 0)
@@ -509,6 +528,77 @@ namespace PSFramework.Logging
         {
             if (_DynamicRunspaceInclusion.ContainsKey(Runspace))
                 _DynamicRunspaceInclusion[Runspace].End(DateTime.Now);
+        }
+
+        /// <summary>
+        /// Wait until all applicable messages have been processed, then disable this instance.
+        /// </summary>
+        /// <param name="WaitForFinalize">Wait until the the final block of the instance has been executed.</param>
+        /// <exception cref="TimeoutException">Will not wait longer than five minutes to drain messages.</exception>
+        public void Drain(bool WaitForFinalize = true)
+        {
+            if (null == NotAfter)
+                NotAfter = DateTime.Now;
+
+            DateTime limit = DateTime.Now.AddMinutes(5);
+
+            // Wait until all messages are done processing
+            LogEntry entry;
+            while (LogHost.OutQueueLog.Count > 0)
+            {
+                LogHost.OutQueueLog.TryPeek(out entry);
+                if (entry == null || entry.Timestamp > NotAfter)
+                    break;
+
+                System.Threading.Thread.Sleep(250);
+
+                if (limit > DateTime.Now)
+                    throw new TimeoutException();
+            }
+
+            // Wait until all errors are done processing
+            PsfExceptionRecord error;
+            while (LogHost.OutQueueError.Count > 0)
+            {
+                LogHost.OutQueueError.TryPeek(out error);
+                if (error == null || error.Timestamp > NotAfter)
+                    break;
+
+                System.Threading.Thread.Sleep(250);
+
+                if (limit < DateTime.Now)
+                    throw new TimeoutException();
+            }
+
+            // Disable Provider Instance
+            string configRoot = $"LoggingProvider.{Provider.Name}";
+            if (!String.IsNullOrEmpty(Name) && !String.Equals(Name, "Default", StringComparison.InvariantCultureIgnoreCase))
+                configRoot = configRoot + $".{Name}";
+
+            Configuration.ConfigurationHost.Configurations[$"{configRoot}.Enabled"].Value = false;
+            Enabled = false;
+
+            // Reset NotAfter in case the instance is later reenabled
+            NotAfter = null;
+
+            if (!WaitForFinalize)
+                return;
+
+            while (Initialized)
+            {
+                System.Threading.Thread.Sleep(250);
+
+                if (limit > DateTime.Now)
+                {
+                    if (Errors.Count == 0)
+                        throw new TimeoutException("Logging was concluded, but timeout was reached while waiting for the final sequence of the logging provider to complete.");
+                    else
+                    {
+                        ErrorRecord lastError = Errors.Last();
+                        throw new TimeoutException($"Logging was concluded, but timeout was reached while waiting for the final sequence of the logging provider to complete. Last Error: {lastError.ToString()}", lastError.Exception);
+                    }
+                }
+            }
         }
 
         /// <summary>
