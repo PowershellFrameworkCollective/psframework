@@ -138,7 +138,7 @@
 		}
 	}
 	else {
-		foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Like ""$wordToComplete*"" | Sort-Object Text)) {
+		foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Like "$wordToComplete*" | Sort-Object Text)) {
 			New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip -ListItemText $item.ListItemText
 		}
 	}
