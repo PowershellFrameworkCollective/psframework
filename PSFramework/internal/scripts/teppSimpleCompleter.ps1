@@ -124,7 +124,7 @@
 		$innerScript = $scriptContainer.InnerScriptBlock
 		[PSFramework.Utility.UtilityHost]::ImportScriptBlock($innerScript)
 		$items = @()
-		try { $items = $innerScript.Invoke() | ConvertTo-TeppCompletionEntry }
+		try { $items = & $innerScript | ConvertTo-TeppCompletionEntry }
 		catch { $null = $scriptContainer.ErrorRecords.Enqueue($_) }
 			
 		foreach ($item in ($items | Where-Object Text -Like "$wordToComplete*" | Sort-Object Text)) {
@@ -138,7 +138,7 @@
 		}
 	}
 	else {
-		foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Like ""$wordToComplete*"" | Sort-Object Text)) {
+		foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Like "$wordToComplete*" | Sort-Object Text)) {
 			New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip -ListItemText $item.ListItemText
 		}
 	}
