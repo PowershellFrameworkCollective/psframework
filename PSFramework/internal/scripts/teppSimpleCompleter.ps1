@@ -102,11 +102,18 @@
 
 				$text = $entry -as [string]
 				if ($entry.PSObject.Properties.Name -contains 'Text' -and $entry.Text) { $text = $entry.Text -as [string] }
-				$toolTip = $text -as [string]
-				if ($entry.PSObject.Properties.Name -contains 'ToolTip' -and $entry.ToolTip) { $toolTip = $entry.ToolTip -as [string] }
-				$listItemText = $text -as [string]
-				if ($entry.PSObject.Properties.Name -contains 'ListItemText' -and $entry.ListItemText) { $listItemText = $entry.ListItemText -as [string] }
+				if ($entry -is [hashtable] -and $entry.Keys -contains 'Text') { $text = $entry['Text'] -as [string] }
 
+				$toolTip = $text
+				$listItemText = $text
+
+				if ($entry -is [hashtable]) {
+					if ($entry['ToolTip']) { $toolTip = $entry['ToolTip'] -as [string] }
+					if ($entry['ListItemText']) { $listItemText = $entry['ListItemText'] -as [string] }
+				}
+				
+				if ($entry.PSObject.Properties.Name -contains 'ToolTip' -and $entry.ToolTip) { $toolTip = $entry.ToolTip -as [string] }
+				if ($entry.PSObject.Properties.Name -contains 'ListItemText' -and $entry.ListItemText) { $listItemText = $entry.ListItemText -as [string] }
 				[PSCustomObject]@{
 					Text         = $text
 					ToolTip      = $toolTip

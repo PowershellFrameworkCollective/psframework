@@ -1,6 +1,11 @@
 ﻿# CHANGELOG
 
-## 1.7.268 (2023-02-01)
+## 1.7.270 (2023-02-06)
+
+- Upd: Import-PSFPowerShellDataFile - added parameter `Psd1Mode`, enabling psd1 files with multiple hashtables to be loaded without exposing yourself to executing unsafe code.
+- Fix: Tab Completion - fails to process hashtables for enriched Tab Completion
+
+## 1.7.268 (2023-02-06)
 
 - New: Type PsfErrorRecord - a custom error record type to provide better and easier error records.
 - Upd: Tab Completion - added support for ListItemText property on results
