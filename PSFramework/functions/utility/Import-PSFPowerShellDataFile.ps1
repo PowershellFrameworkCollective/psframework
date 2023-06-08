@@ -54,9 +54,9 @@
 		Safely loads the data stored in data.json
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "")]
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = 'ByPath')]
 	Param (
-		[Parameter(ParameterSetName = 'ByPath')]
+		[Parameter(Position = 0, ParameterSetName = 'ByPath')]
 		[string[]]
 		$Path,
 		
