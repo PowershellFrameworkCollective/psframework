@@ -322,16 +322,6 @@
             Base class for all PSFramework Cmdlets, offering some shared tooling
             </summary>
         </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.MessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
-            </summary>
-        </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String)">
             <summary>
             Invokes a string of text-based scriptcode

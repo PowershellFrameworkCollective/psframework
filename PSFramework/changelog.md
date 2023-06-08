@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
+
 ## 1.7.270 (2023-02-06)
 
 - Upd: Import-PSFPowerShellDataFile - added parameter `Psd1Mode`, enabling psd1 files with multiple hashtables to be loaded without exposing yourself to executing unsafe code.

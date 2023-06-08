@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Reflection.Emit;
 
 namespace PSFramework.Commands
 {
@@ -15,125 +16,6 @@ namespace PSFramework.Commands
     /// </summary>
     public abstract class PSFCmdlet : PSCmdlet
     {
-        /// <summary>
-        /// Access a scriptblock that can be used to write a message
-        /// </summary>
-        internal static string MessageScript = @"
-param (
-	$____PSF____Message,
-	$____PSF____Level,
-	$____PSF____FunctionName,
-	$____PSF____ModuleName,
-	$____PSF____File,
-	$____PSF____Line,
-	$____PSF____Tag,
-	$____PSF____Target,
-    $____PSF____Data
-)
-Write-PSFMessage -Message $____PSF____Message -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target -Data $____PSF____Data
-";
-
-        /// <summary>
-        /// Access a scriptblock that can be used to write a message
-        /// </summary>
-        internal static string LocalizedMessageScript = @"
-param (
-	$____PSF____String,
-	$____PSF____StringValues,
-	$____PSF____Level,
-	$____PSF____FunctionName,
-	$____PSF____ModuleName,
-	$____PSF____File,
-	$____PSF____Line,
-	$____PSF____Tag,
-	$____PSF____Target,
-    $____PSF____Data
-)
-Write-PSFMessage -String $____PSF____String -StringValues $____PSF____StringValues -Level $____PSF____Level -FunctionName $____PSF____FunctionName -ModuleName $____PSF____ModuleName -Tag $____PSF____Tag -File $____PSF____File -Line $____PSF____Line -Target $____PSF____Target -Data $____PSF____Data
-";
-
-        internal static string StopFunctionScript = @"
-param (
-	$__PSFramework__Message,
-	
-	$__PSFramework__Exception,
-	
-	$__PSFramework__Target,
-	
-	$__PSFramework__FunctionName,
-	
-	$__PSFramework__ModuleName,
-	
-	$__PSFramework__File,
-	
-	$__PSFramework__Line,
-	
-	$__PSFramework__Tag,
-	
-	$__PSFramework__Cmdlet,
-	
-	$__PSFramework__EnableException
-)
-
-$paramStopPSFFunction = @{
-	Message		    = $__PSFramework__Message
-	Target		    = $__PSFramework__Target
-	FunctionName    = $__PSFramework__FunctionName
-	ModuleName	    = $__PSFramework__ModuleName
-	File		    = $__PSFramework__File
-	Line		    = $__PSFramework__Line
-	Cmdlet		    = $__PSFramework__Cmdlet
-	EnableException = $__PSFramework__EnableException
-	StepsUpward	    = -1
-}
-if ($__PSFramework__Tag) { $paramStopPSFFunction['Tag'] = $__PSFramework__Tag }
-if ($__PSFramework__Exception) { $paramStopPSFFunction['Exception'] = $__PSFramework__Exception }
-Stop-PSFFunction @paramStopPSFFunction
-return
-";
-        internal static string LocalizedStopFunctionScript = @"
-param (
-	$__PSFramework__String,
-	
-	$__PSFramework__StringValues,
-	
-	$__PSFramework__Exception,
-	
-	$__PSFramework__Target,
-	
-	$__PSFramework__FunctionName,
-	
-	$__PSFramework__ModuleName,
-	
-	$__PSFramework__File,
-	
-	$__PSFramework__Line,
-	
-	$__PSFramework__Tag,
-	
-	$__PSFramework__Cmdlet,
-	
-	$__PSFramework__EnableException
-)
-
-$paramStopPSFFunction = @{
-	String		    = $__PSFramework__String
-	Target		    = $__PSFramework__Target
-	FunctionName    = $__PSFramework__FunctionName
-	ModuleName	    = $__PSFramework__ModuleName
-	File		    = $__PSFramework__File
-	Line		    = $__PSFramework__Line
-	Cmdlet		    = $__PSFramework__Cmdlet
-	EnableException = $__PSFramework__EnableException
-	StepsUpward	    = -1
-}
-if ($__PSFramework__Tag) { $paramStopPSFFunction['Tag'] = $__PSFramework__Tag }
-if ($__PSFramework__Exception) { $paramStopPSFFunction['Exception'] = $__PSFramework__Exception }
-if ($__PSFramework__StringValues) { $paramStopPSFFunction['StringValues'] = $__PSFramework__StringValues }
-Stop-PSFFunction @paramStopPSFFunction
-return
-";
-
         /// <summary>
         /// Invokes a string of text-based scriptcode
         /// </summary>
@@ -229,8 +111,21 @@ return
         /// <param name="Data">Add additional metadata to the message written</param>
         public void WriteMessage(string Message, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
         {
-            object[] arguments = new object[] { Message, Level, FunctionName, ModuleName, File, Line, Tag, Target, Data };
-            Invoke(MessageScript, false, null, null, null, arguments);
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                CommandInfo messageCmd = SessionState.InvokeCommand.GetCommand("Write-PSFMessage", CommandTypes.Cmdlet);
+                ps.AddCommand(messageCmd)
+                    .AddParameter("Message", Message)
+                    .AddParameter("Level", Level)
+                    .AddParameter("FunctionName", FunctionName)
+                    .AddParameter("ModuleName", ModuleName)
+                    .AddParameter("File", File)
+                    .AddParameter("Line", Line)
+                    .AddParameter("Tag", Tag)
+                    .AddParameter("Target", Target)
+                    .AddParameter("Data", Data);
+                ps.Invoke();
+            }
         }
 
         /// <summary>
@@ -248,8 +143,22 @@ return
         /// <param name="Data">Add additional metadata to the message written</param>
         public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
         {
-            object[] arguments = new object[] { String, StringValues, Level, FunctionName, ModuleName, File, Line, Tag, Target, Data };
-            Invoke(LocalizedMessageScript, false, null, null, null, arguments);
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                CommandInfo messageCmd = SessionState.InvokeCommand.GetCommand("Write-PSFMessage", CommandTypes.Cmdlet);
+                ps.AddCommand(messageCmd)
+                    .AddParameter("String", String)
+                    .AddParameter("StringValues", StringValues)
+                    .AddParameter("Level", Level)
+                    .AddParameter("FunctionName", FunctionName)
+                    .AddParameter("ModuleName", ModuleName)
+                    .AddParameter("File", File)
+                    .AddParameter("Line", Line)
+                    .AddParameter("Tag", Tag)
+                    .AddParameter("Target", Target)
+                    .AddParameter("Data", Data);
+                ps.Invoke();
+            }
         }
 
         /// <summary>
@@ -266,9 +175,27 @@ return
         /// <param name="EnableException">Whether the command should terminate in fire and death and terminating exceptions</param>
         public void StopCommand(string Message, Exception Error, object Target, string FunctionName, string ModuleName, string File, int Line, string[] Tag, bool EnableException = true)
         {
-            object[] arguments = new object[] { Message, Error, Target, FunctionName, ModuleName, File, Line, Tag, this, EnableException };
             IsStopping = true;
-            Invoke(StopFunctionScript, false, null, null, null, arguments);
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                CommandInfo stopCmd = SessionState.InvokeCommand.GetCommand("Stop-PSFFunction", CommandTypes.Function);
+                ps.AddCommand(stopCmd)
+                    .AddParameter("Message", Message)
+                    .AddParameter("FunctionName", FunctionName)
+                    .AddParameter("ModuleName", ModuleName)
+                    .AddParameter("File", File)
+                    .AddParameter("Line", Line)
+                    .AddParameter("Target", Target)
+                    .AddParameter("Cmdlet", this)
+                    .AddParameter("EnableException", EnableException);
+                
+                if (Error != null)
+                    ps.AddParameter("Exception", Error);
+                if (Tag != null)
+                    ps.AddParameter("Tag", Tag);
+
+                ps.Invoke();
+            }
         }
 
         /// <summary>
@@ -286,9 +213,29 @@ return
         /// <param name="EnableException">Whether the command should terminate in fire and death and terminating exceptions</param>
         public void StopLocalizedCommand(string String, object[] StringValues, Exception Error, object Target, string FunctionName, string ModuleName, string File, int Line, string[] Tag, bool EnableException = true)
         {
-            object[] arguments = new object[] { String, StringValues, Error, Target, FunctionName, ModuleName, File, Line, Tag, this, EnableException };
             IsStopping = true;
-            Invoke(LocalizedStopFunctionScript, false, null, null, null, arguments);
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                CommandInfo stopCmd = SessionState.InvokeCommand.GetCommand("Stop-PSFFunction", CommandTypes.Function);
+                ps.AddCommand(stopCmd)
+                    .AddParameter("String", String)
+                    .AddParameter("FunctionName", FunctionName)
+                    .AddParameter("ModuleName", ModuleName)
+                    .AddParameter("File", File)
+                    .AddParameter("Line", Line)
+                    .AddParameter("Target", Target)
+                    .AddParameter("Cmdlet", this)
+                    .AddParameter("EnableException", EnableException);
+
+                if (StringValues != null)
+                    ps.AddParameter("StringValues", StringValues);
+                if (Error != null)
+                    ps.AddParameter("Exception", Error);
+                if (Tag != null)
+                    ps.AddParameter("Tag", Tag);
+
+                ps.Invoke();
+            }
         }
 
         /// <summary>
