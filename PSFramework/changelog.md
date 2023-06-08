@@ -2,7 +2,9 @@
 
 ## ???
 
+- Upd: Import-PSFPowerShellDataFile - now accepts path as a positional argument
 - Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
+- Upd: Type PsfScriptBlock - added second constructor (Scriptblock, bool) to unwrap nested scriptblocks (e.g. when importing from psd1)
 
 ## 1.7.270 (2023-02-06)
 

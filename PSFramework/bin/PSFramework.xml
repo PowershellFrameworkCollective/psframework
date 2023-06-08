@@ -7297,6 +7297,13 @@
             </summary>
             <param name="Script">The Scriptblock to wrap</param>
         </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.#ctor(System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Create a new PsfScriptBlock by wrapping a regular scriptblock.
+            </summary>
+            <param name="Script">The Scriptblock to wrap</param>
+            <param name="Unwrap">Whether to unwrap a scriptblock. When a scriptblock only contains a scriptblock (as happens when importing from psd1), this causes the class to use the inner scriptblock.</param>
+        </member>
         <member name="M:PSFramework.Utility.PsfScriptBlock.op_Implicit(PSFramework.Utility.PsfScriptBlock)~System.Management.Automation.ScriptBlock">
             <summary>
             Implicitly convert PsfScriptblock to ScriptBlock
