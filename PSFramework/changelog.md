@@ -13,6 +13,9 @@
 - Upd: Import-PSFPowerShellDataFile - now also supports jsonc documents
 - Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
 - Upd: Type PsfScriptBlock - added second constructor (Scriptblock, bool) to unwrap nested scriptblocks (e.g. when importing from psd1)
+- Upd: Logging Provider: eventlog - added ability to specify event id via data field 'EventLog.ID'
+- Upd: Logging Provider: eventlog - added option to use the first purely numeric tag as eventid
+- Upd: Logging Provider: eventlog - added option to provide a hashtable to map tags to eventid
 - Fix: Disable-PSFLoggingProvider - throws an error about timeout being reached while still disabling correctly.
 
 ## 1.7.270 (2023-02-06)
