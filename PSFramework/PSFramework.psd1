@@ -122,6 +122,7 @@
 		'Remove-PSFTempItem'
 		'Reset-PSFConfig'
 		'Resolve-PSFDefaultParameterValue'
+		'Resolve-PSFItem'
 		'Resolve-PSFPath'
 		'Select-PSFConfig'
 		'Select-PSFPropertyValue'

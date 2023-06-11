@@ -2,6 +2,7 @@
 
 ## ???
 
+- New: Resolve-PSFItem - Resolves paths provided.
 - New: Register-PSFMessageColorTransform - Adds a rule that changes the color of messages when applicable.
 - New: Unregister-PSFMessageColorTransform - Removes a previously registered message color rule.
 - New: Get-PSFMessageColorTransform - Lists registered message color rules.
@@ -12,6 +13,7 @@
 - Upd: Import-PSFPowerShellDataFile - now also supports jsonc documents
 - Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
 - Upd: Type PsfScriptBlock - added second constructor (Scriptblock, bool) to unwrap nested scriptblocks (e.g. when importing from psd1)
+- Fix: Disable-PSFLoggingProvider - throws an error about timeout being reached while still disabling correctly.
 
 ## 1.7.270 (2023-02-06)
 
