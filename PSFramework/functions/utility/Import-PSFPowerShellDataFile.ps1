@@ -274,7 +274,7 @@
 			$extension = ($resolvedPath -split "\.")[-1]
 			switch ($extension) {
 				#region Json
-				json {
+				{ $_ -in 'json', 'jsonc'} {
 					if ($PSVersionTable.PSVersion.Major -gt 5) {
 						$results = Get-Content -LiteralPath $resolvedPath | ConvertFrom-Json -AsHashtable
 						$results

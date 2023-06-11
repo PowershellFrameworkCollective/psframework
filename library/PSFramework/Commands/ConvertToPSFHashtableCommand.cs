@@ -11,7 +11,7 @@ namespace PSFramework.Commands
     /// <summary>
     /// Implements the ConvertTo-PSFHashtable command
     /// </summary>
-    [Cmdlet("ConvertTo", "PSFHashtable", DefaultParameterSetName = "filter")]
+    [Cmdlet(VerbsData.ConvertTo, "PSFHashtable")]
     [OutputType(new Type[] { typeof(Hashtable) })]
     public class ConvertToPSFHashtableCommand : PSCmdlet
     {
@@ -19,13 +19,13 @@ namespace PSFramework.Commands
         /// <summary>
         /// The properties to include explicitly
         /// </summary>
-        [Parameter(ParameterSetName = "filter")]
+        [Parameter()] 
         public string[] Include = new string[0];
 
         /// <summary>
         /// Any properties to exclude explicitly
         /// </summary>
-        [Parameter(ParameterSetName = "filter")]
+        [Parameter()] 
         public string[] Exclude = new string[0];
 
         /// <summary>
@@ -63,11 +63,12 @@ namespace PSFramework.Commands
         /// <summary>
         /// Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
         /// </summary>
-        [Parameter(ParameterSetName = "reference")]
+        [Parameter()]
         public string ReferenceCommand;
         #endregion Parameters
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
+        List<string> _ToInclude = new List<string>();
 
         #region Cmdlet Methods
         /// <summary>
@@ -75,13 +76,22 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
+            if (Include != null)
+                _ToInclude.AddRange(Include);
+
+            if (Remap != null)
+            {
+                foreach (object key in Remap.Keys)
+                    _ToInclude.Add(key.ToString());
+            }
+
             if (String.IsNullOrEmpty(ReferenceCommand))
                 return;
 
             CommandInfo info = InvokeCommand.GetCommand(ReferenceCommand, CommandTypes.Function | CommandTypes.Cmdlet | CommandTypes.Alias);
             if (info == null)
                 throw new CommandNotFoundException($"Unable to find command: {ReferenceCommand}");
-            Include = info.Parameters.Keys.ToArray();
+            _ToInclude.AddRange(info.Parameters.Keys.ToArray());
         }
 
         /// <summary>
@@ -116,17 +126,17 @@ namespace PSFramework.Commands
                     foreach (string key in Exclude.Where(o => result.ContainsKey(o)))
                         result.Remove(key);
 
-                if (Include.Length > 0)
+                if (_ToInclude.Count > 0)
                 {
                     object[] keys = new object[result.Keys.Count];
                     result.Keys.CopyTo(keys, 0);
-                    foreach (string key in keys.Where(o => !Include.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
+                    foreach (string key in keys.Where(o => !_ToInclude.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
                         result.Remove(key);    
                     if (Inherit.ToBool())
-                        foreach (string name in Include.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))
+                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))
                             result[name] = GetVariableValue(name);
                     if (IncludeEmpty.ToBool())
-                        foreach (string name in Include.Where(o => !result.ContainsKey(o)))
+                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)))
                             result[name] = null;
                 }
                 if (Remap != null)

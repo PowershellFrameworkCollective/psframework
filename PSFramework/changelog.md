@@ -5,8 +5,11 @@
 - New: Register-PSFMessageColorTransform - Adds a rule that changes the color of messages when applicable.
 - New: Unregister-PSFMessageColorTransform - Removes a previously registered message color rule.
 - New: Get-PSFMessageColorTransform - Lists registered message color rules.
+- Upd: ConvertTo-PSFHashtable - Automatically adds all keys of a `-Remap` hashtable to include
+- Upd: ConvertTo-PSFHashtable - Allows using -Include and -Exclude together with -ReferenceCommand
 - Upd: Messages - added option to include the level of a message in the message written to screen
 - Upd: Import-PSFPowerShellDataFile - now accepts path as a positional argument
+- Upd: Import-PSFPowerShellDataFile - now also supports jsonc documents
 - Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
 - Upd: Type PsfScriptBlock - added second constructor (Scriptblock, bool) to unwrap nested scriptblocks (e.g. when importing from psd1)
 
