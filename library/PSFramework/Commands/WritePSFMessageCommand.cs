@@ -214,16 +214,6 @@ namespace PSFramework.Commands
         private string _messageDeveloperColor;
 
         /// <summary>
-        /// Scriptblock that writes the host messages
-        /// </summary>
-        private static string _writeHostScript = @"
-param ( $___psframework__string, $___psframework__NoNewLine )
-
-if ([PSFramework.Message.MessageHost]::DeveloperMode) { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::DeveloperColor) -ErrorAction Ignore -NoNewLine:$___psframework__NoNewLine }
-else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFramework.Message.MessageHost]::InfoColor) -ErrorAction Ignore -NoNewLine:$___psframework__NoNewLine }
-";
-
-        /// <summary>
         /// List of tags to process
         /// </summary>
         private List<string> _Tags = new List<string>();
@@ -508,7 +498,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
-                            InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
+                            WriteHostColor(_MessageHost);
                             channels = channels | LogEntryType.Information;
 
                             Configuration.Config cfg = new Configuration.Config();
@@ -523,8 +513,7 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
                     }
                     else
                     {
-                        //InvokeCommand.InvokeScript(_writeHostScript, _MessageHost);
-                        InvokeCommand.InvokeScript(false, ScriptBlock.Create(_writeHostScript), null, new object[] { _MessageHost, NoNewLine.ToBool() });
+                        WriteHostColor(_MessageHost);
                         channels = channels | LogEntryType.Information;
                     }
                 }
@@ -697,16 +686,26 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
         {
             if (!String.IsNullOrEmpty(_message))
                 return _message;
-            if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageBreadcrumbs)
-                _message = String.Format("[{0}]{1}{2}", _timestamp.ToString("HH:mm:ss"), _BreadCrumbsString, GetMessageSimple());
-            else if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageDisplayCommand)
-                _message = String.Format("[{0}][{1}] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, GetMessageSimple());
-            else if (MessageHost.EnableMessageTimestamp)
-                _message = String.Format("[{0}] {1}", _timestamp.ToString("HH:mm:ss"), GetMessageSimple());
-            else if (MessageHost.EnableMessageBreadcrumbs)
-                _message = String.Format("{0}{1}", _BreadCrumbsString, GetMessageSimple());
-            else if (MessageHost.EnableMessageDisplayCommand)
-                _message = String.Format("[{0}] {1}", FunctionName, GetMessageSimple());
+
+            string levelDisplay = "";
+            if (MessageHost.EnableMessageLevel)
+                levelDisplay = $"[{Level}]";
+            string timeStamp = "";
+            if (MessageHost.EnableMessageTimestamp)
+                timeStamp = $"[{_timestamp.ToString("HH:mm:ss")}]";
+            string breadCrumbs = "";
+            if (MessageHost.EnableMessageBreadcrumbs)
+                breadCrumbs = _BreadCrumbsString;
+            string functionText = "";
+            if (MessageHost.EnableMessageDisplayCommand && !MessageHost.EnableMessageBreadcrumbs)
+                functionText = $"[{FunctionName}]";
+
+            string header = String.Join("", timeStamp, functionText, levelDisplay, breadCrumbs);
+
+            if (MessageHost.EnableMessageBreadcrumbs)
+                _message = String.Join("", header, GetMessageSimple());
+            else if (header.Length > 0)
+                _message = String.Join(" ", header, GetMessageSimple());
             else
                 _message = GetMessageSimple();
 
@@ -778,16 +777,25 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
             if (!String.IsNullOrEmpty(_messageColor))
                 return _messageColor;
 
-            if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageBreadcrumbs)
-                _messageColor = String.Format("[<c='sub'>{0}</c>]{1} {2}", _timestamp.ToString("HH:mm:ss"), _BreadCrumbsStringColored, _errorQualifiedMessage);
-            else if (MessageHost.EnableMessageTimestamp && MessageHost.EnableMessageDisplayCommand)
-                _messageColor = String.Format("[<c='sub'>{0}</c>][<c='sub'>{1}</c>] {2}", _timestamp.ToString("HH:mm:ss"), FunctionName, _errorQualifiedMessage);
-            else if (MessageHost.EnableMessageTimestamp)
-                _messageColor = String.Format("[<c='sub'>{0}</c>] {1}", _timestamp.ToString("HH:mm:ss"), _errorQualifiedMessage);
-            else if (MessageHost.EnableMessageBreadcrumbs)
-                _messageColor = String.Format("{0}{1}", _BreadCrumbsStringColored, _errorQualifiedMessage);
-            else if (MessageHost.EnableMessageDisplayCommand)
-                _messageColor = String.Format("[<c='sub'>{0}</c>] {1}", FunctionName, _errorQualifiedMessage);
+            string levelDisplay = "";
+            if (MessageHost.EnableMessageLevel)
+                levelDisplay = $"[<c='sub'>{Level}</c>]";
+            string timeStamp = "";
+            if (MessageHost.EnableMessageTimestamp)
+                timeStamp = $"[<c='sub'>{_timestamp.ToString("HH:mm:ss")}</c>]";
+            string breadCrumbs = "";
+            if (MessageHost.EnableMessageBreadcrumbs)
+                breadCrumbs = _BreadCrumbsStringColored;
+            string functionText = "";
+            if (MessageHost.EnableMessageDisplayCommand && !MessageHost.EnableMessageBreadcrumbs)
+                functionText = $"[<c='sub'>{FunctionName}</c>]";
+
+            string header = String.Join("", timeStamp, functionText, levelDisplay, breadCrumbs);
+
+            if (MessageHost.EnableMessageBreadcrumbs)
+                _messageColor = String.Join("", header, _errorQualifiedMessage);
+            else if (header.Length > 0)
+                _messageColor = String.Join(" ", header, _errorQualifiedMessage);
             else
                 _messageColor = _errorQualifiedMessage;
 
@@ -902,6 +910,45 @@ else { Write-PSFHostColor -String $___psframework__string -DefaultColor ([PSFram
     {7}", _timestamp.ToString("HH:mm:ss"), FunctionName, Level, targetString, String.Join(",", channelList), EnableException, (!String.IsNullOrEmpty(Once)), _errorQualifiedMessage);
 
             return _messageDeveloperColor;
+        }
+        
+        /// <summary>
+        /// Writes a message to screen
+        /// </summary>
+        /// <param name="Message">The message to write</param>
+        private void WriteHostColor(string Message)
+        {
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                ps.AddCommand("Write-PSFHostColor")
+                    .AddParameter("String", Message)
+                    .AddParameter("ErrorAction", "Ignore")
+                    .AddParameter("DefaultColor", ResolveDefaultColor());
+
+                if (NoNewLine)
+                    ps.AddParameter("NoNewLage", NoNewLine.ToBool());
+
+                ps.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Calculates the default color a message should have
+        /// </summary>
+        /// <returns>The default color of a message</returns>
+        private ConsoleColor ResolveDefaultColor()
+        {
+            if (MessageHost.DeveloperMode)
+                return MessageHost.DeveloperColor;
+
+            if (MessageHost.ColorTransforms.Count < 1)
+                return MessageHost.InfoColor;
+
+            foreach (MessageColorCondition condition in MessageHost.ColorTransforms.Values.OrderBy(o => o.Priority))
+                if (condition.Applies(this))
+                    return condition.Color;
+
+            return MessageHost.InfoColor;
         }
         #endregion Helper methods
     }

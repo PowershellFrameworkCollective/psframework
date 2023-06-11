@@ -82,6 +82,11 @@ namespace PSFramework.Message
         public static bool EnableMessageTimestamp = true;
 
         /// <summary>
+        /// Include the level of a message in verbose message output
+        /// </summary>
+        public static bool EnableMessageLevel = false;
+
+        /// <summary>
         /// Include message prefix in verbose message output
         /// </summary>
         public static bool EnableMessagePrefix = false;
@@ -144,6 +149,11 @@ namespace PSFramework.Message
         /// Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
         /// </summary>
         public static ConcurrentDictionary<string, ScriptBlock> TargetTransforms = new ConcurrentDictionary<string, ScriptBlock>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Provids the option to change the default color used when writing a message to screen
+        /// </summary>
+        public static ConcurrentDictionary<string, MessageColorCondition> ColorTransforms = new ConcurrentDictionary<string, MessageColorCondition>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// The list of transformation errors that occured.
