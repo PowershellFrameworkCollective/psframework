@@ -588,7 +588,7 @@ namespace PSFramework.Logging
             {
                 System.Threading.Thread.Sleep(250);
 
-                if (limit > DateTime.Now)
+                if (limit < DateTime.Now)
                 {
                     if (Errors.Count == 0)
                         throw new TimeoutException("Logging was concluded, but timeout was reached while waiting for the final sequence of the logging provider to complete.");
