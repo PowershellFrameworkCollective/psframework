@@ -165,10 +165,10 @@
 		(Get-PSFMessage).Message | Should -Contain 'Test Var: 1'
 		(Get-PSFMessage).Message | Should -Contain 'Execution Confirmed: Testing'
 		(Get-PSFMessage).Message | Should -Contain 'Executing error event for "Testing" against 42'
-		(Get-PSFMessage).Message | Should -Contain 'ErrorEvent'
+		(Get-PSFMessage).Message | Should -Contain 'ErrorEvent Message'
 		(Get-PSFMessage).Message | Should -Contain 'Successfully executed error event for "Testing" against 42'
 		(Get-PSFMessage).Message | Should -Contain 'Failed to: Testing | Failing!'
 		(Get-PSFMessage).Message | Should -Contain 'Test Var after: 2'
-		$global:__psf_failed | Should
+		$global:__psf_failed | Should -BeTrue
 	}
 }
