@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PSFramework.PSFCore;
+using PSFramework.TabExpansion;
 
 namespace PSFramework.Commands
 {
     /// <summary>
     /// Implements the ConvertTo-PSFHashtable command
     /// </summary>
-    [Cmdlet("ConvertTo", "PSFHashtable", DefaultParameterSetName = "filter")]
+    [Cmdlet(VerbsData.ConvertTo, "PSFHashtable")]
     [OutputType(new Type[] { typeof(Hashtable) })]
     public class ConvertToPSFHashtableCommand : PSCmdlet
     {
@@ -19,13 +19,13 @@ namespace PSFramework.Commands
         /// <summary>
         /// The properties to include explicitly
         /// </summary>
-        [Parameter(ParameterSetName = "filter")]
+        [Parameter()] 
         public string[] Include = new string[0];
 
         /// <summary>
         /// Any properties to exclude explicitly
         /// </summary>
-        [Parameter(ParameterSetName = "filter")]
+        [Parameter()] 
         public string[] Exclude = new string[0];
 
         /// <summary>
@@ -63,11 +63,19 @@ namespace PSFramework.Commands
         /// <summary>
         /// Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
         /// </summary>
-        [Parameter(ParameterSetName = "reference")]
+        [Parameter()]
         public string ReferenceCommand;
+
+        /// <summary>
+        /// The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
+        /// </summary>
+        [Parameter()]
+        [PsfArgumentCompleter("PSFramework.Utility.ParameterSetNames")]
+        public string ReferenceParameterSetName;
         #endregion Parameters
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
+        List<string> _ToInclude = new List<string>();
 
         #region Cmdlet Methods
         /// <summary>
@@ -75,13 +83,41 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
+            if (Include != null)
+                _ToInclude.AddRange(Include);
+
+            if (Remap != null)
+            {
+                foreach (object key in Remap.Keys)
+                    _ToInclude.Add(key.ToString());
+            }
+
             if (String.IsNullOrEmpty(ReferenceCommand))
                 return;
 
-            CommandInfo info = InvokeCommand.GetCommand(ReferenceCommand, CommandTypes.Function | CommandTypes.Cmdlet | CommandTypes.Alias);
+            CommandInfo info = null;
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                ps.AddCommand("Get-Command")
+                    .AddParameter("Name", ReferenceCommand)
+                    .AddParameter("ErrorAction", ActionPreference.SilentlyContinue);
+                info = ps.Invoke()[0]?.BaseObject as CommandInfo;
+            }
+
+            PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand", info);
+
             if (info == null)
                 throw new CommandNotFoundException($"Unable to find command: {ReferenceCommand}");
-            Include = info.Parameters.Keys.ToArray();
+            if (String.IsNullOrEmpty(ReferenceParameterSetName))
+                _ToInclude.AddRange(info.Parameters.Keys.ToArray());
+            else
+            {
+                var parameterSets = info.ParameterSets.Where(o => String.Equals(o.Name, ReferenceParameterSetName, StringComparison.InvariantCultureIgnoreCase));
+                if (parameterSets.Count() != 1)
+                    throw new ArgumentException($"Parameterset {ReferenceParameterSetName} not found on command {info.Name}!");
+                PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand / ParameterSet", parameterSets);
+                _ToInclude.AddRange(parameterSets.First().Parameters.Select(o => o.Name).ToArray());
+            }
         }
 
         /// <summary>
@@ -102,11 +138,16 @@ namespace PSFramework.Commands
 
                 Hashtable result = new Hashtable(_Comparison);
 
-                if (inputItem.BaseObject.GetType() == (typeof(Hashtable)))
+                if (inputItem.BaseObject.GetType() == typeof(Hashtable) && !MyInvocation.BoundParameters.ContainsKey("CaseSensitive"))
                     result = (Hashtable)((Hashtable)inputItem.BaseObject).Clone();
 
                 else if (inputItem.BaseObject as IDictionary != null)
-                    result = new Hashtable(inputItem.BaseObject as IDictionary, _Comparison);
+                    try { result = new Hashtable(inputItem.BaseObject as IDictionary, _Comparison); }
+                    catch (Exception e)
+                    {
+                        WriteError(new ErrorRecord(e, "ConversionError", ErrorCategory.InvalidArgument, inputItem));
+                        continue;
+                    }
 
                 else
                     foreach (string name in inputItem.Properties.Select(o => o.Name))
@@ -116,17 +157,17 @@ namespace PSFramework.Commands
                     foreach (string key in Exclude.Where(o => result.ContainsKey(o)))
                         result.Remove(key);
 
-                if (Include.Length > 0)
+                if (_ToInclude.Count > 0)
                 {
                     object[] keys = new object[result.Keys.Count];
                     result.Keys.CopyTo(keys, 0);
-                    foreach (string key in keys.Where(o => !Include.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
+                    foreach (string key in keys.Where(o => !_ToInclude.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
                         result.Remove(key);    
                     if (Inherit.ToBool())
-                        foreach (string name in Include.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))
+                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))
                             result[name] = GetVariableValue(name);
                     if (IncludeEmpty.ToBool())
-                        foreach (string name in Include.Where(o => !result.ContainsKey(o)))
+                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)))
                             result[name] = null;
                 }
                 if (Remap != null)

@@ -113,6 +113,7 @@
     <Compile Include="Message\LogEntry.cs" />
     <Compile Include="Message\LogEntryType.cs" />
     <Compile Include="Message\LogHost.cs" />
+    <Compile Include="Message\MessageColorCondition.cs" />
     <Compile Include="Message\MessageEventSubscription.cs" />
     <Compile Include="Message\MessageHost.cs" />
     <Compile Include="Message\MessageLevel.cs" />

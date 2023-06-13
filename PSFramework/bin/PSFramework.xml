@@ -189,6 +189,11 @@
             Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ReferenceParameterSetName">
+            <summary>
+            The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
             <summary>
             Initialize command, resolving the ReferenceCommand if specified
@@ -320,16 +325,6 @@
         <member name="T:PSFramework.Commands.PSFCmdlet">
             <summary>
             Base class for all PSFramework Cmdlets, offering some shared tooling
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.MessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
             </summary>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String)">
@@ -1006,11 +1001,6 @@
             Colored version of developermode
             </summary>
         </member>
-        <member name="F:PSFramework.Commands.WritePSFMessageCommand._writeHostScript">
-            <summary>
-            Scriptblock that writes the host messages
-            </summary>
-        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._Tags">
             <summary>
             List of tags to process
@@ -1116,6 +1106,18 @@
             Host output in developermode
             </summary>
             <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.WriteHostColor(System.String)">
+            <summary>
+            Writes a message to screen
+            </summary>
+            <param name="Message">The message to write</param>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.ResolveDefaultColor">
+            <summary>
+            Calculates the default color a message should have
+            </summary>
+            <returns>The default color of a message</returns>
         </member>
         <member name="T:PSFramework.Filter.Condition">
             <summary>
@@ -3644,6 +3646,90 @@
             <param name="ErrorRecord">An associated error record</param>
             <returns>The entry that is being written</returns>
         </member>
+        <member name="T:PSFramework.Message.MessageColorCondition">
+            <summary>
+            A rule object to change the default color of a message written to screen.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Name">
+            <summary>
+            Name of the condition, making it easier to manage rules and figure out where a rule comes form
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Color">
+            <summary>
+            The color it applies to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Priority">
+            <summary>
+            The precedence weight. The lower the number the higher the priority. The first match wins.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.MinLevel">
+            <summary>
+            Minimum message level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.MaxLevel">
+            <summary>
+            Maximum message level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeTags">
+            <summary>
+            At least one specified tag must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeTags">
+            <summary>
+            Any one of these tags disqualifies
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeModules">
+            <summary>
+            Any one of these modules must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeModules">
+            <summary>
+            Any one of these modules disqualify
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeFunctions">
+            <summary>
+            Any one of these functions must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeFunctions">
+            <summary>
+            Any one of these functions disqualify
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.#ctor(System.String,System.ConsoleColor)">
+            <summary>
+            Create a new Message Color Condition
+            </summary>
+            <param name="Name">The name of the condition. Not case sensitive.</param>
+            <param name="Color">The color this rule applies</param>
+            <exception cref="T:System.ArgumentNullException">Providing an empty string for a name will not end well.</exception>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.Applies(PSFramework.Commands.WritePSFMessageCommand)">
+            <summary>
+            Whether the specified message color condition applies to the current message
+            </summary>
+            <param name="Command">The Write-PSFMessage command currently being processed</param>
+            <returns>Whether the message applies</returns>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.HasOverlap(System.String[],System.String[])">
+            <summary>
+            Helper utility, comparing two string arrays and checking whether at least one value is in both.
+            Is not case sensitive.
+            </summary>
+            <param name="One">The first array to compare</param>
+            <param name="Two">The second array to compare</param>
+            <returns>Whether at least one value is in both arrays</returns>
+        </member>
         <member name="T:PSFramework.Message.MessageEventSubscription">
             <summary>
             Condition and logic to be executed on message events
@@ -3846,6 +3932,11 @@
             Include message timestamps in verbose message output
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageLevel">
+            <summary>
+            Include the level of a message in verbose message output
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.EnableMessagePrefix">
             <summary>
             Include message prefix in verbose message output
@@ -3904,6 +3995,11 @@
         <member name="F:PSFramework.Message.MessageHost.TargetTransforms">
             <summary>
             Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.ColorTransforms">
+            <summary>
+            Provids the option to change the default color used when writing a message to screen
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrors">
@@ -7306,6 +7402,13 @@
             Create a new PsfScriptBlock by wrapping a regular scriptblock.
             </summary>
             <param name="Script">The Scriptblock to wrap</param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.#ctor(System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Create a new PsfScriptBlock by wrapping a regular scriptblock.
+            </summary>
+            <param name="Script">The Scriptblock to wrap</param>
+            <param name="Unwrap">Whether to unwrap a scriptblock. When a scriptblock only contains a scriptblock (as happens when importing from psd1), this causes the class to use the inner scriptblock.</param>
         </member>
         <member name="M:PSFramework.Utility.PsfScriptBlock.op_Implicit(PSFramework.Utility.PsfScriptBlock)~System.Management.Automation.ScriptBlock">
             <summary>

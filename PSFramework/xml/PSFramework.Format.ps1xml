@@ -413,6 +413,37 @@
             </TableControl>
         </View>
 
+        <!-- PSFramework.Message.MessageColorCondition -->
+        <View>
+            <Name>PSFramework.Message.MessageColorCondition</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Message.MessageColorCondition</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Color</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Priority</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+		
 		<!-- PSFramework.Message.LogEntry -->
 		<View>
 			<Name>PSFramework.Message.LogEntry</Name>

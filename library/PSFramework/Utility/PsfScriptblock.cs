@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Language;
 using System.Text;
 using System.Threading.Tasks;
 using PSFramework.Extension;
@@ -187,6 +188,37 @@ namespace PSFramework.Utility
         public PsfScriptBlock(ScriptBlock Script)
         {
             ScriptBlock = Script;
+        }
+
+        /// <summary>
+        /// Create a new PsfScriptBlock by wrapping a regular scriptblock.
+        /// </summary>
+        /// <param name="Script">The Scriptblock to wrap</param>
+        /// <param name="Unwrap">Whether to unwrap a scriptblock. When a scriptblock only contains a scriptblock (as happens when importing from psd1), this causes the class to use the inner scriptblock.</param>
+        public PsfScriptBlock(ScriptBlock Script, bool Unwrap)
+        {
+            if (Script == null)
+                throw new ArgumentNullException("Script");
+
+            ScriptBlockAst ast = (ScriptBlockAst)Script.Ast;
+            if (
+                !Unwrap ||
+                ast.ParamBlock != null ||
+                ast.BeginBlock != null ||
+                ast.ProcessBlock != null ||
+                ast.EndBlock.Statements.Count > 1 ||
+                ast.EndBlock.Statements[0].GetType() != typeof(PipelineAst) ||
+                ((PipelineAst)ast.EndBlock.Statements[0]).PipelineElements.Count > 1 ||
+                ((PipelineAst)ast.EndBlock.Statements[0]).PipelineElements[0].GetType() != typeof(CommandExpressionAst) ||
+                ((CommandExpressionAst)((PipelineAst)ast.EndBlock.Statements[0]).PipelineElements[0]).Expression.GetType() != typeof(ScriptBlockExpressionAst)
+            )
+            {
+                ScriptBlock = Script;
+                return;
+            }
+
+            ScriptBlock = LanguagePrimitives.ConvertTo<ScriptBlock>(Script.Invoke()[0]);
+            UtilityHost.SetPrivateProperty("LanguageMode", ScriptBlock, (new PsfScriptBlock(Script)).LanguageMode);
         }
 
         /// <summary>
