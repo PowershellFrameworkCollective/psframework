@@ -1,5 +1,27 @@
 ﻿# CHANGELOG
 
+## 1.8.289 (2023-06-13)
+
+- New: Resolve-PSFItem - Resolves paths provided.
+- New: Register-PSFMessageColorTransform - Adds a rule that changes the color of messages when applicable.
+- New: Unregister-PSFMessageColorTransform - Removes a previously registered message color rule.
+- New: Get-PSFMessageColorTransform - Lists registered message color rules.
+- Upd: ConvertTo-PSFHashtable - Automatically adds all keys of a `-Remap` hashtable to include
+- Upd: ConvertTo-PSFHashtable - Allows using `-Include` and `-Exclude` together with `-ReferenceCommand`
+- Upd: ConvertTo-PSFHashtable - When explicitly binding the `CaseSensitive` parameter, input objects that are hashtables will be converted to the proper case handling
+- Upd: ConvertTo-PSFHashtable - Added `-ReferenceParameterSetName` parameter to only include parameters applicable to a specified parameterset
+- Upd: Messages - added option to include the level of a message in the message written to screen
+- Upd: Import-PSFPowerShellDataFile - now accepts path as a positional argument
+- Upd: Import-PSFPowerShellDataFile - now also supports jsonc documents
+- Upd: Type PSFCmdlet - minor performance improvement (removed dynamic scriptblocks for message events)
+- Upd: Type PsfScriptBlock - added second constructor (Scriptblock, bool) to unwrap nested scriptblocks (e.g. when importing from psd1)
+- Upd: Logging Provider: logfile - added ability to rename properties and access sub-properties (such as entries in the data field)
+- Upd: Logging Provider: logfile - added new supported header: DataCompact. This will include a compacted form of the header data.
+- Upd: Logging Provider: eventlog - added ability to specify event id via data field 'EventLog.ID'
+- Upd: Logging Provider: eventlog - added option to use the first purely numeric tag as eventid
+- Upd: Logging Provider: eventlog - added option to provide a hashtable to map tags to eventid
+- Fix: Disable-PSFLoggingProvider - throws an error about timeout being reached while still disabling correctly.
+
 ## 1.7.270 (2023-02-06)
 
 - Upd: Import-PSFPowerShellDataFile - added parameter `Psd1Mode`, enabling psd1 files with multiple hashtables to be loaded without exposing yourself to executing unsafe code.

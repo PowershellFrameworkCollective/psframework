@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.7.270'
+	ModuleVersion = '1.8.289'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -63,6 +63,7 @@
 		'Get-PSFLoggingProvider'
 		'Get-PSFLoggingProviderInstance'
 		'Get-PSFMessage'
+		'Get-PSFMessageColorTransform'
 		'Get-PSFMessageLevelModifier'
 		'Get-PSFPath'
 		'Get-PSFPipeline'
@@ -102,6 +103,7 @@
 		'Register-PSFConfigValidation'
 		'Register-PSFFeature'
 		'Register-PSFLoggingProvider'
+		'Register-PSFMessageColorTransform'
 		'Register-PSFMessageEvent'
 		'Register-PSFMessageTransform'
 		'Register-PSFParameterClassMapping'
@@ -120,6 +122,7 @@
 		'Remove-PSFTempItem'
 		'Reset-PSFConfig'
 		'Resolve-PSFDefaultParameterValue'
+		'Resolve-PSFItem'
 		'Resolve-PSFPath'
 		'Select-PSFConfig'
 		'Select-PSFPropertyValue'
@@ -145,6 +148,7 @@
 		'Test-PSFTaskEngineTask'
 		'Unregister-PSFCallback'
 		'Unregister-PSFConfig'
+		'Unregister-PSFMessageColorTransform'
 		'Wait-PSFMessage'
 		'Write-PSFHostColor'
 		'Write-PSFMessageProxy'
