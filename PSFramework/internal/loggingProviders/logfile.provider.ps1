@@ -317,6 +317,28 @@ $start_event = {
 					}
 				}
 			}
+			'DataCompact'
+			{
+				@{
+					Name       = "DataCompact"
+					Expression = {
+						if (-not $_.Data) { return }
+						$lines = foreach ($pair in $_.Data.GetEnumerator()) {
+							'{0}={1}' -f $pair.Key, $pair.Value
+						}
+						$lines -join ", "
+					}
+				}
+			}
+			{ "$_" -match '^[\w\.]+ as \S+$' }
+			{
+				$value, $name = $_ -split ' as '
+				@{
+					Name = $name
+					# Dynamic code is safe due to the pattern constraint of "\w\." - only letters, numbers and dots are allowed
+					Expression = [ScriptBlock]::Create("`$_.$value")
+				}
+			}
 			default { $_ }
 		}
 	}
