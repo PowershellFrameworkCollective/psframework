@@ -69,6 +69,8 @@
 		Searches for all files under $Path.
 		No warning will ever be generated, but at least one file must be found, otherwise the calling command is killed with a terminating exception.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[CmdletBinding()]
 	param (
 		[AllowNull()]

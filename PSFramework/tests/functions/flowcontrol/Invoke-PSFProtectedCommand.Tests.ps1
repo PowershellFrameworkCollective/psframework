@@ -68,6 +68,7 @@
 
 	# Simple Attempt
 	It "Should just work most of the time" {
+		Clear-PSFMessage
 		{ Get-Test } | Should -Not -Throw
 		(Get-PSFMessage).Count | Should -Be 4
 		(Get-PSFMessage).Message | Should -Contain "Test Var: 1"
@@ -79,6 +80,7 @@
 
 	# Simple Attempt (Failed)
 	It "Should fail correctly (With Enable Exception)" {
+		Clear-PSFMessage
 		{ Get-Test -Fail -EnableException } | Should -Throw
 		(Get-PSFMessage).Count | Should -Be 3
 		(Get-PSFMessage).Message | Should -Contain "Test Var: 1"
@@ -89,6 +91,7 @@
 
 	# Retry Attempt (No Failure)
 	It "Should work with the retry options without issues when all is well" {
+		Clear-PSFMessage
 		{ Get-Test -RetryCount 3 -RetryWait 1 } | Should -Not -Throw
 		(Get-PSFMessage).Count | Should -Be 4
 		(Get-PSFMessage).Message | Should -Contain "Test Var: 1"
@@ -100,6 +103,7 @@
 
 	# Retry Attempt (Success on 3rd)
 	It "Should work with the retry options when it only works after a few failures" {
+		Clear-PSFMessage
 		{ Get-Test -RetryCount 3 -RetryWait 1 -SucceedAfter 2 } | Should -Not -Throw
 		(Get-PSFMessage).Count | Should -Be 6
 		(Get-PSFMessage).Message | Should -Contain "Test Var: 1"
@@ -113,6 +117,7 @@
 
 	# Retry Attempt (Failed)
 	It "Even with the retry options it should fail correctly, if success never happens" {
+		Clear-PSFMessage
 		{ Get-Test -RetryCount 3 -RetryWait 1 -Fail -EnableException } | Should -Throw
 		(Get-PSFMessage).Count | Should -Be 6
 		(Get-PSFMessage).Message | Should -Contain "Test Var: 1"
@@ -126,6 +131,7 @@
 
 	# Error Event
 	It "Should error out as requested and still be able to execute the error event" {
+		Clear-PSFMessage
 		$event = { Write-PSFMessage "ErrorEvent Message" }
 		{ Get-Test -Fail -EnableException -ErrorEvent $event } | Should -Throw
 		(Get-PSFMessage).Count | Should -Be 6
@@ -140,7 +146,8 @@
 
 	# No Error failure
 	It "Should handle failure without exception as expected, triggering the command termination flag" {
-		{ Get-Event -Fail } | Should -Not -Throw
+		Clear-PSFMessage
+		{ Get-Test -Fail } | Should -Not -Throw
 		(Get-PSFMessage).Count | Should -Be 4
 		(Get-PSFMessage).Message | Should -Contain 'Test Var: 1'
 		(Get-PSFMessage).Message | Should -Contain 'Execution Confirmed: Testing'
@@ -151,6 +158,7 @@
 
 	# Error Event & No Error failure
 	It "Should be able to handle both non-exception failure AND error events" {
+		Clear-PSFMessage
 		$event = { Write-PSFMessage "ErrorEvent Message" }
 		{ Get-Test -Fail -ErrorEvent $event } | Should -Not -Throw
 		(Get-PSFMessage).Count | Should -Be 7
