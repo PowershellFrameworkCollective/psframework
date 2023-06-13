@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PSFramework.PSFCore;
+using PSFramework.TabExpansion;
 
 namespace PSFramework.Commands
 {
@@ -65,6 +65,13 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public string ReferenceCommand;
+
+        /// <summary>
+        /// The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
+        /// </summary>
+        [Parameter()]
+        [PsfArgumentCompleter("PSFramework.Utility.ParameterSetNames")]
+        public string ReferenceParameterSetName;
         #endregion Parameters
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
@@ -88,10 +95,29 @@ namespace PSFramework.Commands
             if (String.IsNullOrEmpty(ReferenceCommand))
                 return;
 
-            CommandInfo info = InvokeCommand.GetCommand(ReferenceCommand, CommandTypes.Function | CommandTypes.Cmdlet | CommandTypes.Alias);
+            CommandInfo info = null;
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                ps.AddCommand("Get-Command")
+                    .AddParameter("Name", ReferenceCommand)
+                    .AddParameter("ErrorAction", ActionPreference.SilentlyContinue);
+                info = ps.Invoke()[0]?.BaseObject as CommandInfo;
+            }
+
+            PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand", info);
+
             if (info == null)
                 throw new CommandNotFoundException($"Unable to find command: {ReferenceCommand}");
-            _ToInclude.AddRange(info.Parameters.Keys.ToArray());
+            if (String.IsNullOrEmpty(ReferenceParameterSetName))
+                _ToInclude.AddRange(info.Parameters.Keys.ToArray());
+            else
+            {
+                var parameterSets = info.ParameterSets.Where(o => String.Equals(o.Name, ReferenceParameterSetName, StringComparison.InvariantCultureIgnoreCase));
+                if (parameterSets.Count() != 1)
+                    throw new ArgumentException($"Parameterset {ReferenceParameterSetName} not found on command {info.Name}!");
+                PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand / ParameterSet", parameterSets);
+                _ToInclude.AddRange(parameterSets.First().Parameters.Select(o => o.Name).ToArray());
+            }
         }
 
         /// <summary>
@@ -112,11 +138,16 @@ namespace PSFramework.Commands
 
                 Hashtable result = new Hashtable(_Comparison);
 
-                if (inputItem.BaseObject.GetType() == (typeof(Hashtable)))
+                if (inputItem.BaseObject.GetType() == typeof(Hashtable) && !MyInvocation.BoundParameters.ContainsKey("CaseSensitive"))
                     result = (Hashtable)((Hashtable)inputItem.BaseObject).Clone();
 
                 else if (inputItem.BaseObject as IDictionary != null)
-                    result = new Hashtable(inputItem.BaseObject as IDictionary, _Comparison);
+                    try { result = new Hashtable(inputItem.BaseObject as IDictionary, _Comparison); }
+                    catch (Exception e)
+                    {
+                        WriteError(new ErrorRecord(e, "ConversionError", ErrorCategory.InvalidArgument, inputItem));
+                        continue;
+                    }
 
                 else
                     foreach (string name in inputItem.Properties.Select(o => o.Name))

@@ -189,6 +189,11 @@
             Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ReferenceParameterSetName">
+            <summary>
+            The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
             <summary>
             Initialize command, resolving the ReferenceCommand if specified
