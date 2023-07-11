@@ -86,7 +86,7 @@ namespace PSFramework.Commands
             if (Include != null)
                 _ToInclude.AddRange(Include);
 
-            if (Remap != null)
+            if (Remap != null && (MyInvocation.BoundParameters.ContainsKey("Include") || !String.IsNullOrEmpty(ReferenceCommand)))
             {
                 foreach (object key in Remap.Keys)
                     _ToInclude.Add(key.ToString());
