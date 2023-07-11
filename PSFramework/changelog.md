@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## 1.8.291 (2023-07-11)
+
+- Fix: ConvertTo-PSFHashTable - the `-Remap` parameter always acts as an `-Include` parameter, causing the command to always disregard additional properties not specified. (#587)
+- Fix: Write-PSFMessage - the `-NoNewLine` parameter causes the error `Write-PSFMessage: A parameter cannot be found that matches parameter name 'NoNewLage'.` (#586)
+
 ## 1.8.289 (2023-06-13)
 
 - New: Resolve-PSFItem - Resolves paths provided.
