@@ -926,7 +926,7 @@ namespace PSFramework.Commands
                     .AddParameter("DefaultColor", ResolveDefaultColor());
 
                 if (NoNewLine)
-                    ps.AddParameter("NoNewLage", NoNewLine.ToBool());
+                    ps.AddParameter("NoNewLine", NoNewLine.ToBool());
 
                 ps.Invoke();
             }
