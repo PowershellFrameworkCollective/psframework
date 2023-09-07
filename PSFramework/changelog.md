@@ -1,5 +1,25 @@
 ﻿# CHANGELOG
 
+## 1.9.308 (2023-09-07)
+
+- New: Parameter Class: PsfPath - Interprets and resolves input as file or folder paths
+- New: Parameter Class: PsfPathLex - Interprets and resolves input as file or folder paths, throws no errors
+- New: Parameter Class: PsfNewFile - Resolves the input into the path to a file, so long as at least its parent folder exists
+- New: Parameter Class: PsfFile - Interprets and resolves input as file paths
+- New: Parameter Class: PsfFileLax - Interprets and resolves input as file paths, throws no errors
+- New: Parameter Class: PsfDirectory - Interprets and resolves input as directory paths
+- New: Parameter Class: PsfDirectoryLax - Interprets and resolves input as directory paths, throws no errors
+- New: Parameter Class: PsfLiteralPath - Resolves input as a path without wildcards
+- New: Parameter Class: PsfLiteralPathLax - Resolves input as a path without wildcards, throws no errors
+- New: Register-PSFArgumentTransformationScriptblock - Registers an input conversion scriptblock for use in Parameter Binding.
+- New: Argument Transform: PsfScriptTransformation - Provide script-based custom argument transformation logic
+- New: Get-PSFLoggingProvider - Retrieve errors that happened when trying to log messages.
+- Upd: Get-PSFConfig - added `-Persisted` parameter to search for settings that have been persisted, rather than their current value in process.
+- Upd: Unregister-PSFConfig - added support for the new persisted config object type returned by Get-PSFConfig.
+- Upd: Register-PSFConfig - added support to register to environment variables, affecting child processes only.
+- Upd: Invoke-PSFProtectedCommand - added parameter `-RetryWaitEscalation` to allow increased wait times each retry that fails
+- Fix: Register-PSFConfig - specifying both file _and_ registry scopes would have it ignore file scopes
+
 ## 1.8.291 (2023-07-11)
 
 - Fix: ConvertTo-PSFHashTable - the `-Remap` parameter always acts as an `-Include` parameter, causing the command to always disregard additional properties not specified. (#587)
