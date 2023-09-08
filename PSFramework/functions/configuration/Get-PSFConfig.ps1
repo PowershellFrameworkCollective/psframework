@@ -1,5 +1,4 @@
-﻿function Get-PSFConfig
-{
+﻿function Get-PSFConfig {
 	<#
 		.SYNOPSIS
 			Retrieves configuration elements by name.
@@ -20,6 +19,9 @@
 		.PARAMETER Module
 			Default: "*"
 			Search configuration by module.
+
+		.PARAMETER Persisted
+			Rather than retrieving current settings, look for configuration entries that have been persisted on the machine.
 		
 		.PARAMETER Force
 			Overrides the default behavior and also displays hidden configuration values.
@@ -33,6 +35,11 @@
 			PS C:\> Get-PSFConfig -Force
 	
 			Retrieve all configuration elements from all modules, even hidden ones.
+
+		.EXAMPLE
+			PS C:\> Get-PSFConfig -Persisted
+
+			Retrieve all persisted settings.
     #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[OutputType([PSFramework.Configuration.Config])]
@@ -49,17 +56,57 @@
 		[Parameter(ParameterSetName = "Module", Position = 0)]
 		[string]
 		$Module = "*",
+
+		[switch]
+		$Persisted,
 		
 		[switch]
 		$Force
 	)
 	
-	process
-	{
-		switch ($PSCmdlet.ParameterSetName)
-		{
-			"Module"
-			{
+	begin {
+		function ConvertFrom-ConfigPersisted {
+			[CmdletBinding()]
+			param (
+				[Parameter(ValueFromPipeline = $true)]
+				[AllowNull()]
+				$Settings,
+
+				[PSFramework.Configuration.ConfigScope]
+				$Scope
+			)
+			process {
+				if (-not $Settings) { return }
+
+				foreach ($value in $Settings.Values) {
+					$cfgValue = $value.Value
+					if ($value.KeepPersisted) {
+						$cfgValue = [PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($value.Value)
+					}
+
+					New-Object PSFramework.Configuration.PersistedConfig -Property @{
+						FullName = $value.FullName
+						Scope    = $Scope
+						Value    = $cfgValue
+					}
+				}
+			}
+		}
+	}
+	process {
+		if ($Persisted) {
+			$settings = foreach ($scope in [enum]::GetNames([PSFramework.Configuration.ConfigScope])) {
+				Read-PsfConfigPersisted -Scope $scope | ConvertFrom-ConfigPersisted -Scope $scope
+			}
+
+			$filter = $FullName
+			if ($PSCmdlet.ParameterSetName -eq 'Module') { $filter = "$Module.$Name" }
+			$settings | Where-Object FullName -like $filter
+
+			return
+		}
+		switch ($PSCmdlet.ParameterSetName) {
+			"Module" {
 				[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object {
 					($_.Name -like $Name) -and
 					($_.Module -like $Module) -and
@@ -67,8 +114,7 @@
 				} | Sort-Object Module, Name
 			}
 			
-			"FullName"
-			{
+			"FullName" {
 				[PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object {
 					("$($_.Module).$($_.Name)" -like $FullName) -and
 					((-not $_.Hidden) -or ($Force))

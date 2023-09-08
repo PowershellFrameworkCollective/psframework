@@ -82,6 +82,37 @@
 			</TableControl>
 		</View>
 		
+        <!-- PSFramework.Configuration.PersistedConfig -->
+        <View>
+            <Name>PSFramework.Configuration.PersistedConfig</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Configuration.PersistedConfig</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Scope</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>FullName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Value</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
 		<!-- PSFramework.Feature.FeatureItem -->
         <View>
             <Name>PSFramework.Feature.FeatureItem</Name>

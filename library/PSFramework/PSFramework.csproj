@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
     <Compile Include="Commands\SortPSFObjectCommand.cs" />
+    <Compile Include="Configuration\PersistedConfig.cs" />
     <Compile Include="Filter\Condition.cs" />
     <Compile Include="Filter\ConditionSet.cs" />
     <Compile Include="Filter\ConditionSetWrapper.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Localization\LocalizationHost.cs" />
     <Compile Include="Localization\LocalString.cs" />
     <Compile Include="Localization\LocalStrings.cs" />
+    <Compile Include="Logging\Error.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />
@@ -135,12 +137,22 @@
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
     <Compile Include="Parameter\EncodingParameter.cs" />
+    <Compile Include="Parameter\PathDirectoryLaxParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemLaxParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemParameterBase.cs" />
     <Compile Include="Parameter\ParameterClass.cs" />
     <Compile Include="Parameter\ParameterClassAttribute.cs" />
     <Compile Include="Parameter\ParameterClasses.cs" />
     <Compile Include="Parameter\ParameterContractAttribute.cs" />
     <Compile Include="Parameter\ParameterContractBehavior.cs" />
     <Compile Include="Parameter\ParameterContractType.cs" />
+    <Compile Include="Parameter\PathDirectoryParameter.cs" />
+    <Compile Include="Parameter\PathFileLaxParameter.cs" />
+    <Compile Include="Parameter\PathFileParameter.cs" />
+    <Compile Include="Parameter\PathLiteralLaxParameter.cs" />
+    <Compile Include="Parameter\PathLiteralParameter.cs" />
+    <Compile Include="Parameter\PathNewFileParameter.cs" />
     <Compile Include="Parameter\SelectAliasParameter.cs" />
     <Compile Include="Parameter\SelectParameter.cs" />
     <Compile Include="Parameter\SelectScriptMethodParameter.cs" />
@@ -193,6 +205,7 @@
     <Compile Include="Utility\PsfScriptBlock.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />
+    <Compile Include="Utility\ScriptTransformationAttribute.cs" />
     <Compile Include="Utility\Size.cs" />
     <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
