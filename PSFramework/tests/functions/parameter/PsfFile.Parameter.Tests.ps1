@@ -48,7 +48,7 @@
 		Get-File -Path "$folder\test[12].txt", "$folder\test3.txt" | Should -Be "$folder\test1.txt", "$folder\test2.txt", "$folder\test3.txt"
 	}
 	It "Should accept a FileInfo object" {
-		Get-File -Path $file1 | Should -Be "$folder\test1.txt"
+		Get-File -Path $file1 | Should -Be $file1.FullName
 	}
 	It "Should accept multiple FileInfo objects" {
 		Get-File -Path $file1, $file2 | Should -Be "$folder\test1.txt", "$folder\test2.txt"
