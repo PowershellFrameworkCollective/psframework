@@ -21,8 +21,13 @@
         TimeSpan,
 
         /// <summary>
-        /// The encoing parameter class allows to consistently accept encodings as input.
+        /// The encoding parameter class allows to consistently accept encodings as input.
         /// </summary>
         Encoding,
+
+        /// <summary>
+        /// The set of path parameter classes allow to resolve file system path designations into absolute paths
+        /// </summary>
+        Path,
     }
 }

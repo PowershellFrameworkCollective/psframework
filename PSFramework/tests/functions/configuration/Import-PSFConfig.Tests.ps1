@@ -69,13 +69,13 @@
 			Get-Content 'testdrive:\Import-PSFConfig.Phase1.Config1.json' | Select-String '"Version":  1' | Should -Not -BeNullOrEmpty
 			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config1.json
 			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1' | Should -Be 42
-			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1').GetType().FullName | Should -Be 'System.Int32'
+			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting1').GetType().FullName | Should -BeIn "System.Int32","System.Int64" # ConvertFrom-Json on later PS versions converts all numbers to long
 		}
 		
 		It "Should correctly import simple style configuration" {
 			Import-PSFConfig -Path testdrive:\Import-PSFConfig.Phase1.Config2.json
 			Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2' | Should -Be 23
-			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2').GetType().FullName | Should -Be 'System.Int32'
+			(Get-PSFConfigValue -FullName 'import-psfconfig.phase1.setting2').GetType().FullName | Should -BeIn "System.Int32","System.Int64" # ConvertFrom-Json on later PS versions converts all numbers to long
 		}
 		
 		It "Should correctly defer deserialization until being explicitly requested" {

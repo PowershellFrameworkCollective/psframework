@@ -13,7 +13,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Unregister-PSFConfig).ParameterSets.Name | Should -Be 'Pipeline', 'Module'
-		$properties = 'ConfigurationItem', 'FullName', 'Module', 'Name', 'Scope', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+		$properties = 'ConfigurationItem', 'PersistedItem', 'FullName', 'Module', 'Name', 'Scope', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
 		Compare-Object $properties ((Get-Command Unregister-PSFConfig).Parameters.Keys | Remove-PSFNull -Enumerate) | Should -BeNullOrEmpty
 	}
 	

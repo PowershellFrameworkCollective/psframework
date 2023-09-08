@@ -48,7 +48,7 @@
 					$null = & $___instance.BeginCommand
 					$___instance.Initialized = $true
 				}
-				catch { $___instance.Errors.Enqueue($_)}
+				catch { $___instance.AddError($_)}
 			}
 			#endregion V2 provider Instances
 			
@@ -64,7 +64,7 @@
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
 				try { $null = & $___instance.StartCommand }
-				catch { $___instance.Errors.Enqueue($_) }
+				catch { $___instance.AddError($_) }
 			}
 			#endregion Start Event
 			
@@ -90,7 +90,7 @@
 						if ($___instance.MessageApplies($Entry))
 						{
 							try { $null = & $___instance.MessageCommand $Entry }
-							catch { $___instance.Errors.Enqueue($_) }
+							catch { $___instance.AddError($_) }
 						}
 					}
 				}
@@ -121,7 +121,7 @@
 						if ($___instance.MessageApplies($Record))
 						{
 							try { $null = & $___instance.ErrorCommand $Record }
-							catch { $___instance.Errors.Enqueue($_) }
+							catch { $___instance.AddError($_) }
 						}
 					}
 				}
@@ -138,7 +138,7 @@
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
 				try { $null = & $___instance.EndCommand }
-				catch { $___instance.Errors.Enqueue($_) }
+				catch { $___instance.AddError($_) }
 			}
 			#endregion End Event
 			
@@ -155,7 +155,7 @@
 			{
 				if ($___instance.Enabled) { continue }
 				try { $null = & $___instance.FinalCommand }
-				catch { $___instance.Errors.Enqueue($_) }
+				catch { $___instance.AddError($_) }
 				$___instance.Initialized = $false
 			}
 			#endregion Finalize / Cleanup
@@ -185,7 +185,7 @@
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
 				try { $null = & $___instance.StartCommand }
-				catch { $___instance.Errors.Enqueue($_) }
+				catch { $___instance.AddError($_) }
 			}
 			#endregion Start Event
 			
@@ -211,7 +211,7 @@
 						if ($___instance.MessageApplies($Entry))
 						{
 							try { $null = & $___instance.MessageCommand $Entry }
-							catch { $___instance.Errors.Enqueue($_) }
+							catch { $___instance.AddError($_) }
 						}
 					}
 				}
@@ -241,7 +241,7 @@
 						if ($___instance.MessageApplies($Record))
 						{
 							try { $null = & $___instance.ErrorCommand $Record }
-							catch { $___instance.Errors.Enqueue($_) }
+							catch { $___instance.AddError($_) }
 						}
 					}
 				}
@@ -257,7 +257,7 @@
 			foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 			{
 				try { $null = & $___instance.EndCommand }
-				catch { $___instance.Errors.Enqueue($_) }
+				catch { $___instance.AddError($_) }
 			}
 			#endregion End Event
 		}
@@ -272,7 +272,7 @@
 		foreach ($___instance in [PSFramework.Logging.ProviderHost]::GetInitializedInstances())
 		{
 			try { $null = & $___instance.FinalCommand }
-			catch { $___instance.Errors.Enqueue($_) }
+			catch { $___instance.AddError($_) }
 		}
 		
 		foreach ($___provider in [PSFramework.Logging.ProviderHost]::GetInitialized())

@@ -604,7 +604,51 @@ namespace PSFramework.Logging
         /// <summary>
         /// The last 128 errors that happenend to the provider instance
         /// </summary>
-        public LimitedConcurrentQueue<ErrorRecord> Errors = new LimitedConcurrentQueue<ErrorRecord>(128);
+        public LimitedConcurrentQueue<ErrorRecord> Errors
+        {
+            get
+            {
+                LimitedConcurrentQueue<ErrorRecord> temp = new LimitedConcurrentQueue<ErrorRecord>(128);
+                foreach (Error entry in _Errors)
+                    temp.Enqueue(entry.ErrorRecord);
+                return temp;
+            }
+            set
+            {
+                LimitedConcurrentQueue<Error> temp = new LimitedConcurrentQueue<Error>(128);
+                foreach (ErrorRecord entry in value)
+                    temp.Enqueue(new Error(Provider.Name, Name, entry));
+                _Errors = temp;
+            }
+        }
+
+        private LimitedConcurrentQueue<Error> _Errors = new LimitedConcurrentQueue<Error>(128);
+
+        /// <summary>
+        /// Add an error record to the list of errors that happened
+        /// </summary>
+        /// <param name="ErrorRecord">The error that happened</param>
+        public void AddError(ErrorRecord ErrorRecord)
+        {
+            _Errors.Enqueue(new Error(Provider.Name, Name, ErrorRecord));
+        }
+
+        /// <summary>
+        /// Get a list of all errors that happened
+        /// </summary>
+        /// <returns>The list of previous errors</returns>
+        public Error[] GetError()
+        {
+            return _Errors.ToArray();
+        }
+
+        /// <summary>
+        /// Resets the list of errors that happened
+        /// </summary>
+        public void ClearErrors()
+        {
+            _Errors = new LimitedConcurrentQueue<Error>(128);
+        }
 
         /// <summary>
         /// Returns the name of the provider instance.

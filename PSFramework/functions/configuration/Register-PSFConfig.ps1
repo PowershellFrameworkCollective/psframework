@@ -1,6 +1,5 @@
-﻿function Register-PSFConfig
-{
-<#
+﻿function Register-PSFConfig {
+	<#
 	.SYNOPSIS
 		Registers an existing configuration object in registry.
 	
@@ -26,7 +25,10 @@
 	.PARAMETER Scope
 		Default: UserDefault
 		Who will be affected by this export how? Current user or all? Default setting or enforced?
-		Legal values: UserDefault, UserMandatory, SystemDefault, SystemMandatory
+		For more information on scopes and what location they correspond to, see:
+		https://psframework.org/documentation/documents/psframework/configuration/persistence-location.html
+
+		Environment variable scopes will only be persisted to the current process, affecting all child processes but not the computer in its entirety.
 	
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
@@ -72,27 +74,70 @@
 		$EnableException
 	)
 	
-	begin
-	{
-		if ($script:NoRegistry -and ($Scope -band 10))
-		{
+	begin {
+		if ($script:NoRegistry -and ($Scope -band 10)) {
 			Stop-PSFFunction -String 'Register-PSFConfig.NoRegistry' -Tag 'NotSupported' -Category ResourceUnavailable
 			return
 		}
 		
 		# Linux and MAC default to local user store file
-		if ($script:NoRegistry -and ($Scope -eq "UserDefault"))
-		{
+		if ($script:NoRegistry -and ($Scope -eq "UserDefault")) {
 			$Scope = [PSFramework.Configuration.ConfigScope]::FileUserLocal
 		}
 		# Linux and MAC get redirection for SystemDefault to FileSystem
-		if ($script:NoRegistry -and ($Scope -eq "SystemDefault"))
-		{
+		if ($script:NoRegistry -and ($Scope -eq "SystemDefault")) {
 			$Scope = [PSFramework.Configuration.ConfigScope]::FileSystem
 		}
 		
-		function Write-Config
-		{
+		#region Functions
+		function Resolve-ConfigItem {
+			[OutputType([PSFramework.Configuration.Config[]])]
+			[CmdletBinding()]
+			param (
+				[AllowEmptyCollection()]
+				[AllowNull()]
+				[PSFramework.Configuration.Config[]]
+				$Config,
+		
+				[AllowEmptyCollection()]
+				[AllowNull()]
+				[string[]]
+				$FullName,
+		
+				[AllowEmptyString()]
+				[AllowNull()]
+				[string]
+				$Module,
+		
+				[AllowEmptyString()]
+				[AllowNull()]
+				[string]
+				$Name
+			)
+
+			$names = [System.Collections.ArrayList]@()
+
+			if ($Config) {
+				$Config
+				$null = $names.AddRange($Config.FullName)
+			}
+			if ($FullName) {
+				foreach ($item in [PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object FullName -In $FullName) {
+					if ($item.FullName -in $names) { continue }
+					$item
+					$null = $names.Add($item.FullName)
+				}
+			}
+			if ($Module) {
+				foreach ($item in [PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name) {
+					if ($item.FullName -in $names) { continue }
+					$item
+					$null = $names.Add($item.FullName)
+				}
+			}
+		}
+
+		function Write-Config {
 			[CmdletBinding()]
 			param (
 				[PSFramework.Configuration.Config]
@@ -108,56 +153,66 @@
 				$FunctionName = (Get-PSCallStack)[0].Command
 			)
 			
-			if (-not $Config -or ($Config.RegistryData -eq "<type not supported>"))
-			{
+			if (-not $Config -or ($Config.RegistryData -eq "<type not supported>")) {
 				Stop-PSFFunction -String 'Register-PSFConfig.Type.NotSupported' -StringValues $Config.FullName -EnableException $EnableException -Category InvalidArgument -Tag "config", "fail" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 			
-			try
-			{
+			try {
 				Write-PSFMessage -Level Verbose -String 'Register-PSFConfig.Registering' -StringValues $Config.FullName, $Scope -Tag "Config" -Target $Config -FunctionName $FunctionName -ModuleName "PSFramework"
 				#region User Default
-				if (1 -band $Scope)
-				{
+				if (1 -band $Scope) {
 					Ensure-RegistryPath -Path $script:path_RegistryUserDefault -ErrorAction Stop
 					Set-ItemProperty -Path $script:path_RegistryUserDefault -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion User Default
 				
 				#region User Mandatory
-				if (2 -band $Scope)
-				{
+				if (2 -band $Scope) {
 					Ensure-RegistryPath -Path $script:path_RegistryUserEnforced -ErrorAction Stop
 					Set-ItemProperty -Path $script:path_RegistryUserEnforced -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion User Mandatory
 				
 				#region System Default
-				if (4 -band $Scope)
-				{
+				if (4 -band $Scope) {
 					Ensure-RegistryPath -Path $script:path_RegistryMachineDefault -ErrorAction Stop
 					Set-ItemProperty -Path $script:path_RegistryMachineDefault -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion System Default
 				
 				#region System Mandatory
-				if (8 -band $Scope)
-				{
+				if (8 -band $Scope) {
 					Ensure-RegistryPath -Path $script:path_RegistryMachineEnforced -ErrorAction Stop
 					Set-ItemProperty -Path $script:path_RegistryMachineEnforced -Name $Config.FullName -Value $Config.RegistryData -ErrorAction Stop
 				}
 				#endregion System Mandatory
 			}
-			catch
-			{
+			catch {
 				Stop-PSFFunction -String 'Register-PSFConfig.Registering.Failed' -StringValues $Config.FullName, $Scope -EnableException $EnableException -Tag "config", "fail" -Target $Config -ErrorRecord $_ -FunctionName $FunctionName -ModuleName "PSFramework"
 				return
 			}
 		}
 		
-		function Ensure-RegistryPath
-		{
+		function Write-Environment {
+			[CmdletBinding()]
+			param (
+				[PSFramework.Configuration.Config]
+				$Config,
+				
+				[PSFramework.Configuration.ConfigScope]
+				$Scope
+			)
+
+			if ($Scope -band 128) {
+				Set-Item -Path "env:\PSFramework_$($Config.FullName)" -Value $Config.RegistryData
+			}
+			if ($Scope -band 256) {
+				Set-Item -Path "env:\PSF_$($Config.FullName)" -Value $Config.RegistryData
+			}
+		}
+
+		function Ensure-RegistryPath {
 			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "")]
 			[CmdletBinding()]
 			param (
@@ -165,94 +220,53 @@
 				$Path
 			)
 			
-			if (-not (Test-Path $Path))
-			{
+			if (-not (Test-Path $Path)) {
 				$null = New-Item $Path -Force
 			}
 		}
-		
+		#endregion Functions
+
 		# For file based persistence
 		$fileConfigurationItems = @()
 	}
-	process
-	{
+	process {
 		if (Test-PSFFunctionInterrupt) { return }
+
+		$configItems = Resolve-ConfigItem -Config $Config -FullName $FullName -Module $Module -Name $Name
 		
 		#region Registry Based
-		if ($Scope -band 15)
-		{
-			switch ($PSCmdlet.ParameterSetName)
-			{
-				"Default"
-				{
-					foreach ($item in $Config)
-					{
-						Write-Config -Config $item -Scope $Scope -EnableException $EnableException
-					}
-					
-					foreach ($item in $FullName)
-					{
-						if ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item))
-						{
-							Write-Config -Config ([PSFramework.Configuration.ConfigurationHost]::Configurations[$item]) -Scope $Scope -EnableException $EnableException
-						}
-					}
-				}
-				"Name"
-				{
-					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
-					{
-						Write-Config -Config $item -Scope $Scope -EnableException $EnableException
-					}
-				}
+		if ($Scope -band 15) {
+			foreach ($item in $configItems) {
+				Write-Config -Config $item -Scope $Scope -EnableException $EnableException
 			}
 		}
 		#endregion Registry Based
 		
 		#region File Based
-		else
-		{
-			switch ($PSCmdlet.ParameterSetName)
-			{
-				"Default"
-				{
-					foreach ($item in $Config)
-					{
-						if ($fileConfigurationItems.FullName -notcontains $item.FullName) { $fileConfigurationItems += $item }
-					}
-					
-					foreach ($item in $FullName)
-					{
-						if (($fileConfigurationItems.FullName -notcontains $item) -and ([PSFramework.Configuration.ConfigurationHost]::Configurations.ContainsKey($item)))
-						{
-							$fileConfigurationItems += [PSFramework.Configuration.ConfigurationHost]::Configurations[$item]
-						}
-					}
-				}
-				"Name"
-				{
-					foreach ($item in ([PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object Module -EQ $Module | Where-Object Name -Like $Name))
-					{
-						if ($fileConfigurationItems.FullName -notcontains $item.FullName) { $fileConfigurationItems += $item }
-					}
-				}
+		if ($Scope -band 112) {
+			foreach ($item in $configItems) {
+				if ($fileConfigurationItems.FullName -notcontains $item.FullName) { $fileConfigurationItems += $item }
 			}
 		}
 		#endregion File Based
+
+		#region Environment Based
+		if ($Scope -band 384) {
+			foreach ($item in $configItems) {
+				Write-Environment -Config $item -Scope $Scope
+			}
+		}
+		#endregion Environment Based
 	}
-	end
-	{
+	end {
 		#region Finish File Based Persistence
-		if ($Scope -band 16)
-		{
+		if ($Scope -band 16) {
 			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileUserLocal "psf_config.json")
 		}
-		if ($Scope -band 32)
-		{
+		if ($Scope -band 32) {
 			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileUserShared "psf_config.json")
 		}
-		if ($Scope -band 64)
-		{
+		if ($Scope -band 64) {
 			Write-PsfConfigFile -Config $fileConfigurationItems -Path (Join-Path $script:path_FileSystem "psf_config.json")
 		}
 		#endregion Finish File Based Persistence

@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.8.291'
+	ModuleVersion = '1.9.308'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -60,6 +60,7 @@
 		'Get-PSFFilterConditionSet'
 		'Get-PSFLicense'
 		'Get-PSFLocalizedString'
+		'Get-PSFLoggingError'
 		'Get-PSFLoggingProvider'
 		'Get-PSFLoggingProviderInstance'
 		'Get-PSFMessage'
@@ -97,6 +98,7 @@
 		'New-PSFTempItem'
 		'New-PSFTeppCompletionResult'
 		'New-PSFThrottle'
+		'Register-PSFArgumentTransformationScriptblock'
 		'Register-PSFCallback'
 		'Register-PSFConfig'
 		'Register-PSFConfigSchema'

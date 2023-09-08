@@ -54,7 +54,7 @@
 		
 		It "Should create a default instance that is disabled" {
 			$provider = Get-PSFLoggingProvider -Name Demo
-			$provider.Instances.Count | Should -Be 1
+			$provider.Instances.Count | Should -BeIn 1,2 # Repeated Test Runs will see the MyInstance provider below
 			$provider.Instances.Keys | Should -Contain 'Default'
 			$provider.Instances.Default.Enabled | Should -BeFalse
 		}

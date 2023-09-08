@@ -51,37 +51,26 @@
 		$EnableException
 	)
 	
+	begin {
+		$classes = @{
+			Computer = [PSFramework.Parameter.ComputerParameter]
+			DateTime = [PSFramework.Parameter.DateTimeParameter]
+			TimeSpan = [PSFramework.Parameter.TimeSpanParameter]
+			Encoding = [PSFramework.Parameter.EncodingParameter]
+			Path = [PSFramework.Parameter.PathFileSystemParameterBase]
+		}
+	}
 	process
 	{
-		try
-		{
-			switch ($ParameterClass)
-			{
-				"Computer"
-				{
-					[PSFramework.Parameter.ComputerParameter]::SetTypePropertyMapping($TypeName, $Properties)
-				}
-				"DateTime"
-				{
-					[PSFramework.Parameter.DateTimeParameter]::SetTypePropertyMapping($TypeName, $Properties)
-				}
-				"TimeSpan"
-				{
-					[PSFramework.Parameter.TimeSpanParameter]::SetTypePropertyMapping($TypeName, $Properties)
-				}
-				"Encoding"
-				{
-					[PSFramework.Parameter.EncodingParameter]::SetTypePropertyMapping($TypeName, $Properties)
-				}
-				default
-				{
-					Stop-PSFFunction -String 'Register-PSFParameterClassMapping.NotImplemented' -StringValues $ParameterClass -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented
-					return
-				}
-			}
+		if ("$ParameterClass" -notin $classes.Keys) {
+			Stop-PSFFunction -String 'Register-PSFParameterClassMapping.NotImplemented' -StringValues $ParameterClass -EnableException $EnableException -Tag 'fail', 'argument' -Category NotImplemented
+			return
 		}
-		catch
-		{
+
+		try {
+			$classes["$ParameterClass"]::SetTypePropertyMapping($TypeName, $Properties)
+		}
+		catch {
 			Stop-PSFFunction -String 'Register-PSFParameterClassMapping.Registration.Error' -StringValues $ParameterClass, $Typename -EnableException $EnableException -Tag 'fail', '.NET' -ErrorRecord $_
 			return
 		}

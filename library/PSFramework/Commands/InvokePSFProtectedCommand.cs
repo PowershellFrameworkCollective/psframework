@@ -93,6 +93,12 @@ namespace PSFramework.Commands
         public TimeSpanParameter RetryWait = new TimeSpanParameter(5);
 
         /// <summary>
+        /// The multiplier applied to waits over the previous wait.
+        /// </summary>
+        [Parameter()]
+        public double RetryWaitEscalation = 1;
+
+        /// <summary>
         /// Only retry on errors of the following types
         /// </summary>
         [Parameter()]
@@ -232,6 +238,7 @@ return
             }
 
             int countAttempted = 0;
+            int nextWait = (int)RetryWait.Value.TotalMilliseconds;
             while (countAttempted <= RetryCount)
             {
                 countAttempted++;
@@ -272,7 +279,8 @@ return
                     }
                 }
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.Retry", new object[] { countAttempted, (RetryCount + 1), _Message }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
-                Thread.Sleep(RetryWait);
+                Thread.Sleep(nextWait);
+                nextWait = (int)((double)nextWait * RetryWaitEscalation);
             }
             
         }
