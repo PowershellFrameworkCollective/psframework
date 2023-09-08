@@ -54,7 +54,10 @@
 			(($items.Type | Group-Object | Sort-Object Count) | Where-Object Name -EQ 3).Count | Should -Be 2
 			(($items.Type | Group-Object | Sort-Object Count) | Where-Object Name -EQ 6).Count | Should -Be 1
 			$items.Version | Should -Be 1, 1, 1
-			$items.Value | Should -Be "foo", "42", "23"
+			$items.Value | Should -Contain "foo"
+			$items.Value | Should -Contain "42"
+			$items.Value | Should -Contain "23"
+			$items.Count | Should -Be 3
 			$items.Style | Should -Be "Default", "Default", "Default"
 		}
 		It "Should export all settings belonging to the specified module" {
@@ -89,7 +92,7 @@
 			$item.FullName | Should -Be 'Export-PSFConfig.TestPhase2.Settings1'
 			$item.Version | Should -Be 1
 			$item.Data | Should -Be 42
-			$item.Data.GetType().FullName | Should -Be "System.Int32"
+			$item.Data.GetType().FullName | Should -BeIn "System.Int32","System.Int64" # ConvertFrom-Json on later PS versions converts all numbers to long
 			
 			# Properties that only exist on non-simple export items
 			$item.Style | Should -BeNullOrEmpty
@@ -116,7 +119,7 @@
 			$item = $items | Where-Object FullName -EQ 'Export-PSFConfig.TestPhase2.Settings1'
 			$item.Version | Should -Be 1
 			$item.Data | Should -Be 42
-			$item.Data.GetType().FullName | Should -Be "System.Int32"
+			$item.Data.GetType().FullName | Should -BeIn "System.Int32","System.Int64" # ConvertFrom-Json on later PS versions converts all numbers to long
 			
 			# Properties that only exist on non-simple export items
 			$item.Style | Should -BeNullOrEmpty

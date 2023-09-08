@@ -81,6 +81,7 @@
 	begin {
 		#region Functions
 		function Remove-PersistedConfig {
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 			[CmdletBinding()]
 			param (
 				$FullName,
@@ -189,8 +190,6 @@
 			}
 		}
 		#endregion Initialize Collection
-		
-		$common = 'PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider'
 	}
 	process {
 		if (Test-PSFFunctionInterrupt) { return }

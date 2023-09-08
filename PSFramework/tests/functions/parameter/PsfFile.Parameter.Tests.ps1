@@ -12,6 +12,7 @@
 		}
 
 		$folder = New-PSFTempDirectory -ModuleName PSFTest -Name TempFolder
+		$folder = (Resolve-Path -LiteralPath $folder).ProviderPath
 		"Test" | Set-Content -Path "$folder\test1.txt"
 		"Test" | Set-Content -Path "$folder\test2.txt"
 		"Test" | Set-Content -Path "$folder\test3.txt"

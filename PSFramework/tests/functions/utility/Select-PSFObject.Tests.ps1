@@ -87,7 +87,7 @@
 		}
 		
 		It "adds multiple aliases when using a hashtable on the -Alias parameter" {
-			$item = Get-Item "$PSScriptRoot\Select-PSFObject.Tests.ps1"
+			$item = [PSCustomObject]@{ Name = 'Foo.txt'; Length = 42; Extension = '.txt' }
 			$modItem = $item | Select-PSFObject -KeepInputObject -Alias @{
 				AliasName = "Name"
 				Size	  = "Length"

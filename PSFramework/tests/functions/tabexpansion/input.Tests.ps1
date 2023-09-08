@@ -18,7 +18,7 @@
 		}
 	}
 	It 'can complete input from Get-ChildItem' {
-		(Complete -Expression 'Get-ChildItem | Select-PSFObject ').CompletionText | Should -Match '^Attributes$|^BaseName$|^CreationTime$|^CreationTimeUtc$|^Directory$|^DirectoryName$|^Exists$|^Extension$|^FullName$|^IsReadOnly$|^LastAccessTime$|^LastAccessTimeUtc$|^LastWriteTime$|^LastWriteTimeUtc$|^Length$|^Name$|^Parent$|^PSChildName$|^PSDrive$|^PSIsContainer$|^PSParentPath$|^PSPath$|^PSProvider$|^Root$|^VersionInfo$'
+		(Complete -Expression 'Get-ChildItem | Select-PSFObject ').CompletionText | Should -Match '^Attributes$|^BaseName$|^CreationTime$|^CreationTimeUtc$|^Directory$|^DirectoryName$|^Exists$|^Extension$|^FullName$|^IsReadOnly$|^LastAccessTime$|^LastAccessTimeUtc$|^LastWriteTime$|^LastWriteTimeUtc$|^Length$|^Name$|^Parent$|^PSChildName$|^PSDrive$|^PSIsContainer$|^PSParentPath$|^PSPath$|^PSProvider$|^Root$|^VersionInfo$|^LinkTarget$|^UnixFileMode$'
 		(Complete -Expression 'Get-ChildItem | Select-PSFObject ').Count | Should -Be 25
 	}
 	

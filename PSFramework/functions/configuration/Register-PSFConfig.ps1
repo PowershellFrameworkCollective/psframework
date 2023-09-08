@@ -91,6 +91,7 @@
 		
 		#region Functions
 		function Resolve-ConfigItem {
+			[OutputType([PSFramework.Configuration.Config[]])]
 			[CmdletBinding()]
 			param (
 				[AllowEmptyCollection()]
@@ -231,7 +232,7 @@
 	process {
 		if (Test-PSFFunctionInterrupt) { return }
 
-		$configItems = Resolve-ConfigItem -Item $Config -FullName $FullName -Module $Module -Name $Name
+		$configItems = Resolve-ConfigItem -Config $Config -FullName $FullName -Module $Module -Name $Name
 		
 		#region Registry Based
 		if ($Scope -band 15) {

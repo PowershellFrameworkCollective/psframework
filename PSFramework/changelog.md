@@ -13,7 +13,7 @@
 - New: Parameter Class: PsfLiteralPathLax - Resolves input as a path without wildcards, throws no errors
 - New: Register-PSFArgumentTransformationScriptblock - Registers an input conversion scriptblock for use in Parameter Binding.
 - New: Argument Transform: PsfScriptTransformation - Provide script-based custom argument transformation logic
-- New: Get-PSFLoggingProvider - Retrieve errors that happened when trying to log messages.
+- New: Get-PSFLoggingError - Retrieve errors that happened when trying to log messages.
 - Upd: Get-PSFConfig - added `-Persisted` parameter to search for settings that have been persisted, rather than their current value in process.
 - Upd: Unregister-PSFConfig - added support for the new persisted config object type returned by Get-PSFConfig.
 - Upd: Register-PSFConfig - added support to register to environment variables, affecting child processes only.
