@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Fix: Parameter Class: PsfLiteralPath - fails to error on invalid paths
+
 ## 1.9.308 (2023-09-07)
 
 - New: Parameter Class: PsfPath - Interprets and resolves input as file or folder paths
