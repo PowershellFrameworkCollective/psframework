@@ -1,7 +1,8 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.9.310 (2023-09-11)
 
+- Fix: Register-PSFConfig - fails to register piped configuration settings
 - Fix: Parameter Class: PsfLiteralPath - fails to error on invalid paths
 
 ## 1.9.308 (2023-09-07)
