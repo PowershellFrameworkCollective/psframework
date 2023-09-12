@@ -35,6 +35,9 @@
 			Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' | Should -Be 'int:24'
 			Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserDefault
 			{ Get-ItemPropertyValue -Path $pathRegistryUserDefault -Name 'Register-PSFConfig.Phase1.Setting1' -ErrorAction Stop } | Should -Throw
+
+			{ Get-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' | Register-PSFConfig -Scope UserDefault -ErrorAction Stop } | Should -Not -Throw
+			Unregister-PSFConfig -FullName 'Register-PSFConfig.Phase1.Setting1' -Scope UserDefault
 		}
 		
 		# Test Persistence for Registry > User > Enforced
