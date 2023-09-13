@@ -1,4 +1,4 @@
-﻿---
+---
 external help file: PSFramework.dll-Help.xml
 Module Name: PSFramework
 online version:
@@ -16,16 +16,18 @@ Combines should process, try/catch error handling and logging in one package.
 ```
 Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target <Object>]
  [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>] [-Tag <String[]>]
- [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>]
- [-RetryCondition <ScriptBlock>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
+ [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
+ [-Level <MessageLevel>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### String
 ```
 Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -ActionString <String> [-ActionStringValues <Object[]>]
  [-Target <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>]
- [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryErrorType <String[]>]
- [-RetryCondition <ScriptBlock>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
+ [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
+ [-Level <MessageLevel>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -322,8 +324,57 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ErrorEvent
+Scriptblock that should be executed in case of failure.
+$_ will be the error that happened.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Level
+At what level should verbose messages be written.
+Defaults to SomewhatVerbose.
+
+```yaml
+Type: MessageLevel
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RetryWaitEscalation
+When retrying failed attempts, the previous wait time is multiplied by this value.
+This allows waiting longer and longer periods, each time it failed.
+Defaults to 1.
+
+```yaml
+Type: Double
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
