@@ -91,6 +91,7 @@ namespace PSFramework.Commands
         public string Culture { get; set; }
 
         /// <summary>
+		/// Indicates that the sort is case-sensitive. By default, sorts aren't case-sensitive.
         /// </summary>
         /// <value></value>
         [Parameter]

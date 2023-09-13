@@ -70,13 +70,7 @@ namespace PSFramework.Parameter
                 resolved = state.Path.GetResolvedPSPathFromPSPath(Path).Where(o => o.Provider.Name == "FileSystem").Select(o => o.ProviderPath);
             else
                 ((Collection<string>)resolved).Add(state.Path.GetUnresolvedProviderPathFromPSPath(Path));
-            if (resolved.Count() == 0)
-            {
-                if (Terminate)
-                    throw new ArgumentException($"Invalid input: Did not resolve into files or directories: {Path}");
-                FailedInput.Add(Path);
-                return paths;
-            }
+            
             if (IncludeFile)
             {
                 IEnumerable<string> files = resolved.Where(o => File.Exists(o));
@@ -104,6 +98,13 @@ namespace PSFramework.Parameter
                     else
                         FailedInput.Add(Path);
                 }
+            }
+            if (paths.Count == 0)
+            {
+                if (Terminate)
+                    throw new ArgumentException($"Invalid input: Did not resolve into files or directories: {Path}");
+                FailedInput.Add(Path);
+                return paths;
             }
 
             return paths;

@@ -119,7 +119,7 @@
 
 			if ($Config) {
 				$Config
-				$null = $names.AddRange($Config.FullName)
+				$null = $names.AddRange(@($Config.FullName))
 			}
 			if ($FullName) {
 				foreach ($item in [PSFramework.Configuration.ConfigurationHost]::Configurations.Values | Where-Object FullName -In $FullName) {
