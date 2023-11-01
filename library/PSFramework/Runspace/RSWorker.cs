@@ -243,10 +243,10 @@ namespace PSFramework.Runspace
 
             if (dispatcher.Variables.Count > 0)
                 foreach (string name in dispatcher.Variables.Keys)
-                    localState.Variables.Add(new SessionStateVariableEntry(name, dispatcher.Variables[name].ToString(), null));
+                    localState.Variables.Add(new SessionStateVariableEntry(name, dispatcher.Variables[name], null));
             if (Variables.Count > 0)
                 foreach (string name in Variables.Keys)
-                    localState.Variables.Add(new SessionStateVariableEntry(name, Variables[name].ToString(), null));
+                    localState.Variables.Add(new SessionStateVariableEntry(name, Variables[name], null));
             localState.Variables.Add(new SessionStateVariableEntry("__PSF_Dispatcher", dispatcher, "PSF Runspace Dispatcher, used to manage the data transfer between workers and the state handling of the workload.", ScopedItemOptions.Constant));
             localState.Variables.Add(new SessionStateVariableEntry("__PSF_Worker", this, "PSF Worker. Represents itself in the active runspaces.", ScopedItemOptions.Constant));
             #endregion Prepare the Initial Session State
