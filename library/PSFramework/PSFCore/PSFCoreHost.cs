@@ -143,5 +143,17 @@ namespace PSFramework.PSFCore
             }
         }
         private static Version _PSVersion = new Version();
+
+        /// <summary>
+        /// Returns, whether the console has ever been in Constrained Language Mode, irrespective of whether the current context is constrained or not.
+        /// </summary>
+        public static bool ConstrainedConsole
+        {
+            get
+            {
+                object executionContextTLS = UtilityHost.GetExecutionContextFromTLS();
+                return (bool)UtilityHost.GetPrivateStaticProperty(executionContextTLS.GetType(), "HasEverUsedConstrainedLanguage");
+            }
+        }
     }
 }

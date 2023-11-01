@@ -104,6 +104,7 @@
         </member>
         <member name="P:PSFramework.Commands.SortPSFObjectCommand.CaseSensitive">
             <summary>
+            Indicates that the sort is case-sensitive. By default, sorts aren't case-sensitive.
             </summary>
             <value></value>
         </member>
@@ -5314,6 +5315,13 @@
             </summary>
             <param name="Path"></param>
         </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.AddFailed(System.Object)">
+            <summary>
+            Add a failed entry to the list of failed entries.
+            Silently ignores calues already listed
+            </summary>
+            <param name="Path"></param>
+        </member>
         <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.op_Addition(PSFramework.Parameter.PathFileSystemParameterBase,PSFramework.Parameter.PathFileSystemParameterBase)">
             <summary>
             Add two parameter classes representing resolved paths.
@@ -6137,6 +6145,11 @@
             Reliably access the PowerShell Version
             </summary>
         </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.ConstrainedConsole">
+            <summary>
+            Returns, whether the console has ever been in Constrained Language Mode, irrespective of whether the current context is constrained or not.
+            </summary>
+        </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
             <summary>
             Attribute designating something as reserved as PSFramework-internal.
@@ -6219,6 +6232,572 @@
             <summary>
             Clears all cache properties to null
             </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSDispatcher">
+            <summary>
+            Runspace worker dispatcher. Central piece tying together runspace execution and data exchange.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Name">
+            <summary>
+            The name of the dispatcher. Pure documentation.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSDispatcher.WorkerCount">
+            <summary>
+            The count of workers registered to this dispatcher
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSDispatcher.WorkerNames">
+            <summary>
+            The names of the workers registered to this dispatcher
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSDispatcher.QueueNames">
+            <summary>
+            The queues in this dispatcher
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Queues">
+            <summary>
+            The queues used for data exchange. Queues are created on demand.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Data">
+            <summary>
+            Additional data exchange available to all workers.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Workers">
+            <summary>
+            Workers associated with this dispatcher.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.SessionState">
+            <summary>
+            Provide a default session state for all workers.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Variables">
+            <summary>
+            Any variables to include in the worker runspaces.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Modules">
+            <summary>
+            Modules to include in the worker runspaces. Always includes the PSFramework.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSDispatcher.Functions">
+            <summary>
+            Functions to inject into the worker runspaces.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.#ctor(System.String)">
+            <summary>
+            Create a new runsoace dispatcher, giving it a name for heck's sake.
+            </summary>
+            <param name="Name">The name of the dispatcher</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.CloseQueue(System.String)">
+            <summary>
+            Close a data queue associated with the dispatcher.
+            By doing so, all new entries will be prevented, effectively soft-killing the processing.
+            </summary>
+            <param name="Name">The name of the queue to close</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.AddWorker(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Int32)">
+            <summary>
+            Add a new worker to the dispatcher.
+            </summary>
+            <param name="Name">The name of the worker. Used to differentiate workers from each other</param>
+            <param name="InQueue">Name of the inqueue to use.</param>
+            <param name="OutQueue">Name of the outqueue to use.</param>
+            <param name="ScriptBlock">The scriptblock that will process each input item from the inqueue and produce the ouptut to the outqueue. Receives one input item and all output will be handled.</param>
+            <param name="Count">The number of worker runspaces to create.</param>
+            <returns>The created worker object.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.Start">
+            <summary>
+            Launch all workers of this dispatcher
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.Stop">
+            <summary>
+            Stop all workers of this dispatcher. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSQueue">
+            <summary>
+            Wrapper around a concurrent queue, adding some flow control and documentation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.Name">
+            <summary>
+            Name of the Queue.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.TotalItemCount">
+            <summary>
+            Total number of items that were ever enqueued into this queue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.Closed">
+            <summary>
+            Whether this queue has been closed. Closed queues silently ignore any further input.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Enqueue(System.Object)">
+            <summary>
+            Add a new item to the queue
+            </summary>
+            <param name="Input">The item to enqueue</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.EnqueueBulk(System.Collections.ICollection)">
+            <summary>
+            Add a large list of items to the queue
+            </summary>
+            <param name="Input">A colection of input objects.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Dequeue">
+            <summary>
+            Return an item from the queue, or null if empty.
+            </summary>
+            <returns>The oldest item in the queue or null if empty.</returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSQueueManager">
+            <summary>
+            Manages runspace queues. Dynamically creates the queues on demand.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.ContainsKey(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.String,PSFramework.Runspace.RSQueue)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.TryGetValue(System.String,PSFramework.Runspace.RSQueue@)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Contains(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.CopyTo(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue}[],System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Contains(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.Object,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.CopyTo(System.Array,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="index"></param>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsReadOnly">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsFixedSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.SyncRoot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsSynchronized">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Item(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Item(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSState">
+            <summary>
+            The state of a worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Pending">
+            <summary>
+            The worker has yet to be configured to run
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Starting">
+            <summary>
+            The worker is currently starting up
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Running">
+            <summary>
+            The worker is busy doing its job
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Stopping">
+            <summary>
+            The worker is in the process of shutting down
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Stopped">
+            <summary>
+            The worker has completed its shutdown
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Failed">
+            <summary>
+            The worker failed otherwise. Check the errors.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorker">
+            <summary>
+            Runspace Worker Class, implementing one kind of workload over N agents.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.WorkerCode">
+            <summary>
+            The base code used to operate workers. Provided during module import
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Name">
+            <summary>
+            Name of the Worker. Mostly documentary in nature.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.InQueue">
+            <summary>
+            Name of the input queue, from which it expects to receive its input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.OutQueue">
+            <summary>
+            Name of the output queue, to which results are written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.ScriptBlock">
+            <summary>
+            The actual script code provided by the user during creation of the worker.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Begin">
+            <summary>
+            Code that is executed when first the worker is launched.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.End">
+            <summary>
+            Code that is executed when at last the worker is closed.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Count">
+            <summary>
+            Maximum count of worker threads / runspaces
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.State">
+            <summary>
+            State of the worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.LastInput">
+            <summary>
+            Time the last input was successfully read from the in queue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountInput">
+            <summary>
+            Number of input items received
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountInputCompleted">
+            <summary>
+            Number of input items for which processing has completed (irrespective of success or output count)
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.LastOutput">
+            <summary>
+            The last time output was enqueued
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountOutput">
+            <summary>
+            Number of output items which have been enqueued
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.ErrorCount">
+            <summary>
+            Number of errors that happened during this workers execution
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.LastError">
+            <summary>
+            The last error that happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Errors">
+            <summary>
+            The last 64 errors that happened
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.InQueueTotalItemCount">
+            <summary>
+            The total number of items ever queued to the input queue
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Completed">
+            <summary>
+            Whether all items that have ever been added to the inqueue have already been processed through this worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.KillToStop">
+            <summary>
+            If this flag is set, worker runspaces will be hard-killed on stop, rather than waiting for them to gracefully shut down
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Throttle">
+            <summary>
+            Throttling to respect. Worker will not execute more frequently than this.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.SessionState">
+            <summary>
+            The initial session state to use for the background runspaces
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Variables">
+            <summary>
+            Variables to inject into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Modules">
+            <summary>
+            Modules to pre-load into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Functions">
+            <summary>
+            Functions to pass into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.PerRSValues">
+            <summary>
+            Variables that are made available for each worker runspace, each with a separate value.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSDispatcher,System.Int32)">
+            <summary>
+            Create a new runspace worker
+            </summary>
+            <param name="Name">The name of the worker</param>
+            <param name="InQueue">Name of the input queue to use</param>
+            <param name="OutQueue">Name of the output queue to use</param>
+            <param name="ScriptBlock">The code that actually consumes the input</param>
+            <param name="Dispatcher">The dispatcher object running the entire workflow.</param>
+            <param name="Count">The number of runspaces this worker will maintain.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.Start">
+            <summary>
+            Starts the worker, creating the number of runspaces configured after preparing the execution state.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Bad language modes or not having configured a dispatcher is a bad thing.</exception>
+            <exception cref="T:System.ArgumentException">A Count less than 1 is implausible.</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.Stop">
+            <summary>
+            Signal all workers to stop and gracefully end them.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.IncrementInput">
+            <summary>
+            Increase the count of input items started
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.IncrementInputCompleted">
+            <summary>
+            Increase the count of input items completed
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.IncrementOutput">
+            <summary>
+            Increase the count of output items produced
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetBegin">
+            <summary>
+            Retrieve the begin scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
+            </summary>
+            <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetEnd">
+            <summary>
+            Retrieve the end scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
+            </summary>
+            <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.ToString">
+            <summary>
+            The text form of the current worker
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkerError">
+            <summary>
+            Something went wrong.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Worker">
+            <summary>
+            The worker that failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Error">
+            <summary>
+            The actual error that happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Timestamp">
+            <summary>
+            When did it happen
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Runspace">
+            <summary>
+            On what runspace did it fail
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.ToString">
+            <summary>
+            Text representation of what went wrong
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceBoundValue">
             <summary>
@@ -8588,12 +9167,17 @@
             Class implementing a throttling mechanism / watcher
             </summary>
         </member>
-        <member name="F:PSFramework.Utility.Throttle.Limit">
+        <member name="P:PSFramework.Utility.Throttle.Limits">
+            <summary>
+            All throttling limits
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Throttle.Limit">
             <summary>
             The maximum number of slots per interval
             </summary>
         </member>
-        <member name="F:PSFramework.Utility.Throttle.Interval">
+        <member name="P:PSFramework.Utility.Throttle.Interval">
             <summary>
             The interval over which slots are limited
             </summary>
@@ -8601,6 +9185,16 @@
         <member name="P:PSFramework.Utility.Throttle.Count">
             <summary>
             The number of slots currently taken
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Throttle.NotBefore">
+            <summary>
+            DO not grant a slot before this timestamp has been reached.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.#ctor">
+            <summary>
+            Create a new throttle object
             </summary>
         </member>
         <member name="M:PSFramework.Utility.Throttle.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
@@ -8618,7 +9212,140 @@
         </member>
         <member name="M:PSFramework.Utility.Throttle.Purge">
             <summary>
+            Clean up all throttle sets
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.Reset">
+            <summary>
+            Resets all throttling limits
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.RemoveLimit(PSFramework.Utility.ThrottleBase)">
+            <summary>
+            Removes a limit from the throttle
+            </summary>
+            <param name="Limit">The limit to remove</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Utility.ThrottleBase)">
+            <summary>
+            Add a limit to the throttle
+            </summary>
+            <param name="Limit">A pre-created limit to add</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Parameter.TimeSpanParameter,System.Int32)">
+            <summary>
+            Add a throttle control, limiting executions within a given timespan
+            </summary>
+            <param name="Interval">The timespan within which executions are counted</param>
+            <param name="Count">The number of action slots within the specified interval</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Parameter.DateTimeParameter)">
+            <summary>
+            Add a throttle control, blocking any further executions until the specified time has come to pass.
+            </summary>
+            <param name="Timeout">Time until when no further action should take place</param>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleBase">
+            <summary>
+            Base implementation of a throttling handler
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            This should only return when the next execution can happen
+            </summary>
+            <param name="Timeout">Maximum time to wait. Throw an exception if expires before next slot becomes available</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.Purge">
+            <summary>
+            Any cleanup action to take without resetting the throttle.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.Reset">
+            <summary>
+            Reset the full throttling condition to base.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleSet">
+            <summary>
+            A throttling condition, limiting to X calls per y time.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleSet.Limit">
+            <summary>
+            The maximum number of slots per interval
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleSet.Interval">
+            <summary>
+            The interval over which slots are limited
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ThrottleSet.Count">
+            <summary>
+            The number of slots currently taken
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Create a new throttle object
+            </summary>
+            <param name="Limit">How many slots are available per interval?</param>
+            <param name="Interval">hat is the interval over which slots are measured?</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Obtain an execution slots from the throttle
+            </summary>
+            <param name="Timeout">How long are you willing to wait for a slot before giving up?</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.Purge">
+            <summary>
             Clean up any expired slots
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.Reset">
+            <summary>
+            Resets the throttling conditions, restoring all available slots
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleTime">
+            <summary>
+            A throttle limit based on "Not Before" a certain timestamp
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleTime.NotBefore">
+            <summary>
+            The time limit: No execution before this time should occur
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleTime.Parent">
+            <summary>
+            The parent throttle object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.#ctor(System.DateTime,PSFramework.Utility.Throttle)">
+            <summary>
+            Creates a new throttle condition object, preventing the execution before the specified time
+            </summary>
+            <param name="notBefore">The timestamp until which we shall wait</param>
+            <param name="parent">The throttle object</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Take a chill pill until the time limit is over
+            </summary>
+            <param name="Timeout">Maximum time we are willing to wait. Will error right away, if the time limit is longer.</param>
+            <exception cref="T:System.TimeoutException">Won't return before the timeout</exception>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.Purge">
+            <summary>
+            Do nothing
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.Reset">
+            <summary>
+            Disables the limit
             </summary>
         </member>
         <member name="T:PSFramework.Utility.TimeRange">
