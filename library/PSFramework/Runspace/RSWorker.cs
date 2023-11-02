@@ -284,6 +284,8 @@ namespace PSFramework.Runspace
                 runtime.Pipe.Dispose();
             }
             State = RSState.Stopped;
+			if (null == pool)
+				return;
             pool.Close();
             pool.Dispose();
         }
