@@ -6327,6 +6327,12 @@
             Stop all workers of this dispatcher. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RSDispatcher.ToString">
+            <summary>
+            String form of the dispatcher
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:PSFramework.Runspace.RSQueue">
             <summary>
             Wrapper around a concurrent queue, adding some flow control and documentation
@@ -6670,6 +6676,11 @@
             Whether all items that have ever been added to the inqueue have already been processed through this worker
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RSWorker.IsDone">
+            <summary>
+            Whether the inqueue has been closed and fully processed. If so, processing can stop.
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RSWorker.KillToStop">
             <summary>
             If this flag is set, worker runspaces will be hard-killed on stop, rather than waiting for them to gracefully shut down
@@ -6703,6 +6714,21 @@
         <member name="F:PSFramework.Runspace.RSWorker.PerRSValues">
             <summary>
             Variables that are made available for each worker runspace, each with a separate value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.MaxItems">
+            <summary>
+            The maximum number of items this worker will process.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CloseOutQueue">
+            <summary>
+            Whether the last worker runspace finishing should close the out-queue of this worker
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Dispatcher">
+            <summary>
+            The Dispatcher owning the worker
             </summary>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSDispatcher,System.Int32)">
@@ -6754,6 +6780,12 @@
             Retrieve the end scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
             </summary>
             <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.SignalEnd">
+            <summary>
+            The tool for each runspace of the worker to signal it is done.
+            Any concluding post-processing is done here, once the last runspace calls it.
+            </summary>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.ToString">
             <summary>

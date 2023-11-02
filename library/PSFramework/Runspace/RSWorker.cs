@@ -143,6 +143,11 @@ namespace PSFramework.Runspace
         public bool Completed => CountInputCompleted >= InQueueTotalItemCount;
 
         /// <summary>
+        /// Whether the inqueue has been closed and fully processed. If so, processing can stop.
+        /// </summary>
+        public bool IsDone => dispatcher.Queues[InQueue].Closed && CountInputCompleted >= InQueueTotalItemCount;
+
+        /// <summary>
         /// If this flag is set, worker runspaces will be hard-killed on stop, rather than waiting for them to gracefully shut down
         /// </summary>
         public bool KillToStop;
@@ -176,6 +181,21 @@ namespace PSFramework.Runspace
         /// Variables that are made available for each worker runspace, each with a separate value.
         /// </summary>
         public ConcurrentDictionary<string, RSQueue> PerRSValues = new ConcurrentDictionary<string, RSQueue>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// The maximum number of items this worker will process.
+        /// </summary>
+        public int MaxItems;
+
+        /// <summary>
+        /// Whether the last worker runspace finishing should close the out-queue of this worker
+        /// </summary>
+        public bool CloseOutQueue;
+
+        /// <summary>
+        /// The Dispatcher owning the worker
+        /// </summary>
+        public RSDispatcher Dispatcher => dispatcher;
 
         private RunspacePool pool;
         private RSDispatcher dispatcher;
@@ -334,6 +354,28 @@ namespace PSFramework.Runspace
                 return null;
             return _End.ToGlobal();
         }
+
+        /// <summary>
+        /// The tool for each runspace of the worker to signal it is done.
+        /// Any concluding post-processing is done here, once the last runspace calls it.
+        /// </summary>
+        public void SignalEnd()
+        {
+            bool terminate = false;
+            lock (this)
+            {
+                _CountDone++;
+                if (_CountDone < Count)
+                    terminate = true;
+            }
+            if (terminate)
+                return;
+
+            // Seal the out queue if desired, ensuring subsequent workers know not to expect further input
+            if (CloseOutQueue)
+                dispatcher.CloseQueue(OutQueue);
+        }
+        private int _CountDone = 0;
 
         /// <summary>
         /// The text form of the current worker

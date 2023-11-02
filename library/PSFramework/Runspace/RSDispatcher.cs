@@ -123,5 +123,14 @@ namespace PSFramework.Runspace
             foreach (RSWorker worker in Workers.Values)
                 worker.Stop();
         }
+
+        /// <summary>
+        /// String form of the dispatcher
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

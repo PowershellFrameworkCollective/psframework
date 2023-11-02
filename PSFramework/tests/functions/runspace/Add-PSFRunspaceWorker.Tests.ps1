@@ -76,10 +76,10 @@ $dis2 | Remove-PSFRunspaceDispatcher
 TODO: Open Dev Items
 
 - Worker:
-  - Should have a "MaxItems" property, to prevent endless circling when done
-  - Should have a way to match a closed inqueue against its total processed items to know when to self-terminate
-  - Should have a "CloseOutQueue" property, to have the last worker runspace close out the output queue when done.
-  - Should have a public Dispatcher property
+  - Should have a "MaxItems" property, to prevent endless circling when done [Done]
+  - Should have a way to match a closed inqueue against its total processed items to know when to self-terminate [Done]
+  - Should have a "CloseOutQueue" property, to have the last worker runspace close out the output queue when done. [Done]
+  - Should have a public Dispatcher property [Done]
 - Dispatcher
-  - Should ToString() to its name
+  - Should ToString() to its name [Done]
 #>
