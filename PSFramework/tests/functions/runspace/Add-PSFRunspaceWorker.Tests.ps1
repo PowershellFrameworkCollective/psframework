@@ -75,6 +75,9 @@ $dis2 | Remove-PSFRunspaceDispatcher
 <#
 TODO: Open Dev Items
 
+- Queues:
+  - Should allow adding multiple values at once
+  - Output Count: Not Threadsafe after all
 - Worker:
   - Should have a "MaxItems" property, to prevent endless circling when done [Done]
   - Should have a way to match a closed inqueue against its total processed items to know when to self-terminate [Done]

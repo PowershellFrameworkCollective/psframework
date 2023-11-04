@@ -35,7 +35,7 @@
 	while ($validStates -contains $__PSF_Worker.State) {
 		# Inqueue is closed and all items processed?
 		if ($__PSF_Worker.Done) { break }
-		if ($__PSF_Worker.MaxItems -and $__PSF_Worker.MaxItems -ge $__PSF_Worker.CountInputCompleted)
+		if ($__PSF_Worker.MaxItems -and $__PSF_Worker.MaxItems -ge $__PSF_Worker.CountInputCompleted) { break }
 
 		if ($__PSF_Worker.Throttle) {
 			$__PSF_Worker.Throttle.GetSlot()
