@@ -71,18 +71,3 @@ $dis2 | Start-PSFRunspaceDispatcher
 $dis2 | Get-PSFRunspaceWorker
 
 $dis2 | Remove-PSFRunspaceDispatcher
-
-<#
-TODO: Open Dev Items
-
-- Queues:
-  - Should allow adding multiple values at once [Done]
-  - Output Count: Not Threadsafe after all [Done]
-- Worker:
-  - Should have a "MaxItems" property, to prevent endless circling when done [Done]
-  - Should have a way to match a closed inqueue against its total processed items to know when to self-terminate [Done]
-  - Should have a "CloseOutQueue" property, to have the last worker runspace close out the output queue when done. [Done]
-  - Should have a public Dispatcher property [Done]
-- Dispatcher
-  - Should ToString() to its name [Done]
-#>
