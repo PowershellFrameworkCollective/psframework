@@ -1,10 +1,10 @@
 ﻿function Write-PSFRunspaceQueue {
 	<#
 	.SYNOPSIS
-		Write data to a queue of a Runspace Workflow Dispatcher.
+		Write data to a queue of a Runspace Workflow.
 	
 	.DESCRIPTION
-		Write data to a queue of a Runspace Workflow Dispatcher.
+		Write data to a queue of a Runspace Workflow.
 		This is generally used to provide the initial input of the first queue.
 
 		Can also be used by a worker code to provide output to more than one queue.
@@ -23,20 +23,19 @@
 		This prevents further data to be added to the queue,
 		and allows a worker to know, when it has fully processed input.
 
-	.PARAMETER DispatcherName
-		Name of the dispatcher owning the queue written to.
+	.PARAMETER WorkflowName
+		Name of the workflow owning the queue written to.
 	
 	.PARAMETER InputObject
-		Dispatcher object that owns the queue written to.
+		Workflow object that owns the queue written to.
 	
 	.EXAMPLE
-		PS C:\> $dispatcher | Write-PSFRunspaceQueue -Name input -BulkValues $entries
+		PS C:\> $workflow | Write-PSFRunspaceQueue -Name input -BulkValues $entries
 
-		Provides all values in $entries as input for the queue named "input"
-		of the Runspace Workflow Dispatcher in $dispatcher.
+		Provides all values in $entries as input for the queue named "input" of the Runspace Workflow in $workflow.
 	
 	.LINK
-		TODO: Add link to section
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
 	[CmdletBinding(DefaultParameterSetName = 'Single')]
 	param (
@@ -58,26 +57,26 @@
 
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string[]]
-		$DispatcherName,
+		$WorkflowName,
 
 		[Parameter(ValueFromPipeline = $true)]
 		[PSFramework.Runspace.RSDispatcher[]]
 		$InputObject
 	)
 	process {
-		$resolvedDispatchers = Resolve-PsfRunspaceDispatcher -Name $DispatcherName -InputObject $InputObject -Cmdlet $PSCmdlet -Terminate -CurrentWorker
-		foreach ($resolvedDispatcher in $resolvedDispatchers) {
+		$resolvedWorkflows = Resolve-PsfRunspaceWorkflow -Name $WorkflowName -InputObject $InputObject -Cmdlet $PSCmdlet -Terminate -CurrentWorker
+		foreach ($resolvedWorkflow in $resolvedWorkflows) {
 			$values = $BulkValues
 			if ($PSBoundParameters.Keys -contains 'Value') {
 				$values = $Value
 			}
 			foreach ($item in $values) {
-				$resolvedDispatcher.Queues.$Name.Enqueue($item)
+				$resolvedWorkflow.Queues.$Name.Enqueue($item)
 				if ($global:__PSF_Worker -and $Name -eq $global:__PSF_Worker.OutQueue) {
 					$global:__PSF_Worker.IncrementOutput()
 				}
 			}
-			if ($Close) { $resolvedDispatcher.CloseQueue($Name) }
+			if ($Close) { $resolvedWorkflow.CloseQueue($Name) }
 		}
 	}
 }

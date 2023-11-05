@@ -38,5 +38,5 @@ $script:tempItems = [PSFramework.Temp.TempItemContainer]::new()
 # Container for extension Data included by the PSF Support Package
 $script:supportDataProviders = @{ }
 
-# Container for runspace dispatchers
-$script:runspaceDispatchers = @{ }
+# Container for runspace workflows
+$script:runspaceWorkflows = @{ }

@@ -1,30 +1,30 @@
 ﻿function Add-PSFRunspaceWorker {
 	<#
 	.SYNOPSIS
-		Adds a new worker / workload to a runspace dispatcher.
+		Adds a new worker / workload to a runspace workflow.
 	
 	.DESCRIPTION
-		Adds a new worker / workload to a runspace dispatcher.
+		Adds a new worker / workload to a runspace workflow.
 		
 		The worker as a conceptually consists of three parts:
 		- Input Queue: A queue where data to process awaits
 		- N Runspaces to convert input to output
 		- Output Queue: A queue where the finished results are passed off to.
 
-		In the wider flow of a Runspace Workload Dispatcher, one Worker's Output Queue is alse another Worker's Input Queue.
+		In the wider flow of a Runspace Workflow, one Worker's Output Queue is alse another Worker's Input Queue.
 		Thus we create a chain of workers from original input to finished output, each step individually with as many runspaces as needed.
 	
 	.PARAMETER Name
 		Name of the worker.
-		The name matters little, other than that it must be unique from other workers on the same Dispatcher.
+		The name matters little, other than that it must be unique from other workers on the same workflow.
 	
 	.PARAMETER InQueue
 		Name of the queue from which to receive input.
-		The name is arbitrary - if the queue does not yet exist on the dispatcher, it will be auto-created.
+		The name is arbitrary - if the queue does not yet exist on the workflow, it will be auto-created.
 	
 	.PARAMETER OutQueue
 		Name of the queueue to which we write output.
-		The name is arbitrary - if the queue does not yet exist on the dispatcher, it will be auto-created.
+		The name is arbitrary - if the queue does not yet exist on the workflow, it will be auto-created.
 	
 	.PARAMETER ScriptBlock
 		The scriptblock performing the actual workload.
@@ -89,30 +89,30 @@
 		A fully prepared session state object to use when creating the worker runspaces.
 		Be aware that if your session state does not contain basic language tools, the background runspace will likely fail.
 	
-	.PARAMETER DispatcherName
-		Name of the Runspace Dispatcher this worker belongs to.
-		The dispatcher contains all the workers, queues and management tools for the Runspace Workload.
+	.PARAMETER WorkflowName
+		Name of the Runspace Workflow this worker belongs to.
+		The workflow contains all the workers, queues and management tools for the Runspace Workload.
 	
 	.PARAMETER InputObject
-		Dispatcher object of the Runspace Dispatcher this worker belongs to.
-		The dispatcher contains all the workers, queues and management tools for the Runspace Workload.
+		Workflow object this worker belongs to.
+		The workflow contains all the workers, queues and management tools for the Runspace Workload.
 	
 	.EXAMPLE
-		PS C:\> $dispatcher | Add-PSFRunspaceWorker -Name DoubleIt -InQueue Q1 -OutQueue Q2 -Count 5 -ScriptBlock { $args[0] * 2 }
+		PS C:\> $workflow | Add-PSFRunspaceWorker -Name DoubleIt -InQueue Q1 -OutQueue Q2 -Count 5 -ScriptBlock { $args[0] * 2 }
 		
-		Adds a worker to the dispatcher that will take items from Q1, double them, then write them to Q2.
+		Adds a worker to the workflow that will take items from Q1, double them, then write them to Q2.
 		Will create 5 runspaces to do the job.
 
 	.EXAMPLE
-		PS C:\> $dispatcher | Add-PSFRunspaceWorker -Name Mailboxes -InQueue Organizations -OutQueue Mailboxes -Count 1 -Variables $connectionData -Begin $logonScript -ScriptBlock $getMailbox -End $logoutScript
+		PS C:\> $workflow | Add-PSFRunspaceWorker -Name Mailboxes -InQueue Organizations -OutQueue Mailboxes -Count 1 -Variables $connectionData -Begin $logonScript -ScriptBlock $getMailbox -End $logoutScript
 
 		Adds a worker that will for each organization retrieve the mailboxes.
 		Will create 1 runspace to avoid hitting EXO throttling.
 		More detailed examples and explanations can be found on psframework.org.
-		TODO: Update link to section once available.
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 
 	.LINK
-		TODO: Add link to section
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
 	[CmdletBinding()]
 	param (
@@ -164,7 +164,7 @@
 
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string[]]
-		$DispatcherName,
+		$WorkflowName,
 
 		[Parameter(ValueFromPipeline = $true)]
 		[PSFramework.Runspace.RSDispatcher[]]
@@ -193,10 +193,10 @@
 		}
 	}
 	process {
-		$resolvedDispatchers = Resolve-PsfRunspaceDispatcher -Name $DispatcherName -InputObject $InputObject -Cmdlet $PSCmdlet -Terminate
+		$resolvedWorkflows = Resolve-PsfRunspaceWorkflow -Name $WorkflowName -InputObject $InputObject -Cmdlet $PSCmdlet -Terminate
 
-		foreach ($resolvedDispatcher in $resolvedDispatchers) {
-			$worker = $resolvedDispatcher.AddWorker($Name, $InQueue, $OutQueue, $ScriptBlock, $Count)
+		foreach ($resolvedWorkflow in $resolvedWorkflows) {
+			$worker = $resolvedWorkflow.AddWorker($Name, $InQueue, $OutQueue, $ScriptBlock, $Count)
 
 			if ($Begin) { $worker.Begin = $Begin }
 			if ($End) { $worker.End = $End }

@@ -1,5 +1,5 @@
 ﻿[PSFramework.Runspace.RSWorker]::WorkerCode = {
-	# $__PSF_Dispatcher --> Workload Dispatcher provided by worker
+	# $__PSF_Workflow --> Workload Dispatcher provided by worker
 	# $__PSF_Worker --> Current Worker Definition
 
 	$ErrorActionPreference = 'Stop'
@@ -42,7 +42,7 @@
 		}
 
 		$inputData = $null
-		$success = $__PSF_Dispatcher.Queues.$($__PSF_Worker.InQueue).TryDequeue([ref]$inputData)
+		$success = $__PSF_Workflow.Queues.$($__PSF_Worker.InQueue).TryDequeue([ref]$inputData)
 		if (-not $success) {
 			Start-Sleep -Milliseconds 250
 			continue
@@ -52,7 +52,7 @@
 		try {
 			$results = & $__PSF_ScriptBlock $inputData
 			foreach ($result in $results) {
-				$__PSF_Dispatcher.Queues.$($__PSF_Worker.OutQueue).Enqueue($result)
+				$__PSF_Workflow.Queues.$($__PSF_Worker.OutQueue).Enqueue($result)
 				$__PSF_Worker.IncrementOutput()
 			}
 			$__PSF_Worker.IncrementInputCompleted()

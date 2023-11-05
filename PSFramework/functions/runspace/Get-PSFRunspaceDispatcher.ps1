@@ -1,23 +1,23 @@
-﻿function Get-PSFRunspaceDispatcher {
+﻿function Get-PSFRunspaceWorkflow {
 	<#
 	.SYNOPSIS
-		Returns a list of registered runspace dispatchers.
+		Returns a list of registered runspace workflows.
 	
 	.DESCRIPTION
-		Returns a list of registered runspace dispatchers.
-		A Runspace dispatcher is the main component managing a PSFramework Runspace Workflow
+		Returns a list of registered runspace workflows.
+		A Runspace workflow object is the main component managing a PSFramework Runspace Workflow
 	
 	.PARAMETER Name
 		By which name to filter.
 		Defaults to *
 	
 	.EXAMPLE
-		PS C:\> Get-PSFRunspaceDispatcher
+		PS C:\> Get-PSFRunspaceWorkflow
 		
-		Returns all registered runspace dispatchers.
+		Returns all registered runspace workflows.
 
 	.LINK
-		TODO: Add link to section
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
 	[CmdletBinding()]
 	param (
@@ -25,6 +25,6 @@
 		$Name = '*'
 	)
 	process {
-		($script:runspaceDispatchers.Values | Where-Object Name -Like $Name)
+		($script:runspaceWorkflows.Values | Where-Object Name -Like $Name)
 	}
 }

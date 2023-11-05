@@ -1,11 +1,11 @@
 ﻿Describe "Testing the command Add-PSFRunspaceWorker" -Tag "CI", "Pipeline", "Unit" {
 	BeforeEach {
-		& (Get-Module PSFramework) { $script:runspaceDispatchers = @{ } }
-		$null = New-PSFRunspaceDispatcher -Name "Test"
+		& (Get-Module PSFramework) { $script:runspaceWorkflows = @{ } }
+		$null = New-PSFRunspaceWorkflow -Name "Test"
 	}
 	AfterEach {
-		Get-PSFRunspaceDispatcher | Remove-PSFRunspaceDispatcher
-		& (Get-Module PSFramework) { $script:runspaceDispatchers = @{ } }
+		Get-PSFRunspaceWorkflow | Remove-PSFRunspaceWorkflow
+		& (Get-Module PSFramework) { $script:runspaceWorkflows = @{ } }
 	}
 
 
@@ -14,7 +14,7 @@
 return
 
 # Case 1: Simple Handoff
-$dis = New-PSFRunspaceDispatcher -Name "Test" -Force
+$dis = New-PSFRunspaceWorkflow -Name "Test" -Force
 $dis | Add-PSFRunspaceWorker -Name Gatherer -InQueue Input -OutQueue Processed -Count 5 -Variables @{ Multiplier = 5 } -ScriptBlock {
 	param ($Value)
 	Start-Sleep -Milliseconds 25
@@ -25,11 +25,11 @@ $dis | Add-PSFRunspaceWorker -Name Processor -InQueue Processed -OutQueue Done -
 	$Value / $Divisor
 }
 1..1000 | ForEach-Object { Write-PSFRunspaceQueue -Name Input -Value $_ -InputObject $dis }
-$dis | Start-PSFRunspaceDispatcher
+$dis | Start-PSFRunspaceWorkflow
 
 $dis | Get-PSFRunspaceWorker
 
-$dis | Remove-PSFRunspaceDispatcher
+$dis | Remove-PSFRunspaceWorkflow
 
 # Case 2: Longrunning Generator & Passing in cool stuff
 function Get-Data {
@@ -49,10 +49,10 @@ function Get-Data {
 	}
 }
 $fun = Get-Command Get-Data
-$dis2 = New-PSFRunspaceDispatcher -Name "Test2" -Force
+$dis2 = New-PSFRunspaceWorkflow -Name "Test2" -Force
 $dis2 | Add-PSFRunspaceWorker -Name Generator -InQueue Input -OutQueue Data -Count 1 -Functions @{ $fun.Name = $fun.Definition } -ScriptBlock {
 	Get-Data -Duration '10m' -Interval '1s' | ForEach-Object {
-		Write-PSFRunspaceQueue -Name Data -Value $_ -InputObject $__PSF_Dispatcher
+		Write-PSFRunspaceQueue -Name Data -Value $_ -InputObject $__PSF_Workflow
 	}
 }
 $dis2 | Add-PSFRunspaceWorker -Name Converter -InQueue Data -OutQueue Done -Count 5 -VarPerRunspace @{ Multiplier = 2, 3, 4, 5, 6 } -ScriptBlock {
@@ -66,8 +66,8 @@ $dis2 | Add-PSFRunspaceWorker -Name Converter -InQueue Data -OutQueue Done -Coun
 	}
 }
 Write-PSFRunspaceQueue -Name Input -Value 42 -InputObject $dis2
-$dis2 | Start-PSFRunspaceDispatcher
+$dis2 | Start-PSFRunspaceWorkflow
 
 $dis2 | Get-PSFRunspaceWorker
 
-$dis2 | Remove-PSFRunspaceDispatcher
+$dis2 | Remove-PSFRunspaceWorkflow

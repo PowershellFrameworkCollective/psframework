@@ -1,30 +1,30 @@
 ﻿function Get-PSFRunspaceWorker {
 	<#
 	.SYNOPSIS
-		Retrieve workers associated with a Runspace Dispatcher.
+		Retrieve workers associated with a Runspace Workflow.
 	
 	.DESCRIPTION
-		Retrieve workers associated with a Runspace Dispatcher.
+		Retrieve workers associated with a Runspace Workflow.
 	
 	.PARAMETER Name
 		Name of the worker to filter by.
 		Defaults to *
 	
-	.PARAMETER DispatcherName
-		Name of the Runspace Dispatcher from which to retrieve workers.
-		The dispatcher contains all the workers, queues and management tools for the Runspace Workload.
+	.PARAMETER WorkflowName
+		Name of the Runspace Workflow from which to retrieve workers.
+		The workflow contains all the workers, queues and management tools for the Runspace Workflow.
 	
 	.PARAMETER InputObject
-		Dispatcher object of the Runspace Dispatcher from which to retrieve workers.
-		The dispatcher contains all the workers, queues and management tools for the Runspace Workload.
+		Workflow object from which to retrieve workers.
+		The workflow contains all the workers, queues and management tools for the Runspace Workflow.
 	
 	.EXAMPLE
-		PS C:\> Get-PSFRunspaceDispatcher | Get-PSFRunspaceWorker
+		PS C:\> Get-PSFRunspaceWorkflow | Get-PSFRunspaceWorker
 
-		Get all workers of all runspace dispatchers.
+		Get all workers of all runspace workflows.
 
 	.LINK
-		TODO: Add link to section
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
 	[CmdletBinding()]
 	param (
@@ -33,15 +33,15 @@
 
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string[]]
-		$DispatcherName,
+		$WorkflowName,
 
 		[Parameter(ValueFromPipeline = $true)]
 		[PSFramework.Runspace.RSDispatcher[]]
 		$InputObject
 	)
 	process {
-		$resolvedDispatchers = Resolve-PsfRunspaceDispatcher -Name $DispatcherName -InputObject $InputObject -Cmdlet $PSCmdlet
+		$resolvedWorkflows = Resolve-PsfRunspaceWorkflow -Name $WorkflowName -InputObject $InputObject -Cmdlet $PSCmdlet
 
-		$resolvedDispatchers.Workers.Values | Where-Object Name -Like $Name
+		$resolvedWorkflows.Workers.Values | Where-Object Name -Like $Name
 	}
 }
