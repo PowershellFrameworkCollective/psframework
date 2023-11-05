@@ -167,7 +167,7 @@
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="Extension\ScriptBlockExt.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
-    <Compile Include="Runspace\RSDispatcher.cs" />
+    <Compile Include="Runspace\RSWorkflow.cs" />
     <Compile Include="Runspace\RSPowerShellWrapper.cs" />
     <Compile Include="Runspace\RSQueue.cs" />
     <Compile Include="Runspace\RSQueueManager.cs" />

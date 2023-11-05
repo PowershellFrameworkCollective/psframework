@@ -6233,82 +6233,82 @@
             Clears all cache properties to null
             </summary>
         </member>
-        <member name="T:PSFramework.Runspace.RSDispatcher">
+        <member name="T:PSFramework.Runspace.RSWorkflow">
             <summary>
-            Runspace worker dispatcher. Central piece tying together runspace execution and data exchange.
+            Runspace Workflow. Central piece tying together runspace execution and data exchange.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Name">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Name">
             <summary>
-            The name of the dispatcher. Pure documentation.
+            The name of the workflow. Pure documentation.
             </summary>
         </member>
-        <member name="P:PSFramework.Runspace.RSDispatcher.WorkerCount">
+        <member name="P:PSFramework.Runspace.RSWorkflow.WorkerCount">
             <summary>
-            The count of workers registered to this dispatcher
+            The count of workers registered to this workflow
             </summary>
         </member>
-        <member name="P:PSFramework.Runspace.RSDispatcher.WorkerNames">
+        <member name="P:PSFramework.Runspace.RSWorkflow.WorkerNames">
             <summary>
-            The names of the workers registered to this dispatcher
+            The names of the workers registered to this workflow
             </summary>
         </member>
-        <member name="P:PSFramework.Runspace.RSDispatcher.QueueNames">
+        <member name="P:PSFramework.Runspace.RSWorkflow.QueueNames">
             <summary>
-            The queues in this dispatcher
+            The queues in this workflow
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Queues">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Queues">
             <summary>
             The queues used for data exchange. Queues are created on demand.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Data">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Data">
             <summary>
             Additional data exchange available to all workers.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Workers">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Workers">
             <summary>
-            Workers associated with this dispatcher.
+            Workers associated with this workflow.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.SessionState">
+        <member name="F:PSFramework.Runspace.RSWorkflow.SessionState">
             <summary>
             Provide a default session state for all workers.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Variables">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Variables">
             <summary>
             Any variables to include in the worker runspaces.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Modules">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Modules">
             <summary>
             Modules to include in the worker runspaces. Always includes the PSFramework.
             </summary>
         </member>
-        <member name="F:PSFramework.Runspace.RSDispatcher.Functions">
+        <member name="F:PSFramework.Runspace.RSWorkflow.Functions">
             <summary>
             Functions to inject into the worker runspaces.
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.#ctor(System.String)">
+        <member name="M:PSFramework.Runspace.RSWorkflow.#ctor(System.String)">
             <summary>
-            Create a new runsoace dispatcher, giving it a name for heck's sake.
+            Create a new runsoace workflow, giving it a name for heck's sake.
             </summary>
-            <param name="Name">The name of the dispatcher</param>
+            <param name="Name">The name of the workflow</param>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.CloseQueue(System.String)">
+        <member name="M:PSFramework.Runspace.RSWorkflow.CloseQueue(System.String)">
             <summary>
-            Close a data queue associated with the dispatcher.
+            Close a data queue associated with the workflow.
             By doing so, all new entries will be prevented, effectively soft-killing the processing.
             </summary>
             <param name="Name">The name of the queue to close</param>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.AddWorker(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Int32)">
+        <member name="M:PSFramework.Runspace.RSWorkflow.AddWorker(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Int32)">
             <summary>
-            Add a new worker to the dispatcher.
+            Add a new worker to the workflow.
             </summary>
             <param name="Name">The name of the worker. Used to differentiate workers from each other</param>
             <param name="InQueue">Name of the inqueue to use.</param>
@@ -6317,19 +6317,19 @@
             <param name="Count">The number of worker runspaces to create.</param>
             <returns>The created worker object.</returns>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.Start">
+        <member name="M:PSFramework.Runspace.RSWorkflow.Start">
             <summary>
-            Launch all workers of this dispatcher
+            Launch all workers of this workflow
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.Stop">
+        <member name="M:PSFramework.Runspace.RSWorkflow.Stop">
             <summary>
-            Stop all workers of this dispatcher. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
+            Stop all workers of this workflow. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RSDispatcher.ToString">
+        <member name="M:PSFramework.Runspace.RSWorkflow.ToString">
             <summary>
-            String form of the dispatcher
+            String form of the workflow
             </summary>
             <returns></returns>
         </member>
@@ -6726,12 +6726,12 @@
             Whether the last worker runspace finishing should close the out-queue of this worker
             </summary>
         </member>
-        <member name="P:PSFramework.Runspace.RSWorker.Dispatcher">
+        <member name="P:PSFramework.Runspace.RSWorker.Workflow">
             <summary>
-            The Dispatcher owning the worker
+            The workflow owning the worker
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSDispatcher,System.Int32)">
+        <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkflow,System.Int32)">
             <summary>
             Create a new runspace worker
             </summary>
@@ -6739,14 +6739,14 @@
             <param name="InQueue">Name of the input queue to use</param>
             <param name="OutQueue">Name of the output queue to use</param>
             <param name="ScriptBlock">The code that actually consumes the input</param>
-            <param name="Dispatcher">The dispatcher object running the entire workflow.</param>
+            <param name="Workflow">The workflow object running the entire workflow.</param>
             <param name="Count">The number of runspaces this worker will maintain.</param>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.Start">
             <summary>
             Starts the worker, creating the number of runspaces configured after preparing the execution state.
             </summary>
-            <exception cref="T:System.InvalidOperationException">Bad language modes or not having configured a dispatcher is a bad thing.</exception>
+            <exception cref="T:System.InvalidOperationException">Bad language modes or not having configured a workflow is a bad thing.</exception>
             <exception cref="T:System.ArgumentException">A Count less than 1 is implausible.</exception>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.Stop">

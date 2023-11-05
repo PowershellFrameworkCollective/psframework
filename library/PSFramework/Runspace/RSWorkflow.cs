@@ -13,27 +13,27 @@ using System.Threading.Tasks;
 namespace PSFramework.Runspace
 {
     /// <summary>
-    /// Runspace worker dispatcher. Central piece tying together runspace execution and data exchange.
+    /// Runspace Workflow. Central piece tying together runspace execution and data exchange.
     /// </summary>
-    public class RSDispatcher
+    public class RSWorkflow
     {
         /// <summary>
-        /// The name of the dispatcher. Pure documentation.
+        /// The name of the workflow. Pure documentation.
         /// </summary>
         public string Name;
 
         /// <summary>
-        /// The count of workers registered to this dispatcher
+        /// The count of workers registered to this workflow
         /// </summary>
         public int WorkerCount => Workers.Count;
 
         /// <summary>
-        /// The names of the workers registered to this dispatcher
+        /// The names of the workers registered to this workflow
         /// </summary>
         public string[] WorkerNames => Workers.Values.Select(o => o.Name).ToArray();
 
         /// <summary>
-        /// The queues in this dispatcher
+        /// The queues in this workflow
         /// </summary>
         public string[] QueueNames => Queues.Keys.Select(o => $"{o} ({Queues[o].Count})").ToArray();
 
@@ -48,7 +48,7 @@ namespace PSFramework.Runspace
         public ConcurrentDictionary<string, object> Data = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
-        /// Workers associated with this dispatcher.
+        /// Workers associated with this workflow.
         /// </summary>
         public ConcurrentDictionary<string, RSWorker> Workers = new ConcurrentDictionary<string, RSWorker>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -73,16 +73,16 @@ namespace PSFramework.Runspace
         public Dictionary<string, ScriptBlock> Functions = new Dictionary<string, ScriptBlock>();
 
         /// <summary>
-        /// Create a new runsoace dispatcher, giving it a name for heck's sake.
+        /// Create a new runsoace workflow, giving it a name for heck's sake.
         /// </summary>
-        /// <param name="Name">The name of the dispatcher</param>
-        public RSDispatcher(string Name)
+        /// <param name="Name">The name of the workflow</param>
+        public RSWorkflow(string Name)
         {
             this.Name = Name;
         }
 
         /// <summary>
-        /// Close a data queue associated with the dispatcher.
+        /// Close a data queue associated with the workflow.
         /// By doing so, all new entries will be prevented, effectively soft-killing the processing.
         /// </summary>
         /// <param name="Name">The name of the queue to close</param>
@@ -92,7 +92,7 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
-        /// Add a new worker to the dispatcher.
+        /// Add a new worker to the workflow.
         /// </summary>
         /// <param name="Name">The name of the worker. Used to differentiate workers from each other</param>
         /// <param name="InQueue">Name of the inqueue to use.</param>
@@ -108,7 +108,7 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
-        /// Launch all workers of this dispatcher
+        /// Launch all workers of this workflow
         /// </summary>
         public void Start()
         {
@@ -125,11 +125,11 @@ namespace PSFramework.Runspace
             }
 
             if (countFailed >= Workers.Count)
-                throw new InvalidOperationException("Failed to start Dispatcher: Is already running.");
+                throw new InvalidOperationException("Failed to start Workflow: Is already running.");
         }
 
         /// <summary>
-        /// Stop all workers of this dispatcher. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
+        /// Stop all workers of this workflow. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
         /// </summary>
         public void Stop()
         {
@@ -138,7 +138,7 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
-        /// String form of the dispatcher
+        /// String form of the workflow
         /// </summary>
         /// <returns></returns>
         public override string ToString()

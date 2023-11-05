@@ -9,10 +9,10 @@
 		& (Get-Module PSFramework) { $script:runspaceWorkflows = @{ } }
 	}
 
-	It "Should return all registered Runspace Dispatchers" {
+	It "Should return all registered Runspace Workflows" {
 		Get-PSFRunspaceWorkflow | Should -HaveCount 3
 	}
-	It "Should return the specified Runspace Dispatchers" {
+	It "Should return the specified Runspace Workflows" {
 		Get-PSFRunspaceWorkflow -Name Test1 | Should -HaveCount 1
 		(Get-PSFRunspaceWorkflow -Name Test1).Name | Should -Be 'Test1'
 	}

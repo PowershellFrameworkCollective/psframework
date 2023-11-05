@@ -33,7 +33,7 @@
 	.LINK
 		Remove-PSFRunspaceWorkflow
 	#>
-	[OutputType([PSFramework.Runspace.RSDispatcher])]
+	[OutputType([PSFramework.Runspace.RSWorkflow])]
 	[CmdletBinding()]
 	param (
 		[string]
@@ -51,7 +51,7 @@
 			$script:runspaceWorkflows[$Name].Stop()
 		}
 
-		$script:runspaceWorkflows[$Name] = [PSFramework.Runspace.RSDispatcher]::new($Name)
+		$script:runspaceWorkflows[$Name] = [PSFramework.Runspace.RSWorkflow]::new($Name)
 		$script:runspaceWorkflows[$Name]
 	}
 }

@@ -136,7 +136,7 @@ namespace PSFramework.Runspace
         /// <summary>
         /// The total number of items ever queued to the input queue
         /// </summary>
-        public int InQueueTotalItemCount => dispatcher.Queues[InQueue].TotalItemCount;
+        public int InQueueTotalItemCount => workflow.Queues[InQueue].TotalItemCount;
 
         /// <summary>
         /// Whether all items that have ever been added to the inqueue have already been processed through this worker
@@ -146,7 +146,7 @@ namespace PSFramework.Runspace
         /// <summary>
         /// Whether the inqueue has been closed and fully processed. If so, processing can stop.
         /// </summary>
-        public bool IsDone => dispatcher.Queues[InQueue].Closed && CountInputCompleted >= InQueueTotalItemCount;
+        public bool IsDone => workflow.Queues[InQueue].Closed && CountInputCompleted >= InQueueTotalItemCount;
 
         /// <summary>
         /// If this flag is set, worker runspaces will be hard-killed on stop, rather than waiting for them to gracefully shut down
@@ -194,12 +194,12 @@ namespace PSFramework.Runspace
         public bool CloseOutQueue;
 
         /// <summary>
-        /// The Dispatcher owning the worker
+        /// The workflow owning the worker
         /// </summary>
-        public RSDispatcher Dispatcher => dispatcher;
+        public RSWorkflow Workflow => workflow;
 
         private RunspacePool pool;
-        private RSDispatcher dispatcher;
+        private RSWorkflow workflow;
         private List<RSPowerShellWrapper> runtimes = new List<RSPowerShellWrapper>();
 
         /// <summary>
@@ -209,30 +209,30 @@ namespace PSFramework.Runspace
         /// <param name="InQueue">Name of the input queue to use</param>
         /// <param name="OutQueue">Name of the output queue to use</param>
         /// <param name="ScriptBlock">The code that actually consumes the input</param>
-        /// <param name="Dispatcher">The dispatcher object running the entire workflow.</param>
+        /// <param name="Workflow">The workflow object running the entire workflow.</param>
         /// <param name="Count">The number of runspaces this worker will maintain.</param>
-        public RSWorker(string Name, string InQueue, string OutQueue, PsfScriptBlock ScriptBlock, RSDispatcher Dispatcher, int Count = 1)
+        public RSWorker(string Name, string InQueue, string OutQueue, PsfScriptBlock ScriptBlock, RSWorkflow Workflow, int Count = 1)
         {
             this.Name = Name;
             this.InQueue = InQueue;
             this.OutQueue = OutQueue;
             this.ScriptBlock = ScriptBlock;
-            dispatcher = Dispatcher;
+            workflow = Workflow;
             this.Count = Count;
         }
 
         /// <summary>
         /// Starts the worker, creating the number of runspaces configured after preparing the execution state.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Bad language modes or not having configured a dispatcher is a bad thing.</exception>
+        /// <exception cref="InvalidOperationException">Bad language modes or not having configured a workflow is a bad thing.</exception>
         /// <exception cref="ArgumentException">A Count less than 1 is implausible.</exception>
         public void Start()
         {
             if (WorkerCode.LanguageMode != PSLanguageMode.FullLanguage)
                 throw new InvalidOperationException("Refusing to launch worker: The registered worker code is not trusted!");
 
-            if (null == dispatcher)
-                throw new InvalidOperationException("Runspace Dispatcher cannot be null!");
+            if (null == workflow)
+                throw new InvalidOperationException("Runspace Workflow cannot be null!");
 
             if (Count < 1)
                 throw new ArgumentException("Count cannot be lower than 1!", "Count");
@@ -248,30 +248,30 @@ namespace PSFramework.Runspace
 
             InitialSessionState localState = SessionState;
             if (null == localState)
-                localState = dispatcher.SessionState;
+                localState = workflow.SessionState;
             if (null == localState)
                 localState = InitialSessionState.CreateDefault();
 
-            if (dispatcher.Modules.Count > 0)
-                localState.ImportPSModule(dispatcher.Modules.ToArray());
+            if (workflow.Modules.Count > 0)
+                localState.ImportPSModule(workflow.Modules.ToArray());
             if (Modules.Count > 0)
                 localState.ImportPSModule(Modules.ToArray());
             localState.ImportPSModulesFromPath(PSFCore.PSFCoreHost.ModuleRoot);
 
-            if (dispatcher.Functions.Count > 0)
-                foreach (string name in dispatcher.Functions.Keys)
-                    localState.Commands.Add(new SessionStateFunctionEntry(name, dispatcher.Functions[name].ToString()));
+            if (workflow.Functions.Count > 0)
+                foreach (string name in workflow.Functions.Keys)
+                    localState.Commands.Add(new SessionStateFunctionEntry(name, workflow.Functions[name].ToString()));
             if (Functions.Count > 0)
                 foreach (string name in Functions.Keys)
                     localState.Commands.Add(new SessionStateFunctionEntry(name, Functions[name].ToString()));
 
-            if (dispatcher.Variables.Count > 0)
-                foreach (string name in dispatcher.Variables.Keys)
-                    localState.Variables.Add(new SessionStateVariableEntry(name, dispatcher.Variables[name], null));
+            if (workflow.Variables.Count > 0)
+                foreach (string name in workflow.Variables.Keys)
+                    localState.Variables.Add(new SessionStateVariableEntry(name, workflow.Variables[name], null));
             if (Variables.Count > 0)
                 foreach (string name in Variables.Keys)
                     localState.Variables.Add(new SessionStateVariableEntry(name, Variables[name], null));
-            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Workflow", dispatcher, "PSF Runspace Dispatcher, used to manage the data transfer between workers and the state handling of the workload.", ScopedItemOptions.Constant));
+            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Workflow", workflow, "PSF Runspace Workflow, used to manage the data transfer between workers and the state handling of the workload.", ScopedItemOptions.Constant));
             localState.Variables.Add(new SessionStateVariableEntry("__PSF_Worker", this, "PSF Worker. Represents itself in the active runspaces.", ScopedItemOptions.Constant));
             #endregion Prepare the Initial Session State
 
@@ -379,7 +379,7 @@ namespace PSFramework.Runspace
 
             // Seal the out queue if desired, ensuring subsequent workers know not to expect further input
             if (CloseOutQueue)
-                dispatcher.CloseQueue(OutQueue);
+                workflow.CloseQueue(OutQueue);
         }
         private int _CountDone = 0;
 
@@ -397,8 +397,8 @@ namespace PSFramework.Runspace
             foreach (string name in Functions.Keys)
                 if (((PsfScriptBlock)Functions[name]).LanguageMode != PSLanguageMode.FullLanguage)
                     throw new PSSecurityException($"Cannot define function {name}: The code provided is not trusted!");
-            foreach (string name in dispatcher.Functions.Keys)
-                if (((PsfScriptBlock)dispatcher.Functions[name]).LanguageMode != PSLanguageMode.FullLanguage)
+            foreach (string name in workflow.Functions.Keys)
+                if (((PsfScriptBlock)workflow.Functions[name]).LanguageMode != PSLanguageMode.FullLanguage)
                     throw new PSSecurityException($"Cannot define function {name}: The code provided is not trusted!");
         }
     }

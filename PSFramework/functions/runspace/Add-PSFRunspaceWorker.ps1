@@ -167,7 +167,7 @@
 		$WorkflowName,
 
 		[Parameter(ValueFromPipeline = $true)]
-		[PSFramework.Runspace.RSDispatcher[]]
+		[PSFramework.Runspace.RSWorkflow[]]
 		$InputObject
 	)
 

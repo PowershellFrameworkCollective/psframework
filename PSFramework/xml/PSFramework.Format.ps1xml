@@ -573,11 +573,11 @@
 			</TableControl>
 		</View>
 
-        <!-- PSFramework.Runspace.RSDispatcher -->
+        <!-- PSFramework.Runspace.RSWorkflow -->
         <View>
-            <Name>PSFramework.Runspace.RSDispatcher</Name>
+            <Name>PSFramework.Runspace.RSWorkflow</Name>
             <ViewSelectedBy>
-                <TypeName>PSFramework.Runspace.RSDispatcher</TypeName>
+                <TypeName>PSFramework.Runspace.RSWorkflow</TypeName>
             </ViewSelectedBy>
             <TableControl>
                 <AutoSize/>

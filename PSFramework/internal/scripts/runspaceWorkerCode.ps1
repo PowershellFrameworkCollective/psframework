@@ -1,5 +1,5 @@
 ﻿[PSFramework.Runspace.RSWorker]::WorkerCode = {
-	# $__PSF_Workflow --> Workload Dispatcher provided by worker
+	# $__PSF_Workflow --> Workload Workflow provided by worker
 	# $__PSF_Worker --> Current Worker Definition
 
 	$ErrorActionPreference = 'Stop'

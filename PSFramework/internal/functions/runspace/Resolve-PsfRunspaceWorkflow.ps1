@@ -31,13 +31,13 @@
 		If no workflow can be resolved, throw a terminating exception.
 		If called from within a worker runspace, return the workflow of the worker if both $InputObject and $WorkflowName are null or empty.
 	#>
-	[OutputType([PSFramework.Runspace.RSDispatcher])]
+	[OutputType([PSFramework.Runspace.RSWorkflow])]
 	[CmdletBinding()]
 	param (
 		[string[]]
 		$Name,
 
-		[PSFramework.Runspace.RSDispatcher[]]
+		[PSFramework.Runspace.RSWorkflow[]]
 		$InputObject,
 
 		$Cmdlet,
