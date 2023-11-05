@@ -7,6 +7,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PSFramework.Runspace
@@ -111,8 +112,20 @@ namespace PSFramework.Runspace
         /// </summary>
         public void Start()
         {
+            int countFailed = 0;
             foreach (RSWorker worker in Workers.Values)
-                worker.Start();
+            {
+                try { worker.Start(); }
+                catch (Exception e)
+                {
+                    if (e.Message != "There are already runspaces running under this worker!")
+                        throw;
+                    countFailed++;
+                }
+            }
+
+            if (countFailed >= Workers.Count)
+                throw new InvalidOperationException("Failed to start Dispatcher: Is already running.");
         }
 
         /// <summary>

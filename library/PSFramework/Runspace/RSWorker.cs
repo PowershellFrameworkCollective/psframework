@@ -7,6 +7,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -236,6 +237,9 @@ namespace PSFramework.Runspace
             if (Count < 1)
                 throw new ArgumentException("Count cannot be lower than 1!", "Count");
 
+            if (runtimes.Count > 0)
+                throw new InvalidOperationException("There are already runspaces running under this worker!");
+
             AssertFunctionSafety();
 
             #region Prepare the Initial Session State
@@ -308,6 +312,8 @@ namespace PSFramework.Runspace
 				return;
             pool.Close();
             pool.Dispose();
+
+            runtimes = new List<RSPowerShellWrapper>();
         }
 
         /// <summary>
@@ -315,7 +321,7 @@ namespace PSFramework.Runspace
         /// </summary>
         public void IncrementInput()
         {
-            CountInput++;
+            Interlocked.Increment(ref CountInput);
             LastInput = DateTime.Now;
         }
         /// <summary>
@@ -323,14 +329,14 @@ namespace PSFramework.Runspace
         /// </summary>
         public void IncrementInputCompleted()
         {
-            CountInputCompleted++;
+            Interlocked.Increment(ref CountInputCompleted);
         }
         /// <summary>
         /// Increase the count of output items produced
         /// </summary>
         public void IncrementOutput()
         {
-            CountOutput++;
+            Interlocked.Increment(ref CountOutput);
             LastOutput = DateTime.Now;
         }
 
