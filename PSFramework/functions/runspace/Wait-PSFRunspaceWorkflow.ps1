@@ -57,7 +57,11 @@
 		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -ReferenceQueue Input
 
 		Wait until the "Done" queue has processed as many items as there were written to the "Input" queue.
+	
+	.LINK
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Closed')]
 	param (
 		[Parameter(Mandatory = $true, ParameterSetName = 'Closed')]

@@ -33,6 +33,7 @@
 	.LINK
 		Remove-PSFRunspaceWorkflow
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[OutputType([PSFramework.Runspace.RSWorkflow])]
 	[CmdletBinding()]
 	param (

@@ -31,6 +31,7 @@
 		If no workflow can be resolved, throw a terminating exception.
 		If called from within a worker runspace, return the workflow of the worker if both $InputObject and $WorkflowName are null or empty.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidGlobalVars", "")]
 	[OutputType([PSFramework.Runspace.RSWorkflow])]
 	[CmdletBinding()]
 	param (
@@ -62,7 +63,7 @@
 				Stop-PSFFunction -String 'Resolve-PsfRunspaceWorkflow.Error.NoInput' -EnableException $true -Cmdlet $Cmdlet -Category ObjectNotFound
 			}
 			$exception = [System.ArgumentException]::new("Must provide either name or an input object!")
-			Write-PSFMessage -Level Error -String 'Stop-PSFRunspaceWorkflow.Error.NoInput' -Exception $exception -EnableException $true -PSCmdlet $Cmdlet
+			Write-PSFMessage -Level Error -String 'Resolve-PsfRunspaceWorkflow.Error.NoInput' -Exception $exception -EnableException $true -PSCmdlet $Cmdlet
 			return
 		}
 
@@ -85,7 +86,7 @@
 				Stop-PSFFunction -String 'Resolve-PsfRunspaceWorkflow.Error.NotFound' -StringValues ($Name -join ', ') -EnableException $true -Cmdlet $Cmdlet -Category ObjectNotFound
 			}
 			$exception = [System.ArgumentException]::new("Cannot resolve Runspace Workflow: $($Name -join ', ')")
-			Write-PSFMessage -Level Error -String 'Stop-PSFRunspaceWorkflow.Error.NotFound' -Exception $exception -EnableException $true -PSCmdlet $Cmdlet
+			Write-PSFMessage -Level Error -String 'Resolve-PsfRunspaceWorkflow.Error.NotFound' -Exception $exception -EnableException $true -PSCmdlet $Cmdlet
 			return
 		}
 

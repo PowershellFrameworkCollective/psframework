@@ -31,6 +31,7 @@
 	.LINK
 		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]

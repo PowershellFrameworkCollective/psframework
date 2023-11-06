@@ -37,6 +37,7 @@
 	.LINK
 		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidGlobalVars", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Single')]
 	param (
 		[Parameter(Mandatory = $true)]
