@@ -56,5 +56,6 @@
 			try { $throttle.AddLimit($pair.Key, $pair.Value) }
 			catch { Write-PSFMessage -Level Error -String 'New-PSFThrottle.Error.InvalidLimit' -StringValues $pair.Key, $pair.Value -ErrorRecord $_ -EnableException $true -PSCmdlet $PSCmdlet }
 		}
+		$throttle
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PSFramework.Runspace
@@ -23,6 +24,12 @@ namespace PSFramework.Runspace
         public int TotalItemCount;
 
         /// <summary>
+        /// Maximum number of items in the queue.
+        /// Trying to add more items to it will hang the call until someone else dequeues an item.
+        /// </summary>
+        public int MaxItemCount;
+
+        /// <summary>
         /// Whether this queue has been closed. Closed queues silently ignore any further input.
         /// </summary>
         public bool Closed;
@@ -36,7 +43,12 @@ namespace PSFramework.Runspace
             if (Closed)
                 return;
 
-            TotalItemCount++;
+            Wait();
+
+            if (Closed)
+                return;
+
+            Interlocked.Increment(ref TotalItemCount);
             base.Enqueue(Input);
         }
 
@@ -51,7 +63,11 @@ namespace PSFramework.Runspace
 
             foreach (object item in Input)
             {
-                TotalItemCount++;
+                Wait();
+                if (Closed)
+                    return;
+
+                Interlocked.Increment(ref TotalItemCount);
                 base.Enqueue(item);
             }
         }
@@ -65,6 +81,15 @@ namespace PSFramework.Runspace
             object result = null;
             TryDequeue(out result);
             return result;
+        }
+
+        /// <summary>
+        /// Wait until enough items have been taken out of the Queue to accomodate more.
+        /// </summary>
+        private void Wait()
+        {
+            while (MaxItemCount > 0 && Count >= MaxItemCount)
+                Thread.Sleep(200);
         }
     }
 }

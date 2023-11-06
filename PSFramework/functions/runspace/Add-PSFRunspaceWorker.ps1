@@ -51,6 +51,18 @@
 		This however requires the worker to cycle often enough to catch that signal.
 		If this is impossible - for example, if the worker has one long-running piece - and we still need to be able to just kill it, set this flag.
 		This means that on stop, all worker runspaces will be killed - without doing any cleanup!
+
+	.PARAMETER MaxItems
+		The maximum number of items this worker will process.
+		All runspaces of this worker will refuse to process more items than this number in total shared among them.
+
+	.PARAMETER CloseOutQueue
+		When this worker stops - for example due to reaching its limit of items produced, or its source queue being closed - it will, after finishing its processing, close the associated out queue.
+		This allows subsequent workers to know, whether to expect any further input.
+
+	.PARAMETER QueuesToClose
+		When this worker stops, close the queues listed.
+		This works independent of CloseOutQueue - both con ber used together or separately.
 	
 	.PARAMETER Throttle
 		A throttle object, as returned by New-PSFThrottle.
@@ -129,6 +141,7 @@
 		$OutQueue,
 
 		[Parameter(Mandatory = $true)]
+		[Alias('Process')]
 		[ScriptBlock]
 		$ScriptBlock,
 
@@ -143,6 +156,15 @@
 
 		[switch]
 		$KillToStop,
+
+		[int]
+		$MaxItems,
+
+		[switch]
+		$CloseOutQueue,
+
+		[string[]]
+		$QueuesToClose,
 
 		[PSFramework.Utility.Throttle]
 		$Throttle,
@@ -200,6 +222,9 @@
 
 			if ($Begin) { $worker.Begin = $Begin }
 			if ($End) { $worker.End = $End }
+			if ($MaxItems) { $worker.MaxItems = $MaxItems }
+			if ($CloseOutQueue) { $worker.CloseOutQueue = $true }
+			if ($QueuesToClose) { $worker.QueuesToClose = $QueuesToClose }
 
 			if ($SessionState) { $worker.SessionState = $SessionState }
 			foreach ($module in $Modules) { $worker.Modules.Add($module) }

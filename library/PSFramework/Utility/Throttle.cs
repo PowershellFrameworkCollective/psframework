@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PSFramework.Parameter;
 
@@ -99,6 +100,24 @@ namespace PSFramework.Utility
         public Throttle()
         {
 
+        }
+
+        /// <summary>
+        /// Create a throttle object with a string DSL
+        /// </summary>
+        /// <param name="Setting">The setting string defining, how the throttling limits should be. Expects a whitespace-delimited set of COUNT/INTERVAL notations.</param>
+        /// <exception cref="ArgumentException">Bad syntax gets punished</exception>
+        public Throttle(string Setting)
+        {
+            foreach (string set in Setting.Split(' '))
+            {
+                if (!Regex.IsMatch(set, "^\\w+/\\w+"))
+                    throw new ArgumentException($"Invalid throttle string: {Setting}", Setting);
+
+                string[] parts = set.Split('/');
+                try { _Throttles[Guid.NewGuid()] = new ThrottleSet(Int32.Parse(parts[0]), new TimeSpanParameter(parts[1])); }
+                catch { throw new ArgumentException($"Invalid throttle string: {Setting}", Setting); }
+            }
         }
 
         /// <summary>

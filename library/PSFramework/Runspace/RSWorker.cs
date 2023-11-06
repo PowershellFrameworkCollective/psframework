@@ -194,11 +194,15 @@ namespace PSFramework.Runspace
         public bool CloseOutQueue;
 
         /// <summary>
+        /// Additional Queues to close when done
+        /// </summary>
+        public string[] QueuesToClose;
+
+        /// <summary>
         /// The workflow owning the worker
         /// </summary>
         public RSWorkflow Workflow => workflow;
 
-        private RunspacePool pool;
         private RSWorkflow workflow;
         private List<RSPowerShellWrapper> runtimes = new List<RSPowerShellWrapper>();
 
@@ -278,15 +282,9 @@ namespace PSFramework.Runspace
             State = RSState.Starting;
 
             #region Launch Runspaces
-            pool = RunspaceFactory.CreateRunspacePool(localState);
-            pool.SetMinRunspaces(1);
-            pool.SetMaxRunspaces(Count);
-            pool.Open();
-
             for (int i = 0; i < Count; i++)
             {
-                PowerShell powershell = PowerShell.Create();
-                powershell.RunspacePool = pool;
+                PowerShell powershell = PowerShell.Create(localState);
                 powershell.AddScript(WorkerCode.ToString());
                 runtimes.Add(new RSPowerShellWrapper(powershell, powershell.BeginInvoke()));
             }
@@ -308,22 +306,10 @@ namespace PSFramework.Runspace
                 runtime.Pipe.Dispose();
             }
             State = RSState.Stopped;
-			if (null == pool)
-				return;
-            pool.Close();
-            pool.Dispose();
 
             runtimes = new List<RSPowerShellWrapper>();
         }
 
-        /// <summary>
-        /// Increase the count of input items started
-        /// </summary>
-        public void IncrementInput()
-        {
-            Interlocked.Increment(ref CountInput);
-            LastInput = DateTime.Now;
-        }
         /// <summary>
         /// Increase the count of input items completed
         /// </summary>
@@ -362,6 +348,30 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
+        /// Main method to pick up the next item in the in queue.
+        /// </summary>
+        /// <param name="Result">The next item in the queue</param>
+        /// <returns>Whether retrieving the next item was successful.</returns>
+        public bool GetNext(out object Result)
+        {
+            bool success = false;
+            object result = null;
+
+            lock (this)
+            {
+                if (MaxItems == 0 || CountInput < MaxItems)
+                {
+                    success = workflow.Queues[InQueue].TryDequeue(out result);
+                    if (success)
+                        CountInput++;
+                }
+            }
+
+            Result = result;
+            return success;
+        }
+
+        /// <summary>
         /// The tool for each runspace of the worker to signal it is done.
         /// Any concluding post-processing is done here, once the last runspace calls it.
         /// </summary>
@@ -370,7 +380,7 @@ namespace PSFramework.Runspace
             bool terminate = false;
             lock (this)
             {
-                _CountDone++;
+                Interlocked.Increment(ref _CountDone);
                 if (_CountDone < Count)
                     terminate = true;
             }
@@ -380,6 +390,9 @@ namespace PSFramework.Runspace
             // Seal the out queue if desired, ensuring subsequent workers know not to expect further input
             if (CloseOutQueue)
                 workflow.CloseQueue(OutQueue);
+            if (null != QueuesToClose)
+                foreach (string queue in QueuesToClose)
+                    workflow.CloseQueue(queue);
         }
         private int _CountDone = 0;
 

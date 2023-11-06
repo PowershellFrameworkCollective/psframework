@@ -6348,6 +6348,12 @@
             Total number of items that were ever enqueued into this queue
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSQueue.MaxItemCount">
+            <summary>
+            Maximum number of items in the queue.
+            Trying to add more items to it will hang the call until someone else dequeues an item.
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RSQueue.Closed">
             <summary>
             Whether this queue has been closed. Closed queues silently ignore any further input.
@@ -6370,6 +6376,11 @@
             Return an item from the queue, or null if empty.
             </summary>
             <returns>The oldest item in the queue or null if empty.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Wait">
+            <summary>
+            Wait until enough items have been taken out of the Queue to accomodate more.
+            </summary>
         </member>
         <member name="T:PSFramework.Runspace.RSQueueManager">
             <summary>
@@ -6726,6 +6737,11 @@
             Whether the last worker runspace finishing should close the out-queue of this worker
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorker.QueuesToClose">
+            <summary>
+            Additional Queues to close when done
+            </summary>
+        </member>
         <member name="P:PSFramework.Runspace.RSWorker.Workflow">
             <summary>
             The workflow owning the worker
@@ -6754,11 +6770,6 @@
             Signal all workers to stop and gracefully end them.
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RSWorker.IncrementInput">
-            <summary>
-            Increase the count of input items started
-            </summary>
-        </member>
         <member name="M:PSFramework.Runspace.RSWorker.IncrementInputCompleted">
             <summary>
             Increase the count of input items completed
@@ -6780,6 +6791,13 @@
             Retrieve the end scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
             </summary>
             <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetNext(System.Object@)">
+            <summary>
+            Main method to pick up the next item in the in queue.
+            </summary>
+            <param name="Result">The next item in the queue</param>
+            <returns>Whether retrieving the next item was successful.</returns>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.SignalEnd">
             <summary>
@@ -9228,6 +9246,13 @@
             <summary>
             Create a new throttle object
             </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.#ctor(System.String)">
+            <summary>
+            Create a throttle object with a string DSL
+            </summary>
+            <param name="Setting">The setting string defining, how the throttling limits should be. Expects a whitespace-delimited set of COUNT/INTERVAL notations.</param>
+            <exception cref="T:System.ArgumentException">Bad syntax gets punished</exception>
         </member>
         <member name="M:PSFramework.Utility.Throttle.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
             <summary>

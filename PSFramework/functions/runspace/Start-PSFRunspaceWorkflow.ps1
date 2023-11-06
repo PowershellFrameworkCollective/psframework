@@ -14,6 +14,9 @@
 	
 	.PARAMETER InputObject
 		Runspace Workflow object to launch.
+
+	.PARAMETER PassThru
+		Return the runspace workflow just started.
 	
 	.EXAMPLE
 		PS C:\> Start-PSFRunspaceWorkflow -Name MailboxAnalysis
@@ -36,13 +39,17 @@
 
 		[Parameter(ValueFromPipeline = $true)]
 		[PSFramework.Runspace.RSWorkflow[]]
-		$InputObject
+		$InputObject,
+
+		[switch]
+		$PassThru
 	)
 	process {
 		$resolvedWorkflows = Resolve-PsfRunspaceWorkflow -Name $Name -InputObject $InputObject -Cmdlet $PSCmdlet
 
 		foreach ($resolvedWorkflow in $resolvedWorkflows) {
 			$resolvedWorkflow.Start()
+			if ($PassThru) { $resolvedWorkflow }
 		}
 	}
 }

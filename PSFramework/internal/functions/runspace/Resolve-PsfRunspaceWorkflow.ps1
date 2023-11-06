@@ -34,9 +34,13 @@
 	[OutputType([PSFramework.Runspace.RSWorkflow])]
 	[CmdletBinding()]
 	param (
+		[AllowEmptyCollection()]
+		[AllowNull()]
 		[string[]]
 		$Name,
 
+		[AllowEmptyCollection()]
+		[AllowNull()]
 		[PSFramework.Runspace.RSWorkflow[]]
 		$InputObject,
 

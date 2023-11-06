@@ -234,7 +234,10 @@ namespace PSFramework.Runspace
         /// <returns></returns>
         public object this[object key]
         {
-            get { return _Queues[(string)key]; }
+            get {
+                EnsureKey((string)key);
+                return _Queues[(string)key];
+            }
             set { _Queues[(string)key] = (RSQueue)value; }
         }
 
@@ -245,7 +248,10 @@ namespace PSFramework.Runspace
         /// <returns></returns>
         public RSQueue this[string key]
         {
-            get { return _Queues[key]; }
+            get {
+                EnsureKey(key);
+                return _Queues[key];
+            }
             set { _Queues[key] = value; }
         }
     }

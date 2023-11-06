@@ -34,20 +34,19 @@
 	$validStates = 'Starting', 'Running'
 	while ($validStates -contains $__PSF_Worker.State) {
 		# Inqueue is closed and all items processed?
-		if ($__PSF_Worker.Done) { break }
-		if ($__PSF_Worker.MaxItems -and $__PSF_Worker.MaxItems -ge $__PSF_Worker.CountInputCompleted) { break }
+		if ($__PSF_Worker.IsDone) { break }
+		if ($__PSF_Worker.MaxItems -and $__PSF_Worker.MaxItems -le $__PSF_Worker.CountInputCompleted) { break }
 
 		if ($__PSF_Worker.Throttle) {
 			$__PSF_Worker.Throttle.GetSlot()
 		}
 
 		$inputData = $null
-		$success = $__PSF_Workflow.Queues.$($__PSF_Worker.InQueue).TryDequeue([ref]$inputData)
+		$success = $__PSF_Worker.GetNext([ref]$inputData)
 		if (-not $success) {
 			Start-Sleep -Milliseconds 250
 			continue
 		}
-		$__PSF_Worker.IncrementInput()
 
 		try {
 			$results = & $__PSF_ScriptBlock $inputData

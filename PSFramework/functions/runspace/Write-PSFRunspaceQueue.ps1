@@ -43,7 +43,7 @@
 		[string]
 		$Name,
 
-		[Parameter(Mandatory = $true, ParameterSetName = 'Single')]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Single')]
 		[AllowNull()]
 		$Value,
 

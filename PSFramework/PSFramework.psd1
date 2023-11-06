@@ -163,6 +163,7 @@
 		'Unregister-PSFConfig'
 		'Unregister-PSFMessageColorTransform'
 		'Wait-PSFMessage'
+		'Wait-PSFRunspaceWorkflow'
 		'Write-PSFHostColor'
 		'Write-PSFMessageProxy'
 		'Write-PSFRunspaceQueue'
