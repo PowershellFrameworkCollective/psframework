@@ -1,6 +1,6 @@
 ﻿@{
-	'Add-PSFRunspaceWorker.Error.UntrustedFunctionCode'      = 'Failed to load function {0}: String-based code is not trusted in a secured console. Provide its code as a scriptblock, rather than a string to enable code trust verification.' # $pair.Key
-	'Add-PSFRunspaceWorker.Error.UntrustedTextFunction'      = 'Failed to load function {0}: The provided function code is not trusted (in Constrained language Mode) and cannot be imported. Ensure the code building the scriptblock is trusted to create a non-constrained scriptblock.' # $pair.Key
+	'Add-PSFRunspaceWorker.Error.UntrustedFunctionCode'      = 'Failed to load function {0}: The provided function code is not trusted (in Constrained language Mode) and cannot be imported. Ensure the code building the scriptblock is trusted to create a non-constrained scriptblock.' # $pair.Key
+	'Add-PSFRunspaceWorker.Error.UntrustedTextFunction'      = 'Failed to load function {0}: String-based code is not trusted in a secured console. Provide its code as a scriptblock, rather than a string to enable code trust verification.' # $pair.Key
 
 	'New-PSFRunspaceWorkflow.Error.ExistsAlready'            = 'Failed to create workflow {0}: It already exists! Use "-Force" to overwrite the existing Runspace Workflow, interrupting all currently ongoing processing.' # $Name
 

@@ -121,6 +121,7 @@
 		'Register-PSFTempProvider'
 		'Register-PSFTeppArgumentCompleter'
 		'Register-PSFTeppScriptblock'
+		'Register-PSFTypeAssemblyMapping'
 		'Register-PSFTypeSerializationData'
 		'Remove-PSFAlias'
 		'Remove-PSFConfig'

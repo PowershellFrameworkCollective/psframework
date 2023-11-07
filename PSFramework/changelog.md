@@ -2,6 +2,8 @@
 
 ## ???
 
+- New: Component: Runspace Workflows - architect parallelized workflows without having to deal with the details of runspaces.
+- New: Register-PSFTypeAssemblyMapping - allows modifying the assembly resolution when deserializing types.
 - New: Register-PSFSupportDataProvider - allows extending the data included in New-PSFSupportPackage.
 - Upd: Select-PSFConfig - added `-Force` parameter to also select hidden settings when used.
 - Upd: New-PSFSupportPackage - added support for custom extension logic provided by Register-PSFSupportDataProvider
