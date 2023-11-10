@@ -21,6 +21,7 @@
 	#>
 	[CmdletBinding()]
 	param (
+		[PsfArgumentCompleter('PSFramework-runspace-workflow-name')]
 		[string]
 		$Name = '*'
 	)

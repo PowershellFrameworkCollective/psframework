@@ -185,6 +185,7 @@
 		$SessionState,
 
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+		[PsfArgumentCompleter('PSFramework-runspace-workflow-name')]
 		[string[]]
 		$WorkflowName,
 

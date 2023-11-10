@@ -12,7 +12,7 @@
 
 	# Generally, Constants are to be avoided. To guarantee no childcode can override the code to be executed, this is made constant.
 	Set-Variable -Name __PSF_Begin -Value $__PSF_Worker.GetBegin() -Option Constant
-	Set-Variable -Name __PSF_ScriptBlock -Value $__PSF_Worker.ScriptBlock.ToGlobal() -Option Constant
+	Set-Variable -Name __PSF_ScriptBlock -Value $__PSF_Worker.ScriptBlock -Option Constant
 	Set-Variable -Name __PSF_End -Value $__PSF_Worker.GetEnd() -Option Constant
 
 	# Consume per-Runspace Values as variables
@@ -49,7 +49,7 @@
 		}
 
 		try {
-			$results = & $__PSF_ScriptBlock $inputData
+			$results = $__PSF_ScriptBlock.InvokeGlobal($inputData)
 			foreach ($result in $results) {
 				$__PSF_Workflow.Queues.$($__PSF_Worker.OutQueue).Enqueue($result)
 				$__PSF_Worker.IncrementOutput()

@@ -14,8 +14,7 @@
 			$Value
 		}
 		$workflow | Add-PSFRunspaceWorker -Name Node2 -InQueue Q2 -OutQueue Q3 -Count 1 -ScriptBlock {
-			param ($Value)
-			$Value
+			$_
 		}
 		$workflow | Add-PSFRunspaceWorker -Name Node3 -InQueue Q3 -OutQueue Q4 -Count 1 -ScriptBlock {
 			param ($Value)
