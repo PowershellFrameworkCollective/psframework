@@ -573,6 +573,108 @@
 			</TableControl>
 		</View>
 
+        <!-- PSFramework.Runspace.RSWorkflow -->
+        <View>
+            <Name>PSFramework.Runspace.RSWorkflow</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Runspace.RSWorkflow</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader>
+                        <Label>Workers</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Queues</Label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>WorkerCount</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.WorkerNames -join ', ' 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.QueueNames -join ", " 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
+        <!-- PSFramework.Runspace.RSWorker -->
+        <View>
+            <Name>PSFramework.Runspace.RSWorker</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Runspace.RSWorker</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>State</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Count</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>InQueue</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>OutQueue</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Completed</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CountInput</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>CountOutput</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ErrorCount</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>LastInput</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
 		<!-- PSFramework.TaskEngine.PsfTask -->
 		<View>
 			<Name>PSFramework.TaskEngine.PsfTask</Name>

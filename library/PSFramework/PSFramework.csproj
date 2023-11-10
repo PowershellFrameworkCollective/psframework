@@ -167,6 +167,13 @@
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="Extension\ScriptBlockExt.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
+    <Compile Include="Runspace\RSWorkflow.cs" />
+    <Compile Include="Runspace\RSPowerShellWrapper.cs" />
+    <Compile Include="Runspace\RSQueue.cs" />
+    <Compile Include="Runspace\RSQueueManager.cs" />
+    <Compile Include="Runspace\RSState.cs" />
+    <Compile Include="Runspace\RSWorker.cs" />
+    <Compile Include="Runspace\RSWorkerError.cs" />
     <Compile Include="Runspace\RunspaceBoundValue.cs" />
     <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
@@ -210,6 +217,9 @@
     <Compile Include="Utility\SizeStyle.cs" />
     <Compile Include="Utility\SupportData.cs" />
     <Compile Include="Utility\Throttle.cs" />
+    <Compile Include="Utility\ThrottleBase.cs" />
+    <Compile Include="Utility\ThrottleSet.cs" />
+    <Compile Include="Utility\ThrottleTime.cs" />
     <Compile Include="Utility\TimeRange.cs" />
     <Compile Include="Utility\TimeRangeContainer.cs" />
     <Compile Include="Utility\TypeTransformationAttribute.cs" />
