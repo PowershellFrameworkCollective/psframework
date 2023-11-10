@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.10.318 (2023-11-10)
 
 - New: Component: Runspace Workflows - architect parallelized workflows without having to deal with the details of runspaces.
 - New: Register-PSFTypeAssemblyMapping - allows modifying the assembly resolution when deserializing types.
