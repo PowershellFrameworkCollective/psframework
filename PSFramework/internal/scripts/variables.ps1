@@ -34,3 +34,9 @@ $script:filterContainer = [PSFramework.Filter.FilterContainer]::Filters
 
 # Container for temp items
 $script:tempItems = [PSFramework.Temp.TempItemContainer]::new()
+
+# Container for extension Data included by the PSF Support Package
+$script:supportDataProviders = @{ }
+
+# Container for runspace workflows
+$script:runspaceWorkflows = @{ }

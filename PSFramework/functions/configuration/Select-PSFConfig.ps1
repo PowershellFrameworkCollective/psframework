@@ -54,6 +54,10 @@
 		- "LoggingProvider" would be depth 0
 		- "LogFile" would be depth 1
 		- ...
+
+	.PARAMETER Force
+		Also select hidden configuration items.
+		By default, only non-hidden settings are selected.
 	
 	.EXAMPLE
 		PS C:\> Select-PSFConfig 'LoggingProvider.LogFile.*'
@@ -68,7 +72,10 @@
 		$FullName,
 		
 		[int[]]
-		$Depth
+		$Depth,
+
+		[switch]
+		$Force
 	)
 	
 	begin
@@ -110,7 +117,7 @@
 	}
 	process
 	{
-		$configItems = Get-PSFConfig -FullName $FullName
+		$configItems = Get-PSFConfig -FullName $FullName -Force:$Force
 		Group-Config -Config $configItems -Depth 0 | ForEach-Object {
 			if (-not $Depth) { return $_ }
 			if ($_._Depth -in $Depth) { $_ }

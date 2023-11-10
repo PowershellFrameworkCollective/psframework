@@ -248,6 +248,14 @@
 				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.DbaTools.Errors'
 				$hash["DbatoolsErrors"] = Get-DbatoolsLog -Errors
 			}
+
+			foreach ($pair in $script:supportDataProviders.GetEnumerator()) {
+				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Extension.Collecting' -StringValues $pair.Key
+				try { $hash["_$($pair.Key)"] = & $pair.Value }
+				catch {
+					Write-PSFMessage -Level Warning -String 'New-PSFSupportPackage.Extension.Collecting.Failed' -StringValues $pair.Key -ErrorRecord $_
+				}
+			}
 		}
 		
 		$data = [pscustomobject]$hash

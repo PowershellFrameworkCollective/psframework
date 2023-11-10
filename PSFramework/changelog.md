@@ -1,5 +1,16 @@
 ﻿# CHANGELOG
 
+## 1.10.318 (2023-11-10)
+
+- New: Component: Runspace Workflows - architect parallelized workflows without having to deal with the details of runspaces.
+- New: Register-PSFTypeAssemblyMapping - allows modifying the assembly resolution when deserializing types.
+- New: Register-PSFSupportDataProvider - allows extending the data included in New-PSFSupportPackage.
+- Upd: Select-PSFConfig - added `-Force` parameter to also select hidden settings when used.
+- Upd: New-PSFSupportPackage - added support for custom extension logic provided by Register-PSFSupportDataProvider
+- Upd: New-PSFThrottle - added ability to have multiple concurrent throttling limits, or to pause execution until a given time.
+- Fix: Parameter Class: PsfPath*Lax - duplicates bad paths in the list of failed paths.
+- Fix: Parameter Class: PsfPath*Lax - throws an error for a bad non-wildcard path.
+
 ## 1.9.310 (2023-09-11)
 
 - Fix: Register-PSFConfig - fails to register piped configuration settings
@@ -8,7 +19,7 @@
 ## 1.9.308 (2023-09-07)
 
 - New: Parameter Class: PsfPath - Interprets and resolves input as file or folder paths
-- New: Parameter Class: PsfPathLex - Interprets and resolves input as file or folder paths, throws no errors
+- New: Parameter Class: PsfPathLax - Interprets and resolves input as file or folder paths, throws no errors
 - New: Parameter Class: PsfNewFile - Resolves the input into the path to a file, so long as at least its parent folder exists
 - New: Parameter Class: PsfFile - Interprets and resolves input as file paths
 - New: Parameter Class: PsfFileLax - Interprets and resolves input as file paths, throws no errors

@@ -60,16 +60,38 @@ namespace PSFramework.Parameter
             Add(Path);
         }
 
+        /// <summary>
+        /// Add a failed entry to the list of failed entries.
+        /// Silently ignores calues already listed
+        /// </summary>
+        /// <param name="Path"></param>
+        internal void AddFailed(object Path)
+        {
+            if (FailedInput.Contains(Path))
+                return;
+            FailedInput.Add(Path);
+        }
+
         internal List<string> ResolveFileSystemPath(string Path, bool IncludeFile, bool IncludeDirectory, bool Terminate, bool Resolve = true)
         {
             List<string> paths = new List<string>();
 
             SessionState state = new SessionState();
             IEnumerable<string> resolved = new Collection<string>();
-            if (Resolve)
-                resolved = state.Path.GetResolvedPSPathFromPSPath(Path).Where(o => o.Provider.Name == "FileSystem").Select(o => o.ProviderPath);
-            else
+            if (!Resolve)
                 ((Collection<string>)resolved).Add(state.Path.GetUnresolvedProviderPathFromPSPath(Path));
+            else
+            {
+                try { resolved = state.Path.GetResolvedPSPathFromPSPath(Path).Where(o => o.Provider.Name == "FileSystem").Select(o => o.ProviderPath); }
+                catch
+                {
+                    if (Terminate)
+                        throw new ArgumentException($"Invalid input: Path does not exist: {Path}");
+                    else
+                        AddFailed(Path);
+                    return paths;
+                }
+            }
             
             if (IncludeFile)
             {
@@ -82,7 +104,7 @@ namespace PSFramework.Parameter
                     if (Terminate)
                         throw new ArgumentException($"Invalid input: Did not resolve into files: {Path}");
                     else
-                        FailedInput.Add(Path);
+                        AddFailed(Path);
                 }
             }
             if (IncludeDirectory)
@@ -96,14 +118,14 @@ namespace PSFramework.Parameter
                     if (Terminate)
                         throw new ArgumentException($"Invalid input: Did not resolve into directories: {Path}");
                     else
-                        FailedInput.Add(Path);
+                        AddFailed(Path);
                 }
             }
             if (paths.Count == 0)
             {
                 if (Terminate)
                     throw new ArgumentException($"Invalid input: Did not resolve into files or directories: {Path}");
-                FailedInput.Add(Path);
+                AddFailed(Path);
                 return paths;
             }
 
@@ -155,9 +177,9 @@ namespace PSFramework.Parameter
             foreach (object item in b)
                 newObject.AddEx((string)item);
             foreach (object error in a.FailedInput)
-                newObject.FailedInput.Add(error);
+                newObject.AddFailed(error);
             foreach (object error in b.FailedInput)
-                newObject.FailedInput.Add(error);
+                newObject.AddFailed(error);
 
             return newObject;
         }

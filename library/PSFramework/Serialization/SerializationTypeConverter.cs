@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Management.Automation;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 
 namespace PSFramework.Serialization
 {
@@ -129,6 +132,7 @@ namespace PSFramework.Serialization
                 {
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
                     obj = binaryFormatter.Deserialize(memoryStream);
+                    PSFCore.PSFCoreHost.WriteDebug("Serializer.DeserializeObject.Obj", obj);
                     IDeserializationCallback deserializationCallback = obj as IDeserializationCallback;
                     if (deserializationCallback != null)
                     {
@@ -150,16 +154,43 @@ namespace PSFramework.Serialization
         {
             AppDomain.CurrentDomain.AssemblyResolve += SerializationTypeConverter.AssemblyHandler;
         }
-        private static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            PSFCore.PSFCoreHost.WriteDebug("Serializer.AssemblyResolve.Sender", sender);
+            PSFCore.PSFCoreHost.WriteDebug("Serializer.AssemblyResolve.Args", args);
+
+            // 1) Match directly against existing assembly
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
-            {
                 if (assemblies[i].FullName == args.Name)
-                {
                     return assemblies[i];
+
+            // 2) Match by short-name
+            string shortName = args.Name.Split(',')[0];
+            if (AssemblyShortnameMapping.Count > 0 && AssemblyShortnameMapping[shortName])
+                for (int i = 0; i < assemblies.Length; i++)
+                    if (String.Equals(assemblies[i].FullName.Split(',')[0],shortName, StringComparison.InvariantCultureIgnoreCase))
+                        return assemblies[i];
+
+            if (AssemblyMapping.Count == 0)
+                return null;
+
+            // 3) Match directly against registered assembly
+            foreach (string key in AssemblyMapping.Keys)
+                if (key == args.Name)
+                    return AssemblyMapping[key];
+
+            // 4) Match by pattern against registered assembly
+            foreach (string key in AssemblyMapping.Keys)
+            {
+                try
+                {
+                    if (Regex.IsMatch(args.Name, key, RegexOptions.IgnoreCase))
+                        return AssemblyMapping[key];
                 }
+                catch { }
             }
+
             return null;
         }
 
@@ -230,5 +261,8 @@ namespace PSFramework.Serialization
             }
             return result;
         }
+    
+        public static readonly ConcurrentDictionary<string, Assembly> AssemblyMapping = new ConcurrentDictionary<string, Assembly>(StringComparer.InvariantCultureIgnoreCase);
+        public static readonly ConcurrentDictionary<string, bool> AssemblyShortnameMapping = new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
     }
 }
