@@ -91,5 +91,17 @@ namespace PSFramework.Runspace
             while (MaxItemCount > 0 && Count >= MaxItemCount)
                 Thread.Sleep(200);
         }
+
+        /// <summary>
+        /// Remove all content in the queue
+        /// </summary>
+        public void Clear()
+        {
+            lock (this)
+            {
+                while (Count > 0)
+                    Dequeue();
+            }
+        }
     }
 }

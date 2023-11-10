@@ -6382,6 +6382,11 @@
             Wait until enough items have been taken out of the Queue to accomodate more.
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Clear">
+            <summary>
+            Remove all content in the queue
+            </summary>
+        </member>
         <member name="T:PSFramework.Runspace.RSQueueManager">
             <summary>
             Manages runspace queues. Dynamically creates the queues on demand.
