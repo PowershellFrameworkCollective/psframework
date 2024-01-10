@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## Unreleased
+
+- New: Configuration Validation: guid - ensures only legal guids can be added
+
 ## 1.10.318 (2023-11-10)
 
 - New: Component: Runspace Workflows - architect parallelized workflows without having to deal with the details of runspaces.
