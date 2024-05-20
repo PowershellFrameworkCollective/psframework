@@ -1,4 +1,7 @@
 ﻿[PSFramework.Runspace.RSWorker]::WorkerCode = {
+	param (
+		$__PSF_WorkerID
+	)
 	# $__PSF_Workflow --> Workload Workflow provided by worker
 	# $__PSF_Worker --> Current Worker Definition
 
@@ -8,6 +11,13 @@
 		$__PSF_Worker.State = 'Failed'
 		$__PSF_Worker.SignalEnd()
 		throw $_
+	}
+
+	try {
+		[runspace]::DefaultRunspace.Name = 'PSF-{0}-{1}-{2}' -f $__PSF_Workflow.Name, $__PSF_Worker.Name, $__PSF_WorkerID
+	}
+	catch {
+		# No action - name is desirable, but cosmetic
 	}
 
 	# Generally, Constants are to be avoided. To guarantee no childcode can override the code to be executed, this is made constant.
@@ -59,7 +69,7 @@
 		catch {
 			$__PSF_Worker.IncrementInputCompleted()
 			$__PSF_Worker.ErrorCount++
-			$__PSF_Worker.LastError = $_
+			$__PSF_Worker.AddError($_, $inputData)
 		}
 	}
 

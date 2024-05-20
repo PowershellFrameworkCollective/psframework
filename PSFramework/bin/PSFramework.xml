@@ -6359,6 +6359,11 @@
             Whether this queue has been closed. Closed queues silently ignore any further input.
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSQueue.LastUpdate">
+            <summary>
+            When was the last item added to the queue?
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSQueue.Enqueue(System.Object)">
             <summary>
             Add a new item to the queue
@@ -6816,6 +6821,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PSFramework.Runspace.RSWorker.AddError(System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Add an error with a target to the errors queue
+            </summary>
+            <param name="Error">The error that happened</param>
+            <param name="Target">The target that was being processed as the error happened</param>
+        </member>
         <member name="T:PSFramework.Runspace.RSWorkerError">
             <summary>
             Something went wrong.
@@ -6841,12 +6853,25 @@
             On what runspace did it fail
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.TargetObject">
+            <summary>
+            What was the current item processing failed for
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord)">
             <summary>
             Create a new error object for tracking purposes.
             </summary>
             <param name="Worker">The worker that failed</param>
             <param name="Error">The error that happened</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+            <param name="TargetObject">The current item where processing failed</param>
         </member>
         <member name="M:PSFramework.Runspace.RSWorkerError.ToString">
             <summary>

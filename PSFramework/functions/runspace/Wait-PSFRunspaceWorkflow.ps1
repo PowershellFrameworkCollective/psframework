@@ -28,6 +28,9 @@
 		When comparing the result queue with a reference queue, multiply the number of items in the reference queue by this value.
 		Use when the number of output items, based from the original input, scales by a constant multiplier.
 		Defaults to 1.
+
+	.PARAMETER QueueTimeout
+		Wait based on how long ago the last item was added to the specified queue.
 	
 	.PARAMETER PassThru
 		Pass through the workflow object waiting for.
@@ -64,6 +67,7 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Closed')]
 	param (
+		[Parameter(Mandatory = $true, ParameterSetName = 'QueueTimeout')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'Closed')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'Count')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'Reference')]
@@ -95,6 +99,10 @@
 		[Parameter(ParameterSetName = 'Reference')]
 		[int]
 		$ReferenceMultiplier = 1,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'QueueTimeout')]
+		[PSFramework.Parameter.TimeSpanParameter]
+		$QueueTimeout,
 
 		[switch]
 		$PassThru,
@@ -161,6 +169,14 @@
 				}
 				'WorkerReference' {
 					while ($resolvedWorkflow.Workers.$WorkerName.CountInputCompleted -lt ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)) {
+						if ($limit -lt (Get-Date)) {
+							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
+						}
+						Start-Sleep -Milliseconds 200
+					}
+				}
+				'QueueTimeout' {
+					while ($resolvedWorkflow.Queues.$Queue.LastUpdate -gt (Get-Date).AddTicks(-1 * $QueueTimeout.Value.Ticks)) {
 						if ($limit -lt (Get-Date)) {
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}

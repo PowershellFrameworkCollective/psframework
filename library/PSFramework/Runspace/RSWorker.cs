@@ -285,7 +285,7 @@ namespace PSFramework.Runspace
             for (int i = 0; i < Count; i++)
             {
                 PowerShell powershell = PowerShell.Create(localState);
-                powershell.AddScript(WorkerCode.ToString());
+                powershell.AddScript(WorkerCode.ToString()).AddArgument(i);
                 runtimes.Add(new RSPowerShellWrapper(powershell, powershell.BeginInvoke()));
             }
             #endregion Launch Runspaces
@@ -414,5 +414,15 @@ namespace PSFramework.Runspace
                 if (((PsfScriptBlock)workflow.Functions[name]).LanguageMode != PSLanguageMode.FullLanguage)
                     throw new PSSecurityException($"Cannot define function {name}: The code provided is not trusted!");
         }
+
+		/// <summary>
+		/// Add an error with a target to the errors queue
+		/// </summary>
+		/// <param name="Error">The error that happened</param>
+		/// <param name="Target">The target that was being processed as the error happened</param>
+		public void AddError(ErrorRecord Error, object Target)
+		{
+			Errors.Enqueue(new RSWorkerError(this, Error, Target));
+		}
     }
 }

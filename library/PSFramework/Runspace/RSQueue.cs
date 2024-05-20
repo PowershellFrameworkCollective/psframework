@@ -34,6 +34,11 @@ namespace PSFramework.Runspace
         /// </summary>
         public bool Closed;
 
+		/// <summary>
+        /// When was the last item added to the queue?
+        /// </summary>
+		public DateTime LastUpdate;
+
         /// <summary>
         /// Add a new item to the queue
         /// </summary>
@@ -50,6 +55,7 @@ namespace PSFramework.Runspace
 
             Interlocked.Increment(ref TotalItemCount);
             base.Enqueue(Input);
+			LastUpdate = DateTime.Now;
         }
 
         /// <summary>
