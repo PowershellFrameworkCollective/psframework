@@ -13,6 +13,7 @@ $TypeAliasTable = @{
 	PsfErrorRecord          = 'PSFramework.Meta.PsfErrorRecord'
 	PsfFile                 = 'PSFramework.Parameter.PathFileParameter'
 	PsfFileLax              = 'PSFramework.Parameter.PathFileLaxParameter'
+	PsfHashtable            = 'PSFramework.Utility.PsfHashtable'
 	PsfLiteralPath          = 'PSFramework.Parameter.PathLiteralParameter'
 	PsfLiteralPathLax       = 'PSFramework.Parameter.PathLiteralLaxParameter'
 	PsfNewFile              = 'PSFramework.Parameter.PathNewFileParameter'

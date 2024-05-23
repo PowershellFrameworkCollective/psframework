@@ -8552,6 +8552,47 @@
             <param name="InnerException">An inner exception to pass through</param>
             <param name="StringValues">Any values to format into the message</param>
         </member>
+        <member name="T:PSFramework.Utility.PsfHashtable">
+            <summary>
+            Extend default hashtables to include a default value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.PsfHashtable.defaultValue">
+            <summary>
+            The default value when retrieving values for keys that do not exist
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.PsfHashtable.#ctor">
+            <summary>
+            Creates a new, empty psfhashtable
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.PsfHashtable.#ctor(System.Collections.Hashtable)">
+            <summary>
+            Creates a new PsfHashtable based on an existing hashtable
+            </summary>
+            <param name="Original"></param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfHashtable.SetDefaultValue(System.Object)">
+            <summary>
+            Set the default value provided, when reading for a key that does not yet exist.
+            </summary>
+            <param name="Value">The default value when accessing this PsfHashtable's values</param>
+        </member>
+        <member name="M:PSFramework.Utility.PsfHashtable.Clone">
+            <summary>
+            Create a copy of the current PsfHashtable, including its default value. The default value will be the same instance of an object.
+            </summary>
+            <returns>A copy of the current PsfHashtable.</returns>
+        </member>
+        <member name="P:PSFramework.Utility.PsfHashtable.Item(System.Object)">
+            <summary>
+            The overriden read/write accessor for entries in this extended hashtable.
+            Reads will return the default value when the key does not exist.
+            </summary>
+            <param name="key">The key of the value to read or write.</param>
+            <returns>The value behind the key specified or the default value if none exists.</returns>
+        </member>
         <member name="T:PSFramework.Utility.PsfScriptBlock">
             <summary>
             Wrapper class around the traditional scriptblock class, extending its capabilities

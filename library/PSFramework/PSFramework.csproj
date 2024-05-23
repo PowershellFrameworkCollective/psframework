@@ -209,6 +209,7 @@
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\Number.cs" />
     <Compile Include="Utility\PsfException.cs" />
+    <Compile Include="Utility\PsfHashtable.cs" />
     <Compile Include="Utility\PsfScriptBlock.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />

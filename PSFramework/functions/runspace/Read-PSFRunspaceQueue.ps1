@@ -88,8 +88,10 @@
 
 		foreach ($resolvedWorkflow in $resolvedWorkflows) {
 			if ($All) {
-				$resolvedWorkflow.Queues.$Name.ToArray()
+				# Cache Results so downstream pipeline commands do not interfere with the clearing
+				$results = $resolvedWorkflow.Queues.$Name.ToArray()
 				$resolvedWorkflow.Queues.$Name.Clear()
+				$results
 				continue
 			}
 			$result = $resolvedWorkflow.Queues.$Name.Dequeue()
