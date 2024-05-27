@@ -133,6 +133,7 @@
     <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Meta\PsfErrorRecord.cs" />
     <Compile Include="Meta\PSTraceSource.cs" />
+    <Compile Include="Object\ObjectHost.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
@@ -209,7 +210,7 @@
     <Compile Include="Utility\LimitedConcurrentQueue.cs" />
     <Compile Include="Utility\Number.cs" />
     <Compile Include="Utility\PsfException.cs" />
-    <Compile Include="Utility\PsfHashtable.cs" />
+    <Compile Include="Object\PsfHashtable.cs" />
     <Compile Include="Utility\PsfScriptBlock.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />

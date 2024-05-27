@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PSFramework.Utility
+namespace PSFramework.Object
 {
     /// <summary>
     /// Extend default hashtables to include a default value

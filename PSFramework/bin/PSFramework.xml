@@ -4855,6 +4855,103 @@
             <param name="Category">The category of the error, determining the exception type</param>
             <returns>An exception</returns>
         </member>
+        <member name="T:PSFramework.Object.ObjectHost">
+            <summary>
+            Provides centralized utilities for interacting with PowerShell objects.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Add a set of noteproperties to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Members">The set of properties to add</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.String,System.Object,System.Boolean)">
+            <summary>
+            Adds a single noteproperty to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the property to add</param>
+            <param name="Value">The value to assign to the new property</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptProperty(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-calculated property to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the script-property to add</param>
+            <param name="Get">The code used to read the value</param>
+            <param name="Set">(optional) The code used when assigning input to the property.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.RemoveMember(System.Management.Automation.PSObject,System.String)">
+            <summary>
+            Removes a member from the specified PowerShell object
+            </summary>
+            <param name="Item">The object to remove a member from</param>
+            <param name="Name">The name of the member to remove.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-based method to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the method to add.</param>
+            <param name="Code">The code implementing the logic when the method is called.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Adds several script methods to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="T:PSFramework.Object.PsfHashtable">
+            <summary>
+            Extend default hashtables to include a default value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Object.PsfHashtable.defaultValue">
+            <summary>
+            The default value when retrieving values for keys that do not exist
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.#ctor">
+            <summary>
+            Creates a new, empty psfhashtable
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.#ctor(System.Collections.Hashtable)">
+            <summary>
+            Creates a new PsfHashtable based on an existing hashtable
+            </summary>
+            <param name="Original"></param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.SetDefaultValue(System.Object)">
+            <summary>
+            Set the default value provided, when reading for a key that does not yet exist.
+            </summary>
+            <param name="Value">The default value when accessing this PsfHashtable's values</param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.Clone">
+            <summary>
+            Create a copy of the current PsfHashtable, including its default value. The default value will be the same instance of an object.
+            </summary>
+            <returns>A copy of the current PsfHashtable.</returns>
+        </member>
+        <member name="P:PSFramework.Object.PsfHashtable.Item(System.Object)">
+            <summary>
+            The overriden read/write accessor for entries in this extended hashtable.
+            Reads will return the default value when the key does not exist.
+            </summary>
+            <param name="key">The key of the value to read or write.</param>
+            <returns>The value behind the key specified or the default value if none exists.</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation
@@ -8552,47 +8649,6 @@
             <param name="InnerException">An inner exception to pass through</param>
             <param name="StringValues">Any values to format into the message</param>
         </member>
-        <member name="T:PSFramework.Utility.PsfHashtable">
-            <summary>
-            Extend default hashtables to include a default value
-            </summary>
-        </member>
-        <member name="F:PSFramework.Utility.PsfHashtable.defaultValue">
-            <summary>
-            The default value when retrieving values for keys that do not exist
-            </summary>
-        </member>
-        <member name="M:PSFramework.Utility.PsfHashtable.#ctor">
-            <summary>
-            Creates a new, empty psfhashtable
-            </summary>
-        </member>
-        <member name="M:PSFramework.Utility.PsfHashtable.#ctor(System.Collections.Hashtable)">
-            <summary>
-            Creates a new PsfHashtable based on an existing hashtable
-            </summary>
-            <param name="Original"></param>
-        </member>
-        <member name="M:PSFramework.Utility.PsfHashtable.SetDefaultValue(System.Object)">
-            <summary>
-            Set the default value provided, when reading for a key that does not yet exist.
-            </summary>
-            <param name="Value">The default value when accessing this PsfHashtable's values</param>
-        </member>
-        <member name="M:PSFramework.Utility.PsfHashtable.Clone">
-            <summary>
-            Create a copy of the current PsfHashtable, including its default value. The default value will be the same instance of an object.
-            </summary>
-            <returns>A copy of the current PsfHashtable.</returns>
-        </member>
-        <member name="P:PSFramework.Utility.PsfHashtable.Item(System.Object)">
-            <summary>
-            The overriden read/write accessor for entries in this extended hashtable.
-            Reads will return the default value when the key does not exist.
-            </summary>
-            <param name="key">The key of the value to read or write.</param>
-            <returns>The value behind the key specified or the default value if none exists.</returns>
-        </member>
         <member name="T:PSFramework.Utility.PsfScriptBlock">
             <summary>
             Wrapper class around the traditional scriptblock class, extending its capabilities
@@ -9728,6 +9784,14 @@
             <param name="Instance">The object from which to read the field from</param>
             <returns>The value of the field content (may be null)</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.SetPrivateField(System.String,System.Object,System.Object)">
+            <summary>
+            Updates the value of a private field
+            </summary>
+            <param name="Name">The name of the field to update</param>
+            <param name="Instance">The object that contains the field to update</param>
+            <param name="Value">The value to apply</param>
+        </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticMethod(System.Type,System.String)">
             <summary>
             Returns a static private method of a type
@@ -9819,6 +9883,7 @@
             <summary>
             Imports a scriptblock into the current sessionstate, without affecting its language mode.
             Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
+            Mostly superseded by the PsfScriptblock type.
             </summary>
             <param name="ScriptBlock">The code to localize.</param>
             <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>

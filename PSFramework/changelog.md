@@ -4,9 +4,11 @@
 
 - New: Configuration Validation: guid - ensures only legal guids can be added
 - New: Type PsfHashtable - a hashtable that can have a default value
+- New: Type Object.ObjectHost - added methods to modify members of a PSObject
 - Upd: Runspace Workflows - Worker runspaces are now named "PSF-<Workflow>-<Worker>-<Index>"
 - Upd: Runspace Workflows - Errors that happened during a worker's processing now include the object being processed
 - Upd: Wait-PSFRunspaceWorkflow - Added option to wait based on how long ago an item was added to a specified queue.
+- Upd: Type Utility.UtilityHost - added SetPrivateField method, using reflection to update a non-public field.
 - Fix: Read-PSFRunspaceQueue - Queue is not cleared when piping result to Select-Object -First X (#621)
 
 ## 1.10.318 (2023-11-10)
