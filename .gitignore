@@ -8,6 +8,7 @@
 library/.vs/*
 library/PSFramework/bin/*
 library/PSFramework/obj/*
+library/PSFramework/.vs/*
 
 # ignore PowerShell Studio MetaData
 PSFramework/PSFramework.psproj

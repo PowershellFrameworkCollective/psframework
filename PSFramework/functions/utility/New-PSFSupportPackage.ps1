@@ -16,10 +16,28 @@
 		- The In-Memory message log
 		- The In-Memory error log
 		- Screenshot of the console buffer (Basically, everything written in your current console, even if you have to scroll upwards to see it).
+
+		Use "Register-PSFSupportDataProvider" to add more information to include in the support package.
+		The zip-file contains a debug file with the extension ".clidat". Use Import-PSFClixml to read this file.
 	
 	.PARAMETER Path
 		The folder where to place the output xml in.
 		Defaults to your desktop.
+
+	.PARAMETER TaskName
+		Automatically write the debug dump to a managed debug dump folder associated with this task name.
+		By default, this path will be:
+		%AppData%\PowerShell\PSFramework\Debug\%TaskName%
+		This parameter is intended to have a script automatically create a debug dump in case of failure.
+		In that scenario, it is still necessary to call this command, for example during a trap statement before killing the script in failure.
+
+	.PARAMETER TaskRetentionCount
+		The number of debug dumps associated with the chosen TaskName that will be retained.
+		Any excess debug dumps will be deleted, starting with the oldest.
+		Defaults to the value of the "Utility.SupportPackage.TaskDumpLimit" configuration setting, which by default is 10.
+
+	.PARAMETER Force
+		Create the folder for the output path if needed.
 	
 	.PARAMETER Include
 		What to include in the export.
@@ -42,16 +60,42 @@
 		This is less user friendly, but allows catching exceptions in calling scripts.
 	
 	.EXAMPLE
-		New-PSFSupportPackage
+		PS C:\> New-PSFSupportPackage
 		
-		Creates a large support pack in order to help us troubleshoot stuff.
+		Creates a large support pack in order to help troubleshoot whatever went wrong in the current session.
+		The support pack will be written to a zip file on the current user's desktop.
+
+	.EXAMPLE
+		PS C:\> New-PSFSupportPackage -Path .
+
+		Creates a large support pack in order to help troubleshoot whatever went wrong in the current session.
+		The support pack will be written to a zip file in the current path.
+
+	.EXAMPLE
+		PS C:\> New-PSFSupportPackage -TaskName MyScript
+
+		Creates a large support pack in order to help troubleshoot whatever went wrong in the current session.
+		The support pack will be written to a zip file in the dedicated debug path for this task.
+		By default, that path will be: %AppData%\PowerShell\PSFramework\Debug\MyScript
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFSupportPackage')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFSupportPackage', DefaultParameterSetName = 'Path')]
 	param (
+		[Parameter(ParameterSetName = 'Path')]
 		[string]
 		$Path = "$($env:USERPROFILE)\Desktop",
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'Task')]
+		[PsfValidateScript('PSFramework.Validate.SafeName', ErrorString = 'PSFramework.Validate.SafeName')]
+		[string]
+		$TaskName,
+
+		[int]
+		$TaskRetentionCount = (Get-PSFConfigValue -FullName 'Utility.SupportPackage.TaskDumpLimit'),
+
+		[switch]
+		$Force,
 		
 		[PSFramework.Utility.SupportData]
 		$Include = 'All',
@@ -135,11 +179,30 @@
 			catch { }
 		}
 		#endregion Helper functions
+	
+		if ($PSCmdlet.ParameterSetName -eq 'Path') {
+			$outputFolderExists = Test-Path -Path $Path
+			if (-not $outputFolderExists -and -not $Force) {
+				Stop-PSFFunction -String 'New-PSFSupportPackage.Error.PathNotFound' -EnableException $EnableException
+				return
+			}
+			if (-not $outputFolderExists) {
+				$null = New-Item -Path $Path -ItemType Directory -Force
+			}
+			$filePathXml = Join-Path -Path $Path -ChildPath "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").cliDat"
+		}
+		else {
+			$outputPath = Join-Path -Path (Get-PSFPath -Name AppData) -ChildPath "PowerShell\PSFramework\Debug\$TaskName"
+			if (-not (Test-Path -Path $outputPath)) {
+				$null = New-Item -Path $outputPath -ItemType Directory -Force
+			}
+			$filePathXml = Join-Path -Path $outputPath -ChildPath "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").cliDat"
+		}
+		$filePathZip = $filePathXml -replace "\.cliDat$", ".zip"
 	}
 	process
 	{
-		$filePathXml = Join-Path $Path "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").cliDat"
-		$filePathZip = $filePathXml -replace "\.cliDat$", ".zip"
+		if (Test-PSFFunctionInterrupt) { return }
 		
 		Write-PSFMessage -Level Critical -String 'New-PSFSupportPackage.Header' -StringValues $filePathZip, (Get-PSFConfigValue -FullName 'psframework.supportpackage.contactmessage' -Fallback '')
 		
@@ -275,5 +338,13 @@
 		}
 		
 		Remove-Item -Path $filePathXml -ErrorAction Ignore
+	}
+	end {
+		if ($PSCmdlet.ParameterSetName -eq 'Task') {
+			Get-ChidItem -Path $outputPath -Force -Filter *.cliDat |
+				Microsoft.PowerShell.Utility\Sort-Object LastWriteTime -Descending |
+					Microsoft.PowerShell.Utility\Select-Object -Skip $TaskRetentionCount |
+						Remove-Item -Force
+		}
 	}
 }

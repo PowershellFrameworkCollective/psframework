@@ -5,6 +5,8 @@
 - New: Configuration Validation: guid - ensures only legal guids can be added
 - New: Type PsfHashtable - a hashtable that can have a default value
 - New: Type Object.ObjectHost - added methods to modify members of a PSObject
+- Upd: New-PSFSupportPackage - Added a parameter to create the debug dump in a managed folder specific to the provided task name.
+- Upd: New-PSFSupportPackage - Added parameter to force-create parent folder of output path.
 - Upd: Runspace Workflows - Worker runspaces are now named "PSF-<Workflow>-<Worker>-<Index>"
 - Upd: Runspace Workflows - Errors that happened during a worker's processing now include the object being processed
 - Upd: Wait-PSFRunspaceWorkflow - Added option to wait based on how long ago an item was added to a specified queue.
