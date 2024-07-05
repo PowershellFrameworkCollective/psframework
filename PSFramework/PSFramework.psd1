@@ -92,6 +92,7 @@
 		'New-PSFFilter'
 		'New-PSFFilterCondition'
 		'New-PSFFilterConditionSet'
+		'New-PSFHashtable'
 		'New-PSFLicense'
 		'New-PSFMessageLevelModifier'
 		'New-PSFRunspaceWorkflow'
