@@ -195,6 +195,11 @@
             The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.AsPsfHashtable">
+            <summary>
+            Return the resulting hashtable as a PsfHashtable, which can later have a default value.
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
             <summary>
             Initialize command, resolving the ReferenceCommand if specified
@@ -7375,6 +7380,16 @@
             </summary>
             <param name="psObject">The object to dissect</param>
             <returns>A memory stream.</returns>
+        </member>
+        <member name="F:PSFramework.Serialization.SerializationTypeConverter.AssemblyMapping">
+            <summary>
+            Allows remapping assembly-names for objects being deserialized, using the full assembly-name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Serialization.SerializationTypeConverter.AssemblyShortnameMapping">
+            <summary>
+            Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
+            </summary>
         </member>
         <member name="T:PSFramework.TabExpansion.CompletionResultComparer">
             <summary>

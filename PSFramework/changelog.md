@@ -2,11 +2,13 @@
 
 ## Unreleased
 
+- New: Command New-PSFHashtable - returns a PsfHashtable object, a hashtable with default value option.
 - New: Configuration Validation: guid - ensures only legal guids can be added
 - New: Type PsfHashtable - a hashtable that can have a default value
 - New: Type Object.ObjectHost - added methods to modify members of a PSObject
 - Upd: New-PSFSupportPackage - Added a parameter to create the debug dump in a managed folder specific to the provided task name.
 - Upd: New-PSFSupportPackage - Added parameter to force-create parent folder of output path.
+- Upd: ConvertTo-PSFHashtable - Added parameter `-AsPsfHashtable` to return a PsfHashtable instead of a default Hashtable.
 - Upd: Runspace Workflows - Worker runspaces are now named "PSF-<Workflow>-<Worker>-<Index>"
 - Upd: Runspace Workflows - Errors that happened during a worker's processing now include the object being processed
 - Upd: Wait-PSFRunspaceWorkflow - Added option to wait based on how long ago an item was added to a specified queue.
@@ -14,6 +16,7 @@
 - Fix: Read-PSFRunspaceQueue - Queue is not cleared when piping result to Select-Object -First X (#621)
 - Fix: Import during JEA session establishment fails - "Cannot bind empty value to Path"
 - Fix: Import-PSFpowerShellDataFile - Safe mode incorrectly reports "File is not safe to execute" on ArrayLiteralAsts inside of a psd1 file.
+- Fix: New-PSFMessageLevelModifier - Is case sensitive when comparing function names.
 
 ## 1.10.318 (2023-11-10)
 
