@@ -12,6 +12,8 @@
 - Upd: Wait-PSFRunspaceWorkflow - Added option to wait based on how long ago an item was added to a specified queue.
 - Upd: Type Utility.UtilityHost - added SetPrivateField method, using reflection to update a non-public field.
 - Fix: Read-PSFRunspaceQueue - Queue is not cleared when piping result to Select-Object -First X (#621)
+- Fix: Import during JEA session establishment fails - "Cannot bind empty value to Path"
+- Fix: Import-PSFpowerShellDataFile - Safe mode incorrectly reports "File is not safe to execute" on ArrayLiteralAsts inside of a psd1 file.
 
 ## 1.10.318 (2023-11-10)
 
