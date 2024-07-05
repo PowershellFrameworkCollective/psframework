@@ -16,7 +16,8 @@ Sets configuration entries.
 ```
 Set-PSFConfig -FullName <String> [-Value <Object>] [-Description <String>] [-Validation <String>]
  [-Handler <ScriptBlock>] [-Hidden] [-Default] [-Initialize] [-SimpleExport] [-ModuleExport] [-AllowDelete]
- [-DisableValidation] [-DisableHandler] [-PassThru] [-EnableException] [<CommonParameters>]
+ [-DisableValidation] [-DisableHandler] [-PassThru] [-EnableException] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ### Persisted
@@ -24,7 +25,7 @@ Set-PSFConfig -FullName <String> [-Value <Object>] [-Description <String>] [-Val
 Set-PSFConfig -FullName <String> -PersistedValue <String> [-PersistedType <ConfigurationValueType>]
  [-Description <String>] [-Validation <String>] [-Handler <ScriptBlock>] [-Hidden] [-Default] [-Initialize]
  [-SimpleExport] [-ModuleExport] [-AllowDelete] [-DisableValidation] [-DisableHandler] [-PassThru]
- [-EnableException] [<CommonParameters>]
+ [-EnableException] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### Module
@@ -32,7 +33,7 @@ Set-PSFConfig -FullName <String> -PersistedValue <String> [-PersistedType <Confi
 Set-PSFConfig [-Module <String>] -Name <String> [-Value <Object>] [-Description <String>]
  [-Validation <String>] [-Handler <ScriptBlock>] [-Hidden] [-Default] [-Initialize] [-SimpleExport]
  [-ModuleExport] [-AllowDelete] [-DisableValidation] [-DisableHandler] [-PassThru] [-EnableException]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -405,6 +406,21 @@ Note:
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

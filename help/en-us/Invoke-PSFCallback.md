@@ -13,7 +13,8 @@ Invokes all registered callback scripts applicable to the calling command.
 ## SYNTAX
 
 ```
-Invoke-PSFCallback [-Data <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [<CommonParameters>]
+Invoke-PSFCallback [-Data <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -103,6 +104,21 @@ Providing it improves performance slightly, as it removes the need to look it up
 Type: PSCmdlet
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

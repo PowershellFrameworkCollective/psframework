@@ -18,7 +18,7 @@ Write-PSFMessage [-Level <MessageLevel>] -Message <String> [-StringValues <Objec
  [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
  [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### String
@@ -27,7 +27,7 @@ Write-PSFMessage [-Level <MessageLevel>] -String <String> [-StringValues <Object
  [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
  [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-Breakpoint] [-PSCmdlet <PSCmdlet>]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -471,6 +471,21 @@ Offer the $PSCmdlet variable of the calling function for this parameter.
 Type: PSCmdlet
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

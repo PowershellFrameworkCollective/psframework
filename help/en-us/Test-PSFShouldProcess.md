@@ -14,14 +14,14 @@ Implements the shouldprocess question.
 
 ### Message (Default)
 ```
-Test-PSFShouldProcess -Target <String> -Action <String> [-PSCmdlet <PSCmdlet>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Test-PSFShouldProcess -Target <String> -Action <String> [-PSCmdlet <PSCmdlet>]
+ [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### String
 ```
 Test-PSFShouldProcess -Target <String> -ActionString <String> [-ActionStringValues <Object[]>]
- [-PSCmdlet <PSCmdlet>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-PSCmdlet <PSCmdlet>] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -143,6 +143,21 @@ The cmdlet is not run.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

@@ -18,7 +18,8 @@ Select-PSFObject [-InputObject <PSObject>] [-Property <SelectParameter[]>] [-Exc
  [-ExpandProperty <String>] [-Alias <SelectAliasParameter[]>]
  [-ScriptProperty <SelectScriptPropertyParameter[]>] [-ScriptMethod <SelectScriptMethodParameter[]>] [-Unique]
  [-Last <Int32>] [-First <Int32>] [-Skip <Int32>] [-Wait] [-ShowProperty <String[]>]
- [-ShowExcludeProperty <String[]>] [-TypeName <String>] [-KeepInputObject] [<CommonParameters>]
+ [-ShowExcludeProperty <String[]>] [-TypeName <String>] [-KeepInputObject] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ### SkipLastParameter
@@ -27,13 +28,14 @@ Select-PSFObject [-InputObject <PSObject>] [-Property <SelectParameter[]>] [-Exc
  [-ExpandProperty <String>] [-Alias <SelectAliasParameter[]>]
  [-ScriptProperty <SelectScriptPropertyParameter[]>] [-ScriptMethod <SelectScriptMethodParameter[]>] [-Unique]
  [-SkipLast <Int32>] [-ShowProperty <String[]>] [-ShowExcludeProperty <String[]>] [-TypeName <String>]
- [-KeepInputObject] [<CommonParameters>]
+ [-KeepInputObject] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### IndexParameter
 ```
 Select-PSFObject [-InputObject <PSObject>] [-Unique] [-Wait] [-Index <Int32[]>] [-ShowProperty <String[]>]
- [-ShowExcludeProperty <String[]>] [-TypeName <String>] [-KeepInputObject] [<CommonParameters>]
+ [-ShowExcludeProperty <String[]>] [-TypeName <String>] [-KeepInputObject] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -400,6 +402,21 @@ Add script properties to the object. This parameter takes a hashtable that can b
 Type: SelectScriptPropertyParameter[]
 Parameter Sets: DefaultParameter, SkipLastParameter
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

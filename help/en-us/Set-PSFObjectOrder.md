@@ -15,19 +15,21 @@ Wrapper around Sort-Object, unifying the parameter seruface between PS5 and PS7.
 ### Default (Default)
 ```
 Set-PSFObjectOrder [-Stable] [-Descending] [-Unique] [-InputObject <PSObject>] [[-Property] <SortParameter[]>]
- [-Culture <String>] [-CaseSensitive] [<CommonParameters>]
+ [-Culture <String>] [-CaseSensitive] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### Top
 ```
 Set-PSFObjectOrder [-Descending] [-Unique] -Top <Int32> [-InputObject <PSObject>]
- [[-Property] <SortParameter[]>] [-Culture <String>] [-CaseSensitive] [<CommonParameters>]
+ [[-Property] <SortParameter[]>] [-Culture <String>] [-CaseSensitive] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ### Bottom
 ```
 Set-PSFObjectOrder [-Descending] [-Unique] -Bottom <Int32> [-InputObject <PSObject>]
- [[-Property] <SortParameter[]>] [-Culture <String>] [-CaseSensitive] [<CommonParameters>]
+ [[-Property] <SortParameter[]>] [-Culture <String>] [-CaseSensitive] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -182,6 +184,21 @@ Indicates that `Set-PSFObjectOrder` eliminates duplicates and returns only the u
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named
