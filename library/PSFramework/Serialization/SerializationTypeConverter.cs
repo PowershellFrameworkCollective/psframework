@@ -262,7 +262,13 @@ namespace PSFramework.Serialization
             return result;
         }
     
+        /// <summary>
+        /// Allows remapping assembly-names for objects being deserialized, using the full assembly-name.
+        /// </summary>
         public static readonly ConcurrentDictionary<string, Assembly> AssemblyMapping = new ConcurrentDictionary<string, Assembly>(StringComparer.InvariantCultureIgnoreCase);
+        /// <summary>
+        /// Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
+        /// </summary>
         public static readonly ConcurrentDictionary<string, bool> AssemblyShortnameMapping = new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
     }
 }

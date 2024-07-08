@@ -19,6 +19,7 @@ namespace PSFramework.Utility
     /// </summary>
     public static class UtilityHost
     {
+        #region Config
         /// <summary>
         /// The ID for the primary (or front end) Runspace. Used for stuff that should only happen on the user-runspace.
         /// </summary>
@@ -53,7 +54,9 @@ namespace PSFramework.Utility
         /// When displaying numbers, how many digits after the decimal seperator will be shown?
         /// </summary>
         public static int NumberDecimalDigits = 2;
+        #endregion Config
 
+        #region Computer
         /// <summary>
         /// Tests whether a given string is the local host.
         /// Does NOT use DNS resolution, DNS aliases will NOT be recognized!
@@ -113,7 +116,9 @@ namespace PSFramework.Utility
             }
             catch { return false; }
         }
+        #endregion Computer
 
+        #region Strings
         /// <summary>
         /// Implement's VB's Like operator logic.
         /// </summary>
@@ -259,7 +264,9 @@ namespace PSFramework.Utility
                 return result;
             }
         }
+        #endregion Strings
 
+        #region PowerShell Runtime
         /// <summary>
         /// Returns the execution context for the current runspace based on the current thread.
         /// </summary>
@@ -306,7 +313,9 @@ namespace PSFramework.Utility
             
             aliases.Remove(Name);
         }
+        #endregion PowerShell Runtime
 
+        #region Reflection
         /// <summary>
         /// Returns the value of a private property on an object
         /// </summary>
@@ -402,6 +411,24 @@ namespace PSFramework.Utility
             if (property == null)
                 throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateFieldNotFound", Name)), "Name");
             return property.GetValue(Instance);
+        }
+
+        /// <summary>
+        /// Updates the value of a private field
+        /// </summary>
+        /// <param name="Name">The name of the field to update</param>
+        /// <param name="Instance">The object that contains the field to update</param>
+        /// <param name="Value">The value to apply</param>
+        public static void SetPrivateField(string Name, object Instance, object Value)
+        {
+            if (Instance == null)
+                return;
+
+            FieldInfo property = Instance.GetType().GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (property == null)
+                throw new ArgumentException(String.Format(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.PrivateFieldNotFound"), Name), "Name");
+
+            property.SetValue(Instance, Value);
         }
 
         /// <summary>
@@ -501,7 +528,9 @@ namespace PSFramework.Utility
         {
             return (T)InvokeConstructor(typeof(T), Arguments, Flags);
         }
+        #endregion Reflection
 
+        #region Callstack Metadata
         /// <summary>
         /// Returns the current callstack
         /// </summary>
@@ -557,15 +586,18 @@ namespace PSFramework.Utility
         {
             return Meta.CallerInfo.GetCaller(Level);
         }
+        #endregion Callstack Metadata
 
         /// <summary>
         /// Stored scriptblocks that can be retrieved on demand anywhere within the process
         /// </summary>
         public static ConcurrentDictionary<string, ScriptBlockItem> ScriptBlocks = new ConcurrentDictionary<string, ScriptBlockItem>(StringComparer.InvariantCultureIgnoreCase);
 
+        #region Legacy
         /// <summary>
         /// Imports a scriptblock into the current sessionstate, without affecting its language mode.
         /// Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
+        /// Mostly superseded by the PsfScriptblock type.
         /// </summary>
         /// <param name="ScriptBlock">The code to localize.</param>
         /// <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>
@@ -580,5 +612,6 @@ namespace PSFramework.Utility
 
             SetPrivateProperty("SessionStateInternal", ScriptBlock, targetState);
         }
+        #endregion Legacy
     }
 }

@@ -18,7 +18,7 @@ Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target 
  [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>] [-Tag <String[]>]
  [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
  [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
- [-Level <MessageLevel>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Level <MessageLevel>] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### String
@@ -27,7 +27,7 @@ Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -ActionString <String> [-A
  [-Target <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>]
  [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
  [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
- [-Level <MessageLevel>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Level <MessageLevel>] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,6 +37,8 @@ This command is designed to do away with the script code overhead of:
 - Including try/catch error handling for the purpose of the PSFramework opt-in exceptions concept
 - Logging execution
 As such it is intended to help produce more readable code in less time.
+
+It also adds the ability to retry a failed action a specified number of times, at a static or escalating interval.
 
 Note: This command can only be used from an advanced function unless specifying the -PSCmdlet parameter.
 
@@ -64,6 +66,31 @@ PS C:\> if (Test-PSFFunctionInterrupt) { return }
 
 Invokes the specified scriptblock, honoring ShouldProcess, logging execution and potential failure.
 Failure will lead to a warning with the command terminating silently, unless the calling command's module opted into inheriting the '-EnableException' parameter (in which case the caller of the command calling Invoke-PSFProtectedCommand gets to pick whether this is throwing an exception or not)
+
+_
+
+### Example 3 : Try again
+```powershell
+Invoke-PSFProtectedCommand -Action Delete -Target $Path -ScriptBlock {
+    Remove-Item -Path $Path -Recurse -Force -Confirm:$false -ErrorAction Stop
+} -PSCmdlet $PSCmdlet -EnableException $EnableException -Continue -RetryCount 3 -RetryWait 2s
+```
+
+Will try to delete the resource specified in $Path.
+It will keep trying to do that every 2s until it failed four times (Once plus the specified 3 retries).
+
+_
+
+### Example 4 : Try again ... sometimes
+```powershell
+Invoke-PSFProtectedCommand -Action Delete -Target $Path -ScriptBlock {
+    Remove-Item -Path $Path -Recurse -Force -Confirm:$false -ErrorAction Stop
+} -PSCmdlet $PSCmdlet -EnableException $EnableException -Continue -RetryCount 3 -RetryErrorType 'System.Management.Automation.ItemNotFoundException'
+```
+
+Will try to delete the resource specified in $Path.
+It will keep trying to do that until it failed four times (Once plus the specified 3 retries).
+Retries will only happen, if the error of the failure was of the type 'System.Management.Automation.ItemNotFoundException'.
 
 ## PARAMETERS
 
@@ -348,6 +375,21 @@ Defaults to SomewhatVerbose.
 Type: MessageLevel
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

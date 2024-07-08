@@ -14,7 +14,7 @@ Filters out null objects.
 
 ```
 Remove-PSFNull [-InputObject <PSObject>] [-AllowEmptyCollections] [-AllowEmptyStrings] [-Enumerate]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -86,6 +86,21 @@ If Remove-PSFNull should enumerate output after all, set this switch.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

@@ -167,6 +167,7 @@
 
 			$saveAstTypes = @(
 				'ArrayExpressionAst'
+				'ArrayLiteralAst'
 				'CommandExpressionAst'
 				'ConstantExpressionAst'
 				'HashtableAst'
@@ -228,7 +229,10 @@
 				[string]
 				$Path
 			)
-			$filePath = Join-Path -Path (Get-PSFPath -Name Temp) -ChildPath "psf_temp-$(Get-Random).ps1"
+			$tempRoot = Get-PSFPath -Name Temp
+			if (-not $tempRoot) { $tempRoot = "$([System.Environment]::GetFolderPath("LocalApplicationData"))\Temp" }
+
+			$filePath = Join-Path -Path $tempRoot -ChildPath "psf_temp-$(Get-Random).ps1"
 			try {
 				Copy-Item -LiteralPath $Path -Destination $filePath
 				if ($PSVersionTable.PSVersion.Major -lt 5) {

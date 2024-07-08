@@ -104,6 +104,7 @@
         </member>
         <member name="P:PSFramework.Commands.SortPSFObjectCommand.CaseSensitive">
             <summary>
+            Indicates that the sort is case-sensitive. By default, sorts aren't case-sensitive.
             </summary>
             <value></value>
         </member>
@@ -189,6 +190,11 @@
             Command to use as reference. Reads parameters from the command and use them as "Include" parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ReferenceParameterSetName">
+            <summary>
+            The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
             <summary>
             Initialize command, resolving the ReferenceCommand if specified
@@ -266,6 +272,11 @@
             How long to wait inbetween retries?
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryWaitEscalation">
+            <summary>
+            The multiplier applied to waits over the previous wait.
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.RetryErrorType">
             <summary>
             Only retry on errors of the following types
@@ -320,16 +331,6 @@
         <member name="T:PSFramework.Commands.PSFCmdlet">
             <summary>
             Base class for all PSFramework Cmdlets, offering some shared tooling
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.MessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
-            </summary>
-        </member>
-        <member name="F:PSFramework.Commands.PSFCmdlet.LocalizedMessageScript">
-            <summary>
-            Access a scriptblock that can be used to write a message
             </summary>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.Invoke(System.String)">
@@ -1006,11 +1007,6 @@
             Colored version of developermode
             </summary>
         </member>
-        <member name="F:PSFramework.Commands.WritePSFMessageCommand._writeHostScript">
-            <summary>
-            Scriptblock that writes the host messages
-            </summary>
-        </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._Tags">
             <summary>
             List of tags to process
@@ -1116,6 +1112,409 @@
             Host output in developermode
             </summary>
             <returns>The string to write on messages that go straight to Write-PSFHostColor</returns>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.WriteHostColor(System.String)">
+            <summary>
+            Writes a message to screen
+            </summary>
+            <param name="Message">The message to write</param>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.ResolveDefaultColor">
+            <summary>
+            Calculates the default color a message should have
+            </summary>
+            <returns>The default color of a message</returns>
+        </member>
+        <member name="T:PSFramework.Configuration.PersistedConfig">
+            <summary>
+            A setting that has been persisted on the computer.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.PersistedConfig.FullName">
+            <summary>
+            The full name of the setting
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.PersistedConfig.Scope">
+            <summary>
+            The scope it has been persisted to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.PersistedConfig.Value">
+            <summary>
+            The value of the setting
+            </summary>
+        </member>
+        <member name="T:PSFramework.Configuration.Config">
+            <summary>
+            Configuration Manager as well as individual configuration object.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Name">
+            <summary>
+            The Name of the setting
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.FullName">
+            <summary>
+            The full name of the configuration entry, comprised of both Module and Name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Module">
+            <summary>
+            The module of the setting. Helps being able to group configurations.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Description">
+            <summary>
+            A description of the specific setting
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Type">
+            <summary>
+            The data type of the value stored in the configuration element.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Value">
+            <summary>
+            The value stored in the configuration element
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.SafeValue">
+            <summary>
+            The value stored in the configuration element, but without deserializing objects.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Unchanged">
+            <summary>
+            Whether the value of the configuration setting has been changed since its initialization.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Handler">
+            <summary>
+            The handler script that is run whenever the configuration value is set.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Validation">
+            <summary>
+            Validates the user input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.Hidden">
+            <summary>
+            Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.AllowDelete">
+            <summary>
+            Whether the setting can be legally deleted.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.Initialized">
+            <summary>
+            Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.PolicySet">
+            <summary>
+            Whether this setting was set by policy
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.PolicyEnforced">
+            <summary>
+            Whether this setting was set by policy and forbids changes to the configuration.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.SimpleExport">
+            <summary>
+            Enabling this causes export to json to use simple json serialization for data transmission.
+            This is suitable for simple data that is not sensitive to conversion losses.
+            Simple export leads to exports more easily readable to the human eye.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.ModuleExport">
+            <summary>
+            Whether this setting should be exported to a module specific file when exporting to json by modulename.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.Config.RegistryData">
+            <summary>
+            The finalized value to put into the registry value when using policy to set this setting.
+            Deprecated property.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.Config.DefaultValue">
+            <summary>
+            The default value the configuration item was set to when initializing
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.Config.SetPersistedValue(PSFramework.Configuration.ConfigurationValueType,System.String)">
+            <summary>
+            Applies the persisted value to the configuration item.
+            This method should only be called by PSFramework internals
+            </summary>
+            <param name="Type">The type of data being specified</param>
+            <param name="ValueString">The value string to register</param>
+        </member>
+        <member name="M:PSFramework.Configuration.Config.ResetValue">
+            <summary>
+            Resets the configuration value to its configured default value
+            </summary>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigScope">
+            <summary>
+            The location where a setting was applied
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.UserDefault">
+            <summary>
+            The configuration is set as default value for the user
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.UserMandatory">
+            <summary>
+            The configuration is enforced for the user
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.SystemDefault">
+            <summary>
+            The configuration is set as default value for all users on the system
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.SystemMandatory">
+            <summary>
+            The configuration is enforced for all users on the system.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileUserLocal">
+            <summary>
+            The configuration is stored as Json in the per user local machine config directory.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileUserShared">
+            <summary>
+            The configuration is stored as Json in the per user config directory shared across machines.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.FileSystem">
+            <summary>
+            The configuration is stored as Json in the local computer config directory.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.Environment">
+            <summary>
+            The configuration is stored in environment variables with full data syntax.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigScope.EnvironmentSimple">
+            <summary>
+            The configuration is stored in environment variables with simplified data syntax.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationHost">
+            <summary>
+            Host class providing static configuration settings that are constant across all runspaces within the process.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Configurations">
+            <summary>
+            Hashtable containing all the configuration entries
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Validation">
+            <summary>
+            Hashtable containing all the registered validations
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.Schemata">
+            <summary>
+            The list of configuration definitions, controlling how configuration data is ingested.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.DeleteConfiguration(System.String)">
+            <summary>
+            Deletes a configuration setting in compliance with policy.
+            </summary>
+            <param name="FullName">The full name of the setting the remove</param>
+            <returns>Whether the deletion was successful</returns>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
+            <summary>
+            Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertToPersistedValue(System.Object)">
+            <summary>
+            Converts any object into its persisted state.
+            </summary>
+            <param name="Item">The item to convert.</param>
+            <returns>Its persisted state representation.</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String,PSFramework.Configuration.ConfigurationValueType)">
+            <summary>
+            Converts a persisted value back to its original data type
+            </summary>
+            <param name="PersistedValue">The value in its persisted state</param>
+            <param name="Type">The type of the persisted value</param>
+            <returns>The natural state of the value originally persisted</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String)">
+            <summary>
+            Converts a persisted value back to its original data type
+            </summary>
+            <param name="TypeQualifiedPersistedValue">The value in its persisted state, with a prefixed type identifier.</param>
+            <returns>The natural state of the value originally persisted</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.GetConfigValue(System.String)">
+            <summary>
+            Retrieve the configuration value only.
+            Returns null if the configuration entry does not exist.
+            </summary>
+            <param name="FullName">The full name of the configuration object of which to return the value</param>
+            <returns>The value of the configuration entry.</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.Utf8ToBase64(System.String)">
+            <summary>
+            Converts a plain text into a base64 string
+            </summary>
+            <param name="Value">The string to convert</param>
+            <returns>base64 encoded version of string.</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationHost.Base64ToUtf8(System.String)">
+            <summary>
+            Converts a base64 encoded string into plain text
+            </summary>
+            <param name="Value">The string to convert</param>
+            <returns>Plain Text string</returns>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationValue">
+            <summary>
+            Contains all information about a configuration item's value
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.Value">
+            <summary>
+            The runtime value of the setting.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.PersistedValue">
+            <summary>
+            The value in its persisted state
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue.PersistedType">
+            <summary>
+            The kind of 
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.TypeQualifiedPersistedValue">
+            <summary>
+            The type qualified representation of the persisted value
+            </summary>
+        </member>
+        <member name="P:PSFramework.Configuration.ConfigurationValue.SafeValue">
+            <summary>
+            Ensures wanton Get-PSFConfig will not deserialize persisted objects that might have registered deserialization in their module.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue._Value">
+            <summary>
+            Internal storage for the Value property
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValue._PersistedValue">
+            <summary>
+            Internal storage for the PersistedValue property
+            </summary>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.ToString">
+            <summary>
+            The string representation of its actual value
+            </summary>
+            <returns>Returns the type-qualified string representation of its value</returns>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.String,PSFramework.Configuration.ConfigurationValueType)">
+            <summary>
+            Creates a value object from persisted data
+            </summary>
+            <param name="PersistedValue">The value that will be persisted</param>
+            <param name="PersistedType">The type of the value to be persisted</param>
+        </member>
+        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.Object)">
+            <summary>
+            Creates a value object from runtime data
+            </summary>
+            <param name="Value">The value that will be stored</param>
+        </member>
+        <member name="T:PSFramework.Configuration.ConfigurationValueType">
+            <summary>
+            The data types supported by the configuration system.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Unknown">
+            <summary>
+            An unknown type, should be prevented
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Null">
+            <summary>
+            The value is as empty as the void.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Bool">
+            <summary>
+            The value is of a true/false kind
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Int">
+            <summary>
+            The value is a regular integer
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Double">
+            <summary>
+            The value is a double numeric value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Long">
+            <summary>
+            The value is a long type
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.String">
+            <summary>
+            The value is a common string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Timespan">
+            <summary>
+            The value is a regular timespan
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Datetime">
+            <summary>
+            The value is a plain datetime
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.ConsoleColor">
+            <summary>
+            The value is a fancy console color
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Array">
+            <summary>
+            The value is an array full of booty
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Hashtable">
+            <summary>
+            The value is a hashtable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Configuration.ConfigurationValueType.Object">
+            <summary>
+            The value is something indeterminate, but possibly complex
+            </summary>
         </member>
         <member name="T:PSFramework.Filter.Condition">
             <summary>
@@ -1644,377 +2043,6 @@
             The default string representation
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:PSFramework.Configuration.Config">
-            <summary>
-            Configuration Manager as well as individual configuration object.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Name">
-            <summary>
-            The Name of the setting
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.FullName">
-            <summary>
-            The full name of the configuration entry, comprised of both Module and Name.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Module">
-            <summary>
-            The module of the setting. Helps being able to group configurations.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Description">
-            <summary>
-            A description of the specific setting
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.Type">
-            <summary>
-            The data type of the value stored in the configuration element.
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.Value">
-            <summary>
-            The value stored in the configuration element
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.SafeValue">
-            <summary>
-            The value stored in the configuration element, but without deserializing objects.
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.Unchanged">
-            <summary>
-            Whether the value of the configuration setting has been changed since its initialization.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Handler">
-            <summary>
-            The handler script that is run whenever the configuration value is set.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Validation">
-            <summary>
-            Validates the user input
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.Hidden">
-            <summary>
-            Setting this to true will cause the element to not be discovered unless using the '-Force' parameter on "Get-DbaConfig"
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.AllowDelete">
-            <summary>
-            Whether the setting can be legally deleted.
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.Initialized">
-            <summary>
-            Whether the setting has been initialized. This handles module imports and avoids modules overwriting settings when imported in multiple runspaces.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.PolicySet">
-            <summary>
-            Whether this setting was set by policy
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.PolicyEnforced">
-            <summary>
-            Whether this setting was set by policy and forbids changes to the configuration.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.SimpleExport">
-            <summary>
-            Enabling this causes export to json to use simple json serialization for data transmission.
-            This is suitable for simple data that is not sensitive to conversion losses.
-            Simple export leads to exports more easily readable to the human eye.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.ModuleExport">
-            <summary>
-            Whether this setting should be exported to a module specific file when exporting to json by modulename.
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.Config.RegistryData">
-            <summary>
-            The finalized value to put into the registry value when using policy to set this setting.
-            Deprecated property.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.Config.DefaultValue">
-            <summary>
-            The default value the configuration item was set to when initializing
-            </summary>
-        </member>
-        <member name="M:PSFramework.Configuration.Config.SetPersistedValue(PSFramework.Configuration.ConfigurationValueType,System.String)">
-            <summary>
-            Applies the persisted value to the configuration item.
-            This method should only be called by PSFramework internals
-            </summary>
-            <param name="Type">The type of data being specified</param>
-            <param name="ValueString">The value string to register</param>
-        </member>
-        <member name="M:PSFramework.Configuration.Config.ResetValue">
-            <summary>
-            Resets the configuration value to its configured default value
-            </summary>
-        </member>
-        <member name="T:PSFramework.Configuration.ConfigScope">
-            <summary>
-            The location where a setting was applied
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.UserDefault">
-            <summary>
-            The configuration is set as default value for the user
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.UserMandatory">
-            <summary>
-            The configuration is enforced for the user
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.SystemDefault">
-            <summary>
-            The configuration is set as default value for all users on the system
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.SystemMandatory">
-            <summary>
-            The configuration is enforced for all users on the system.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.FileUserLocal">
-            <summary>
-            The configuration is stored as Json in the per user local machine config directory.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.FileUserShared">
-            <summary>
-            The configuration is stored as Json in the per user config directory shared across machines.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.FileSystem">
-            <summary>
-            The configuration is stored as Json in the local computer config directory.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.Environment">
-            <summary>
-            The configuration is stored in environment variables with full data syntax.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigScope.EnvironmentSimple">
-            <summary>
-            The configuration is stored in environment variables with simplified data syntax.
-            </summary>
-        </member>
-        <member name="T:PSFramework.Configuration.ConfigurationHost">
-            <summary>
-            Host class providing static configuration settings that are constant across all runspaces within the process.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationHost.Configurations">
-            <summary>
-            Hashtable containing all the configuration entries
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationHost.Validation">
-            <summary>
-            Hashtable containing all the registered validations
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationHost.Schemata">
-            <summary>
-            The list of configuration definitions, controlling how configuration data is ingested.
-            </summary>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.DeleteConfiguration(System.String)">
-            <summary>
-            Deletes a configuration setting in compliance with policy.
-            </summary>
-            <param name="FullName">The full name of the setting the remove</param>
-            <returns>Whether the deletion was successful</returns>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationHost.ImportFromRegistryDone">
-            <summary>
-            Whether the import from registry has been completed. Prevents multiple imports and overwrites when importing the module multiple times.
-            </summary>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertToPersistedValue(System.Object)">
-            <summary>
-            Converts any object into its persisted state.
-            </summary>
-            <param name="Item">The item to convert.</param>
-            <returns>Its persisted state representation.</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String,PSFramework.Configuration.ConfigurationValueType)">
-            <summary>
-            Converts a persisted value back to its original data type
-            </summary>
-            <param name="PersistedValue">The value in its persisted state</param>
-            <param name="Type">The type of the persisted value</param>
-            <returns>The natural state of the value originally persisted</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.ConvertFromPersistedValue(System.String)">
-            <summary>
-            Converts a persisted value back to its original data type
-            </summary>
-            <param name="TypeQualifiedPersistedValue">The value in its persisted state, with a prefixed type identifier.</param>
-            <returns>The natural state of the value originally persisted</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.GetConfigValue(System.String)">
-            <summary>
-            Retrieve the configuration value only.
-            Returns null if the configuration entry does not exist.
-            </summary>
-            <param name="FullName">The full name of the configuration object of which to return the value</param>
-            <returns>The value of the configuration entry.</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.Utf8ToBase64(System.String)">
-            <summary>
-            Converts a plain text into a base64 string
-            </summary>
-            <param name="Value">The string to convert</param>
-            <returns>base64 encoded version of string.</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationHost.Base64ToUtf8(System.String)">
-            <summary>
-            Converts a base64 encoded string into plain text
-            </summary>
-            <param name="Value">The string to convert</param>
-            <returns>Plain Text string</returns>
-        </member>
-        <member name="T:PSFramework.Configuration.ConfigurationValue">
-            <summary>
-            Contains all information about a configuration item's value
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.ConfigurationValue.Value">
-            <summary>
-            The runtime value of the setting.
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.ConfigurationValue.PersistedValue">
-            <summary>
-            The value in its persisted state
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValue.PersistedType">
-            <summary>
-            The kind of 
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.ConfigurationValue.TypeQualifiedPersistedValue">
-            <summary>
-            The type qualified representation of the persisted value
-            </summary>
-        </member>
-        <member name="P:PSFramework.Configuration.ConfigurationValue.SafeValue">
-            <summary>
-            Ensures wanton Get-PSFConfig will not deserialize persisted objects that might have registered deserialization in their module.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValue._Value">
-            <summary>
-            Internal storage for the Value property
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValue._PersistedValue">
-            <summary>
-            Internal storage for the PersistedValue property
-            </summary>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationValue.ToString">
-            <summary>
-            The string representation of its actual value
-            </summary>
-            <returns>Returns the type-qualified string representation of its value</returns>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.String,PSFramework.Configuration.ConfigurationValueType)">
-            <summary>
-            Creates a value object from persisted data
-            </summary>
-            <param name="PersistedValue">The value that will be persisted</param>
-            <param name="PersistedType">The type of the value to be persisted</param>
-        </member>
-        <member name="M:PSFramework.Configuration.ConfigurationValue.#ctor(System.Object)">
-            <summary>
-            Creates a value object from runtime data
-            </summary>
-            <param name="Value">The value that will be stored</param>
-        </member>
-        <member name="T:PSFramework.Configuration.ConfigurationValueType">
-            <summary>
-            The data types supported by the configuration system.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Unknown">
-            <summary>
-            An unknown type, should be prevented
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Null">
-            <summary>
-            The value is as empty as the void.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Bool">
-            <summary>
-            The value is of a true/false kind
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Int">
-            <summary>
-            The value is a regular integer
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Double">
-            <summary>
-            The value is a double numeric value
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Long">
-            <summary>
-            The value is a long type
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.String">
-            <summary>
-            The value is a common string
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Timespan">
-            <summary>
-            The value is a regular timespan
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Datetime">
-            <summary>
-            The value is a plain datetime
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.ConsoleColor">
-            <summary>
-            The value is a fancy console color
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Array">
-            <summary>
-            The value is an array full of booty
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Hashtable">
-            <summary>
-            The value is a hashtable
-            </summary>
-        </member>
-        <member name="F:PSFramework.Configuration.ConfigurationValueType.Object">
-            <summary>
-            The value is something indeterminate, but possibly complex
-            </summary>
         </member>
         <member name="T:PSFramework.Feature.FeatureHost">
             <summary>
@@ -2614,6 +2642,39 @@
             </summary>
             <param name="ModuleName">The name of the module to wrap</param>
         </member>
+        <member name="T:PSFramework.Logging.Error">
+            <summary>
+            Container for errors that happened during logging
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Error.Provider">
+            <summary>
+            The logging provider that had the issue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Error.Instance">
+            <summary>
+            The specific instance of the logging provider that encounter the issue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Error.Timestamp">
+            <summary>
+            When it all happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Error.ErrorRecord">
+            <summary>
+            The error that happened
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.Error.#ctor(System.String,System.String,System.Management.Automation.ErrorRecord)">
+            <summary>
+            Create a new error object
+            </summary>
+            <param name="Provider">Logging Provider with the issue</param>
+            <param name="Instance">Instance of the Logging Provider with the issue</param>
+            <param name="ErrorRecord">The Issue</param>
+        </member>
         <member name="T:PSFramework.Logging.LogFileFileType">
             <summary>
             The data format to log to in the logfile logging provider
@@ -2766,6 +2827,11 @@
             Whether to include warning messages in the log
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.Provider.IncludeError">
+            <summary>
+            Whether to include error messages in the log
+            </summary>
+        </member>
         <member name="M:PSFramework.Logging.Provider.MessageApplies(PSFramework.Message.LogEntry)">
             <summary>
             Tests whether a log entry applies to the provider instance
@@ -2908,6 +2974,23 @@
             Updates all V2 provider instances, creating new ones depending on configuration.
             </summary>
         </member>
+        <member name="P:PSFramework.Logging.ProviderHost._CycleIndicator">
+            <summary>
+            Used to indicate a new logging cycle occured. Switches between 1 and 0
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.WaitNextCycle(System.DateTime)">
+            <summary>
+            Wait for the next logging cycle to begin
+            </summary>
+            <param name="Timeout">Up to how long to wait</param>
+            <exception cref="T:System.TimeoutException">Took too long</exception>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderHost.NextCycle">
+            <summary>
+            Indicate the next cycle started
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.ProviderInstance">
             <summary>
             Active instance of a logging provider
@@ -3007,6 +3090,16 @@
             Whether to include warning messages in the log
             </summary>
         </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.IncludeError">
+            <summary>
+            Whether to include error messages in the log
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.ProviderInstance.NotAfter">
+            <summary>
+            Deadline after which no more messages can be accepted. Used during the logging provider disablement workflow and should not be used outside that.
+            </summary>
+        </member>
         <member name="M:PSFramework.Logging.ProviderInstance.MessageApplies(PSFramework.Message.LogEntry)">
             <summary>
             Tests whether a log entry applies to the provider instance
@@ -3068,9 +3161,33 @@
             </summary>
             <param name="Runspace">The runspace to remove.</param>
         </member>
-        <member name="F:PSFramework.Logging.ProviderInstance.Errors">
+        <member name="M:PSFramework.Logging.ProviderInstance.Drain(System.Boolean)">
+            <summary>
+            Wait until all applicable messages have been processed, then disable this instance.
+            </summary>
+            <param name="WaitForFinalize">Wait until the the final block of the instance has been executed.</param>
+            <exception cref="T:System.TimeoutException">Will not wait longer than five minutes to drain messages.</exception>
+        </member>
+        <member name="P:PSFramework.Logging.ProviderInstance.Errors">
             <summary>
             The last 128 errors that happenend to the provider instance
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.AddError(System.Management.Automation.ErrorRecord)">
+            <summary>
+            Add an error record to the list of errors that happened
+            </summary>
+            <param name="ErrorRecord">The error that happened</param>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.GetError">
+            <summary>
+            Get a list of all errors that happened
+            </summary>
+            <returns>The list of previous errors</returns>
+        </member>
+        <member name="M:PSFramework.Logging.ProviderInstance.ClearErrors">
+            <summary>
+            Resets the list of errors that happened
             </summary>
         </member>
         <member name="M:PSFramework.Logging.ProviderInstance.ToString">
@@ -3157,11 +3274,40 @@
             The entries that make up the callstack
             </summary>
         </member>
+        <member name="F:PSFramework.Message.CallStack.DefaultEntryJoinSequence">
+            <summary>
+            The string sequence used to join callstack entries by default.
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.CallStack.ToString">
             <summary>
             String representation of the callstack copy
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.ToString(System.String)">
+            <summary>
+            String representation of the callstack copy
+            </summary>
+            <param name="JoinBy">By what the individual lines should be joined</param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.GetSubStack(System.Int32)">
+            <summary>
+            Picks a subset of the total callstack
+            </summary>
+            <param name="Start">The starting index to work from. Anything larger than 0 means skipping the innermost entries of the stack.</param>
+            <returns>A pared-down callstack</returns>
+            <exception cref="T:System.IndexOutOfRangeException">When the starting index is larger than the number of entries available.</exception>
+        </member>
+        <member name="M:PSFramework.Message.CallStack.GetSubStack(System.Int32,System.Int32)">
+            <summary>
+            Picks a subset of the total callstack
+            </summary>
+            <param name="Start">The starting index to work from. Anything larger than 0 means skipping the innermost entries of the stack.</param>
+            <param name="Count">How many entries should be included after the start index.</param>
+            <returns>A pared-down callstack</returns>
+            <exception cref="T:System.IndexOutOfRangeException">When the starting index is larger than the number of entries available.</exception>
         </member>
         <member name="M:PSFramework.Message.CallStack.#ctor">
             <summary>
@@ -3511,6 +3657,11 @@
             </summary>
             <returns>All messages logged this session.</returns>
         </member>
+        <member name="M:PSFramework.Message.LogHost.ClearLog">
+            <summary>
+            Clears the current in-memory log
+            </summary>
+        </member>
         <member name="M:PSFramework.Message.LogHost.WriteErrorEntry(System.Management.Automation.ErrorRecord[],System.String,System.String,System.Collections.Generic.List{System.String},System.DateTime,System.String,System.Guid,System.String)">
             <summary>
             Write an error record to the log
@@ -3570,6 +3721,90 @@
             <param name="StringValue">The values to format into the localized string</param>
             <param name="ErrorRecord">An associated error record</param>
             <returns>The entry that is being written</returns>
+        </member>
+        <member name="T:PSFramework.Message.MessageColorCondition">
+            <summary>
+            A rule object to change the default color of a message written to screen.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Name">
+            <summary>
+            Name of the condition, making it easier to manage rules and figure out where a rule comes form
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Color">
+            <summary>
+            The color it applies to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.Priority">
+            <summary>
+            The precedence weight. The lower the number the higher the priority. The first match wins.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.MinLevel">
+            <summary>
+            Minimum message level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.MaxLevel">
+            <summary>
+            Maximum message level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeTags">
+            <summary>
+            At least one specified tag must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeTags">
+            <summary>
+            Any one of these tags disqualifies
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeModules">
+            <summary>
+            Any one of these modules must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeModules">
+            <summary>
+            Any one of these modules disqualify
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.IncludeFunctions">
+            <summary>
+            Any one of these functions must be included
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageColorCondition.ExcludeFunctions">
+            <summary>
+            Any one of these functions disqualify
+            </summary>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.#ctor(System.String,System.ConsoleColor)">
+            <summary>
+            Create a new Message Color Condition
+            </summary>
+            <param name="Name">The name of the condition. Not case sensitive.</param>
+            <param name="Color">The color this rule applies</param>
+            <exception cref="T:System.ArgumentNullException">Providing an empty string for a name will not end well.</exception>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.Applies(PSFramework.Commands.WritePSFMessageCommand)">
+            <summary>
+            Whether the specified message color condition applies to the current message
+            </summary>
+            <param name="Command">The Write-PSFMessage command currently being processed</param>
+            <returns>Whether the message applies</returns>
+        </member>
+        <member name="M:PSFramework.Message.MessageColorCondition.HasOverlap(System.String[],System.String[])">
+            <summary>
+            Helper utility, comparing two string arrays and checking whether at least one value is in both.
+            Is not case sensitive.
+            </summary>
+            <param name="One">The first array to compare</param>
+            <param name="Two">The second array to compare</param>
+            <returns>Whether at least one value is in both arrays</returns>
         </member>
         <member name="T:PSFramework.Message.MessageEventSubscription">
             <summary>
@@ -3773,6 +4008,11 @@
             Include message timestamps in verbose message output
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageLevel">
+            <summary>
+            Include the level of a message in verbose message output
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.EnableMessagePrefix">
             <summary>
             Include message prefix in verbose message output
@@ -3786,6 +4026,11 @@
         <member name="F:PSFramework.Message.MessageHost.EnableMessageBreadcrumbs">
             <summary>
             Include the entire callstack in the verbose message output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.NoColor">
+            <summary>
+            Whether the console messages should be written with only one color, rather than respecting color tags
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.PrefixValueError">
@@ -3826,6 +4071,11 @@
         <member name="F:PSFramework.Message.MessageHost.TargetTransforms">
             <summary>
             Provides the option to transform target objects based on type. This is sometimes important when working with live state objects that should not be serialized.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.ColorTransforms">
+            <summary>
+            Provids the option to change the default color used when writing a message to screen
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrors">
@@ -4546,6 +4796,65 @@
             The actual PowerShell internal pipeline object
             </summary>
         </member>
+        <member name="T:PSFramework.Meta.PsfErrorRecord">
+            <summary>
+            A customized error record class, enabling write access to a few properties usually only readable
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.Management.Automation.ErrorRecord,System.Exception)">
+            <summary>
+            Create an error record based off another record
+            </summary>
+            <param name="Record">The record to wrap</param>
+            <param name="ReplaceParent">Replace the original exception with your own exception</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+            <summary>
+            Create an error record based off an exception
+            </summary>
+            <param name="Error">The exception to wrap</param>
+            <param name="ErrorId">An ID to attach to the error</param>
+            <param name="Category">What kind of error happened</param>
+            <param name="TargetObject">The target of the operation that failed</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.#ctor(System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+            <summary>
+            Create a new error record, based off a message.
+            </summary>
+            <param name="Message">The message to build the error record around</param>
+            <param name="Category">What kind of error happened</param>
+            <param name="ErrorId">An ID to attach to the error</param>
+            <param name="Target">The target of the operation that failed</param>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.InvocationInfo">
+            <summary>
+            Information about the context where the error happened
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.ScriptStackTrace">
+            <summary>
+            The Stack Trace when things went bad
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.PsfErrorRecord.FullyQualifiedErrorId">
+            <summary>
+            Identify the error by its own, grand ID
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.SetStackTrace(PSFramework.Message.CallStack)">
+            <summary>
+            Applies a specified CallStack to the error record
+            </summary>
+            <param name="Callstack">The Callstack object to write</param>
+        </member>
+        <member name="M:PSFramework.Meta.PsfErrorRecord.GetException(System.String,System.Management.Automation.ErrorCategory)">
+            <summary>
+            Generate a new exception object from a message and an error category
+            </summary>
+            <param name="Message">The message to wrap into an exception</param>
+            <param name="Category">The category of the error, determining the exception type</param>
+            <returns>An exception</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation
@@ -4796,6 +5105,239 @@
             <param name="Encoding">The encoding object to interpret</param>
             <returns>Whether it is with BOM or without</returns>
         </member>
+        <member name="T:PSFramework.Parameter.PathDirectoryLaxParameter">
+            <summary>
+            Interpret input values as directory paths, silently ignoring bad input
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryLaxParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemLaxParameter">
+            <summary>
+            Resolves any file or folder evaluating wildcards, will not throw on bad input
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemLaxParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemParameter">
+            <summary>
+            Resolves any file or folder evaluating wildcards
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemParameterBase">
+            <summary>
+            Base class for parameter classes related to filesystem path validation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.PathFileSystemParameterBase.InputObject">
+            <summary>
+            The original item presented as input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.PathFileSystemParameterBase.FailedInput">
+            <summary>
+            The input that failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.PathFileSystemParameterBase._PropertyMapping">
+            <summary>
+            Contains the list of property mappings.
+            Types can be registered to it, allowing the parameter class to blindly interpret unknown types
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.SetTypePropertyMapping(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Assigns a property mapping for a given type, allowing the parameter class to handle unknown types
+            </summary>
+            <param name="Name">The name of the type. Use the FullName of the type</param>
+            <param name="PropertyName">The property names to register. When parsing input, it will move down this list until a valid property was found</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.AddEx(System.String)">
+            <summary>
+            Add a value if it is not yet included.
+            Silently ignores values already in the ArrayList
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.AddFailed(System.Object)">
+            <summary>
+            Add a failed entry to the list of failed entries.
+            Silently ignores calues already listed
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.op_Addition(PSFramework.Parameter.PathFileSystemParameterBase,PSFramework.Parameter.PathFileSystemParameterBase)">
+            <summary>
+            Add two parameter classes representing resolved paths.
+            Mostly intended to converge literal and non-literal parameter options.
+            Note: PowerShell will usually enumerate the result of this, leading to a simple object array
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemParameterBase.ToString">
+            <summary>
+            The default string display style
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:PSFramework.Parameter.ParameterClass">
             <summary>
             Base class of all parameter classes
@@ -4852,7 +5394,12 @@
         </member>
         <member name="F:PSFramework.Parameter.ParameterClasses.Encoding">
             <summary>
-            The encoing parameter class allows to consistently accept encodings as input.
+            The encoding parameter class allows to consistently accept encodings as input.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.ParameterClasses.Path">
+            <summary>
+            The set of path parameter classes allow to resolve file system path designations into absolute paths
             </summary>
         </member>
         <member name="T:PSFramework.Parameter.ParameterContractAttribute">
@@ -4936,6 +5483,328 @@
             <summary>
             The contracted element is an operator, facilitating type conversion. Generally into a dedicated object type this parameterclass abstracts.
             </summary>
+        </member>
+        <member name="T:PSFramework.Parameter.PathDirectoryParameter">
+            <summary>
+            Interpret input values as directory paths
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectoryParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileLaxParameter">
+            <summary>
+            Parameter class that will not throw on bad or empty input and will instead just return empty paths
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileLaxParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileParameter">
+            <summary>
+            Input Converter for file input
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralLaxParameter">
+            <summary>
+            Input converter performing path evaluation without wildcard interpretation, not throwing errors on bad input
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralLaxParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralParameter">
+            <summary>
+            Input converter performing path evaluation without wildcard interpretation
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Convert a single DirectoryInfo object
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.IO.DirectoryInfo[])">
+            <summary>
+            Convert any number of DirectoryInfo objects
+            </summary>
+            <param name="Directory"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathNewFileParameter">
+            <summary>
+            Parameter class, converting input into the path to a file, where either the file or at least its parent folder already exist.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.String)">
+            <summary>
+            Convert a single path
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.String[])">
+            <summary>
+            Convert any number of paths
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Convert a single FileInfo object
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.IO.FileInfo[])">
+            <summary>
+            Convert any number of FileInfo objects
+            </summary>
+            <param name="File"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.Uri)">
+            <summary>
+            Convert a single Uri
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.Uri[])">
+            <summary>
+            Convert multiple Uris
+            </summary>
+            <param name="Uri"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileParameter.#ctor(System.Object)">
+            <summary>
+            Convert anything else
+            </summary>
+            <param name="Input"></param>
         </member>
         <member name="T:PSFramework.Parameter.SelectAliasParameter">
             <summary>
@@ -5276,6 +6145,11 @@
             Reliably access the PowerShell Version
             </summary>
         </member>
+        <member name="P:PSFramework.PSFCore.PSFCoreHost.ConstrainedConsole">
+            <summary>
+            Returns, whether the console has ever been in Constrained Language Mode, irrespective of whether the current context is constrained or not.
+            </summary>
+        </member>
         <member name="T:PSFramework.PSFCore.PsfInternalAttribute">
             <summary>
             Attribute designating something as reserved as PSFramework-internal.
@@ -5358,6 +6232,652 @@
             <summary>
             Clears all cache properties to null
             </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkflow">
+            <summary>
+            Runspace Workflow. Central piece tying together runspace execution and data exchange.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Name">
+            <summary>
+            The name of the workflow. Pure documentation.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflow.WorkerCount">
+            <summary>
+            The count of workers registered to this workflow
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflow.WorkerNames">
+            <summary>
+            The names of the workers registered to this workflow
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflow.QueueNames">
+            <summary>
+            The queues in this workflow
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Queues">
+            <summary>
+            The queues used for data exchange. Queues are created on demand.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Data">
+            <summary>
+            Additional data exchange available to all workers.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Workers">
+            <summary>
+            Workers associated with this workflow.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.SessionState">
+            <summary>
+            Provide a default session state for all workers.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Variables">
+            <summary>
+            Any variables to include in the worker runspaces.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Modules">
+            <summary>
+            Modules to include in the worker runspaces. Always includes the PSFramework.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflow.Functions">
+            <summary>
+            Functions to inject into the worker runspaces.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.#ctor(System.String)">
+            <summary>
+            Create a new runsoace workflow, giving it a name for heck's sake.
+            </summary>
+            <param name="Name">The name of the workflow</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.CloseQueue(System.String)">
+            <summary>
+            Close a data queue associated with the workflow.
+            By doing so, all new entries will be prevented, effectively soft-killing the processing.
+            </summary>
+            <param name="Name">The name of the queue to close</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.AddWorker(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,System.Int32)">
+            <summary>
+            Add a new worker to the workflow.
+            </summary>
+            <param name="Name">The name of the worker. Used to differentiate workers from each other</param>
+            <param name="InQueue">Name of the inqueue to use.</param>
+            <param name="OutQueue">Name of the outqueue to use.</param>
+            <param name="ScriptBlock">The scriptblock that will process each input item from the inqueue and produce the ouptut to the outqueue. Receives one input item and all output will be handled.</param>
+            <param name="Count">The number of worker runspaces to create.</param>
+            <returns>The created worker object.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.Start">
+            <summary>
+            Launch all workers of this workflow
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.Stop">
+            <summary>
+            Stop all workers of this workflow. Workers will gracefully finish their current item to process and execute any closing logic before terminating.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkflow.ToString">
+            <summary>
+            String form of the workflow
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSQueue">
+            <summary>
+            Wrapper around a concurrent queue, adding some flow control and documentation
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.Name">
+            <summary>
+            Name of the Queue.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.TotalItemCount">
+            <summary>
+            Total number of items that were ever enqueued into this queue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.MaxItemCount">
+            <summary>
+            Maximum number of items in the queue.
+            Trying to add more items to it will hang the call until someone else dequeues an item.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.Closed">
+            <summary>
+            Whether this queue has been closed. Closed queues silently ignore any further input.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSQueue.LastUpdate">
+            <summary>
+            When was the last item added to the queue?
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Enqueue(System.Object)">
+            <summary>
+            Add a new item to the queue
+            </summary>
+            <param name="Input">The item to enqueue</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.EnqueueBulk(System.Collections.ICollection)">
+            <summary>
+            Add a large list of items to the queue
+            </summary>
+            <param name="Input">A colection of input objects.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Dequeue">
+            <summary>
+            Return an item from the queue, or null if empty.
+            </summary>
+            <returns>The oldest item in the queue or null if empty.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Wait">
+            <summary>
+            Wait until enough items have been taken out of the Queue to accomodate more.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Clear">
+            <summary>
+            Remove all content in the queue
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSQueueManager">
+            <summary>
+            Manages runspace queues. Dynamically creates the queues on demand.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.ContainsKey(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.String,PSFramework.Runspace.RSQueue)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.TryGetValue(System.String,PSFramework.Runspace.RSQueue@)">
+            <summary>
+            
+            </summary>
+            <param name="Key"></param>
+            <param name="Value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Contains(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.CopyTo(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue}[],System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.Collections.Generic.KeyValuePair{System.String,PSFramework.Runspace.RSQueue})">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Contains(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Add(System.Object,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.Remove(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueueManager.CopyTo(System.Array,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="index"></param>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsReadOnly">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#Keys">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.System#Collections#IDictionary#Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsFixedSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.SyncRoot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.IsSynchronized">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Item(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:PSFramework.Runspace.RSQueueManager.Item(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSState">
+            <summary>
+            The state of a worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Pending">
+            <summary>
+            The worker has yet to be configured to run
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Starting">
+            <summary>
+            The worker is currently starting up
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Running">
+            <summary>
+            The worker is busy doing its job
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Stopping">
+            <summary>
+            The worker is in the process of shutting down
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Stopped">
+            <summary>
+            The worker has completed its shutdown
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSState.Failed">
+            <summary>
+            The worker failed otherwise. Check the errors.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorker">
+            <summary>
+            Runspace Worker Class, implementing one kind of workload over N agents.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.WorkerCode">
+            <summary>
+            The base code used to operate workers. Provided during module import
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Name">
+            <summary>
+            Name of the Worker. Mostly documentary in nature.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.InQueue">
+            <summary>
+            Name of the input queue, from which it expects to receive its input
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.OutQueue">
+            <summary>
+            Name of the output queue, to which results are written
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.ScriptBlock">
+            <summary>
+            The actual script code provided by the user during creation of the worker.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Begin">
+            <summary>
+            Code that is executed when first the worker is launched.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.End">
+            <summary>
+            Code that is executed when at last the worker is closed.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Count">
+            <summary>
+            Maximum count of worker threads / runspaces
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.State">
+            <summary>
+            State of the worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.LastInput">
+            <summary>
+            Time the last input was successfully read from the in queue
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountInput">
+            <summary>
+            Number of input items received
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountInputCompleted">
+            <summary>
+            Number of input items for which processing has completed (irrespective of success or output count)
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.LastOutput">
+            <summary>
+            The last time output was enqueued
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CountOutput">
+            <summary>
+            Number of output items which have been enqueued
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.ErrorCount">
+            <summary>
+            Number of errors that happened during this workers execution
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.LastError">
+            <summary>
+            The last error that happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Errors">
+            <summary>
+            The last 64 errors that happened
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.InQueueTotalItemCount">
+            <summary>
+            The total number of items ever queued to the input queue
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Completed">
+            <summary>
+            Whether all items that have ever been added to the inqueue have already been processed through this worker
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.IsDone">
+            <summary>
+            Whether the inqueue has been closed and fully processed. If so, processing can stop.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.KillToStop">
+            <summary>
+            If this flag is set, worker runspaces will be hard-killed on stop, rather than waiting for them to gracefully shut down
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Throttle">
+            <summary>
+            Throttling to respect. Worker will not execute more frequently than this.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.SessionState">
+            <summary>
+            The initial session state to use for the background runspaces
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Variables">
+            <summary>
+            Variables to inject into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Modules">
+            <summary>
+            Modules to pre-load into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Functions">
+            <summary>
+            Functions to pass into the background runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.PerRSValues">
+            <summary>
+            Variables that are made available for each worker runspace, each with a separate value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.MaxItems">
+            <summary>
+            The maximum number of items this worker will process.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.CloseOutQueue">
+            <summary>
+            Whether the last worker runspace finishing should close the out-queue of this worker
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.QueuesToClose">
+            <summary>
+            Additional Queues to close when done
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Workflow">
+            <summary>
+            The workflow owning the worker
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkflow,System.Int32)">
+            <summary>
+            Create a new runspace worker
+            </summary>
+            <param name="Name">The name of the worker</param>
+            <param name="InQueue">Name of the input queue to use</param>
+            <param name="OutQueue">Name of the output queue to use</param>
+            <param name="ScriptBlock">The code that actually consumes the input</param>
+            <param name="Workflow">The workflow object running the entire workflow.</param>
+            <param name="Count">The number of runspaces this worker will maintain.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.Start">
+            <summary>
+            Starts the worker, creating the number of runspaces configured after preparing the execution state.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Bad language modes or not having configured a workflow is a bad thing.</exception>
+            <exception cref="T:System.ArgumentException">A Count less than 1 is implausible.</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.Stop">
+            <summary>
+            Signal all workers to stop and gracefully end them.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.IncrementInputCompleted">
+            <summary>
+            Increase the count of input items completed
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.IncrementOutput">
+            <summary>
+            Increase the count of output items produced
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetBegin">
+            <summary>
+            Retrieve the begin scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
+            </summary>
+            <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetEnd">
+            <summary>
+            Retrieve the end scriptblock, localized to the current runspace and set to the global scope, without breaking code trust.
+            </summary>
+            <returns>Either null or the globalized scriptblock.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetNext(System.Object@)">
+            <summary>
+            Main method to pick up the next item in the in queue.
+            </summary>
+            <param name="Result">The next item in the queue</param>
+            <returns>Whether retrieving the next item was successful.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.SignalEnd">
+            <summary>
+            The tool for each runspace of the worker to signal it is done.
+            Any concluding post-processing is done here, once the last runspace calls it.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.ToString">
+            <summary>
+            The text form of the current worker
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.AddError(System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Add an error with a target to the errors queue
+            </summary>
+            <param name="Error">The error that happened</param>
+            <param name="Target">The target that was being processed as the error happened</param>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkerError">
+            <summary>
+            Something went wrong.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Worker">
+            <summary>
+            The worker that failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Error">
+            <summary>
+            The actual error that happened
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Timestamp">
+            <summary>
+            When did it happen
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.Runspace">
+            <summary>
+            On what runspace did it fail
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.TargetObject">
+            <summary>
+            What was the current item processing failed for
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+            <param name="TargetObject">The current item where processing failed</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.ToString">
+            <summary>
+            Text representation of what went wrong
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceBoundValue">
             <summary>
@@ -5526,6 +7046,11 @@
             The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RunspaceHost.RbvCleanupInterval">
+            <summary>
+            The interval (in milliseonds) in which Runspace-Bound Values will be leaned up
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RunspaceHost.Runspaces">
             <summary>
             The dictionary containing the definitive list of unique Runspace
@@ -5545,6 +7070,11 @@
             <summary>
             Stops the timer that in the background will periodically clean up runspace-bound variable-values that no longer have a hosting runspace.
             Should only be called when destroying the primary runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.PurgeAllRunspaceBoundVariables">
+            <summary>
+            Purge all RBVs of datasets from all expired runspaces
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
@@ -5841,6 +7371,11 @@
             The values the last search returned
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.LastCompletion">
+            <summary>
+            The completion data for the values the last search returned
+            </summary>
+        </member>
         <member name="F:PSFramework.TabExpansion.ScriptContainer.LastResultsValidity">
             <summary>
             How long are previous values valid, before a new execution becomes necessary.
@@ -5897,6 +7432,11 @@
             <param name="CacheDuration">How long the gathered pieces of data remain valid.</param>
             <param name="Global">Whether to globalize scriptblocks prior to invocation.</param>
             <param name="PassThru">Parameter is ignored. Needed to have a second signature that returns the script container.</param>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.SimpleCompletionScript">
+            <summary>
+            The script used for providing tabcompletion for completers using the simplified notation.
+            </summary>
         </member>
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.InputCompletionTypeData">
             <summary>
@@ -7150,6 +8690,13 @@
             </summary>
             <param name="Script">The Scriptblock to wrap</param>
         </member>
+        <member name="M:PSFramework.Utility.PsfScriptBlock.#ctor(System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Create a new PsfScriptBlock by wrapping a regular scriptblock.
+            </summary>
+            <param name="Script">The Scriptblock to wrap</param>
+            <param name="Unwrap">Whether to unwrap a scriptblock. When a scriptblock only contains a scriptblock (as happens when importing from psd1), this causes the class to use the inner scriptblock.</param>
+        </member>
         <member name="M:PSFramework.Utility.PsfScriptBlock.op_Implicit(PSFramework.Utility.PsfScriptBlock)~System.Management.Automation.ScriptBlock">
             <summary>
             Implicitly convert PsfScriptblock to ScriptBlock
@@ -7321,6 +8868,41 @@
             <param name="ImportContext">Whether to first import the scriptblock into the current Context.</param>
             <param name="ImportGlobal">When importing the ScriptBlock, import it into the global Context instead.</param>
             <returns>Whatever output this scriptblock generates</returns>
+        </member>
+        <member name="T:PSFramework.Utility.ScriptTransformationAttribute">
+            <summary>
+            Allow custom argument transformation logic defined in script
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptTransformationAttribute.Conversions">
+            <summary>
+            List of registered conversion logics
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptTransformationAttribute.Name">
+            <summary>
+            Name of the conversion logic to use
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ScriptTransformationAttribute.TargetType">
+            <summary>
+            The target type we try to generate
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptTransformationAttribute.Transform(System.Management.Automation.EngineIntrinsics,System.Object)">
+            <summary>
+            Converts input to output
+            </summary>
+            <param name="engineIntrinsics"></param>
+            <param name="inputData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Utility.ScriptTransformationAttribute.#ctor(System.String,System.Type)">
+            <summary>
+            Creates a new and awesome transformation attribute
+            </summary>
+            <param name="Name"></param>
+            <param name="TargetType"></param>
         </member>
         <member name="T:PSFramework.Utility.Size">
             <summary>
@@ -7665,12 +9247,17 @@
             Class implementing a throttling mechanism / watcher
             </summary>
         </member>
-        <member name="F:PSFramework.Utility.Throttle.Limit">
+        <member name="P:PSFramework.Utility.Throttle.Limits">
+            <summary>
+            All throttling limits
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Throttle.Limit">
             <summary>
             The maximum number of slots per interval
             </summary>
         </member>
-        <member name="F:PSFramework.Utility.Throttle.Interval">
+        <member name="P:PSFramework.Utility.Throttle.Interval">
             <summary>
             The interval over which slots are limited
             </summary>
@@ -7679,6 +9266,23 @@
             <summary>
             The number of slots currently taken
             </summary>
+        </member>
+        <member name="P:PSFramework.Utility.Throttle.NotBefore">
+            <summary>
+            DO not grant a slot before this timestamp has been reached.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.#ctor">
+            <summary>
+            Create a new throttle object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.#ctor(System.String)">
+            <summary>
+            Create a throttle object with a string DSL
+            </summary>
+            <param name="Setting">The setting string defining, how the throttling limits should be. Expects a whitespace-delimited set of COUNT/INTERVAL notations.</param>
+            <exception cref="T:System.ArgumentException">Bad syntax gets punished</exception>
         </member>
         <member name="M:PSFramework.Utility.Throttle.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
             <summary>
@@ -7695,7 +9299,140 @@
         </member>
         <member name="M:PSFramework.Utility.Throttle.Purge">
             <summary>
+            Clean up all throttle sets
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.Reset">
+            <summary>
+            Resets all throttling limits
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.RemoveLimit(PSFramework.Utility.ThrottleBase)">
+            <summary>
+            Removes a limit from the throttle
+            </summary>
+            <param name="Limit">The limit to remove</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Utility.ThrottleBase)">
+            <summary>
+            Add a limit to the throttle
+            </summary>
+            <param name="Limit">A pre-created limit to add</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Parameter.TimeSpanParameter,System.Int32)">
+            <summary>
+            Add a throttle control, limiting executions within a given timespan
+            </summary>
+            <param name="Interval">The timespan within which executions are counted</param>
+            <param name="Count">The number of action slots within the specified interval</param>
+        </member>
+        <member name="M:PSFramework.Utility.Throttle.AddLimit(PSFramework.Parameter.DateTimeParameter)">
+            <summary>
+            Add a throttle control, blocking any further executions until the specified time has come to pass.
+            </summary>
+            <param name="Timeout">Time until when no further action should take place</param>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleBase">
+            <summary>
+            Base implementation of a throttling handler
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            This should only return when the next execution can happen
+            </summary>
+            <param name="Timeout">Maximum time to wait. Throw an exception if expires before next slot becomes available</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.Purge">
+            <summary>
+            Any cleanup action to take without resetting the throttle.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleBase.Reset">
+            <summary>
+            Reset the full throttling condition to base.
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleSet">
+            <summary>
+            A throttling condition, limiting to X calls per y time.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleSet.Limit">
+            <summary>
+            The maximum number of slots per interval
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleSet.Interval">
+            <summary>
+            The interval over which slots are limited
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.ThrottleSet.Count">
+            <summary>
+            The number of slots currently taken
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.#ctor(System.Int32,PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Create a new throttle object
+            </summary>
+            <param name="Limit">How many slots are available per interval?</param>
+            <param name="Interval">hat is the interval over which slots are measured?</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Obtain an execution slots from the throttle
+            </summary>
+            <param name="Timeout">How long are you willing to wait for a slot before giving up?</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.Purge">
+            <summary>
             Clean up any expired slots
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleSet.Reset">
+            <summary>
+            Resets the throttling conditions, restoring all available slots
+            </summary>
+        </member>
+        <member name="T:PSFramework.Utility.ThrottleTime">
+            <summary>
+            A throttle limit based on "Not Before" a certain timestamp
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleTime.NotBefore">
+            <summary>
+            The time limit: No execution before this time should occur
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.ThrottleTime.Parent">
+            <summary>
+            The parent throttle object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.#ctor(System.DateTime,PSFramework.Utility.Throttle)">
+            <summary>
+            Creates a new throttle condition object, preventing the execution before the specified time
+            </summary>
+            <param name="notBefore">The timestamp until which we shall wait</param>
+            <param name="parent">The throttle object</param>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.GetSlot(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Take a chill pill until the time limit is over
+            </summary>
+            <param name="Timeout">Maximum time we are willing to wait. Will error right away, if the time limit is longer.</param>
+            <exception cref="T:System.TimeoutException">Won't return before the timeout</exception>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.Purge">
+            <summary>
+            Do nothing
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.ThrottleTime.Reset">
+            <summary>
+            Disables the limit
             </summary>
         </member>
         <member name="T:PSFramework.Utility.TimeRange">
@@ -7974,6 +9711,15 @@
             <param name="Instance">The object whose method to run</param>
             <param name="Arguments">Arguments to pass to the method</param>
             <returns>Whatever the private method may return</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.InvokePrivateStaticMethod(System.Type,System.String,System.Object[])">
+            <summary>
+            Executes a static private method of a type
+            </summary>
+            <param name="StaticType">The type containing the method</param>
+            <param name="Name">The name of the method to invoke</param>
+            <param name="Arguments">The arguments to pass to the method</param>
+            <returns>The result of the method invoked</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor(System.Type,System.Object[],System.Reflection.BindingFlags)">
             <summary>

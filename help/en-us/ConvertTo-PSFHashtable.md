@@ -15,7 +15,8 @@ Converts an object into a hashtable.
 ```
 ConvertTo-PSFHashtable [-Include <String[]>] [-Exclude <String[]>] [-CaseSensitive] [-IncludeEmpty] [-Inherit]
  [-Remap <Hashtable>] [-InputObject <PSObject[]>] [-ReferenceCommand <String>]
- [-ReferenceParameterSetName <String>] [<CommonParameters>]
+ [-ReferenceParameterSetName <String>] [-AsPsfHashtable] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,6 +36,8 @@ Get-ChildItem | ConvertTo-PSFHashtable
 ```
 
 Scans all items in the current path and converts those objects into hashtables.
+
+_
 
 ### Example 2
 ```
@@ -129,11 +132,43 @@ Accept wildcard characters: False
 
 ### -CaseSensitive
 Make Include and Exclude name-filtering case sensitive.
+Will be ignored when also specifying the "AsPsfHashtable" parameter.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AsPsfHashtable
+The return object(s) will be of the special type "PsfHashtable", rather than a regular hashtable.
+This will behave like a regular hashtable, but also supports defining a default value when resolving a key that has not been defined.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

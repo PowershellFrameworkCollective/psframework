@@ -71,7 +71,7 @@ namespace PSFramework.Runspace
             _Timer.Stop();
         }
 
-        private static void CleanupRunspaceBoundVariables(Object source, ElapsedEventArgs e)
+        private static void CleanupRunspaceBoundVariables(object source, ElapsedEventArgs e)
         {
             PurgeAllRunspaceBoundVariables();
         }
