@@ -183,7 +183,7 @@
 		if ($PSCmdlet.ParameterSetName -eq 'Path') {
 			$outputFolderExists = Test-Path -Path $Path
 			if (-not $outputFolderExists -and -not $Force) {
-				Stop-PSFFunction -String 'New-PSFSupportPackage.Error.PathNotFound' -EnableException $EnableException
+				Stop-PSFFunction -String 'New-PSFSupportPackage.Error.PathNotFound' -StringValues $Path -EnableException $EnableException
 				return
 			}
 			if (-not $outputFolderExists) {

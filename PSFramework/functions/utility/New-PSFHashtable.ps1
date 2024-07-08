@@ -43,6 +43,8 @@
 
 		Returns a PSFHashtable that is a copy of the hashtable in $originHash, which will by default return $false when resolving undefined keys.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[OutputType([PSFramework.Object.PsfHashtable])]
 	[CmdletBinding()]
 	param (
 		[Hashtable]

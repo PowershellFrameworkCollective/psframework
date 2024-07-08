@@ -18,6 +18,10 @@
 	.PARAMETER BulkValues
 		Write multiple values as separate entries.
 
+	.PARAMETER UseCurrent
+		Write to a queue in the current runspace workflow.
+		Only valid when used from within the code of a Runspace Workflow worker.
+
 	.PARAMETER Close
 		Closes the queue after writing the input.
 		This prevents further data to be added to the queue,
