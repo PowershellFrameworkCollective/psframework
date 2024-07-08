@@ -199,9 +199,32 @@ namespace PSFramework.Runspace
         public string[] QueuesToClose;
 
         /// <summary>
+        /// Whether this worker should have no output.
+        /// If set to true, its inherent output generation will be suppressed.
+        /// </summary>
+        public bool NoOutput;
+
+        /// <summary>
         /// The workflow owning the worker
         /// </summary>
         public RSWorkflow Workflow => workflow;
+
+        /// <summary>
+        /// The runspaces belonging to the worker
+        /// </summary>
+        public List<RSWorkflowRunespaceReport> Runspaces
+        {
+            get
+            {
+                List<RSWorkflowRunespaceReport> result = new List<RSWorkflowRunespaceReport>();
+
+                foreach (RSPowerShellWrapper wrapper in runtimes)
+                    if (wrapper.Pipe != null && wrapper.Pipe.Runspace != null)
+                        result.Add(new RSWorkflowRunespaceReport(workflow, this, wrapper.Pipe.Runspace));
+
+                return result;
+            }
+        }
 
         private RSWorkflow workflow;
         private List<RSPowerShellWrapper> runtimes = new List<RSPowerShellWrapper>();
@@ -303,6 +326,8 @@ namespace PSFramework.Runspace
             {
                 if (!KillToStop)
                     runtime.Pipe.EndInvoke(runtime.Status);
+                runtime.Pipe.Runspace.Close();
+                runtime.Pipe.Runspace.Dispose();
                 runtime.Pipe.Dispose();
             }
             State = RSState.Stopped;

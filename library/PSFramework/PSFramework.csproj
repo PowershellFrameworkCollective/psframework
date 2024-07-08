@@ -134,6 +134,7 @@
     <Compile Include="Meta\PsfErrorRecord.cs" />
     <Compile Include="Meta\PSTraceSource.cs" />
     <Compile Include="Object\ObjectHost.cs" />
+    <Compile Include="Parameter\CertificateParameter.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
     <Compile Include="Parameter\ComputerParameterInputType.cs" />
     <Compile Include="Parameter\DateTimeParameter.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Parameter\PathLiteralLaxParameter.cs" />
     <Compile Include="Parameter\PathLiteralParameter.cs" />
     <Compile Include="Parameter\PathNewFileParameter.cs" />
+    <Compile Include="Parameter\PublicCertificateParameter.cs" />
     <Compile Include="Parameter\SelectAliasParameter.cs" />
     <Compile Include="Parameter\SelectParameter.cs" />
     <Compile Include="Parameter\SelectScriptMethodParameter.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Runspace\RSState.cs" />
     <Compile Include="Runspace\RSWorker.cs" />
     <Compile Include="Runspace\RSWorkerError.cs" />
+    <Compile Include="Runspace\RSWorkflowRunespaceReport.cs" />
     <Compile Include="Runspace\RunspaceBoundValue.cs" />
     <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />

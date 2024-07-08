@@ -109,5 +109,16 @@ namespace PSFramework.Runspace
                     Dequeue();
             }
         }
+
+        /// <summary>
+        /// Take a look without removing anything
+        /// </summary>
+        /// <returns>The next item without removing it from the queue</returns>
+        public object Peek()
+        {
+            object result = null;
+            TryPeek(out result);
+            return result;
+        }
     }
 }

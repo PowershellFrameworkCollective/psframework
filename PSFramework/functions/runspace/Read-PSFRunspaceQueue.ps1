@@ -15,6 +15,9 @@
 		Retrieve all items from the queue.
 		By default, only the oldest entry is returned.
 
+	.PARAMETER Peek
+		Retrieve one (or all, if used with -All) item from the queue, without actually removing the item from it.
+
 	.PARAMETER Continual
 		Keep reading data from the queue until the queue is closed and emptied.
 		Intended for use in situations, where a processing worker must run within a single pipeline,
@@ -43,17 +46,24 @@
 	.LINK
 		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = 'Default')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Name,
 
+		[Parameter(ParameterSetName = 'Default')]
+		[Parameter(ParameterSetName = 'Peek')]
 		[switch]
 		$All,
 
+		[Parameter(ParameterSetName = 'Continual')]
 		[switch]
 		$Continual,
+
+		[Parameter(ParameterSetName = 'Peek')]
+		[switch]
+		$Peek,
 
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[PsfArgumentCompleter('PSFramework-runspace-workflow-name')]
@@ -90,11 +100,12 @@
 			if ($All) {
 				# Cache Results so downstream pipeline commands do not interfere with the clearing
 				$results = $resolvedWorkflow.Queues.$Name.ToArray()
-				$resolvedWorkflow.Queues.$Name.Clear()
+				if (-not $Peek) { $resolvedWorkflow.Queues.$Name.Clear() }
 				$results
 				continue
 			}
-			$result = $resolvedWorkflow.Queues.$Name.Dequeue()
+			if ($Peek) { $result = $resolvedWorkflow.Queues.$Name.Peek() }
+			else { $result = $resolvedWorkflow.Queues.$Name.Dequeue() }
 			if ($null -ne $result) { $result }
 		}
 	}

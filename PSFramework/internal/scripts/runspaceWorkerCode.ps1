@@ -61,6 +61,7 @@
 		try {
 			$results = $__PSF_ScriptBlock.InvokeGlobal($inputData)
 			foreach ($result in $results) {
+				if ($__PSF_Worker.NoOutput) { break }
 				$__PSF_Workflow.Queues.$($__PSF_Worker.OutQueue).Enqueue($result)
 				$__PSF_Worker.IncrementOutput()
 			}

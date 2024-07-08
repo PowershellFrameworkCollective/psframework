@@ -45,6 +45,7 @@
 		$Name,
 
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Single')]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SingleCurrent')]
 		[AllowNull()]
 		$Value,
 
@@ -53,15 +54,21 @@
 		[object[]]
 		$BulkValues,
 
+		[Parameter(Mandatory = $true, ParameterSetName = 'SingleCurrent')]
+		[switch]
+		$UseCurrent,
+
 		[switch]
 		$Close,
 
-		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Single')]
+		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Multi')]
 		[PsfArgumentCompleter('PSFramework-runspace-workflow-name')]
 		[string[]]
 		$WorkflowName,
 
-		[Parameter(ValueFromPipeline = $true)]
+		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Single')]
+		[Parameter(ValueFromPipeline = $true, ParameterSetName = 'Multi')]
 		[PSFramework.Runspace.RSWorkflow[]]
 		$InputObject
 	)

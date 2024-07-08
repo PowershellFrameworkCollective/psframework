@@ -573,49 +573,6 @@
 			</TableControl>
 		</View>
 
-        <!-- PSFramework.Runspace.RSWorkflow -->
-        <View>
-            <Name>PSFramework.Runspace.RSWorkflow</Name>
-            <ViewSelectedBy>
-                <TypeName>PSFramework.Runspace.RSWorkflow</TypeName>
-            </ViewSelectedBy>
-            <TableControl>
-                <AutoSize/>
-                <TableHeaders>
-                    <TableColumnHeader/>
-                    <TableColumnHeader/>
-                    <TableColumnHeader>
-                        <Label>Workers</Label>
-                    </TableColumnHeader>
-                    <TableColumnHeader>
-                        <Label>Queues</Label>
-                    </TableColumnHeader>
-                </TableHeaders>
-                <TableRowEntries>
-                    <TableRowEntry>
-                        <TableColumnItems>
-                            <TableColumnItem>
-                                <PropertyName>Name</PropertyName>
-                            </TableColumnItem>
-                            <TableColumnItem>
-                                <PropertyName>WorkerCount</PropertyName>
-                            </TableColumnItem>
-                            <TableColumnItem>
-                                <ScriptBlock>
- $_.WorkerNames -join ', ' 
-                                </ScriptBlock>
-                            </TableColumnItem>
-                            <TableColumnItem>
-                                <ScriptBlock>
- $_.QueueNames -join ", " 
-                                </ScriptBlock>
-                            </TableColumnItem>
-                        </TableColumnItems>
-                    </TableRowEntry>
-                </TableRowEntries>
-            </TableControl>
-        </View>
-
         <!-- PSFramework.Runspace.RSWorker -->
         <View>
             <Name>PSFramework.Runspace.RSWorker</Name>
@@ -668,6 +625,88 @@
                             </TableColumnItem>
                             <TableColumnItem>
                                 <PropertyName>LastInput</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
+        <!-- PSFramework.Runspace.RSWorkflow -->
+        <View>
+            <Name>PSFramework.Runspace.RSWorkflow</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Runspace.RSWorkflow</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader>
+                        <Label>Workers</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Queues</Label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>WorkerCount</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.WorkerNames -join ', ' 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.QueueNames -join ", " 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
+        <!-- PSFramework.Runspace.RSWorkflowRunespaceReport -->
+        <View>
+            <Name>PSFramework.Runspace.RSWorkflowRunespaceReport</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Runspace.RSWorkflowRunespaceReport</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Workflow</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Worker</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Id</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>State</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
                             </TableColumnItem>
                         </TableColumnItems>
                     </TableRowEntry>

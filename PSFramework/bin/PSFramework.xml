@@ -4957,6 +4957,55 @@
             <param name="key">The key of the value to read or write.</param>
             <returns>The value behind the key specified or the default value if none exists.</returns>
         </member>
+        <member name="T:PSFramework.Parameter.CertificateParameter">
+            <summary>
+            Parameter Class to help automate certificate store lookup but also accept a pure certificate object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.CertificateParameter.Certificate">
+            <summary>
+            The certificate as it was resolved to
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Fill out the parameter class with a certificate object
+            </summary>
+            <param name="Certificate">The certificate to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.#ctor(System.String)">
+            <summary>
+            Fill out the parameter class by searching in the local certificate stores for a certificate with matching thumbprint or subject.
+            Will select the longest-lasting valid certificate with a private key
+            </summary>
+            <param name="Name">Thumbprint or subject to resolve into a certificate</param>
+            <exception cref="T:System.ArgumentException">Will be thrown when no certificate has been found</exception>
+            <exception cref="T:System.IO.InvalidDataException">Will be thrown when a certificate was found, but it was not valid (expired or no private key)</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(PSFramework.Parameter.CertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(PSFramework.Parameter.CertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate2">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(System.Security.Cryptography.X509Certificates.X509Certificate2)~PSFramework.Parameter.CertificateParameter">
+            <summary>
+            Converts a certificate object into a CertificateParameter.
+            </summary>
+            <param name="Cert"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.ToString">
+            <summary>
+            The default string representation of the object
+            </summary>
+            <returns>Returns the string representation of the certificate or a placeholder when null.</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation
@@ -5908,6 +5957,55 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PublicCertificateParameter">
+            <summary>
+            Parameter Class to help automate certificate store lookup but also accept a pure certificate object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.PublicCertificateParameter.Certificate">
+            <summary>
+            The certificate as it was resolved to
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Fill out the parameter class with a certificate object
+            </summary>
+            <param name="Certificate">The certificate to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.#ctor(System.String)">
+            <summary>
+            Fill out the parameter class by searching in the local certificate stores for a certificate with matching thumbprint or subject.
+            Will select the longest-lasting valid certificate,
+            </summary>
+            <param name="Name">Thumbprint or subject to resolve into a certificate</param>
+            <exception cref="T:System.ArgumentException">Will be thrown when no certificate has been found</exception>
+            <exception cref="T:System.IO.InvalidDataException">Will be thrown when a certificate was found, but it was not valid (expired)</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(PSFramework.Parameter.PublicCertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(PSFramework.Parameter.PublicCertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate2">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(System.Security.Cryptography.X509Certificates.X509Certificate2)~PSFramework.Parameter.PublicCertificateParameter">
+            <summary>
+            Converts a certificate object into a CertificateParameter.
+            </summary>
+            <param name="Cert"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.ToString">
+            <summary>
+            The default string representation of the object
+            </summary>
+            <returns>Returns the string representation of the certificate or a placeholder when null.</returns>
+        </member>
         <member name="T:PSFramework.Parameter.SelectAliasParameter">
             <summary>
             A parameter class for binding specific alias property mappings
@@ -6395,6 +6493,11 @@
             Functions to inject into the worker runspaces.
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RSWorkflow.Runspaces">
+            <summary>
+            The PowerShell runspaces operated by this workflow.
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkflow.#ctor(System.String)">
             <summary>
             Create a new runsoace workflow, giving it a name for heck's sake.
@@ -6493,6 +6596,12 @@
             <summary>
             Remove all content in the queue
             </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Peek">
+            <summary>
+            Take a look without removing anything
+            </summary>
+            <returns>The next item without removing it from the queue</returns>
         </member>
         <member name="T:PSFramework.Runspace.RSQueueManager">
             <summary>
@@ -6854,9 +6963,20 @@
             Additional Queues to close when done
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorker.NoOutput">
+            <summary>
+            Whether this worker should have no output.
+            If set to true, its inherent output generation will be suppressed.
+            </summary>
+        </member>
         <member name="P:PSFramework.Runspace.RSWorker.Workflow">
             <summary>
             The workflow owning the worker
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Runspaces">
+            <summary>
+            The runspaces belonging to the worker
             </summary>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkflow,System.Int32)">
@@ -6980,6 +7100,41 @@
             Text representation of what went wrong
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkflowRunespaceReport">
+            <summary>
+            Information for a specific runspace of a worker.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Workflow">
+            <summary>
+            The overall workflow this belongs to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Worker">
+            <summary>
+            The worker that manages the runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.Id">
+            <summary>
+            ID of the runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.State">
+            <summary>
+            Current state of the runspace. Should always be busy until the worker closes down.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.Name">
+            <summary>
+            Name of the runspace. Should be "PSF-&lt;workflow&gt;-&lt;worker&gt;-&lt;index&gt;
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Runspace">
+            <summary>
+            PowerShell runspace executing the actual code of the worker
+            </summary>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceBoundValue">
             <summary>
