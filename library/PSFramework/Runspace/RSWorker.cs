@@ -199,9 +199,32 @@ namespace PSFramework.Runspace
         public string[] QueuesToClose;
 
         /// <summary>
+        /// Whether this worker should have no output.
+        /// If set to true, its inherent output generation will be suppressed.
+        /// </summary>
+        public bool NoOutput;
+
+        /// <summary>
         /// The workflow owning the worker
         /// </summary>
         public RSWorkflow Workflow => workflow;
+
+        /// <summary>
+        /// The runspaces belonging to the worker
+        /// </summary>
+        public List<RSWorkflowRunespaceReport> Runspaces
+        {
+            get
+            {
+                List<RSWorkflowRunespaceReport> result = new List<RSWorkflowRunespaceReport>();
+
+                foreach (RSPowerShellWrapper wrapper in runtimes)
+                    if (wrapper.Pipe != null && wrapper.Pipe.Runspace != null)
+                        result.Add(new RSWorkflowRunespaceReport(workflow, this, wrapper.Pipe.Runspace));
+
+                return result;
+            }
+        }
 
         private RSWorkflow workflow;
         private List<RSPowerShellWrapper> runtimes = new List<RSPowerShellWrapper>();
@@ -285,7 +308,7 @@ namespace PSFramework.Runspace
             for (int i = 0; i < Count; i++)
             {
                 PowerShell powershell = PowerShell.Create(localState);
-                powershell.AddScript(WorkerCode.ToString());
+                powershell.AddScript(WorkerCode.ToString()).AddArgument(i);
                 runtimes.Add(new RSPowerShellWrapper(powershell, powershell.BeginInvoke()));
             }
             #endregion Launch Runspaces
@@ -303,6 +326,8 @@ namespace PSFramework.Runspace
             {
                 if (!KillToStop)
                     runtime.Pipe.EndInvoke(runtime.Status);
+                runtime.Pipe.Runspace.Close();
+                runtime.Pipe.Runspace.Dispose();
                 runtime.Pipe.Dispose();
             }
             State = RSState.Stopped;
@@ -414,5 +439,15 @@ namespace PSFramework.Runspace
                 if (((PsfScriptBlock)workflow.Functions[name]).LanguageMode != PSLanguageMode.FullLanguage)
                     throw new PSSecurityException($"Cannot define function {name}: The code provided is not trusted!");
         }
+
+		/// <summary>
+		/// Add an error with a target to the errors queue
+		/// </summary>
+		/// <param name="Error">The error that happened</param>
+		/// <param name="Target">The target that was being processed as the error happened</param>
+		public void AddError(ErrorRecord Error, object Target)
+		{
+			Errors.Enqueue(new RSWorkerError(this, Error, Target));
+		}
     }
 }

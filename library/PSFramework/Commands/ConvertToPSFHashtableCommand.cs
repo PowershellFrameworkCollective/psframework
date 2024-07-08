@@ -72,6 +72,12 @@ namespace PSFramework.Commands
         [Parameter()]
         [PsfArgumentCompleter("PSFramework.Utility.ParameterSetNames")]
         public string ReferenceParameterSetName;
+
+        /// <summary>
+        /// Return the resulting hashtable as a PsfHashtable, which can later have a default value.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter AsPsfHashtable;
         #endregion Parameters
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
@@ -85,6 +91,9 @@ namespace PSFramework.Commands
         {
             if (Include != null)
                 _ToInclude.AddRange(Include);
+
+            if (CaseSensitive.ToBool())
+                _Comparison = StringComparer.InvariantCulture;
 
             if (Remap != null && (MyInvocation.BoundParameters.ContainsKey("Include") || !String.IsNullOrEmpty(ReferenceCommand)))
             {
@@ -127,9 +136,6 @@ namespace PSFramework.Commands
         {
             if (InputObject == null)
                 return;
-
-            if (CaseSensitive.ToBool())
-                _Comparison = StringComparer.InvariantCulture;
 
             foreach (PSObject inputItem in InputObject)
             {
@@ -181,6 +187,9 @@ namespace PSFramework.Commands
                         }
                     }
                 }
+
+                if (AsPsfHashtable.ToBool())
+                    result = new Object.PsfHashtable(result);
 
                 WriteObject(result);
             }

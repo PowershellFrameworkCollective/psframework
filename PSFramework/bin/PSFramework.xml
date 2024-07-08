@@ -195,6 +195,11 @@
             The parameterset of the command to reference. Reads parameters from the specified parameterset of the command and use them as "Include" parameter.
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.AsPsfHashtable">
+            <summary>
+            Return the resulting hashtable as a PsfHashtable, which can later have a default value.
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.ConvertToPSFHashtableCommand.BeginProcessing">
             <summary>
             Initialize command, resolving the ReferenceCommand if specified
@@ -4855,6 +4860,152 @@
             <param name="Category">The category of the error, determining the exception type</param>
             <returns>An exception</returns>
         </member>
+        <member name="T:PSFramework.Object.ObjectHost">
+            <summary>
+            Provides centralized utilities for interacting with PowerShell objects.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Add a set of noteproperties to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Members">The set of properties to add</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.String,System.Object,System.Boolean)">
+            <summary>
+            Adds a single noteproperty to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the property to add</param>
+            <param name="Value">The value to assign to the new property</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptProperty(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-calculated property to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the script-property to add</param>
+            <param name="Get">The code used to read the value</param>
+            <param name="Set">(optional) The code used when assigning input to the property.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.RemoveMember(System.Management.Automation.PSObject,System.String)">
+            <summary>
+            Removes a member from the specified PowerShell object
+            </summary>
+            <param name="Item">The object to remove a member from</param>
+            <param name="Name">The name of the member to remove.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-based method to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Name">The name of the method to add.</param>
+            <param name="Code">The code implementing the logic when the method is called.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Adds several script methods to the specified PowerShell object
+            </summary>
+            <param name="Item">The object to extend</param>
+            <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="T:PSFramework.Object.PsfHashtable">
+            <summary>
+            Extend default hashtables to include a default value
+            </summary>
+        </member>
+        <member name="F:PSFramework.Object.PsfHashtable.defaultValue">
+            <summary>
+            The default value when retrieving values for keys that do not exist
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.#ctor">
+            <summary>
+            Creates a new, empty psfhashtable
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.#ctor(System.Collections.Hashtable)">
+            <summary>
+            Creates a new PsfHashtable based on an existing hashtable
+            </summary>
+            <param name="Original"></param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.SetDefaultValue(System.Object)">
+            <summary>
+            Set the default value provided, when reading for a key that does not yet exist.
+            </summary>
+            <param name="Value">The default value when accessing this PsfHashtable's values</param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.Clone">
+            <summary>
+            Create a copy of the current PsfHashtable, including its default value. The default value will be the same instance of an object.
+            </summary>
+            <returns>A copy of the current PsfHashtable.</returns>
+        </member>
+        <member name="P:PSFramework.Object.PsfHashtable.Item(System.Object)">
+            <summary>
+            The overriden read/write accessor for entries in this extended hashtable.
+            Reads will return the default value when the key does not exist.
+            </summary>
+            <param name="key">The key of the value to read or write.</param>
+            <returns>The value behind the key specified or the default value if none exists.</returns>
+        </member>
+        <member name="T:PSFramework.Parameter.CertificateParameter">
+            <summary>
+            Parameter Class to help automate certificate store lookup but also accept a pure certificate object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.CertificateParameter.Certificate">
+            <summary>
+            The certificate as it was resolved to
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Fill out the parameter class with a certificate object
+            </summary>
+            <param name="Certificate">The certificate to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.#ctor(System.String)">
+            <summary>
+            Fill out the parameter class by searching in the local certificate stores for a certificate with matching thumbprint or subject.
+            Will select the longest-lasting valid certificate with a private key
+            </summary>
+            <param name="Name">Thumbprint or subject to resolve into a certificate</param>
+            <exception cref="T:System.ArgumentException">Will be thrown when no certificate has been found</exception>
+            <exception cref="T:System.IO.InvalidDataException">Will be thrown when a certificate was found, but it was not valid (expired or no private key)</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(PSFramework.Parameter.CertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(PSFramework.Parameter.CertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate2">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.op_Implicit(System.Security.Cryptography.X509Certificates.X509Certificate2)~PSFramework.Parameter.CertificateParameter">
+            <summary>
+            Converts a certificate object into a CertificateParameter.
+            </summary>
+            <param name="Cert"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.CertificateParameter.ToString">
+            <summary>
+            The default string representation of the object
+            </summary>
+            <returns>Returns the string representation of the certificate or a placeholder when null.</returns>
+        </member>
         <member name="T:PSFramework.Parameter.ComputerParameter">
             <summary>
             Parameter class that converts various input into a unified input representation
@@ -5806,6 +5957,55 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PublicCertificateParameter">
+            <summary>
+            Parameter Class to help automate certificate store lookup but also accept a pure certificate object
+            </summary>
+        </member>
+        <member name="P:PSFramework.Parameter.PublicCertificateParameter.Certificate">
+            <summary>
+            The certificate as it was resolved to
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Fill out the parameter class with a certificate object
+            </summary>
+            <param name="Certificate">The certificate to use</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.#ctor(System.String)">
+            <summary>
+            Fill out the parameter class by searching in the local certificate stores for a certificate with matching thumbprint or subject.
+            Will select the longest-lasting valid certificate,
+            </summary>
+            <param name="Name">Thumbprint or subject to resolve into a certificate</param>
+            <exception cref="T:System.ArgumentException">Will be thrown when no certificate has been found</exception>
+            <exception cref="T:System.IO.InvalidDataException">Will be thrown when a certificate was found, but it was not valid (expired)</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(PSFramework.Parameter.PublicCertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(PSFramework.Parameter.PublicCertificateParameter)~System.Security.Cryptography.X509Certificates.X509Certificate2">
+            <summary>
+            Converts a CertificateParameter into certificate object.
+            </summary>
+            <param name="Parameter">The CertificateParameter to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.op_Implicit(System.Security.Cryptography.X509Certificates.X509Certificate2)~PSFramework.Parameter.PublicCertificateParameter">
+            <summary>
+            Converts a certificate object into a CertificateParameter.
+            </summary>
+            <param name="Cert"></param>
+        </member>
+        <member name="M:PSFramework.Parameter.PublicCertificateParameter.ToString">
+            <summary>
+            The default string representation of the object
+            </summary>
+            <returns>Returns the string representation of the certificate or a placeholder when null.</returns>
+        </member>
         <member name="T:PSFramework.Parameter.SelectAliasParameter">
             <summary>
             A parameter class for binding specific alias property mappings
@@ -6293,6 +6493,11 @@
             Functions to inject into the worker runspaces.
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RSWorkflow.Runspaces">
+            <summary>
+            The PowerShell runspaces operated by this workflow.
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkflow.#ctor(System.String)">
             <summary>
             Create a new runsoace workflow, giving it a name for heck's sake.
@@ -6359,6 +6564,11 @@
             Whether this queue has been closed. Closed queues silently ignore any further input.
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSQueue.LastUpdate">
+            <summary>
+            When was the last item added to the queue?
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSQueue.Enqueue(System.Object)">
             <summary>
             Add a new item to the queue
@@ -6386,6 +6596,12 @@
             <summary>
             Remove all content in the queue
             </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSQueue.Peek">
+            <summary>
+            Take a look without removing anything
+            </summary>
+            <returns>The next item without removing it from the queue</returns>
         </member>
         <member name="T:PSFramework.Runspace.RSQueueManager">
             <summary>
@@ -6747,9 +6963,20 @@
             Additional Queues to close when done
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorker.NoOutput">
+            <summary>
+            Whether this worker should have no output.
+            If set to true, its inherent output generation will be suppressed.
+            </summary>
+        </member>
         <member name="P:PSFramework.Runspace.RSWorker.Workflow">
             <summary>
             The workflow owning the worker
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.Runspaces">
+            <summary>
+            The runspaces belonging to the worker
             </summary>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.#ctor(System.String,System.String,System.String,PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkflow,System.Int32)">
@@ -6816,6 +7043,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PSFramework.Runspace.RSWorker.AddError(System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Add an error with a target to the errors queue
+            </summary>
+            <param name="Error">The error that happened</param>
+            <param name="Target">The target that was being processed as the error happened</param>
+        </member>
         <member name="T:PSFramework.Runspace.RSWorkerError">
             <summary>
             Something went wrong.
@@ -6841,6 +7075,11 @@
             On what runspace did it fail
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorkerError.TargetObject">
+            <summary>
+            What was the current item processing failed for
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord)">
             <summary>
             Create a new error object for tracking purposes.
@@ -6848,11 +7087,54 @@
             <param name="Worker">The worker that failed</param>
             <param name="Error">The error that happened</param>
         </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord,System.Object)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+            <param name="TargetObject">The current item where processing failed</param>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkerError.ToString">
             <summary>
             Text representation of what went wrong
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkflowRunespaceReport">
+            <summary>
+            Information for a specific runspace of a worker.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Workflow">
+            <summary>
+            The overall workflow this belongs to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Worker">
+            <summary>
+            The worker that manages the runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.Id">
+            <summary>
+            ID of the runspace
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.State">
+            <summary>
+            Current state of the runspace. Should always be busy until the worker closes down.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorkflowRunespaceReport.Name">
+            <summary>
+            Name of the runspace. Should be "PSF-&lt;workflow&gt;-&lt;worker&gt;-&lt;index&gt;
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkflowRunespaceReport.Runspace">
+            <summary>
+            PowerShell runspace executing the actual code of the worker
+            </summary>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceBoundValue">
             <summary>
@@ -7253,6 +7535,16 @@
             </summary>
             <param name="psObject">The object to dissect</param>
             <returns>A memory stream.</returns>
+        </member>
+        <member name="F:PSFramework.Serialization.SerializationTypeConverter.AssemblyMapping">
+            <summary>
+            Allows remapping assembly-names for objects being deserialized, using the full assembly-name.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Serialization.SerializationTypeConverter.AssemblyShortnameMapping">
+            <summary>
+            Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
+            </summary>
         </member>
         <member name="T:PSFramework.TabExpansion.CompletionResultComparer">
             <summary>
@@ -9662,6 +9954,14 @@
             <param name="Instance">The object from which to read the field from</param>
             <returns>The value of the field content (may be null)</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.SetPrivateField(System.String,System.Object,System.Object)">
+            <summary>
+            Updates the value of a private field
+            </summary>
+            <param name="Name">The name of the field to update</param>
+            <param name="Instance">The object that contains the field to update</param>
+            <param name="Value">The value to apply</param>
+        </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetPrivateStaticMethod(System.Type,System.String)">
             <summary>
             Returns a static private method of a type
@@ -9753,6 +10053,7 @@
             <summary>
             Imports a scriptblock into the current sessionstate, without affecting its language mode.
             Note: Be wary where you import to, as the thus imported code can affect local variables that might be trusted.
+            Mostly superseded by the PsfScriptblock type.
             </summary>
             <param name="ScriptBlock">The code to localize.</param>
             <param name="Global">Add the code to the global sessionstate, not the current sessionstate.</param>

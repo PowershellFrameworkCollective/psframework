@@ -52,6 +52,10 @@
 		If this is impossible - for example, if the worker has one long-running piece - and we still need to be able to just kill it, set this flag.
 		This means that on stop, all worker runspaces will be killed - without doing any cleanup!
 
+	.PARAMETER NoOutput
+		Whether the regular output of the runspace worker should be disregarded.
+		Use this parameter if all subsequent queues are filled by calling Write-PSFRunspaceQueue, rather than said output.
+
 	.PARAMETER MaxItems
 		The maximum number of items this worker will process.
 		All runspaces of this worker will refuse to process more items than this number in total shared among them.
@@ -157,6 +161,9 @@
 		[switch]
 		$KillToStop,
 
+		[switch]
+		$NoOutput,
+
 		[int]
 		$MaxItems,
 
@@ -240,6 +247,7 @@
 				}
 			}
 			if ($KillToStop) { $worker.KillToStop = $true }
+			if ($NoOutput) { $worker.NoOutput = $true }
 			if ($Throttle) { $worker.THrottle = $Throttle }
 
 			$worker

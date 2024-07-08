@@ -32,12 +32,31 @@ namespace PSFramework.Runspace
         /// </summary>
         public readonly Guid Runspace;
 
+		/// <summary>
+		/// What was the current item processing failed for
+		/// </summary>
+		public readonly object TargetObject;
+
         /// <summary>
         /// Create a new error object for tracking purposes.
         /// </summary>
         /// <param name="Worker">The worker that failed</param>
         /// <param name="Error">The error that happened</param>
         public RSWorkerError(RSWorker Worker, ErrorRecord Error)
+        {
+            this.Worker = Worker;
+            this.Error = Error;
+            Timestamp = DateTime.Now;
+            Runspace = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId;
+        }
+
+		/// <summary>
+        /// Create a new error object for tracking purposes.
+        /// </summary>
+        /// <param name="Worker">The worker that failed</param>
+        /// <param name="Error">The error that happened</param>
+		/// <param name="TargetObject">The current item where processing failed</param>
+        public RSWorkerError(RSWorker Worker, ErrorRecord Error, object TargetObject)
         {
             this.Worker = Worker;
             this.Error = Error;

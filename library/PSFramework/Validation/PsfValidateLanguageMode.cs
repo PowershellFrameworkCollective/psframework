@@ -31,8 +31,14 @@ namespace PSFramework.Validation
             ScriptBlock script = element as ScriptBlock;
             
             PSLanguageMode modeDetected = (PSLanguageMode)Utility.UtilityHost.GetPrivateProperty("LanguageMode", script);
-            if (!Modes.Contains(modeDetected))
-                throw new ArgumentException(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.LanguageMode.BadMode", new object[] { String.Join(",", Modes), modeDetected }));
+            if (Modes.Contains(modeDetected))
+                return;
+
+            // FL requirement will not be met in AuditMode
+            if (Modes.Contains(PSLanguageMode.FullLanguage) && modeDetected == PSLanguageMode.ConstrainedLanguage && IsAuditMode())
+                return;
+
+            throw new ArgumentException(Localization.LocalizationHost.Read("PSFramework.Assembly.Validation.LanguageMode.BadMode", new object[] { String.Join(",", Modes), modeDetected }));
         }
 
         /// <summary>
@@ -47,6 +53,21 @@ namespace PSFramework.Validation
         public PsfValidateLanguageMode(PSLanguageMode[] Modes)
         {
             this.Modes = Modes;
+        }
+
+
+        private bool IsAuditMode()
+        {
+            // This wrapping is required to support older PS versions that do not yet contain the security namespace.
+            // This might include older PS5.1 versions.
+            // Methods using unknown classes / namespaces fail on invoke.
+            try { return _IsAuditModeInternal(); }
+            catch {  return false; }
+        }
+
+        private bool _IsAuditModeInternal()
+        {
+            return System.Management.Automation.Security.SystemPolicy.GetSystemLockdownPolicy() == System.Management.Automation.Security.SystemEnforcementMode.Audit;
         }
     }
 }

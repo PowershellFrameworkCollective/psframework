@@ -73,6 +73,22 @@ namespace PSFramework.Runspace
         public Dictionary<string, ScriptBlock> Functions = new Dictionary<string, ScriptBlock>();
 
         /// <summary>
+        /// The PowerShell runspaces operated by this workflow.
+        /// </summary>
+        public List<RSWorkflowRunespaceReport> Runspaces
+        {
+            get
+            {
+                List<RSWorkflowRunespaceReport> result = new List<RSWorkflowRunespaceReport>();
+
+                foreach (RSWorker worker in Workers.Values)
+                    result.AddRange(worker.Runspaces);
+
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Create a new runsoace workflow, giving it a name for heck's sake.
         /// </summary>
         /// <param name="Name">The name of the workflow</param>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PSFramework.Runspace
 {
-    internal class RSPowerShellWrapper
+    internal class RSPowerShellWrapper : IDisposable
     {
         internal PowerShell Pipe;
         internal IAsyncResult Status;
@@ -17,5 +17,10 @@ namespace PSFramework.Runspace
             Pipe = pipe;
             Status = status;
         }
+
+		public void Dispose()
+		{
+			Pipe.Dispose();
+		}
     }
 }
