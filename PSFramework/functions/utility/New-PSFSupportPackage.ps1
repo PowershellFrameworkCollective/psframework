@@ -281,7 +281,7 @@
 			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Modules'
 			$hash["Modules"] = Get-Module
 		}
-		if ((($Include -band 512) -and -not ($Exclude -band 512)) -and (Get-Command -Name Get-PSSnapIn -ErrorAction SilentlyContinue))
+		if ((($Include -band 512) -and -not ($Exclude -band 512)) -and ($PSVersionTable.PSVersion.Major -le 5))
 		{
 			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Snapins'
 			$hash["SnapIns"] = Get-PSSnapin
@@ -341,7 +341,7 @@
 	}
 	end {
 		if ($PSCmdlet.ParameterSetName -eq 'Task') {
-			Get-ChidItem -Path $outputPath -Force -Filter *.cliDat |
+			Get-ChildItem -Path $outputPath -Force -Filter *.cliDat |
 				Microsoft.PowerShell.Utility\Sort-Object LastWriteTime -Descending |
 					Microsoft.PowerShell.Utility\Select-Object -Skip $TaskRetentionCount |
 						Remove-Item -Force
