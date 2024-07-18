@@ -552,7 +552,7 @@ namespace PSFramework.Logging
 
                 System.Threading.Thread.Sleep(250);
 
-                if (limit > DateTime.Now)
+                if (limit < DateTime.Now)
                     throw new TimeoutException();
             }
 

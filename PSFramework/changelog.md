@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.11.343 (2024-07-18)
+
+- Fix: Disable-PSFLoggingProvider - fails with timeout error.
+
 ## 1.11.342 (2024-07-18)
 
 - Fix: New-PSFSupportPackage - fails to delete old managed debug dumps
