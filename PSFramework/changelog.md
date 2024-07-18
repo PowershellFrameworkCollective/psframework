@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.11.342 (2024-07-18)
+
+- Fix: New-PSFSupportPackage - fails to delete old managed debug dumps
+
 ## 1.11.341 (2024-07-08)
 
 - New: Command New-PSFHashtable - returns a PsfHashtable object, a hashtable with default value option.
