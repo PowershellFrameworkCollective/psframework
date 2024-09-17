@@ -182,8 +182,9 @@ namespace PSFramework.Commands
                     {
                         if (result.ContainsKey(key))
                         {
-                            result[Remap[key]] = result[key];
+                            object value = result[key];
                             result.Remove(key);
+                            result[Remap[key]] = value;
                         }
                     }
                 }
