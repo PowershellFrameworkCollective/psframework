@@ -1,5 +1,25 @@
 ﻿# CHANGELOG
 
+## 1.12.345 (2024-09-17)
+
+> Breaking Change
+
+SerializationTypeConverter changed from using BinaryFormatter to using DataContractSerializer instead, avoiding a critical security vulnerability. This change will _not_ affect anybody not using this component to prevent Deserialized objects when sending objects from formal classes from one PowerShell process to another (e.g. with remoting). Regular PowerShell execution - including remoting - remains unaffected (only without the vulnerability).
+
+Actual impact on modules implementing this component:
+
+- "Failure" always means a fallback to "Deserialized." objects, not actual exceptions.
+- The new version must be deployed on both ends of the communication, otherwise implemented deserialization will fail.
+- The new version will fail to import clixml files exported with the old version
+- All sub-properties must adhere to the serialization rules, not just the top level class. Previously it was possible to have your own class have an "object"-typed property and only the content of that property would be a "deserialized." object, rather the entire item. This no longer works.
+
+This critical security vulnerability superseded the reliability promise, but should fortunately have little impact on almost all existing use of the module.
+
+> Change List
+
+- Sec: Critical security update to the `SerializationTypeConverter` class and PS Object Serialization extension component.
+- Fix: ConvertTo-PSFHashtable - `-Remap` fails when trying to fix the casing on a key. (#641)
+
 ## 1.11.343 (2024-07-18)
 
 - Fix: Disable-PSFLoggingProvider - fails with timeout error.
