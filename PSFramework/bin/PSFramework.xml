@@ -7546,6 +7546,20 @@
             Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
             </summary>
         </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.CompressString(System.String)">
+            <summary>
+            Compress string using default zip algorithms
+            </summary>
+            <param name="String">The string to compress</param>
+            <returns>Returns a compressed string as byte-array.</returns>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.ExpandString(System.Byte[])">
+            <summary>
+            Expand a string using default zig algorithms
+            </summary>
+            <param name="CompressedString">The compressed string to expand</param>
+            <returns>Returns an expanded string.</returns>
+        </member>
         <member name="T:PSFramework.TabExpansion.CompletionResultComparer">
             <summary>
             Compares two completion results
