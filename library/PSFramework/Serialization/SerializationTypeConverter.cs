@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.IO.Compression;
 using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace PSFramework.Serialization
 {
@@ -14,7 +17,7 @@ namespace PSFramework.Serialization
     /// </summary>
     public class SerializationTypeConverter : PSTypeConverter
     {
-        private static ResolveEventHandler AssemblyHandler = new ResolveEventHandler(SerializationTypeConverter.CurrentDomain_AssemblyResolve);
+        private static ResolveEventHandler AssemblyHandler = new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 
         /// <summary>
         /// Whether the source can be converted to its destination
@@ -87,7 +90,7 @@ namespace PSFramework.Serialization
                 error = new NotSupportedException(string.Format("Unsupported Source Type: {0}", sourceValue.GetType().FullName));
                 return false;
             }
-            if (!SerializationTypeConverter.CanSerialize(destinationType))
+            if (!CanSerialize(destinationType))
             {
                 error = new NotSupportedException(string.Format("Unsupported Type Conversion: {0}", destinationType.FullName));
                 return false;
@@ -125,24 +128,19 @@ namespace PSFramework.Serialization
                 throw ex;
             }
             object obj;
-            using (MemoryStream memoryStream = new MemoryStream(buffer))
+
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyHandler;
+            try
             {
-                AppDomain.CurrentDomain.AssemblyResolve += SerializationTypeConverter.AssemblyHandler;
-                try
-                {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    obj = binaryFormatter.Deserialize(memoryStream);
-                    PSFCore.PSFCoreHost.WriteDebug("Serializer.DeserializeObject.Obj", obj);
-                    IDeserializationCallback deserializationCallback = obj as IDeserializationCallback;
-                    if (deserializationCallback != null)
-                    {
-                        deserializationCallback.OnDeserialization(sourceValue);
-                    }
-                }
-                finally
-                {
-                    AppDomain.CurrentDomain.AssemblyResolve -= SerializationTypeConverter.AssemblyHandler;
-                }
+                obj = ConvertFromXml(ExpandString(buffer), destinationType);
+                PSFCore.PSFCoreHost.WriteDebug("Serializer.DeserializeObject.Obj", obj);
+                IDeserializationCallback deserializationCallback = obj as IDeserializationCallback;
+                if (deserializationCallback != null)
+                    deserializationCallback.OnDeserialization(sourceValue);
+            }
+            finally
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= AssemblyHandler;
             }
             return obj;
         }
@@ -152,13 +150,13 @@ namespace PSFramework.Serialization
         /// </summary>
         public static void RegisterAssemblyResolver()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += SerializationTypeConverter.AssemblyHandler;
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyHandler;
         }
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             PSFCore.PSFCoreHost.WriteDebug("Serializer.AssemblyResolve.Sender", sender);
             PSFCore.PSFCoreHost.WriteDebug("Serializer.AssemblyResolve.Args", args);
-
+            
             // 1) Match directly against existing assembly
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
@@ -169,7 +167,7 @@ namespace PSFramework.Serialization
             string shortName = args.Name.Split(',')[0];
             if (AssemblyShortnameMapping.Count > 0 && AssemblyShortnameMapping[shortName])
                 for (int i = 0; i < assemblies.Length; i++)
-                    if (String.Equals(assemblies[i].FullName.Split(',')[0],shortName, StringComparison.InvariantCultureIgnoreCase))
+                    if (String.Equals(assemblies[i].FullName.Split(',')[0], shortName, StringComparison.InvariantCultureIgnoreCase))
                         return assemblies[i];
 
             if (AssemblyMapping.Count == 0)
@@ -201,7 +199,7 @@ namespace PSFramework.Serialization
         /// <returns>Whether the object can be serialized</returns>
         public static bool CanSerialize(object obj)
         {
-            return obj != null && SerializationTypeConverter.CanSerialize(obj.GetType());
+            return obj != null && CanSerialize(obj.GetType());
         }
 
         /// <summary>
@@ -211,7 +209,7 @@ namespace PSFramework.Serialization
         /// <returns>Whether the specified type can be serialized</returns>
         public static bool CanSerialize(Type type)
         {
-            return SerializationTypeConverter.TypeIsSerializable(type) && !type.IsEnum || (type.Equals(typeof(Exception)) || type.IsSubclassOf(typeof(Exception)));
+            return TypeIsSerializable(type) && !type.IsEnum || (type.Equals(typeof(Exception)) || type.IsSubclassOf(typeof(Exception)));
         }
 
         /// <summary>
@@ -237,7 +235,7 @@ namespace PSFramework.Serialization
             for (int i = 0; i < genericArguments.Length; i++)
             {
                 Type type2 = genericArguments[i];
-                if (!SerializationTypeConverter.TypeIsSerializable(type2))
+                if (!TypeIsSerializable(type2))
                 {
                     return false;
                 }
@@ -252,16 +250,9 @@ namespace PSFramework.Serialization
         /// <returns>A memory stream.</returns>
         public static object GetSerializationData(PSObject psObject)
         {
-            object result;
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                binaryFormatter.Serialize(memoryStream, psObject.BaseObject);
-                result = memoryStream.ToArray();
-            }
-            return result;
+            return CompressString(ConvertToXml(psObject.BaseObject));
         }
-    
+
         /// <summary>
         /// Allows remapping assembly-names for objects being deserialized, using the full assembly-name.
         /// </summary>
@@ -270,5 +261,71 @@ namespace PSFramework.Serialization
         /// Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
         /// </summary>
         public static readonly ConcurrentDictionary<string, bool> AssemblyShortnameMapping = new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
+
+        public static string ConvertToXml(object Item)
+        {
+            if (Item == null)
+                throw new ArgumentNullException("item");
+
+            string result;
+            using (StringWriter writer = new StringWriter())
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            {
+                DataContractSerializer serializer = new DataContractSerializer(Item.GetType());
+                serializer.WriteObject(xmlWriter, Item);
+                result = writer.ToString();
+            }
+            return result;
+        }
+
+        public static object ConvertFromXml(string Xml, Type ExpectedType)
+        {
+            object result;
+            using (StringReader reader = new StringReader(Xml))
+            using (XmlTextReader xmlReader = new XmlTextReader(reader))
+            {
+                DataContractSerializer serializer = new DataContractSerializer(ExpectedType);
+                result = serializer.ReadObject(xmlReader);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Compress string using default zip algorithms
+        /// </summary>
+        /// <param name="String">The string to compress</param>
+        /// <returns>Returns a compressed string as byte-array.</returns>
+        public static byte[] CompressString(string String)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(String);
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                gZipStream.Write(bytes, 0, bytes.Length);
+                gZipStream.Close();
+                outputStream.Close();
+                return outputStream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Expand a string using default zig algorithms
+        /// </summary>
+        /// <param name="CompressedString">The compressed string to expand</param>
+        /// <returns>Returns an expanded string.</returns>
+        public static string ExpandString(byte[] CompressedString)
+        {
+            using (MemoryStream inputStream = new MemoryStream(CompressedString))
+            using (MemoryStream outputStream = new MemoryStream())
+            using (GZipStream converter = new GZipStream(inputStream, CompressionMode.Decompress))
+            {
+                converter.CopyTo(outputStream);
+                converter.Close();
+                inputStream.Close();
+                string result = Encoding.UTF8.GetString(outputStream.ToArray());
+                outputStream.Close();
+                return result;
+            }
+        }
     }
 }
