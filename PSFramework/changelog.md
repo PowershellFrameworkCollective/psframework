@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.12.346 (2024-09-25)
+
+- Fix: MessageLevel Modifiers break Write-PSFMessage
+
 ## 1.12.345 (2024-09-17)
 
 > Breaking Change
