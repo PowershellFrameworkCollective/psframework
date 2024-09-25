@@ -262,6 +262,12 @@ namespace PSFramework.Serialization
         /// </summary>
         public static readonly ConcurrentDictionary<string, bool> AssemblyShortnameMapping = new ConcurrentDictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
+        /// <summary>
+        /// Converts an object into XML
+        /// </summary>
+        /// <param name="Item">The object to serialize</param>
+        /// <returns>The XML form of the object</returns>
+        /// <exception cref="ArgumentNullException">$null objects are not accepted</exception>
         public static string ConvertToXml(object Item)
         {
             if (Item == null)
@@ -278,6 +284,12 @@ namespace PSFramework.Serialization
             return result;
         }
 
+        /// <summary>
+        /// Deserializes an XML object back into its object form
+        /// </summary>
+        /// <param name="Xml">The XML text to convert</param>
+        /// <param name="ExpectedType">What type to convert to</param>
+        /// <returns>The converted object</returns>
         public static object ConvertFromXml(string Xml, Type ExpectedType)
         {
             object result;

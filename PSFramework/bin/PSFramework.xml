@@ -7546,6 +7546,22 @@
             Allows remapping assembly-names for objects being deserialized, using an abbreviated name only, to help avoid having to be version specific.
             </summary>
         </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.ConvertToXml(System.Object)">
+            <summary>
+            Converts an object into XML
+            </summary>
+            <param name="Item">The object to serialize</param>
+            <returns>The XML form of the object</returns>
+            <exception cref="T:System.ArgumentNullException">$null objects are not accepted</exception>
+        </member>
+        <member name="M:PSFramework.Serialization.SerializationTypeConverter.ConvertFromXml(System.String,System.Type)">
+            <summary>
+            Deserializes an XML object back into its object form
+            </summary>
+            <param name="Xml">The XML text to convert</param>
+            <param name="ExpectedType">What type to convert to</param>
+            <returns>The converted object</returns>
+        </member>
         <member name="M:PSFramework.Serialization.SerializationTypeConverter.CompressString(System.String)">
             <summary>
             Compress string using default zip algorithms

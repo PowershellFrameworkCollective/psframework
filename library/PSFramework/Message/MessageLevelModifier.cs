@@ -61,15 +61,17 @@ namespace PSFramework.Message
         public bool AppliesTo(string FunctionName, string ModuleName, List<string> Tags)
         {
             // Negatives
-            if (ExcludeFunctionName.Equals(FunctionName, StringComparison.OrdinalIgnoreCase))
+            if (!String.IsNullOrEmpty(ExcludeFunctionName) && ExcludeFunctionName.Equals(FunctionName, StringComparison.OrdinalIgnoreCase))
                 return false;
-            if (ExcludeModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase))
+            if (!String.IsNullOrEmpty(ExcludeModuleName) && ExcludeModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase))
                 return false;
+            
             if (Tags != null)
                 foreach (string tag in ExcludeTags)
-                    foreach (string tag2 in Tags)
-                        if (tag.Equals(tag2, StringComparison.OrdinalIgnoreCase))
-                            return false;
+                    if (!String.IsNullOrEmpty(tag))
+                        foreach (string tag2 in Tags)
+                            if (tag.Equals(tag2, StringComparison.OrdinalIgnoreCase))
+                                return false;
 
             // Positives
             if (!String.IsNullOrEmpty(IncludeFunctionName))
@@ -83,9 +85,10 @@ namespace PSFramework.Message
             {
                 if (Tags != null)
                     foreach (string tag in IncludeTags)
-                        foreach (string tag2 in Tags)
-                            if (tag.Equals(tag2, StringComparison.OrdinalIgnoreCase))
-                                return true;
+                        if (!String.IsNullOrEmpty(tag))
+                            foreach (string tag2 in Tags)
+                                if (tag.Equals(tag2, StringComparison.OrdinalIgnoreCase))
+                                    return true;
 
                 return false;
             }
