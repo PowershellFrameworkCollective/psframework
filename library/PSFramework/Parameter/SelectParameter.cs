@@ -25,8 +25,15 @@ namespace PSFramework.Parameter
 
             if (!Value.Contains(" "))
             {
-                this.Value = Value;
-                return;
+                if (Value.StartsWith("$"))
+                {
+                    Value = Value + " as " + Value.Substring(1);
+                }
+                else
+                {
+                    this.Value = Value;
+                    return;
+                }
             }
 
             #region Process Input
@@ -119,7 +126,16 @@ namespace PSFramework.Parameter
             }
 
             if (propertyName != ".")
-                stringValue = String.Format("{0}.{1}", stringValue, valueName);
+            {
+                if (valueName.StartsWith("$"))
+                {
+                    stringValue = valueName;
+                }
+                else
+                {
+                    stringValue = String.Format("{0}.{1}", stringValue, valueName);
+                }
+            }
 
             // <guid> = $_
             // "(<size>(<cast>(<value>))<sizeName>)"
