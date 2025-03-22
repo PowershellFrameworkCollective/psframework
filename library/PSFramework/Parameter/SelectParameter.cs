@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace PSFramework.Parameter
 {
     /// <summary>
-    /// Class that automatically parses input chosen for the -Property parameter of Select-PSUObject
+    /// Class that automatically parses input chosen for the -Property parameter of Select-PSFObject
     /// </summary>
     public class SelectParameter : ParameterClass
     {
@@ -23,17 +23,18 @@ namespace PSFramework.Parameter
         {
             InputObject = Value;
 
+            // check if Value is a variable name (i.e. starts with $ and is a single word)
+            // if so, the variable value is stored in a property with the same name
+            if (Value.StartsWith("$") && !Value.Contains(" "))
+            {
+                Value = Value + " as " + Value.Substring(1);
+            }
+
+            // check if Value is a property name (i.e. is a single word)
             if (!Value.Contains(" "))
             {
-                if (Value.StartsWith("$"))
-                {
-                    Value = Value + " as " + Value.Substring(1);
-                }
-                else
-                {
-                    this.Value = Value;
-                    return;
-                }
+                this.Value = Value;
+                return;
             }
 
             #region Process Input
