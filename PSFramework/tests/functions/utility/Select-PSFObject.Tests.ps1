@@ -1,4 +1,4 @@
-﻿Describe "Select-PSFObject Unit Tests" -Tag "UnitTests" {
+Describe "Select-PSFObject Unit Tests" -Tag "UnitTests" {
 	BeforeAll {
 		$object = [PSCustomObject]@{
 			Foo  = 42
@@ -18,6 +18,8 @@
 			Bar  = 88
 			Tara = 28
 		}
+
+		$variable = 42
 	}
 	
 	Describe "Basic DSL functionalities" {
@@ -34,9 +36,9 @@
 			($object2 | Select-PSFObject -Property 'Foo size KB:1:1').Foo | Should -Be "41 KB"
 		}
 	}
-	
-	Describe "Selects from other variables" {
-		It "picks values from other variables" {
+
+	Describe "Selects from other object variables" {
+		It "picks values from other object variables" {
 			($object2 | Select-PSFObject -Property 'Tara from object').Tara | Should -Be 21
 		}
 		
@@ -44,7 +46,16 @@
 			($object2 | Select-PSFObject -Property 'Tara from List where Foo = Bar').Tara | Should -Be 28
 		}
 	}
-	
+
+	Describe "Selects from other non-object variables" {
+		It "picks values from other non-object variables" {
+			($object2 | Select-PSFObject -Property '$variable as Tara').Tara | Should -Be 42
+		}
+		It "uses the variable name as property name" {
+			($object2 | Select-PSFObject -Property '$variable').variable | Should -Be 42
+		}
+	}
+
 	Describe "Display Settings are applied" {
 		It "sets the correct properties to show in whitelist mode" {
 			$obj = [PSCustomObject]@{ Foo = "Bar"; Bar = 42; Right = "Left" }
