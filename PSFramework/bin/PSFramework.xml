@@ -6041,7 +6041,7 @@
         </member>
         <member name="T:PSFramework.Parameter.SelectParameter">
             <summary>
-            Class that automatically parses input chosen for the -Property parameter of Select-PSUObject
+            Class that automatically parses input chosen for the -Property parameter of Select-PSFObject
             </summary>
         </member>
         <member name="F:PSFramework.Parameter.SelectParameter.Value">
