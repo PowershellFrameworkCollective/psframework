@@ -61,14 +61,9 @@ if ($IsLinux -or $IsMacOs)
 }
 else
 {
-	# Defaults to $Env:ProgramData on Windows
-	$script:path_FileSystem = Join-Path $Env:ProgramData "$psVersionName\PSFramework\Config"
-	$script:path_ProgramData = $env:ProgramData
-	if (-not $script:path_FileSystem)
-	{
-		$script:path_ProgramData = [Environment]::GetFolderPath("CommonApplicationData")
-		$script:path_FileSystem = Join-Path ([Environment]::GetFolderPath("CommonApplicationData")) "$psVersionName\PSFramework\Config"
-	}
+    $localProgramData = $Env:ProgramData -or [Environment]::GetFolderPath("CommonApplicationData")
+    $script:path_FileSystem = Join-Path $localProgramData "$psVersionName\PSFramework\Config"
+    $script:path_ProgramData = $localProgramData
 }
 #endregion System
 
