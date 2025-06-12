@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## ???
+
+- New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
+- Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
+- Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
+
 ## 1.12.346 (2024-09-25)
 
 - Fix: MessageLevel Modifiers break Write-PSFMessage

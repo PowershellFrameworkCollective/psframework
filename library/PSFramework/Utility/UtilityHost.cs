@@ -484,6 +484,54 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
+        /// Creates a new PSCustomObject based on the base object wrapped by the input.
+        /// </summary>
+        /// <param name="Item">The item to refelct upon.</param>
+        /// <param name="IncludePublic">Whether to include public properties / fields</param>
+        /// <param name="IncludePrivate">Whether to include private properties / fields</param>
+        /// <returns>A new object containing only properties and fields of the base input. Anything else (including noteproperties of the input) will be ignored.</returns>
+        public static PSObject GetReflectedObject(PSObject Item, bool IncludePublic = true, bool IncludePrivate = true)
+        {
+            if (Item == null || Item.BaseObject == null)
+                return null;
+
+            PSObject temp = new PSObject();
+
+            Type type = Item.BaseObject.GetType();
+            if (IncludePublic)
+            {
+                foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    PSNoteProperty newProperty = new PSNoteProperty(property.Name, property.GetValue(Item.BaseObject));
+                    temp.Properties.Add(newProperty);
+                }
+
+                foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    PSNoteProperty newProperty = new PSNoteProperty(field.Name, field.GetValue(Item.BaseObject));
+                    temp.Properties.Add(newProperty);
+                }
+            }
+
+            if (IncludePrivate)
+            {
+                foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic))
+                {
+                    PSNoteProperty newProperty = new PSNoteProperty(property.Name, property.GetValue(Item.BaseObject));
+                    temp.Properties.Add(newProperty);
+                }
+
+                foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                {
+                    PSNoteProperty newProperty = new PSNoteProperty(field.Name, field.GetValue(Item.BaseObject));
+                    temp.Properties.Add(newProperty);
+                }
+            }
+
+            return temp;
+        }
+
+        /// <summary>
         /// Execute a constructor for the specified type, creating a new instance of it.
         /// It will try each constructor with the correct number of arguments until it finds a working one, so ... not REALLY efficient.
         /// May have side-effects when used on types that do significant logic in their constructors even when they fail.

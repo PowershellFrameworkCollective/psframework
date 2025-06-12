@@ -134,6 +134,7 @@
     <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Meta\PsfErrorRecord.cs" />
     <Compile Include="Meta\PSTraceSource.cs" />
+    <Compile Include="Meta\Scope.cs" />
     <Compile Include="Object\ObjectHost.cs" />
     <Compile Include="Parameter\CertificateParameter.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />

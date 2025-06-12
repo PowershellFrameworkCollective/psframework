@@ -21,6 +21,7 @@ $TypeAliasTable = @{
 	PsfPath                 = 'PSFramework.Parameter.PathFileSystemParameter'
 	PsfPathLax              = 'PSFramework.Parameter.PathFileSystemLaxParameter'
 	psfrgx                  = "PSFramework.Utility.RegexHelper"
+	PsfScope                = 'PSFramework.Meta.Scope'
 	PsfScriptBlock          = 'PSFramework.Utility.PsfScriptBlock'
 	PsfScriptTransform      = 'PSFramework.Utility.ScriptTransformationAttribute'
 	PSFSize                 = "PSFramework.Utility.Size"
