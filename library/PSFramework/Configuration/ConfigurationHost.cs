@@ -139,6 +139,8 @@ namespace PSFramework.Configuration
                 case ConfigurationValueType.ConsoleColor:
                     return Enum.Parse(typeof(ConsoleColor), PersistedValue);
                 case ConfigurationValueType.Hashtable:
+                    if (PersistedValue == "")
+                        return new Hashtable(StringComparer.OrdinalIgnoreCase);
                     string[] hashItems = PersistedValue.Split(new string[1] { "þHþ" }, StringSplitOptions.None);
                     Hashtable tempTable = new Hashtable();
                     foreach (string tempValue in hashItems)
