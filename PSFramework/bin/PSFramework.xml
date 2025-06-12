@@ -4873,11 +4873,28 @@
             <param name="Members">The set of properties to add</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNotePropertyBulk(System.Management.Automation.PSObject[],System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Add a set of noteproperties to all specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Members">The set of properties to add</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.String,System.Object,System.Boolean)">
             <summary>
             Adds a single noteproperty to the specified PowerShell object
             </summary>
             <param name="Item">The object to extend</param>
+            <param name="Name">The name of the property to add</param>
+            <param name="Value">The value to assign to the new property</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNotePropertyBulk(System.Management.Automation.PSObject[],System.String,System.Object,System.Boolean)">
+            <summary>
+            Adds a single noteproperty to a lot of specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
             <param name="Name">The name of the property to add</param>
             <param name="Value">The value to assign to the new property</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
@@ -4892,11 +4909,28 @@
             <param name="Set">(optional) The code used when assigning input to the property.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptPropertyBulk(System.Management.Automation.PSObject[],System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-calculated property to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Name">The name of the script-property to add</param>
+            <param name="Get">The code used to read the value</param>
+            <param name="Set">(optional) The code used when assigning input to the property.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.RemoveMember(System.Management.Automation.PSObject,System.String)">
             <summary>
             Removes a member from the specified PowerShell object
             </summary>
             <param name="Item">The object to remove a member from</param>
+            <param name="Name">The name of the member to remove.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.RemoveMemberBulk(System.Management.Automation.PSObject[],System.String)">
+            <summary>
+            Removes a member from the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to remove a member from</param>
             <param name="Name">The name of the member to remove.</param>
         </member>
         <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
@@ -4908,11 +4942,28 @@
             <param name="Code">The code implementing the logic when the method is called.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethodBulk(System.Management.Automation.PSObject[],System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-based method to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Name">The name of the method to add.</param>
+            <param name="Code">The code implementing the logic when the method is called.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.Collections.Hashtable,System.Boolean)">
             <summary>
             Adds several script methods to the specified PowerShell object
             </summary>
             <param name="Item">The object to extend</param>
+            <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethodBulk(System.Management.Automation.PSObject[],System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Adds several script methods to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
             <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
@@ -10025,6 +10076,15 @@
             <param name="Name">The name of the method to invoke</param>
             <param name="Arguments">The arguments to pass to the method</param>
             <returns>The result of the method invoked</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetReflectedObject(System.Management.Automation.PSObject,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new PSCustomObject based on the base object wrapped by the input.
+            </summary>
+            <param name="Item">The item to refelct upon.</param>
+            <param name="IncludePublic">Whether to include public properties / fields</param>
+            <param name="IncludePrivate">Whether to include private properties / fields</param>
+            <returns>A new object containing only properties and fields of the base input. Anything else (including noteproperties of the input) will be ignored.</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor(System.Type,System.Object[],System.Reflection.BindingFlags)">
             <summary>

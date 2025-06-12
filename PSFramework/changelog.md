@@ -4,7 +4,9 @@
 
 - New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
 - Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
+- Upd: Select-PSFObject - Can now select variables directly, as well as properties of variables (#664)
 - Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
+- Fix: Pathing issue - Programdata resolution fails when environment variable is not available (#671)
 
 ## 1.12.346 (2024-09-25)
 
