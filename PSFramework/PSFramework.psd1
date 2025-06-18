@@ -38,6 +38,7 @@
 		'Add-PSFFilterCondition'
 		'Add-PSFLoggingProviderRunspace'
 		'Add-PSFRunspaceWorker'
+		'Add-PSFTeppCompletion'
 		'Clear-PSFMessage'
 		'Clear-PSFresultCache'
 		'Compare-PSFArray'
@@ -181,6 +182,7 @@
 		'Set-PSFConfig'
 		'Set-PSFObjectOrder'
 		'Test-PSFShouldProcess'
+		'Update-PSFTeppCompletion'
 		'Write-PSFMessage'
 	)
 	

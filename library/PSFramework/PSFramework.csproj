@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
     <Compile Include="Commands\SortPSFObjectCommand.cs" />
+    <Compile Include="Commands\UpdatePSFTeppCompletionCommand.cs" />
     <Compile Include="Configuration\PersistedConfig.cs" />
     <Compile Include="Filter\Condition.cs" />
     <Compile Include="Filter\ConditionSet.cs" />

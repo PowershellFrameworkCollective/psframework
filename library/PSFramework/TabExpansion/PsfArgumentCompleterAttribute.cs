@@ -10,6 +10,11 @@ namespace PSFramework.TabExpansion
     public class PsfArgumentCompleterAttribute : Attribute
     {
         /// <summary>
+        /// The name of the completion
+        /// </summary>
+        public string CompletionName = "";
+
+        /// <summary>
         /// Create an argument completer offering but the name of the registered completion
         /// </summary>
         /// <param name="Completion">The completion scriptblock to use to provide completion information</param>
@@ -65,13 +70,18 @@ namespace PSFramework.TabExpansion
     public class PsfArgumentCompleterAttribute : ArgumentCompleterAttribute
     {
         /// <summary>
+        /// The name of the completion
+        /// </summary>
+        public string CompletionName = "";
+
+        /// <summary>
         /// Create an argument completer offering but the name of the registered completion
         /// </summary>
         /// <param name="Completion">The completion scriptblock to use to provide completion information</param>
         public PsfArgumentCompleterAttribute(string Completion)
             : base(TabExpansionHost.Scripts.ContainsKey(Completion) ? TabExpansionHost.Scripts[Completion].ScriptBlock : ScriptBlock.Create(""))
         {
-            
+            CompletionName = Completion;
         }
 
         /// <summary>
@@ -103,7 +113,7 @@ namespace PSFramework.TabExpansion
         public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name)
             : base(TabExpansionHost.RegisterCompletion(Name, ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), false, true).ScriptBlock)
         {
-
+            CompletionName = Name;
         }
 
         /// <summary>
@@ -115,7 +125,7 @@ namespace PSFramework.TabExpansion
         public PsfArgumentCompleterAttribute(ScriptBlock ScriptBlock, string Name, bool Global)
             : base(TabExpansionHost.RegisterCompletion(Name, ScriptBlock, TeppScriptMode.Auto, new Parameter.TimeSpanParameter(0), Global, true).ScriptBlock)
         {
-
+            CompletionName = Name;
         }
     }
 #endif

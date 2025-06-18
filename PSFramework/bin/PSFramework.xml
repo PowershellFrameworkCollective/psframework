@@ -143,6 +143,17 @@
             Execute end step
             </summary>
         </member>
+        <member name="T:PSFramework.Commands.UpdatePSFTeppCompletionCommand">
+            <summary>
+            Imports provided values to parameters configured for an auto-training completer.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.UpdatePSFTeppCompletionCommand.ProcessRecord">
+            <summary>
+            Execute the main (and only) step: Copying over values provided to the calling command as parameter into the completion cache.
+            Only applies to parameters configured for auto-training tab completers.
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
             <summary>
             Implements the ConvertTo-PSFHashtable command
@@ -7645,6 +7656,11 @@
             Allows integrating PSFramework tab expansion by attribute, rather than command.
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.CompletionName">
+            <summary>
+            The name of the completion
+            </summary>
+        </member>
         <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.String)">
             <summary>
             Create an argument completer offering but the name of the registered completion
@@ -7734,6 +7750,26 @@
             Whether to execute the scriptblock in the global scope
             </summary>
         </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.MatchAnywhere">
+            <summary>
+            If true: Match input against any part of the options, not just the beginning
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.AlwaysQuote">
+            <summary>
+            If true: Wrap all results into quotes, not just those with whitespace
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.FuzzyMatch">
+            <summary>
+            If true: Apply FuzzyMatching to the legal completions, not just direct word matching.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.DontSort">
+            <summary>
+            If true: Completion results will not be sorted by name.
+            </summary>
+        </member>
         <member name="P:PSFramework.TabExpansion.ScriptContainer.ShouldExecute">
             <summary>
             Returns whether a new refresh of tab completion should be executed.
@@ -7744,6 +7780,48 @@
             Returns the correct results, either by executing the scriptblock or consulting the cache
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.GetPattern(System.String)">
+            <summary>
+            Returns the matching pattern applied against the list of completion values.
+            </summary>
+            <param name="WordToComplete">What the user typed so far</param>
+            <returns>The resolved pattern to match with</returns>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.Trained">
+            <summary>
+            The trained values for the current completion scriptblock.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.AutoTraining">
+            <summary>
+            Whether this completion should automatically be trained with values provided to parameters
+            </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.AddTraining(System.String)">
+            <summary>
+            Add a completion option to the list of trained completions.
+            </summary>
+            <param name="Text">The value to offer for completion</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.AddTraining(System.Collections.Hashtable)">
+            <summary>
+            Add a completion option to the list of trained completions.
+            </summary>
+            <param name="Data">A hashtable with the completion data to add. Must at least contain a "Text" node.</param>
+            <exception cref="T:System.ArgumentException">An invalid hashtable, not containing a key named "Text" will cause an argument exception</exception>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.RemoveTraining(System.String)">
+            <summary>
+            Remove a previously provided completion value.
+            </summary>
+            <param name="Text">The text value to no longer complete.</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.RemoveTraining(System.Collections.Hashtable)">
+            <summary>
+            Remove a previously provided completion value.
+            </summary>
+            <param name="Data">Hashtable containing the completion to no longer offer.</param>
         </member>
         <member name="T:PSFramework.TabExpansion.TabExpansionHost">
             <summary>
@@ -7758,6 +7836,21 @@
         <member name="P:PSFramework.TabExpansion.TabExpansionHost.Cache">
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.MatchAnywhere">
+            <summary>
+            Whether PSFramework completion should by default match type text to anywhere in the included/valid options' text, not just from the beginning.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.AlwaysQuote">
+            <summary>
+            Whether PSFramework completion should always wrap quotes around the completion text, even if there is no whitespace.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.FuzzyMatch">
+            <summary>
+            Whether PSFramework completion should use fuzzy-matching when matching completion values with the already typed text.
             </summary>
         </member>
         <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean)">

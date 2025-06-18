@@ -2,7 +2,20 @@
 
 ## ???
 
+- New: Add-PSFTeppCompletion - Adds a completion result to a tab completion script.
+- New: Remove-PSFTeppCompletion - Removes a previously added completion result from a tab completion script.
+- New: Update-PSFTeppCompletion - Automatically adds provided values to the completion result of the associated completion script.
 - New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
+- New: Configuration Setting - `PSFramework.TabExpansion.FuzzyMatch`: Whether to match tab completions with Fuzzy-Matching by default.
+- New: Configuration Setting - `PSFramework.TabExpansion.MatchAnywhere`: Wrap all completion results into quotes, whitespace or not.
+- New: Configuration Setting - `PSFramework.TabExpansion.AlwaysQuote`: Whether to match tab completions with Fuzzy-Matching by default.
+- Upd: Tab Completion - Now sorts by the List Item Text - the options shown in the tab menu - rather than the actual value being inserted into the console.
+- Upd: Tab Completion - Added support for `ToolTipString` and `ListItemTextString` in the result, allowing to localize tab completion tooltip and list items.
+- Upd: Tab Completion - Can now be trained / provided with an explicit list of completions to offer.
+- Upd: Register-PSFTeppScriptblock - add parameter `-FuzzyMatch` to match input against the completions using Fuzzy Logic.
+- Upd: Register-PSFTeppScriptblock - add parameter `-MatchAnywhere` to match input against anywhere within the completions, not just from the start.
+- Upd: Register-PSFTeppScriptblock - add parameter `-AlwaysQuote` to wrap all completion results into quotes, irrespective of whether they contain a whitespace or not.
+- Upd: Register-PSFTeppScriptblock - add parameter `-DontSort` to stop sorting completion results alphabetically.
 - Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
 - Upd: Select-PSFObject - Can now select variables directly, as well as properties of variables (#664)
 - Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
