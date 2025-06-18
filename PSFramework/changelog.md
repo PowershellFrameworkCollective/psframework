@@ -20,6 +20,7 @@
 - Upd: Select-PSFObject - Can now select variables directly, as well as properties of variables (#664)
 - Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
 - Fix: Pathing issue - Programdata resolution fails when environment variable is not available (#671)
+- Fix: ScriptTransformation Attribute - conversion results were not considered valid, when not of the demanded type, but one inheriting from the demanded type. (#646)
 
 ## 1.12.346 (2024-09-25)
 
