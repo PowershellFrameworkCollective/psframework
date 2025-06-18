@@ -25,14 +25,16 @@
 	param (
 		[PsfArgumentCompleter('PSFramework-tepp-scriptblockname')]
 		[PsfValidateSet(TabCompletion = 'PSFramework-tepp-scriptblockname')]
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+		[Alias('Completion')]
 		[string]
 		$Name,
 
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]
 		[object[]]
 		$Options
 	)
+	
 	process {
 		$completionScript = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name]
 		foreach ($option in $Options) {
