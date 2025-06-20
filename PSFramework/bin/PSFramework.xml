@@ -4871,6 +4871,159 @@
             <param name="Category">The category of the error, determining the exception type</param>
             <returns>An exception</returns>
         </member>
+        <member name="T:PSFramework.Meta.Scope">
+            <summary>
+            Wrapper exposing a PowerShell scope and all its content.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Type">
+            <summary>
+            What kind of scope it is.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.#ctor">
+            <summary>
+            Creates an empty scope object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.#ctor(System.Object)">
+            <summary>
+            Creates a scope object, wrapping around a previously reflected PS scope object.
+            </summary>
+            <param name="RawScope">The raw scope object, as obtained from the PowerShell engine via reflection.</param>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Global">
+            <summary>
+            Get a representation of the global scope.
+            </summary>
+            <returns>a representation of the global scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Module">
+            <summary>
+            Get a representation of the module scope.
+            </summary>
+            <returns>a representation of the module scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Script">
+            <summary>
+            Get a representation of the script scope.
+            </summary>
+            <returns>a representation of the script scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Current">
+            <summary>
+            Get a representation of the current scope.
+            </summary>
+            <returns>a representation of the current scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableVariables">
+            <summary>
+            Enable access to variable content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableVariables">
+            <summary>
+            Disable access to variable content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Variables">
+            <summary>
+            The variables contained in the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.HasVariable(System.String)">
+            <summary>
+            Checks whether a specific variable exists in the scope
+            </summary>
+            <param name="Name">Name of the variable to scan for</param>
+            <returns>Whether the variable exists</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.GetVariableValue(System.String)">
+            <summary>
+            Retrieve the value of a variable in the scope.
+            Returns null if scope or variable do not exist.
+            </summary>
+            <param name="Name">Name of the variable to retrieve.</param>
+            <returns>The value of the variable.</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.SetVariable(System.String,System.Object)">
+            <summary>
+            Change the value of a variable, in effect overwriting it.
+            </summary>
+            <param name="Name">The name of the variable to apply</param>
+            <param name="Value">The value to assign to the variable</param>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableAliases">
+            <summary>
+            Enable access to alias content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableAliases">
+            <summary>
+            Disable access to alias content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Aliases">
+            <summary>
+            The aliases of the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableFunctions">
+            <summary>
+            Enable access to function content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableFunctions">
+            <summary>
+            Disable access to function content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Functions">
+            <summary>
+            The functions defined within the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableCmdlets">
+            <summary>
+            Enable access to cmdlet content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableCmdlets">
+            <summary>
+            Disable access to cmdlet content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Cmdlets">
+            <summary>
+            The Cmdlets contained within the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableDrives">
+            <summary>
+            Enable access to PSDrivecontent of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableDrives">
+            <summary>
+            Disable access to PSDrivecontent of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Drives">
+            <summary>
+            The PSDrives contained within the scope
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Parent">
+            <summary>
+            The Parent Scope of the current scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.VerifyType">
+            <summary>
+            Update the assigned Type.
+            Intended when generating a scope based on another scope.
+            </summary>
+        </member>
         <member name="T:PSFramework.Object.ObjectHost">
             <summary>
             Provides centralized utilities for interacting with PowerShell objects.
@@ -5366,6 +5519,70 @@
             Convert anything else
             </summary>
             <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSingle">
+            <summary>
+            Parameterclass accepting/resolving to a single, fully-resolved path to a file.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.PathFileSingle.Path">
+            <summary>
+            The fully-resolved path
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.ToString">
+            <summary>
+            Default text representation of the PathFileSingle type.
+            </summary>
+            <returns>Its path.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSingle">
+            <summary>
+            Implicitly convert FileInfo to PathFileSingle.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
         </member>
         <member name="T:PSFramework.Parameter.PathFileSystemLaxParameter">
             <summary>
