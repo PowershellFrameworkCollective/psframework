@@ -143,7 +143,7 @@
     <Compile Include="Parameter\DateTimeParameter.cs" />
     <Compile Include="Parameter\EncodingParameter.cs" />
     <Compile Include="Parameter\PathDirectoryLaxParameter.cs" />
-    <Compile Include="Parameter\PathFileSingle.cs" />
+    <Compile Include="Parameter\PathFileSingleParameter.cs" />
     <Compile Include="Parameter\PathFileSystemLaxParameter.cs" />
     <Compile Include="Parameter\PathFileSystemParameter.cs" />
     <Compile Include="Parameter\PathFileSystemParameterBase.cs" />

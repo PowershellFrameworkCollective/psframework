@@ -5520,65 +5520,65 @@
             </summary>
             <param name="Input"></param>
         </member>
-        <member name="T:PSFramework.Parameter.PathFileSingle">
+        <member name="T:PSFramework.Parameter.PathFileSingleParameter">
             <summary>
             Parameterclass accepting/resolving to a single, fully-resolved path to a file.
             </summary>
         </member>
-        <member name="F:PSFramework.Parameter.PathFileSingle.Path">
+        <member name="F:PSFramework.Parameter.PathFileSingleParameter.Path">
             <summary>
             The fully-resolved path
             </summary>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.String)">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.String)">
             <summary>
             Processes a single string as a single file.
             </summary>
             <param name="Path">The path to process</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.IO.FileInfo)">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.IO.FileInfo)">
             <summary>
             Processes a single FileInfo item as a single file.
             </summary>
             <param name="Path">The path to process</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.Uri)">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.Uri)">
             <summary>
             Processes a single Uri as a single file.
             </summary>
             <param name="Path">The path to process</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.#ctor(System.Object)">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.Object)">
             <summary>
             Processes a single object as a single file.
             </summary>
             <param name="Path">The path to process</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.ToString">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.ToString">
             <summary>
             Default text representation of the PathFileSingle type.
             </summary>
             <returns>Its path.</returns>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.String">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.String">
             <summary>
             Implicitly convert to string.
             </summary>
             <param name="Path">The path to convert</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.IO.FileInfo">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.IO.FileInfo">
             <summary>
             Implicitly convert to FileInfo.
             </summary>
             <param name="Path">The path to convert</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSingle">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSingleParameter">
             <summary>
             Implicitly convert FileInfo to PathFileSingle.
             </summary>
             <param name="Info">The path to convert</param>
         </member>
-        <member name="M:PSFramework.Parameter.PathFileSingle.op_Implicit(PSFramework.Parameter.PathFileSingle)~System.IO.FileSystemInfo">
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.IO.FileSystemInfo">
             <summary>
             Implicitly convert to FileSystemInfo.
             </summary>

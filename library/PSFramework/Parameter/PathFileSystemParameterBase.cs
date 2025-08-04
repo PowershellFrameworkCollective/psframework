@@ -190,7 +190,7 @@ namespace PSFramework.Parameter
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Join(", ", this);
+            return String.Join(", ", this.ToArray());
         }
     }
 }
