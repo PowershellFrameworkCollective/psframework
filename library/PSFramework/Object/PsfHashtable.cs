@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Management.Automation;
+using PSFramework.Extension;
 
 namespace PSFramework.Object
 {
@@ -12,6 +14,16 @@ namespace PSFramework.Object
         /// The default value when retrieving values for keys that do not exist
         /// </summary>
         private object defaultValue;
+
+        /// <summary>
+        /// Whether in case of unexpected key, the key should be returned, rather than a default value.
+        /// </summary>
+        private bool passThru;
+
+        /// <summary>
+        /// Scriptblock used to calculate result when providing a key that is not applied to the hashtable.
+        /// </summary>
+        private ScriptBlock calculator;
 
         /// <summary>
         /// Creates a new, empty psfhashtable
@@ -43,6 +55,25 @@ namespace PSFramework.Object
         }
 
         /// <summary>
+        /// Enables the PassThru behavior, where an unexpected key gets returned as the default action
+        /// </summary>
+        public void EnablePassthru()
+            { passThru = true; }
+
+        /// <summary>
+        /// Disables the PassThru behavior, where an unexpected key would get returned as the default action
+        /// </summary>
+        public void DisablePassThru()
+            { passThru = false; }
+
+        /// <summary>
+        /// Sets the scriptblock used to calculate the results for keys, that are not registered with the hashtable
+        /// </summary>
+        /// <param name="Calculator">The logic doing the calculating. Provide null to disable.</param>
+        public void SetCalculator(ScriptBlock Calculator)
+            { this.calculator = Calculator; }
+
+        /// <summary>
         /// Create a copy of the current PsfHashtable, including its default value. The default value will be the same instance of an object.
         /// </summary>
         /// <returns>A copy of the current PsfHashtable.</returns>
@@ -50,6 +81,8 @@ namespace PSFramework.Object
         {
             PsfHashtable temp = (PsfHashtable)base.Clone();
             temp.SetDefaultValue(defaultValue);
+            if (passThru)
+                temp.EnablePassthru();
             return temp;
         }
 
@@ -64,7 +97,13 @@ namespace PSFramework.Object
             get
             {
                 if (!ContainsKey(key))
+                {
+                    if (calculator != null)
+                        return calculator.DoInvokeReturnAsIs(false, 2, key, key, this, new object[] { key });
+                    if (passThru)
+                        return key;
                     return defaultValue;
+                }
                 return base[key];
             }
             set => base[key] = value;

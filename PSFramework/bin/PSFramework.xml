@@ -5141,6 +5141,16 @@
             The default value when retrieving values for keys that do not exist
             </summary>
         </member>
+        <member name="F:PSFramework.Object.PsfHashtable.passThru">
+            <summary>
+            Whether in case of unexpected key, the key should be returned, rather than a default value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Object.PsfHashtable.calculator">
+            <summary>
+            Scriptblock used to calculate result when providing a key that is not applied to the hashtable.
+            </summary>
+        </member>
         <member name="M:PSFramework.Object.PsfHashtable.#ctor">
             <summary>
             Creates a new, empty psfhashtable
@@ -5157,6 +5167,22 @@
             Set the default value provided, when reading for a key that does not yet exist.
             </summary>
             <param name="Value">The default value when accessing this PsfHashtable's values</param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.EnablePassthru">
+            <summary>
+            Enables the PassThru behavior, where an unexpected key gets returned as the default action
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.DisablePassThru">
+            <summary>
+            Disables the PassThru behavior, where an unexpected key would get returned as the default action
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.SetCalculator(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Sets the scriptblock used to calculate the results for keys, that are not registered with the hashtable
+            </summary>
+            <param name="Calculator">The logic doing the calculating. Provide null to disable.</param>
         </member>
         <member name="M:PSFramework.Object.PsfHashtable.Clone">
             <summary>

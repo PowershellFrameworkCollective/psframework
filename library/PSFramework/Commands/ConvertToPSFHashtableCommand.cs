@@ -48,6 +48,11 @@ namespace PSFramework.Commands
         public SwitchParameter Inherit;
 
         /// <summary>
+        /// Inherit from all parameters of the calling command, including all non-bound parameters.
+        /// </summary>
+        public SwitchParameter InheritParameters;
+
+        /// <summary>
         /// Remap individual keys in the hashtable provided.
         /// Effectively renames entries in the hashtable.
         /// </summary>
@@ -107,7 +112,7 @@ namespace PSFramework.Commands
             CommandInfo info = null;
             using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
-                ps.AddCommand("Get-Command")
+                ps.AddCommand(InvokeCommand.GetCmdlet("Get-Command"))
                     .AddParameter("Name", ReferenceCommand)
                     .AddParameter("ErrorAction", ActionPreference.SilentlyContinue);
                 info = ps.Invoke()[0]?.BaseObject as CommandInfo;
