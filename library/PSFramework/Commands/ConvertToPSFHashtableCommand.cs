@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Management.Automation.Language;
 using System.Linq;
 using PSFramework.PSFCore;
 using PSFramework.TabExpansion;
@@ -13,7 +14,7 @@ namespace PSFramework.Commands
     /// </summary>
     [Cmdlet(VerbsData.ConvertTo, "PSFHashtable")]
     [OutputType(new Type[] { typeof(Hashtable) })]
-    public class ConvertToPSFHashtableCommand : PSCmdlet
+    public class ConvertToPSFHashtableCommand : PSFCmdlet
     {
         #region Parameters
         /// <summary>
@@ -50,6 +51,7 @@ namespace PSFramework.Commands
         /// <summary>
         /// Inherit from all parameters of the calling command, including all non-bound parameters.
         /// </summary>
+        [Parameter()]
         public SwitchParameter InheritParameters;
 
         /// <summary>
@@ -87,6 +89,7 @@ namespace PSFramework.Commands
 
         StringComparer _Comparison = StringComparer.InvariantCultureIgnoreCase;
         List<string> _ToInclude = new List<string>();
+        List<string> _ReferenceParameters = new List<string>();
 
         #region Cmdlet Methods
         /// <summary>
@@ -115,7 +118,9 @@ namespace PSFramework.Commands
                 ps.AddCommand(InvokeCommand.GetCmdlet("Get-Command"))
                     .AddParameter("Name", ReferenceCommand)
                     .AddParameter("ErrorAction", ActionPreference.SilentlyContinue);
-                info = ps.Invoke()[0]?.BaseObject as CommandInfo;
+                var result = ps.Invoke();
+                if (result != null && result.Count > 0)
+                    info = result[0].BaseObject as CommandInfo;
             }
 
             PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand", info);
@@ -123,7 +128,10 @@ namespace PSFramework.Commands
             if (info == null)
                 throw new CommandNotFoundException($"Unable to find command: {ReferenceCommand}");
             if (String.IsNullOrEmpty(ReferenceParameterSetName))
+            {
                 _ToInclude.AddRange(info.Parameters.Keys.ToArray());
+                _ReferenceParameters.AddRange(info.Parameters.Keys.ToArray());
+            }
             else
             {
                 var parameterSets = info.ParameterSets.Where(o => String.Equals(o.Name, ReferenceParameterSetName, StringComparison.InvariantCultureIgnoreCase));
@@ -131,6 +139,7 @@ namespace PSFramework.Commands
                     throw new ArgumentException($"Parameterset {ReferenceParameterSetName} not found on command {info.Name}!");
                 PSFCoreHost.WriteDebug("ConvertTo-PSFHashTable: ReferenceCommand / ParameterSet", parameterSets);
                 _ToInclude.AddRange(parameterSets.First().Parameters.Select(o => o.Name).ToArray());
+                _ReferenceParameters.AddRange(parameterSets.First().Parameters.Select(o => o.Name).ToArray());
             }
         }
 
@@ -175,22 +184,37 @@ namespace PSFramework.Commands
                     foreach (string key in keys.Where(o => !_ToInclude.Contains(o.ToString(), _Comparison) && result.ContainsKey(o)))
                         result.Remove(key);    
                     if (Inherit.ToBool())
-                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)).Where(o => GetVariableValue(o) != null))
+                        foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o) && GetVariableValue(o) != null && (Exclude == null || !Exclude.Contains(o, StringComparer.OrdinalIgnoreCase))))
                             result[name] = GetVariableValue(name);
                     if (IncludeEmpty.ToBool())
                         foreach (string name in _ToInclude.Where(o => !result.ContainsKey(o)))
                             result[name] = null;
                 }
+                if (InheritParameters.ToBool())
+                {
+                    CallStackFrame caller = GetCaller();
+                    Dictionary<string, ParameterAst> parameters = GetCommandParameters(caller.InvocationInfo.MyCommand);
+                    foreach (ParameterAst parameter in parameters.Values)
+                    {
+                        if (result.ContainsKey(parameter.Name.VariablePath.UserPath) || (Exclude != null && Exclude.Contains(parameter.Name.VariablePath.UserPath, StringComparer.OrdinalIgnoreCase)))
+                            continue;
+                        if (!IsValidParameter(parameter, IncludeEmpty.ToBool(), caller.InvocationInfo.BoundParameters))
+                            continue;
+                        if (_ReferenceParameters.Count > 0 && !_ReferenceParameters.Contains(parameter.Name.VariablePath.UserPath, StringComparer.OrdinalIgnoreCase))
+                            continue;
+                        result[parameter.Name.VariablePath.UserPath] = GetVariableValue(parameter.Name.VariablePath.UserPath);
+                    }
+                }
                 if (Remap != null)
                 {
                     foreach (string key in Remap.Keys)
                     {
-                        if (result.ContainsKey(key))
-                        {
-                            object value = result[key];
-                            result.Remove(key);
-                            result[Remap[key]] = value;
-                        }
+                        if (!result.ContainsKey(key))
+                            continue;
+
+                        object value = result[key];
+                        result.Remove(key);
+                        result[Remap[key]] = value;
                     }
                 }
 
@@ -201,5 +225,38 @@ namespace PSFramework.Commands
             }
         }
         #endregion Cmdlet Methods
+
+        #region Internal Helpers
+        private bool IsValidParameter(ParameterAst Parameter, bool IncludeEmpty, Dictionary<string, object> BoundParameters)
+        {
+            if (Parameter.DefaultValue != null || IncludeEmpty)
+                return true;
+
+            if (BoundParameters.ContainsKey(Parameter.Name.VariablePath.UserPath))
+                return true;
+
+            return false;
+        }
+
+        private Dictionary<string, ParameterAst> GetCommandParameters(CommandInfo Command)
+        {
+            Dictionary<string, ParameterAst> result = new Dictionary<string, ParameterAst>(StringComparer.OrdinalIgnoreCase);
+
+            if (Command as FunctionInfo == null && Command as ScriptInfo == null && Command as ExternalScriptInfo == null)
+                return result;
+
+            if (Command as FunctionInfo != null)
+                foreach (ParameterAst parameter in ((FunctionDefinitionAst)((FunctionInfo)Command).ScriptBlock.Ast).Body.ParamBlock.Parameters)
+                    result[parameter.Name.VariablePath.UserPath] = parameter;
+            else if (Command as ExternalScriptInfo != null)
+                foreach (ParameterAst parameter in ((ScriptBlockAst)((ExternalScriptInfo)Command).ScriptBlock.Ast).ParamBlock.Parameters)
+                    result[parameter.Name.VariablePath.UserPath] = parameter;
+            else
+                foreach (ParameterAst parameter in ((ScriptBlockAst)((ScriptInfo)Command).ScriptBlock.Ast).ParamBlock.Parameters)
+                    result[parameter.Name.VariablePath.UserPath] = parameter;
+
+            return result;
+        }
+        #endregion Internal Helpers
     }
 }

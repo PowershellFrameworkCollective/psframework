@@ -2,13 +2,19 @@
 
 ## ???
 
+- New: Assert-PSFInternalCommand - Verifies, that the command calling it in turn was only called from another command within the same module. (#685)
 - New: Add-PSFTeppCompletion - Adds a completion result to a tab completion script.
 - New: Remove-PSFTeppCompletion - Removes a previously added completion result from a tab completion script.
 - New: Update-PSFTeppCompletion - Automatically adds provided values to the completion result of the associated completion script.
+- New: Get-PSFFileContent - Reads content from a file.
+- New: Set-PSFFileContent - Writes content to a file.
+- New: Export-PSFJson - Converts input to json string and writes the result to file.
 - New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
 - New: Configuration Setting - `PSFramework.TabExpansion.FuzzyMatch`: Whether to match tab completions with Fuzzy-Matching by default.
 - New: Configuration Setting - `PSFramework.TabExpansion.MatchAnywhere`: Wrap all completion results into quotes, whitespace or not.
 - New: Configuration Setting - `PSFramework.TabExpansion.AlwaysQuote`: Whether to match tab completions with Fuzzy-Matching by default.
+- New: Configuration Setting - `PSFramework.Message.Style.TimeFormat`: The format used in timestamps for messages written on screen.
+- New: Configuration Setting - `PSFramework.Message.Style.Target`: Include the message target (if present) in verbose message output.
 - New: Configuration Export Schema - The "Psd1" schema was added as an alternative name for "MetaJson", offering the same implementation logic.
 - Upd: Tab Completion - Now sorts by the List Item Text - the options shown in the tab menu - rather than the actual value being inserted into the console.
 - Upd: Tab Completion - Added support for `ToolTipString` and `ListItemTextString` in the result, allowing to localize tab completion tooltip and list items.
@@ -17,12 +23,19 @@
 - Upd: Register-PSFTeppScriptblock - add parameter `-MatchAnywhere` to match input against anywhere within the completions, not just from the start.
 - Upd: Register-PSFTeppScriptblock - add parameter `-AlwaysQuote` to wrap all completion results into quotes, irrespective of whether they contain a whitespace or not.
 - Upd: Register-PSFTeppScriptblock - add parameter `-DontSort` to stop sorting completion results alphabetically.
-- Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
+- Upd: ConvertTo-PSFHashtable - add parameter `-InheritParameters` that automatically picks up values from the calling command / script.
+- Upd: Write-PSFMessage - add parameter `-NewErrorRecord` to actually write an error when also specifying `-EnableException`, even if the command did not first receive an error record as input. (#659)
 - Upd: Select-PSFObject - Can now select variables directly, as well as properties of variables (#664)
+- Upd: New-PSFHashtable - Added parameter `-PassThru` to create a hashtable that will return the key itself if it does not exist on the hashtable.
+- Upd: New-PSFHashtable - Added parameter `-Calculator` to create a hashtable that will return the result of this scriptblock if the key does not exist on the hashtable.
+- Upd: New-PSFSupportPackage - When specifying a task-name, the command will no longer spam messages on screen, instead sending the message 
+- Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
 - Upd: PSFHashtable - added method `EnablePassThru()`, which will return the Key itself, when the provided key does not yet exist in the hashtable. (#676)
-- Upd: PSFHashtable - added method `SetCalculator()`, which will calculate the value returned using a scriptvblock, when the provided key does not yet exist in the hashtable. (#676)
+- Upd: PSFHashtable - added method `SetCalculator()`, which will calculate the value returned using a scriptblock, when the provided key does not yet exist in the hashtable. (#676)
 - Upd: Logging Provider logfile - Added option `JsonNoEmptyFirstLine` to make it stop adding an empty line at the beginning of the logfile. As an option to avoid breaking changes for people automatically processing the logfile.
 - Upd: Logging Provider logfile - Added option `CMTraceOverrideComponent` to allow overriding the "Component" section on a per-message basis, vie the `-Data` parameter. (#623)
+- Upd: Logging Provider logfile - Added new filetype `TXT` to the list of supported filetypes. This allows creating simple plaintext logfiles, even when they are generally discouraged. (#654)
+- Upd: Logging Provider logfile - Added option `TXTPattern`: The pattern of any given line in the TXT-based logfile. Use %PROPERTYNAME% as placeholder, e.g. "%Message%". Same properties as with the headers configuration - you need to specify both settings, if your pattern includes non-default properties such as "Data". (#654)
 - Fix: Logging Provider logfile - Renaming header breaks timestamp format (#672)
 - Fix: Logging Provider logfile - Using the `JsonString` parameter breaks header order (#667)
 - Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
@@ -30,6 +43,9 @@
 - Fix: ScriptTransformation Attribute - conversion results were not considered valid, when not of the demanded type, but one inheriting from the demanded type. (#646)
 - Fix: ParameterClass Path - Fails on `.ToString()` on Stack Overflow.
 - Fix: ConvertTo-PSFHashtable - fails to correctly resolve the reference command when somebody overrides the Get-Command command in a breaking way.
+- Fix: ConvertTo-PSFHashtable - fails with an index error when the `-ReferenceCommand` command cannot be resolved.
+- Fix: ConvertTo-PSFHashtable - when specifying the `-Inherit` parameter, the `-Exclude` parameter is ignored for inherited values.
+- Fix: Write-PSFMessage - fails to process a Switch value as input. (#655)
 
 ## 1.12.346 (2024-09-25)
 

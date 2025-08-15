@@ -199,32 +199,39 @@
 			$filePathXml = Join-Path -Path $outputPath -ChildPath "powershell_support_pack_$(Get-Date -Format "yyyy_MM_dd-HH_mm_ss").cliDat"
 		}
 		$filePathZip = $filePathXml -replace "\.cliDat$", ".zip"
+
+		$messageLevel = 'Important'
+		$headerLevel = 'Critical'
+		if ($TaskName) {
+			$messageLevel = 'Verbose'
+			$headerLevel = 'Verbose'
+		}
 	}
 	process
 	{
 		if (Test-PSFFunctionInterrupt) { return }
 		
-		Write-PSFMessage -Level Critical -String 'New-PSFSupportPackage.Header' -StringValues $filePathZip, (Get-PSFConfigValue -FullName 'psframework.supportpackage.contactmessage' -Fallback '')
+		Write-PSFMessage -Level $headerLevel -String 'New-PSFSupportPackage.Header' -StringValues $filePathZip, (Get-PSFConfigValue -FullName 'psframework.supportpackage.contactmessage' -Fallback '')
 		
 		$hash = @{ }
 		if (($Include -band 1) -and -not ($Exclude -band 1))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Messages'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Messages'
 			$hash["Messages"] = Get-PSFMessage
 		}
 		if (($Include -band 2) -and -not ($Exclude -band 2))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.MsgErrors'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.MsgErrors'
 			$hash["Errors"] = Get-PSFMessage -Errors
 		}
 		if (($Include -band 4) -and -not ($Exclude -band 4))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.ConsoleBuffer'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.ConsoleBuffer'
 			$hash["ConsoleBuffer"] = Get-ShellBuffer
 		}
 		if (($Include -band 8) -and -not ($Exclude -band 8))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.OperatingSystem'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.OperatingSystem'
 			$hash["OperatingSystem"] = if ($IsLinux -or $IsMacOs)
 			{
 				[PSCustomObject]@{
@@ -244,12 +251,12 @@
 		{
 			$hash["CPU"] = if ($IsLinux -and (Test-Path -Path /proc/cpuinfo))
 			{
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.CPU' -StringValues '/proc/cpuinfo'
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.CPU' -StringValues '/proc/cpuinfo'
 				Get-Content -Raw -Path /proc/cpuinfo
 			}
 			else
 			{
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.CPU' -StringValues Win32_Processor
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.CPU' -StringValues Win32_Processor
 				Get-CimInstance -ClassName Win32_Processor
 			}
 		}
@@ -257,48 +264,48 @@
 		{
 			$hash["Ram"] = if ($IsLinux -and (Test-Path -Path /proc/meminfo))
 			{
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.RAM' -StringValues '/proc/meminfo'
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.RAM' -StringValues '/proc/meminfo'
 				Get-Content -Raw -Path /proc/meminfo
 			}
 			else
 			{
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.RAM' -StringValues Win32_PhysicalMemory
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.RAM' -StringValues Win32_PhysicalMemory
 				Get-CimInstance -ClassName Win32_PhysicalMemory
 			}
 		}
 		if (($Include -band 64) -and -not ($Exclude -band 64))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.PSVersion'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.PSVersion'
 			$hash["PSVersion"] = $PSVersionTable
 		}
 		if (($Include -band 128) -and -not ($Exclude -band 128))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.History'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.History'
 			$hash["History"] = Get-History
 		}
 		if (($Include -band 256) -and -not ($Exclude -band 256))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Modules'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Modules'
 			$hash["Modules"] = Get-Module
 		}
 		if ((($Include -band 512) -and -not ($Exclude -band 512)) -and ($PSVersionTable.PSVersion.Major -le 5))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Snapins'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Snapins'
 			$hash["SnapIns"] = Get-PSSnapin
 		}
 		if (($Include -band 1024) -and -not ($Exclude -band 1024))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Assemblies'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Assemblies'
 			$hash["Assemblies"] = [appdomain]::CurrentDomain.GetAssemblies() | Select-Object CodeBase, FullName, Location, ImageRuntimeVersion, GlobalAssemblyCache, IsDynamic
 		}
 		if (Test-PSFParameterBinding -ParameterName "Variables")
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Variables' -StringValues ($Variables -join ", ")
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Variables' -StringValues ($Variables -join ", ")
 			$hash["Variables"] = $Variables | Get-Variable -ErrorAction Ignore
 		}
 		if (($Include -band 2048) -and -not ($Exclude -band 2048) -and (-not $ExcludeError))
 		{
-			Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.PSErrors'
+			Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.PSErrors'
 			$hash["PSErrors"] = @()
 			foreach ($errorItem in $global:Error) { $hash["PSErrors"] += New-Object PSFramework.Message.PsfException($errorItem) }
 		}
@@ -306,14 +313,14 @@
 		{
 			if (Test-Path function:Get-DbatoolsLog)
 			{
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.DbaTools.Messages'
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.DbaTools.Messages'
 				$hash["DbatoolsMessages"] = Get-DbatoolsLog
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.DbaTools.Errors'
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.DbaTools.Errors'
 				$hash["DbatoolsErrors"] = Get-DbatoolsLog -Errors
 			}
 
 			foreach ($pair in $script:supportDataProviders.GetEnumerator()) {
-				Write-PSFMessage -Level Important -String 'New-PSFSupportPackage.Extension.Collecting' -StringValues $pair.Key
+				Write-PSFMessage -Level $messageLevel -String 'New-PSFSupportPackage.Extension.Collecting' -StringValues $pair.Key
 				try { $hash["_$($pair.Key)"] = & $pair.Value }
 				catch {
 					Write-PSFMessage -Level Warning -String 'New-PSFSupportPackage.Extension.Collecting.Failed' -StringValues $pair.Key -ErrorRecord $_

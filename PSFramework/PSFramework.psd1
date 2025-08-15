@@ -52,12 +52,14 @@
 		'Enable-PSFTaskEngineTask'
 		'Export-PSFClixml'
 		'Export-PSFConfig'
+		'Export-PSFJson'
 		'Export-PSFModuleClass'
 		'Get-PSFCallback'
 		'Get-PSFConfig'
 		'Get-PSFConfigValue'
 		'Get-PSFDynamicContentObject'
 		'Get-PSFFeature'
+		'Get-PSFFileContent'
 		'Get-PSFFilterCondition'
 		'Get-PSFFilterConditionSet'
 		'Get-PSFLicense'
@@ -142,6 +144,7 @@
 		'Select-PSFPropertyValue'
 		'Set-PSFDynamicContentObject'
 		'Set-PSFFeature'
+		'Set-PSFFileContent'
 		'Set-PSFLoggingProvider'
 		'Set-PSFPath'
 		'Set-PSFResultCache'
@@ -176,6 +179,7 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
+		'Assert-PSFInternalCommand'
 		'ConvertTo-PSFHashtable'
 		'Invoke-PSFCallback'
 		'Invoke-PSFProtectedCommand'

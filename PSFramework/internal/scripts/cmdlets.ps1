@@ -7,6 +7,7 @@ $commonParam = @{
 	Module = $ExecutionContext.SessionState.Module
 }
 
+Import-PSFCmdlet @commonParam -Name Assert-PSFInternalCommand -Type ([PSFramework.Commands.AssertPSFInternalCommandCommand])
 Import-PSFCmdlet @commonParam -Name ConvertTo-PSFHashtable -Type ([PSFramework.Commands.ConvertToPSFHashtableCommand])
 Import-PSFCmdlet @commonParam -Name Invoke-PSFCallback -Type ([PSFramework.Commands.InvokePSFCallbackCommand])
 Import-PSFCmdlet @commonParam -Name Invoke-PSFProtectedCommand -Type ([PSFramework.Commands.InvokePSFProtectedCommand])

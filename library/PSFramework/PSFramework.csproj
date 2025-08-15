@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AssertPSFInternalCommandCommand.cs" />
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
     <Compile Include="Commands\SortPSFObjectCommand.cs" />
     <Compile Include="Commands\UpdatePSFTeppCompletionCommand.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Logging\ProviderInstance.cs" />
     <Compile Include="Logging\ProviderV2.cs" />
     <Compile Include="Logging\ProviderVersion.cs" />
+    <Compile Include="Logging\TxtBuilder.cs" />
     <Compile Include="Message\CallStack.cs" />
     <Compile Include="Message\CallStackEntry.cs" />
     <Compile Include="Message\LogEntry.cs" />

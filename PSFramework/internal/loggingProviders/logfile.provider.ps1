@@ -141,6 +141,11 @@
 					$script:writer.WriteLine($line)
 				}
 				#endregion CMTrace
+				#region TXT
+				'TXT' {
+					$script:writer.WriteLine($script:txtBuilder.Convert($Message))
+				}
+				#endregion TXT
 			}
 			#endregion Type-Based Output
 		
@@ -284,6 +289,7 @@ $begin_event = {
 	$script:currentPath = ''
 	$script:writer = $null
 	$script:firstEntry = $true
+	$script:txtBuilder = [PSFramework.Logging.TxtBuilder]::new()
 }
 
 $start_event = {
@@ -352,6 +358,15 @@ $start_event = {
 							}
 						}
 					}
+					DataCompact {
+						{
+							if (-not $_.Data) { return }
+							$lines = foreach ($pair in $_.Data.GetEnumerator()) {
+								'{0}={1}' -f $pair.Key, $pair.Value
+							}
+							$lines -join ", "
+						}
+					}
 					default { [ScriptBlock]::Create("`$_.$value") }
 				}
 
@@ -404,6 +419,9 @@ $start_event = {
 	$script:cmTraceSettings = @{
 		CMTraceOverrideComponent = Get-ConfigValue -Name CMTraceOverrideComponent
 	}
+	if ($script:logfile_paramWriteLogFileMessage.FileType -eq 'TXT') {
+		$script:txtBuilder.Load((Get-ConfigValue -Name TXTPattern))
+	}
 }
 
 $message_event = {
@@ -453,7 +471,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Logname' -Value "" -Initialize -Validation string -Description "A special string you can use as a placeholder in the logfile path (by using '%logname%' as placeholder)"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.IncludeHeader' -Value $true -Initialize -Validation bool -Description "Whether a written csv file will include headers"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Headers' -Value @('ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username') -Initialize -Validation stringarray -Description "The properties to export, in the order to select them."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Description "In what format to write the logfile. Supported styles: CSV, XML, Html, Json or CMTrace. Html, XML and Json will be written as fragments."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Description "In what format to write the logfile. Supported styles: CSV, XML, Html, Json, TXT or CMTrace. Html, XML and Json will be written as fragments."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value "," -Initialize -Validation string -Description "The delimiter to use when writing to csv."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Description "The format used for timestamps in the logfile"
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Encoding' -Value "UTF8" -Initialize -Validation string -Description "In what encoding to write the logfile."
@@ -468,6 +486,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoComma' -Value $false -Initialize -Validation bool -Description "Prevent adding commas between two json entries."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoEmptyFirstLine' -Value $false -Initialize -Validation bool -Description "Prevent the empty first line when commas have not been disabled."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CMTraceOverrideComponent' -Value $false -Initialize -Validation bool -Description 'When Enabled, messages that include a "Data" hashtable with a "Component" entry will use that Entry for the log message Component element, rather than the auto-calculated one.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TXTPattern' -Value '%Timestamp% [%Level%] %Message%' -Initialize -Validation string -Description 'The pattern of any given line in the TXT-based logfile. Use %PROPERTYNAME% as placeholder, e.g. "%Message%". Same properties as with the headers configuration - you need to specify both settings, if your pattern includes non-default properties such as "Data".'
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MoveOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to move logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CopyOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to copy logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
 }
@@ -476,7 +495,7 @@ $paramRegisterPSFLoggingProvider = @{
 	Name                       = "logfile"
 	Version2                   = $true
 	ConfigurationRoot          = 'PSFramework.Logging.LogFile'
-	InstanceProperties         = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma', 'JsonNoEmptyFirstLine', 'CMTraceOverrideComponent', 'MoveOnFinal', 'CopyOnFinal'
+	InstanceProperties         = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma', 'JsonNoEmptyFirstLine', 'CMTraceOverrideComponent', 'TXTPattern', 'MoveOnFinal', 'CopyOnFinal'
 	FunctionDefinitions        = $functionDefinitions
 	BeginEvent                 = $begin_event
 	StartEvent                 = $start_event
@@ -493,6 +512,7 @@ $paramRegisterPSFLoggingProvider = @{
 		LogRetentionTime = '30d'
 		LogRotateFilter  = '*'
 		LogRotateRecurse = $false
+		TXTPattern       = '%Timestamp% [%Level%] %Message%'
 	}
 	ConfigurationSettings      = $configuration_Settings
 }

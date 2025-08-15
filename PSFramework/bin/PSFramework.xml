@@ -4,6 +4,21 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.AssertPSFInternalCommandCommand">
+            <summary>
+            Amazingly useful command, that verifies that the command being executed was called from another command in the same module.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.AssertPSFInternalCommandCommand.PSCmdlet">
+            <summary>
+            The $PSCmdlet variable of the calling function. This allows us to throw the error from the calling command and hide our cmdlet to the end user.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.AssertPSFInternalCommandCommand.ProcessRecord">
+            <summary>
+            The main implementation, doing the various checks needed to ensure it is only called internally.
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.InvokePSFCallbackCommand">
             <summary>
             Command executing callbacks in functions
@@ -183,6 +198,11 @@
             <summary>
             Specifically designed for use in a command when passing through parameters with default values.
             Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.InheritParameters">
+            <summary>
+            Inherit from all parameters of the calling command, including all non-bound parameters.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Remap">
@@ -961,6 +981,12 @@
             <summary>
             This parameters disables user-friendly warnings and enables the throwing of exceptions.
             This is less user friendly, but allows catching exceptions in calling scripts.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.NewErrorRecord">
+            <summary>
+            Create a new error record, using the current message, then write it.
+            This parameter is only respected if EnableException is set to true.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.Breakpoint">
@@ -3280,6 +3306,45 @@
             Generation 2 logging provider, where each provider is handled as a dynamically created module, properly isolating resource from each other.
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.TxtBuilder">
+            <summary>
+            Helper class to properly format logging messages for the TXT-Variant of the logfile provider
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.TxtBuilder.Text">
+            <summary>
+            The text pattern provided by the user, describing the way the logfile is supposed to look.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.TxtBuilder.Properties">
+            <summary>
+            The properties that exist within the text pattern. Used to optimize the content replacement process.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.#ctor">
+            <summary>
+            Create an empty text-builder
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.#ctor(System.String)">
+            <summary>
+            Create a text-builder preconfigured with a text to build
+            </summary>
+            <param name="Text">The text to build. Use "%PropertyName%" to offer placeholders that later values get inserted into.</param>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.Load(System.String)">
+            <summary>
+            Load a new text to build.
+            </summary>
+            <param name="Text">The text to build. Use "%PropertyName%" to offer placeholders that later values get inserted into.</param>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.Convert(System.Management.Automation.PSObject)">
+            <summary>
+            Take a message object and build it into a string, ready for logging
+            </summary>
+            <param name="Message">The message object to build.</param>
+            <returns>The finished message, ready for the logfile.</returns>
+        </member>
         <member name="T:PSFramework.Message.CallStack">
             <summary>
             Container for a callstack, to create a non-volatile copy of the relevant information
@@ -4024,6 +4089,11 @@
             Include message timestamps in verbose message output
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageTarget">
+            <summary>
+            Include the message target (if present) in verbose message output
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.EnableMessageLevel">
             <summary>
             Include the level of a message in verbose message output
@@ -4047,6 +4117,11 @@
         <member name="F:PSFramework.Message.MessageHost.NoColor">
             <summary>
             Whether the console messages should be written with only one color, rather than respecting color tags
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TimeFormat">
+            <summary>
+            The format used in messages written on screen
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.PrefixValueError">
