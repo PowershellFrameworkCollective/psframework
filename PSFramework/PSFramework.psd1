@@ -86,6 +86,7 @@
 		'Import-PSFClixml'
 		'Import-PSFCmdlet'
 		'Import-PSFConfig'
+		'Import-PSFJson'
 		'Import-PSFLocalizedString'
 		'Import-PSFLoggingProvider'
 		'Import-PSFPowerShellDataFile'

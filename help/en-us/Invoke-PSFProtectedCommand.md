@@ -18,7 +18,8 @@ Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -Action <String> [-Target 
  [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>] [-Tag <String[]>]
  [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
  [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
- [-Level <MessageLevel>] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Level <MessageLevel>] [-NonTerminating] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ### String
@@ -27,7 +28,8 @@ Invoke-PSFProtectedCommand -ScriptBlock <ScriptBlock> -ActionString <String> [-A
  [-Target <Object>] [-EnableException <Boolean>] [-PSCmdlet <PSCmdlet>] [-Continue] [-ContinueLabel <String>]
  [-Tag <String[]>] [-RetryCount <Int32>] [-RetryWait <TimeSpanParameter>] [-RetryWaitEscalation <Double>]
  [-RetryErrorType <String[]>] [-RetryCondition <ScriptBlock>] [-ErrorEvent <ScriptBlock>]
- [-Level <MessageLevel>] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Level <MessageLevel>] [-NonTerminating] [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -383,13 +385,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ProgressAction
-{{ Fill ProgressAction Description }}
+### -RetryWaitEscalation
+When retrying failed attempts, the previous wait time is multiplied by this value.
+This allows waiting longer and longer periods, each time it failed.
+Defaults to 1.
 
 ```yaml
-Type: ActionPreference
+Type: Double
 Parameter Sets: (All)
-Aliases: proga
+Aliases:
 
 Required: False
 Position: Named
@@ -398,13 +402,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RetryWaitEscalation
-When retrying failed attempts, the previous wait time is multiplied by this value.
-This allows waiting longer and longer periods, each time it failed.
-Defaults to 1.
+### -NonTerminating
+Make the final error generated a nonterminating error, if the wrapped command fails.
+By default, exceptions generated will be terminating instead.
 
 ```yaml
-Type: Double
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 

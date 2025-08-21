@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using System.Reflection.Emit;
+using System.Reflection;
 
 namespace PSFramework.Commands
 {
@@ -109,7 +109,8 @@ namespace PSFramework.Commands
         /// <param name="Tag">Tags to attach to this message</param>
         /// <param name="Target">A target object to specify</param>
         /// <param name="Data">Add additional metadata to the message written</param>
-        public void WriteMessage(string Message, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
+        /// <param name="Error">Exception to include in the message</param>
+        public void WriteMessage(string Message, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null, Exception Error = null)
         {
             using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
@@ -122,8 +123,11 @@ namespace PSFramework.Commands
                     .AddParameter("File", File)
                     .AddParameter("Line", Line)
                     .AddParameter("Tag", Tag)
-                    .AddParameter("Target", Target)
-                    .AddParameter("Data", Data);
+                    .AddParameter("Target", Target);
+                if (Data != null)
+                    ps.AddParameter("Data", Data);
+                if (Error != null)
+                    ps.AddParameter("Exception", Error);
                 ps.Invoke();
             }
         }
@@ -141,7 +145,8 @@ namespace PSFramework.Commands
         /// <param name="Tag">Tags to attach to this message</param>
         /// <param name="Target">A target object to specify</param>
         /// <param name="Data">Add additional metadata to the message written</param>
-        public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null)
+        /// <param name="Error">Exception to include in the message</param>
+        public void WriteLocalizedMessage(string String, object[] StringValues, MessageLevel Level, string FunctionName, string ModuleName, string File, int Line, string[] Tag, object Target, Hashtable Data = null, Exception Error = null)
         {
             using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
@@ -155,8 +160,11 @@ namespace PSFramework.Commands
                     .AddParameter("File", File)
                     .AddParameter("Line", Line)
                     .AddParameter("Tag", Tag)
-                    .AddParameter("Target", Target)
-                    .AddParameter("Data", Data);
+                    .AddParameter("Target", Target);
+                if (Data != null)
+                    ps.AddParameter("Data", Data);
+                if (Error != null)
+                    ps.AddParameter("Exception", Error);
                 ps.Invoke();
             }
         }
@@ -242,6 +250,21 @@ namespace PSFramework.Commands
         /// Whether the command has been set to terminate by StopCommand. Use when supporting EnableException
         /// </summary>
         public bool IsStopping;
+
+        /// <summary>
+        /// Throw a continue exception, equivalent to calling continue in script
+        /// </summary>
+        /// <param name="Label"></param>
+        public void DoContinue(string Label = "")
+        {
+            ConstructorInfo[] constructors = typeof(ContinueException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
+            ConstructorInfo constructor = constructors.Where(o => o.GetParameters().Count() == 0).First();
+            if (String.IsNullOrEmpty(Label))
+                throw (ContinueException)constructor.Invoke(new object[0]);
+            
+            constructor = constructors.Where(o => o.GetParameters().Count() == 1 && o.GetParameters()[0].Name == "label").First();
+            throw (ContinueException)constructor.Invoke(new object[] { Label });
+        }
 
         /// <summary>
         /// Invokes all applicable callback scripts.

@@ -334,6 +334,11 @@
             The message level at which to generate non-error messages written by this cmdlet
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.NonTerminating">
+            <summary>
+            Make the final error generated a nonterminating error
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
             <summary>
             Information on the calling command, including name, module, file and line.
@@ -421,7 +426,7 @@
             <param name="Name">The name of the feature to check.</param>
             <returns>Whether the flag is enabled</returns>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable,System.Exception)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -434,8 +439,9 @@
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
             <param name="Data">Add additional metadata to the message written</param>
+            <param name="Error">Exception to include in the message</param>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable,System.Exception)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -449,6 +455,7 @@
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
             <param name="Data">Add additional metadata to the message written</param>
+            <param name="Error">Exception to include in the message</param>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.StopCommand(System.String,System.Exception,System.Object,System.String,System.String,System.String,System.Int32,System.String[],System.Boolean)">
             <summary>
@@ -483,6 +490,12 @@
             <summary>
             Whether the command has been set to terminate by StopCommand. Use when supporting EnableException
             </summary>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.DoContinue(System.String)">
+            <summary>
+            Throw a continue exception, equivalent to calling continue in script
+            </summary>
+            <param name="Label"></param>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.InvokeCallback(System.Object,System.Boolean)">
             <summary>
@@ -650,6 +663,13 @@
             <summary>
             Implements the end action of the command
             </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SelectPSFObjectCommand.ConvertResult(System.Object)">
+            <summary>
+            Converts a select-object result based on extra elements to add
+            </summary>
+            <param name="Item">The item to convert / extend</param>
+            <returns>A fully converted object</returns>
         </member>
         <member name="T:PSFramework.Commands.SetPSFConfigCommand">
             <summary>

@@ -9,6 +9,7 @@
 - New: Get-PSFFileContent - Reads content from a file.
 - New: Set-PSFFileContent - Writes content to a file.
 - New: Export-PSFJson - Converts input to json string and writes the result to file.
+- New: Import-PSFJson - Reads json files and returns their content as objects.
 - New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
 - New: Configuration Setting - `PSFramework.TabExpansion.FuzzyMatch`: Whether to match tab completions with Fuzzy-Matching by default.
 - New: Configuration Setting - `PSFramework.TabExpansion.MatchAnywhere`: Wrap all completion results into quotes, whitespace or not.
@@ -26,12 +27,14 @@
 - Upd: ConvertTo-PSFHashtable - add parameter `-InheritParameters` that automatically picks up values from the calling command / script.
 - Upd: Write-PSFMessage - add parameter `-NewErrorRecord` to actually write an error when also specifying `-EnableException`, even if the command did not first receive an error record as input. (#659)
 - Upd: Select-PSFObject - Can now select variables directly, as well as properties of variables (#664)
+- Upd: Invoke-PSFProtectedCommand - add parameter `-NonTerminating` to stop sending terminating exceptions in combination with `-EnableException`.
 - Upd: New-PSFHashtable - Added parameter `-PassThru` to create a hashtable that will return the key itself if it does not exist on the hashtable.
 - Upd: New-PSFHashtable - Added parameter `-Calculator` to create a hashtable that will return the result of this scriptblock if the key does not exist on the hashtable.
-- Upd: New-PSFSupportPackage - When specifying a task-name, the command will no longer spam messages on screen, instead sending the message 
+- Upd: New-PSFSupportPackage - When specifying a task-name, the command will no longer spam messages on screen, instead sending the message to verbose.
 - Upd: Type Object.ObjectHost - added methods to modify PSObjects in bulk
 - Upd: PSFHashtable - added method `EnablePassThru()`, which will return the Key itself, when the provided key does not yet exist in the hashtable. (#676)
 - Upd: PSFHashtable - added method `SetCalculator()`, which will calculate the value returned using a scriptblock, when the provided key does not yet exist in the hashtable. (#676)
+- Upd: PSFCmdlet - added method `DoContinue()`, allowing cmdlets to trigger a powershell script-based continue action.
 - Upd: Logging Provider logfile - Added option `JsonNoEmptyFirstLine` to make it stop adding an empty line at the beginning of the logfile. As an option to avoid breaking changes for people automatically processing the logfile.
 - Upd: Logging Provider logfile - Added option `CMTraceOverrideComponent` to allow overriding the "Component" section on a per-message basis, vie the `-Data` parameter. (#623)
 - Upd: Logging Provider logfile - Added new filetype `TXT` to the list of supported filetypes. This allows creating simple plaintext logfiles, even when they are generally discouraged. (#654)
@@ -42,10 +45,12 @@
 - Fix: Pathing issue - Programdata resolution fails when environment variable is not available (#671)
 - Fix: ScriptTransformation Attribute - conversion results were not considered valid, when not of the demanded type, but one inheriting from the demanded type. (#646)
 - Fix: ParameterClass Path - Fails on `.ToString()` on Stack Overflow.
+- Fix: Select-PSFObject - fails with "Index was outside the bounds of the array." when combining `-Last` with `-TypeName` or any other parameter that causes the command to intercept the output of `Select-Object` (#666)
 - Fix: ConvertTo-PSFHashtable - fails to correctly resolve the reference command when somebody overrides the Get-Command command in a breaking way.
 - Fix: ConvertTo-PSFHashtable - fails with an index error when the `-ReferenceCommand` command cannot be resolved.
 - Fix: ConvertTo-PSFHashtable - when specifying the `-Inherit` parameter, the `-Exclude` parameter is ignored for inherited values.
 - Fix: Write-PSFMessage - fails to process a Switch value as input. (#655)
+- Fix: Import-PSFPowerShellDataFile - does not import DateTime properties from json correctly on PowerShell 7.
 
 ## 1.12.346 (2024-09-25)
 
