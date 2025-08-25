@@ -9,37 +9,38 @@ using System.Threading.Tasks;
 namespace PSFramework.Parameter
 {
     /// <summary>
-    /// Parameterclass accepting/resolving to a single, fully-resolved path to a file.
+    /// Parameterclass that accepts a single directory
     /// </summary>
-    public class PathFileSingleParameter : PathFileSystemSingleParameterBase
+    public class PathDirectorySingleParameter : PathFileSystemSingleParameterBase
     {
         #region Constructors
         /// <summary>
-        /// Processes a single string as a single file.
+        /// Processes a single string as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathFileSingleParameter(string Path) {
+        public PathDirectorySingleParameter(string Path)
+        {
             InputObject = Path;
             Apply(Path, true, false);
         }
 
         /// <summary>
-        /// Processes a single FileInfo item as a single file.
+        /// Processes a single DirectoryInfo item as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathFileSingleParameter(FileInfo Path) :this(Path.FullName) { InputObject = Path; }
+        public PathDirectorySingleParameter(DirectoryInfo Path) : this(Path.FullName) { InputObject = Path; }
 
         /// <summary>
-        /// Processes a single Uri as a single file.
+        /// Processes a single Uri as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathFileSingleParameter(Uri Path) :this(Path.OriginalString) { InputObject = Path; }
+        public PathDirectorySingleParameter(Uri Path) : this(Path.OriginalString) { InputObject = Path; }
 
         /// <summary>
-        /// Processes a single object as a single file.
+        /// Processes a single object as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathFileSingleParameter(object Path)
+        public PathDirectorySingleParameter(object Path)
         {
             InputObject = Path;
             string actualpath;
@@ -50,41 +51,41 @@ namespace PSFramework.Parameter
         }
         #endregion Constructors
 
-        #region Implicit Casts
+        #region Operators
         /// <summary>
         /// Implicitly convert to string.
         /// </summary>
         /// <param name="Path">The path to convert</param>
-        public static implicit operator string(PathFileSingleParameter Path)
+        public static implicit operator string(PathDirectorySingleParameter Path)
         {
             return Path.Path;
         }
         /// <summary>
-        /// Implicitly convert to FileInfo.
+        /// Implicitly convert to DirectoryInfo.
         /// </summary>
         /// <param name="Path">The path to convert</param>
-        public static implicit operator FileInfo(PathFileSingleParameter Path)
+        public static implicit operator DirectoryInfo(PathDirectorySingleParameter Path)
         {
-            return new FileInfo(Path.Path);
+            return new DirectoryInfo(Path.Path);
         }
         /// <summary>
-        /// Implicitly convert FileInfo to PathFileSingle.
+        /// Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
         /// </summary>
         /// <param name="Info">The path to convert</param>
 
-        public static implicit operator PathFileSingleParameter(FileInfo Info)
+        public static implicit operator PathDirectorySingleParameter(DirectoryInfo Info)
         {
-            return new PathFileSingleParameter(Info);
+            return new PathDirectorySingleParameter(Info);
         }
         /// <summary>
         /// Implicitly convert to FileSystemInfo.
         /// </summary>
         /// <param name="Path">The path to convert</param>
 
-        public static implicit operator FileSystemInfo(PathFileSingleParameter Path)
+        public static implicit operator FileSystemInfo(PathDirectorySingleParameter Path)
         {
-            return new FileInfo(Path.Path);
+            return new DirectoryInfo(Path.Path);
         }
-        #endregion Implicit Casts
+        #endregion Operators
     }
 }

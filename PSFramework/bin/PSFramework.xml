@@ -6182,6 +6182,29 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="F:PSFramework.Parameter.PathFileSystemSingleParameterBase.Path">
+            <summary>
+            The path resolved
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.Apply(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolve the path provided and ensure it exists and is of the proper type!
+            </summary>
+            <param name="Path">The path to resolve</param>
+            <param name="MayBeFile">Whether it may be a file</param>
+            <param name="MayBeDirectory">Whether it may be a directory</param>
+            <exception cref="T:System.ArgumentException">When the path provided cannot be resolved at all.</exception>
+            <exception cref="T:System.IO.InvalidDataException">When the path provided resolves to multiple items.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">When the path should resolve to a file, but is not a file.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">When the path should resolve to a directory, but is not a directory.</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameterBase)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
         <member name="T:PSFramework.Parameter.PathLiteralLaxParameter">
             <summary>
             Input converter performing path evaluation without wildcard interpretation, not throwing errors on bad input
@@ -10398,6 +10421,22 @@
             </summary>
             <param name="CompressedString">The compressed string to expand</param>
             <returns>Returns an expanded string.</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.JoinPath(System.String,System.String)">
+            <summary>
+            Joins two path segments together. Will correct path separators, will trace back ".." path segments. Will ignore the Base, if the Child is an absolute Uri.
+            </summary>
+            <param name="Base">The base path to which to add the child</param>
+            <param name="Child">The child path segement to add to the base</param>
+            <returns>The fully joined path</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.RemoveAt``1(``0[],System.Int32[])">
+            <summary>
+            Tool to remove items from an array at a specific location
+            </summary>
+            <param name="Array">The array to remove items from</param>
+            <param name="Indexes">The indexes of the items to remove</param>
+            <returns>A new array with all items of the source array, minus the ones at the specified indexes.</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetExecutionContextFromTLS">
             <summary>

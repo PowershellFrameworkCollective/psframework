@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Management.Automation;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -263,6 +264,70 @@ namespace PSFramework.Utility
                 outputStream.Close();
                 return result;
             }
+        }
+        
+        /// <summary>
+        /// Joins two path segments together. Will correct path separators, will trace back ".." path segments. Will ignore the Base, if the Child is an absolute Uri.
+        /// </summary>
+        /// <param name="Base">The base path to which to add the child</param>
+        /// <param name="Child">The child path segement to add to the base</param>
+        /// <returns>The fully joined path</returns>
+        public static string JoinPath(string Base, string Child)
+        {
+            string tempPath = Child;
+            Uri tempUri = new Uri(Child, UriKind.RelativeOrAbsolute);
+            if (!tempUri.IsAbsoluteUri)
+                tempPath = String.Join(Path.DirectorySeparatorChar.ToString(), new string[] { Base, Child });
+            bool isUnc = Regex.IsMatch(Base, "^\\\\|^//");
+
+            tempPath = Regex.Replace(tempPath, "[\\\\|/]+", Path.DirectorySeparatorChar.ToString());
+
+            string[] parts = tempPath.Split(Path.DirectorySeparatorChar);
+            do
+            {
+                bool doBreak = true;
+                for (int index = 0; index < parts.Length; index++)
+                {
+                    if (parts[index] == ".")
+                    {
+                        parts = RemoveAt(parts, new int[] { index });
+                        doBreak = false;
+                        break;
+                    }
+                    if (parts[index] == "..")
+                    {
+                        parts = RemoveAt(parts, new int[] { index - 1, index });
+                        doBreak = false;
+                        break;
+                    }
+                }
+                if (doBreak)
+                    break;
+            }
+            while (true);
+
+            tempPath = String.Join(Path.DirectorySeparatorChar.ToString(), parts);
+            if (isUnc)
+                tempPath = Path.DirectorySeparatorChar.ToString() + tempPath;
+
+            return tempPath;
+        }
+
+        /// <summary>
+        /// Tool to remove items from an array at a specific location
+        /// </summary>
+        /// <param name="Array">The array to remove items from</param>
+        /// <param name="Indexes">The indexes of the items to remove</param>
+        /// <returns>A new array with all items of the source array, minus the ones at the specified indexes.</returns>
+        public static T[] RemoveAt<T>(T[] Array, int[] Indexes)
+        {
+            List<T> list = new List<T>();
+            for (int i = 0; i < Array.Length; i++)
+            {
+                if (!Indexes.Contains(i))
+                    list.Add(Array[i]);
+            }
+            return list.ToArray();
         }
         #endregion Strings
 

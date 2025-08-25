@@ -158,6 +158,7 @@
     <Compile Include="Parameter\PathDirectoryParameter.cs" />
     <Compile Include="Parameter\PathFileLaxParameter.cs" />
     <Compile Include="Parameter\PathFileParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemSingleParameterBase.cs" />
     <Compile Include="Parameter\PathLiteralLaxParameter.cs" />
     <Compile Include="Parameter\PathLiteralParameter.cs" />
     <Compile Include="Parameter\PathNewFileParameter.cs" />
