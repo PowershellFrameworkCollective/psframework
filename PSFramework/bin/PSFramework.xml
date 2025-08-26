@@ -1578,6 +1578,374 @@
             The value is something indeterminate, but possibly complex
             </summary>
         </member>
+        <member name="T:PSFramework.Data.Converters.ArrayConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.ArrayConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.AssemblyConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.AssemblyConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.BoolConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.BoolConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DateTimeConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DateTimeConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DBNullConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DBNullConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DoubleConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DoubleConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.FileSystemInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.FileSystemInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.GuidConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.GuidConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.HashtableConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.HashtableConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.IntConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.IntConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSDriveInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSDriveInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSObjectConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSObjectConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSProviderInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSProviderInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.ScriptblockConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.ScriptblockConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.SwitchConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.SwitchConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TextConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TextConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TimeSpanConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TimeSpanConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TypeInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TypeInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.VersionConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.VersionConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.DataHost">
+            <summary>
+            Global Helper Tools for dealing with Data
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.DataHost.Converters">
+            <summary>
+            The registered list of PSD1 converters
+            </summary>
+        </member>
+        <member name="P:PSFramework.Data.DataHost.DefaultConverter">
+            <summary>
+            The fallback converter to use when all else fails
+            </summary>
+        </member>
+        <member name="P:PSFramework.Data.DataHost.DictionaryConverter">
+            <summary>
+            The converter to use for dictionaries, such as Hashtables
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.DataHost.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Convert an object to the string to insert into a psd1 document.
+            </summary>
+            <param name="Value">The value to convert</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <param name="Depth">The current indentation depth. Can be ignored for plain value returns, if you do not need to return multiple lines.</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.IPsd1Converter">
+            <summary>
+            Ruleset for types implementing PSD1 Conversion
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.IPsd1Converter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Convert an object to the string to insert into a psd1 document.
+            </summary>
+            <param name="Value">The value to convert</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <param name="Depth">The current indentation depth. Can be ignored for plain value returns, if you do not need to return multiple lines.</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Psd1Converter">
+            <summary>
+            The PSD1 conversion runtime object.
+            Use this to transport any settings conversion plugins require.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.Cmdlet">
+            <summary>
+            The reference to the PowerShell command running this conversion.
+            Can be used to directly interact with the current runtime, send messages or throw errors.
+            May be null.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.MaxDepth">
+            <summary>
+            How deeply nested are we willing to delve into sub-properties?
+            By default, this is only respected for PSObjects or Dictionaries.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.Config">
+            <summary>
+            Extra configuration settings.
+            This will be ignored by the default, builtin converters, but external ones may use this to transport and implement settings.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.Convert(System.Object)">
+            <summary>
+            Convert some object to PSD1
+            </summary>
+            <param name="Value">The object to convert to PSD1</param>
+            <returns>A PSD1-string</returns>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.WriteVerbose(System.String)">
+            <summary>
+            Send a message (maybe)
+            </summary>
+            <param name="Message"></param>
+        </member>
         <member name="T:PSFramework.Filter.Condition">
             <summary>
             An individual filter condition.
