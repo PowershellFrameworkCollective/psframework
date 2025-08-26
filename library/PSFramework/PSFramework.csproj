@@ -145,6 +145,7 @@
     <Compile Include="Parameter\DateTimeParameter.cs" />
     <Compile Include="Parameter\EncodingParameter.cs" />
     <Compile Include="Parameter\PathDirectoryLaxParameter.cs" />
+    <Compile Include="Parameter\PathDirectorySingleParameter.cs" />
     <Compile Include="Parameter\PathFileSingleParameter.cs" />
     <Compile Include="Parameter\PathFileSystemLaxParameter.cs" />
     <Compile Include="Parameter\PathFileSystemParameter.cs" />
@@ -158,10 +159,15 @@
     <Compile Include="Parameter\PathDirectoryParameter.cs" />
     <Compile Include="Parameter\PathFileLaxParameter.cs" />
     <Compile Include="Parameter\PathFileParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemSingleParameter.cs" />
     <Compile Include="Parameter\PathFileSystemSingleParameterBase.cs" />
+    <Compile Include="Parameter\PathLiteralDirectorySingleParameter.cs" />
+    <Compile Include="Parameter\PathLiteralFileSingleParameter.cs" />
     <Compile Include="Parameter\PathLiteralLaxParameter.cs" />
     <Compile Include="Parameter\PathLiteralParameter.cs" />
+    <Compile Include="Parameter\PathLiteralSingleParameter.cs" />
     <Compile Include="Parameter\PathNewFileParameter.cs" />
+    <Compile Include="Parameter\PathNewFileSingleParameter.cs" />
     <Compile Include="Parameter\PublicCertificateParameter.cs" />
     <Compile Include="Parameter\SelectAliasParameter.cs" />
     <Compile Include="Parameter\SelectParameter.cs" />

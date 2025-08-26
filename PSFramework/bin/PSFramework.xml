@@ -5641,14 +5641,62 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PathDirectorySingleParameter">
+            <summary>
+            Parameterclass that accepts a single directory
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathDirectorySingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
         <member name="T:PSFramework.Parameter.PathFileSingleParameter">
             <summary>
             Parameterclass accepting/resolving to a single, fully-resolved path to a file.
-            </summary>
-        </member>
-        <member name="F:PSFramework.Parameter.PathFileSingleParameter.Path">
-            <summary>
-            The fully-resolved path
             </summary>
         </member>
         <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.String)">
@@ -5674,12 +5722,6 @@
             Processes a single object as a single file.
             </summary>
             <param name="Path">The path to process</param>
-        </member>
-        <member name="M:PSFramework.Parameter.PathFileSingleParameter.ToString">
-            <summary>
-            Default text representation of the PathFileSingle type.
-            </summary>
-            <returns>Its path.</returns>
         </member>
         <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.String">
             <summary>
@@ -6182,10 +6224,92 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file or folder
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathFileSystemSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathFileSystemSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemSingleParameterBase">
+            <summary>
+            Base class for parameter classes mapping to a single filesystem item
+            </summary>
+        </member>
         <member name="F:PSFramework.Parameter.PathFileSystemSingleParameterBase.Path">
             <summary>
             The path resolved
             </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.ToString">
+            <summary>
+            Default text representation of the PathFileSingle type.
+            </summary>
+            <returns>Its path.</returns>
         </member>
         <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.Apply(System.String,System.Boolean,System.Boolean)">
             <summary>
@@ -6199,9 +6323,126 @@
             <exception cref="T:System.IO.FileNotFoundException">When the path should resolve to a file, but is not a file.</exception>
             <exception cref="T:System.IO.DirectoryNotFoundException">When the path should resolve to a directory, but is not a directory.</exception>
         </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.ApplyLiteral(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Verify the specified path exists, process relative paths, but do not apply wildcards.
+            </summary>
+            <param name="Path">The path to process</param>
+            <param name="MayBeFile">Whether the path may point to a file</param>
+            <param name="MayBeDirectory">Whether the path may point to a directory</param>
+            <exception cref="T:System.Management.Automation.ItemNotFoundException">Thrown if the item does not exist at all</exception>
+            <exception cref="T:System.IO.FileNotFoundException">When the path should resolve to a file, but is not a file.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">When the path should resolve to a directory, but is not a directory.</exception>
+        </member>
         <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameterBase)~System.String">
             <summary>
             Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralDirectorySingleParameter">
+            <summary>
+            Parameter class that maps to a single directory.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathLiteralDirectorySingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathLiteralDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralFileSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file without processing wildcards
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathLiteralFileSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathLiteralFileSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
             </summary>
             <param name="Path">The path to convert</param>
         </member>
@@ -6331,6 +6572,77 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file or directory, without resolving wildcards.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
         <member name="T:PSFramework.Parameter.PathNewFileParameter">
             <summary>
             Parameter class, converting input into the path to a file, where either the file or at least its parent folder already exist.
@@ -6379,6 +6691,59 @@
             Convert anything else
             </summary>
             <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathNewFileSingleParameter">
+            <summary>
+            ParameterClass to map to a single file that needs not exist, but whose parent directory must.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathNewFileSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
         </member>
         <member name="T:PSFramework.Parameter.PublicCertificateParameter">
             <summary>

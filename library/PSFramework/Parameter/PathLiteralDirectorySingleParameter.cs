@@ -9,45 +9,45 @@ using System.Threading.Tasks;
 namespace PSFramework.Parameter
 {
     /// <summary>
-    /// Parameterclass that accepts a single directory
+    /// Parameter class that maps to a single directory.
     /// </summary>
-    public class PathDirectorySingleParameter : PathFileSystemSingleParameterBase
+    public class PathLiteralDirectorySingleParameter : PathFileSystemSingleParameterBase
     {
         #region Constructors
         /// <summary>
         /// Processes a single string as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathDirectorySingleParameter(string Path)
+        public PathLiteralDirectorySingleParameter(string Path)
         {
             InputObject = Path;
-            Apply(Path, false, true);
+            ApplyLiteral(Path, false, true);
         }
 
         /// <summary>
         /// Processes a single DirectoryInfo item as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathDirectorySingleParameter(DirectoryInfo Path) : this(Path.FullName) { InputObject = Path; }
+        public PathLiteralDirectorySingleParameter(DirectoryInfo Path) : this(Path.FullName) { InputObject = Path; }
 
         /// <summary>
         /// Processes a single Uri as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathDirectorySingleParameter(Uri Path) : this(Path.OriginalString) { InputObject = Path; }
+        public PathLiteralDirectorySingleParameter(Uri Path) : this(Path.OriginalString) { InputObject = Path; }
 
         /// <summary>
         /// Processes a single object as a single directory.
         /// </summary>
         /// <param name="Path">The path to process</param>
-        public PathDirectorySingleParameter(object Path)
+        public PathLiteralDirectorySingleParameter(object Path)
         {
             InputObject = Path;
             string actualpath;
             try { actualpath = LanguagePrimitives.ConvertTo<string>(PathFileSystemParameterBase.GetObject(Path)); }
             catch (Exception e) { throw new ArgumentException($"Failed to process {Path}! Error converting to string: {e.Message}", e); }
 
-            Apply(actualpath, false, true);
+            ApplyLiteral(actualpath, false, true);
         }
         #endregion Constructors
 
@@ -56,33 +56,34 @@ namespace PSFramework.Parameter
         /// Implicitly convert to string.
         /// </summary>
         /// <param name="Path">The path to convert</param>
-        public static implicit operator string(PathDirectorySingleParameter Path)
+        public static implicit operator string(PathLiteralDirectorySingleParameter Path)
         {
             return Path.Path;
         }
+
         /// <summary>
         /// Implicitly convert to DirectoryInfo.
         /// </summary>
         /// <param name="Path">The path to convert</param>
-        public static implicit operator DirectoryInfo(PathDirectorySingleParameter Path)
+        public static implicit operator DirectoryInfo(PathLiteralDirectorySingleParameter Path)
         {
             return new DirectoryInfo(Path.Path);
         }
+
         /// <summary>
-        /// Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
+        /// Implicitly convert DirectoryInfo to PathLiteralDirectorySingleParameter.
         /// </summary>
         /// <param name="Info">The path to convert</param>
-
-        public static implicit operator PathDirectorySingleParameter(DirectoryInfo Info)
+        public static implicit operator PathLiteralDirectorySingleParameter(DirectoryInfo Info)
         {
-            return new PathDirectorySingleParameter(Info);
+            return new PathLiteralDirectorySingleParameter(Info);
         }
+
         /// <summary>
         /// Implicitly convert to FileSystemInfo.
         /// </summary>
         /// <param name="Path">The path to convert</param>
-
-        public static implicit operator FileSystemInfo(PathDirectorySingleParameter Path)
+        public static implicit operator FileSystemInfo(PathLiteralDirectorySingleParameter Path)
         {
             return new DirectoryInfo(Path.Path);
         }

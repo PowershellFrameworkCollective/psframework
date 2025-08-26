@@ -17,6 +17,13 @@
 - New: Configuration Setting - `PSFramework.Message.Style.TimeFormat`: The format used in timestamps for messages written on screen.
 - New: Configuration Setting - `PSFramework.Message.Style.Target`: Include the message target (if present) in verbose message output.
 - New: Configuration Export Schema - The "Psd1" schema was added as an alternative name for "MetaJson", offering the same implementation logic.
+- New: Parameter Class PsfFileSingle - Converts input into the path to a single file.
+- New: Parameter Class PsfDirectorySingle - Converts input into the path to a single directory.
+- New: Parameter Class PsfPathSingle - Converts input into the path to a single filesystem path.
+- New: Parameter Class PsfLiteralPathSingle - Converts input into the path to a single filesystem path without resolving wildcards.
+- New: Parameter Class PsfLiteralFileSingle - Converts input into the path to a single file without resolving wildcards.
+- New: Parameter Class PsfLiteralDirectorySingle - Converts input into the path to a single directory without resolving wildcards.
+- New: Parameter Class PsfNewFileSingle - Converts input into the path to a single file, which may or may not exist, but whose parent directory _must_ exist.
 - Upd: Tab Completion - Now sorts by the List Item Text - the options shown in the tab menu - rather than the actual value being inserted into the console.
 - Upd: Tab Completion - Added support for `ToolTipString` and `ListItemTextString` in the result, allowing to localize tab completion tooltip and list items.
 - Upd: Tab Completion - Can now be trained / provided with an explicit list of completions to offer.
