@@ -299,6 +299,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Table' -Value "LoggingTable" -Initialize -Validation 'string' -Description "SQL server database table."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value "" -Initialize -Description "SQL server hosting logs."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Schema' -Value "dbo" -Initialize -Description "SQL server schema."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Description "SQL server schema."
 }
 
 # Registered parameters for the logging provider.
