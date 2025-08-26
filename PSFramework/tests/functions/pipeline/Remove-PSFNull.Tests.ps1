@@ -4,7 +4,7 @@
 		(Get-Command Remove-PSFNull).ParameterSets.Name | Should -Be '__AllParameterSets'
 		foreach ($key in (Get-Command Remove-PSFNull).Parameters.Keys)
 		{
-			$key | Should -BeIn 'InputObject', 'AllowEmptyStrings', 'AllowEmptyCollections', 'Enumerate', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+			$key | Should -BeIn 'InputObject', 'AllowEmptyStrings', 'AllowEmptyCollections', 'Enumerate', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
 		}
 	}
 	

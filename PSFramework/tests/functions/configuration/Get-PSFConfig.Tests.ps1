@@ -13,7 +13,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Get-PSFConfig).ParameterSets.Name | Should -Be 'FullName', 'Module'
-		(Get-Command Get-PSFConfig).Parameters.Keys | Should -Be 'FullName', 'Name', 'Module', 'Persisted', 'Force', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+		(Get-Command Get-PSFConfig).Parameters.Keys | Should -Be 'FullName', 'Name', 'Module', 'Persisted', 'Force', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
 	}
 	
 	It "Should find the correct Configuration item" {

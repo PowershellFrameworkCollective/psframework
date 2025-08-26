@@ -15,7 +15,7 @@
 		(Get-Command Remove-PSFConfig).ParameterSets.Name | Should -Be 'Default', 'Name'
 		foreach ($key in (Get-Command Remove-PSFConfig).Parameters.Keys)
 		{
-			$key | Should -BeIn 'Config', 'FullName', 'Module', 'Name', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm'
+			$key | Should -BeIn 'Config', 'FullName', 'Module', 'Name', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm', 'ProgressAction'
 		}
 	}
 	
