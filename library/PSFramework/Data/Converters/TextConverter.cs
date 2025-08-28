@@ -23,7 +23,7 @@ namespace PSFramework.Data.Converters
         /// <returns>The converted PSD1 representation of the value provided</returns>
         public string Convert(object Value, object[] Parents, int Depth, Psd1Converter Converter)
         {
-            return $"'{CodeGeneration.EscapeSingleQuotedStringContent(LanguagePrimitives.ConvertTo<string>(Value))}'";
+            return $"'{Converter.EscapeQuotes(Value)}'";
         }
     }
 }

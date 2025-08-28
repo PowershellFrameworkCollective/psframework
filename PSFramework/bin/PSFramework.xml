@@ -1623,6 +1623,55 @@
             <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
             <returns>The converted PSD1 representation of the value provided</returns>
         </member>
+        <member name="T:PSFramework.Data.Converters.CustomConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.AssignedType">
+            <summary>
+            The type the custom converter is assigned to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.Code">
+            <summary>
+            The code calculating the new PSD1-String
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.Properties">
+            <summary>
+            Any additional properties to assign to this.
+            These properties are made available to the code via the $this variable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.DefaultResult">
+            <summary>
+            The result to return as a default.
+            This is mostly used in combination with "OnErrorDefault"
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.OnErrorDefault">
+            <summary>
+            Whether in case of an error it should just return a default string, rather than failing the entire conversion.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.CustomConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="M:PSFramework.Data.Converters.CustomConverter.#ctor(System.Type,PSFramework.Utility.PsfScriptBlock)">
+            <summary>
+            Creates a new custom converter
+            </summary>
+            <param name="AssignedType">The type that should be converted</param>
+            <param name="Code">The code doing the conversion</param>
+        </member>
         <member name="T:PSFramework.Data.Converters.DateTimeConverter">
             <summary>
             Converts data structures into PSD1 Strings
@@ -1893,6 +1942,11 @@
             <param name="Converter">The conversion runtime object, including its settings.</param>
             <returns>The converted PSD1 representation of the value provided</returns>
         </member>
+        <member name="M:PSFramework.Data.DataHost.ResetConverters">
+            <summary>
+            Resets the PSD1 Converters to their default state
+            </summary>
+        </member>
         <member name="T:PSFramework.Data.IPsd1Converter">
             <summary>
             Ruleset for types implementing PSD1 Conversion
@@ -1933,6 +1987,11 @@
             This will be ignored by the default, builtin converters, but external ones may use this to transport and implement settings.
             </summary>
         </member>
+        <member name="F:PSFramework.Data.Psd1Converter.EnableVerbose">
+            <summary>
+            Enable verbose messages.
+            </summary>
+        </member>
         <member name="M:PSFramework.Data.Psd1Converter.Convert(System.Object)">
             <summary>
             Convert some object to PSD1
@@ -1940,11 +1999,35 @@
             <param name="Value">The object to convert to PSD1</param>
             <returns>A PSD1-string</returns>
         </member>
+        <member name="M:PSFramework.Data.Psd1Converter.Convert(System.Object,System.Object[],System.Int32)">
+            <summary>
+            Convert some object to PSD1
+            </summary>
+            <param name="Value">The object to convert to PSD1</param>
+            <param name="Depth">How deeply indented do we start?</param>
+            <param name="Parents">What parent objects came before us? Helps prevent infinite recursion.</param>
+            <returns>A PSD1-string</returns>
+        </member>
         <member name="M:PSFramework.Data.Psd1Converter.WriteVerbose(System.String)">
             <summary>
             Send a message (maybe)
             </summary>
             <param name="Message"></param>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.EscapeQuotes(System.String)">
+            <summary>
+            Escapes a string's single quotes of all flavors.
+            </summary>
+            <param name="Text">The text to escape</param>
+            <returns>A properly escaped string</returns>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.EscapeQuotes(System.Object)">
+            <summary>
+            Escapes a string's single quotes of all flavors.
+            Ensures content is converted to text using PowerShell rules first.
+            </summary>
+            <param name="Value">The text to escape</param>
+            <returns>A properly escaped string</returns>
         </member>
         <member name="T:PSFramework.Filter.Condition">
             <summary>

@@ -10,6 +10,9 @@
 - New: Set-PSFFileContent - Writes content to a file.
 - New: Export-PSFJson - Converts input to json string and writes the result to file.
 - New: Import-PSFJson - Reads json files and returns their content as objects.
+- New: ConvertTo-PSFPsd1 - Converts objects into PSD1 configuration text.
+- New: Export-PSFPowerShellDataFile - Exports data into psd1 config files.
+- New: Register-PSFPsd1Converter - Registers a new piece of logic used to convert specific data types to PSD1 format.
 - New: PSFScope - type granting direct access to the current, script, module or global scope as an object.
 - New: Configuration Setting - `PSFramework.TabExpansion.FuzzyMatch`: Whether to match tab completions with Fuzzy-Matching by default.
 - New: Configuration Setting - `PSFramework.TabExpansion.MatchAnywhere`: Wrap all completion results into quotes, whitespace or not.

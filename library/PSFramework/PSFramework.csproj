@@ -69,6 +69,7 @@
     <Compile Include="Data\Converters\ArrayConverter.cs" />
     <Compile Include="Data\Converters\AssemblyConverter.cs" />
     <Compile Include="Data\Converters\BoolConverter.cs" />
+    <Compile Include="Data\Converters\CustomConverter.cs" />
     <Compile Include="Data\Converters\DateTimeConverter.cs" />
     <Compile Include="Data\Converters\DBNullConverter.cs" />
     <Compile Include="Data\Converters\DoubleConverter.cs" />

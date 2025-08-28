@@ -63,6 +63,15 @@ namespace PSFramework.Data
             return DefaultConverter.Convert(Value, Parents, Depth, Converter);
         }
 
+        /// <summary>
+        /// Resets the PSD1 Converters to their default state
+        /// </summary>
+        public static void ResetConverters()
+        {
+            Converters = new Dictionary<Type, IPsd1Converter>();
+            Initialize();
+        }
+
         internal static void Initialize()
         {
             Converters[typeof(Int16)] = new IntConverter();
