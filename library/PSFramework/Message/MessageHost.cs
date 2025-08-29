@@ -82,6 +82,11 @@ namespace PSFramework.Message
         public static bool EnableMessageTimestamp = true;
 
         /// <summary>
+        /// Include the message target (if present) in verbose message output
+        /// </summary>
+        public static bool EnableMessageTarget = false;
+
+        /// <summary>
         /// Include the level of a message in verbose message output
         /// </summary>
         public static bool EnableMessageLevel = false;
@@ -105,6 +110,11 @@ namespace PSFramework.Message
         /// Whether the console messages should be written with only one color, rather than respecting color tags
         /// </summary>
         public static bool NoColor = false;
+
+        /// <summary>
+        /// The format used in messages written on screen
+        /// </summary>
+        public static string TimeFormat = "HH:mm:ss";
 
         /// <summary>
         /// Define the message prefix value for the critical level

@@ -15,7 +15,7 @@
 		(Get-Command Get-PSFConfigValue).ParameterSets.Name | Should -Be '__AllParameterSets'
 		foreach ($key in (Get-Command Get-PSFConfigValue).Parameters.Keys)
 		{
-			$key | Should -BeIn 'FullName', 'Fallback', 'NotNull', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+			$key | Should -BeIn 'FullName', 'Fallback', 'NotNull', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
 		}
 	}
 	

@@ -26,6 +26,13 @@
 	
 	.PARAMETER DefaultValue
 		The default value returned by the hashtable, when resolving a key not specified on the hashtable.
+
+	.PARAMETER PassThru
+		When resolving a key not specified on the hashtable, return the key instead of nothing.
+
+	.PARAMETER Calculator
+		When resolving a key not specified on the hashtable, use this logic to determine the result.
+		Receives the key as its sole input / argument / $_
 	
 	.EXAMPLE
 		PS C:\> New-PSFHashtable
@@ -42,21 +49,46 @@
 		PS C:\> New-PSFHashtable -Hashtable $originHash -DefaultValue $false
 
 		Returns a PSFHashtable that is a copy of the hashtable in $originHash, which will by default return $false when resolving undefined keys.
+
+	.EXAMPLE
+		PS C:\> New-PSFHashtable -Hashtable $originHash -PassThru
+
+		Returns a PSFHashtable that is a copy of the hashtable in $originHash, which will by default return the key itself when resolving undefined keys.
+
+	.EXAMPLE
+		PS C:\> New-PSFHashtable -Calculator { (Get-Volume | Sort-Object SizeRemaining -Descending)[0] }
+
+		Returns an empty PSFHashtable which will by default return the volume with the most space remaining.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[OutputType([PSFramework.Object.PsfHashtable])]
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = 'Default')]
 	param (
 		[Hashtable]
 		$Hashtable = @{ },
 
+		[Parameter(ParameterSetName = 'Default')]
 		[object]
-		$DefaultValue
+		$DefaultValue,
+		
+		[Parameter(ParameterSetName = 'PassThru')]
+		[switch]
+		$PassThru,
+		
+		[Parameter(ParameterSetName = 'Calculator')]
+		[scriptblock]
+		$Calculator
 	)
 	process {
 		$result = [PSFramework.Object.PsfHashtable]::new($Hashtable)
 		if ($PSBoundParameters.Keys -contains 'DefaultValue') {
 			$result.SetDefaultValue($DefaultValue)
+		}
+		if ($PassThru) {
+			$result.EnablePassthru()
+		}
+		if ($Calculator) {
+			$result.SetCalculator($Calculator)
 		}
 		$result
 	}

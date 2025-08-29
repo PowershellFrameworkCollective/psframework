@@ -1,4 +1,4 @@
-﻿Register-PSFConfigSchema -Name MetaJson -Schema {
+﻿$code = {
 	param (
 		[string]
 		$Resource,
@@ -312,3 +312,5 @@
 		}
 	}
 }
+Register-PSFConfigSchema -Name MetaJson -Schema $code
+Register-PSFConfigSchema -Name Psd1 -Schema $code

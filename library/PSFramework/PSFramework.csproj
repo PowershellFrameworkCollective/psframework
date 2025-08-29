@@ -61,9 +61,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AssertPSFInternalCommandCommand.cs" />
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
     <Compile Include="Commands\SortPSFObjectCommand.cs" />
+    <Compile Include="Commands\UpdatePSFTeppCompletionCommand.cs" />
     <Compile Include="Configuration\PersistedConfig.cs" />
+    <Compile Include="Data\Converters\ArrayConverter.cs" />
+    <Compile Include="Data\Converters\AssemblyConverter.cs" />
+    <Compile Include="Data\Converters\BoolConverter.cs" />
+    <Compile Include="Data\Converters\CustomConverter.cs" />
+    <Compile Include="Data\Converters\DateTimeConverter.cs" />
+    <Compile Include="Data\Converters\DBNullConverter.cs" />
+    <Compile Include="Data\Converters\DoubleConverter.cs" />
+    <Compile Include="Data\Converters\FileSystemInfoConverter.cs" />
+    <Compile Include="Data\Converters\GuidConverter.cs" />
+    <Compile Include="Data\Converters\HashtableConverter.cs" />
+    <Compile Include="Data\Converters\IntConverter.cs" />
+    <Compile Include="Data\Converters\PSDriveInfoConverter.cs" />
+    <Compile Include="Data\Converters\PSObjectConverter.cs" />
+    <Compile Include="Data\Converters\PSProviderInfoConverter.cs" />
+    <Compile Include="Data\Converters\ScriptblockConverter.cs" />
+    <Compile Include="Data\Converters\SwitchConverter.cs" />
+    <Compile Include="Data\Converters\TextConverter.cs" />
+    <Compile Include="Data\Converters\TimeSpanConverter.cs" />
+    <Compile Include="Data\Converters\TypeInfoConverter.cs" />
+    <Compile Include="Data\Converters\VersionConverter.cs" />
+    <Compile Include="Data\DataHost.cs" />
+    <Compile Include="Data\IPsd1Converter.cs" />
+    <Compile Include="Data\Psd1Converter.cs" />
     <Compile Include="Filter\Condition.cs" />
     <Compile Include="Filter\ConditionSet.cs" />
     <Compile Include="Filter\ConditionSetWrapper.cs" />
@@ -111,6 +136,7 @@
     <Compile Include="Logging\ProviderInstance.cs" />
     <Compile Include="Logging\ProviderV2.cs" />
     <Compile Include="Logging\ProviderVersion.cs" />
+    <Compile Include="Logging\TxtBuilder.cs" />
     <Compile Include="Message\CallStack.cs" />
     <Compile Include="Message\CallStackEntry.cs" />
     <Compile Include="Message\LogEntry.cs" />
@@ -134,6 +160,7 @@
     <Compile Include="Meta\Pipeline.cs" />
     <Compile Include="Meta\PsfErrorRecord.cs" />
     <Compile Include="Meta\PSTraceSource.cs" />
+    <Compile Include="Meta\Scope.cs" />
     <Compile Include="Object\ObjectHost.cs" />
     <Compile Include="Parameter\CertificateParameter.cs" />
     <Compile Include="Parameter\ComputerParameter.cs" />
@@ -141,6 +168,8 @@
     <Compile Include="Parameter\DateTimeParameter.cs" />
     <Compile Include="Parameter\EncodingParameter.cs" />
     <Compile Include="Parameter\PathDirectoryLaxParameter.cs" />
+    <Compile Include="Parameter\PathDirectorySingleParameter.cs" />
+    <Compile Include="Parameter\PathFileSingleParameter.cs" />
     <Compile Include="Parameter\PathFileSystemLaxParameter.cs" />
     <Compile Include="Parameter\PathFileSystemParameter.cs" />
     <Compile Include="Parameter\PathFileSystemParameterBase.cs" />
@@ -153,9 +182,15 @@
     <Compile Include="Parameter\PathDirectoryParameter.cs" />
     <Compile Include="Parameter\PathFileLaxParameter.cs" />
     <Compile Include="Parameter\PathFileParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemSingleParameter.cs" />
+    <Compile Include="Parameter\PathFileSystemSingleParameterBase.cs" />
+    <Compile Include="Parameter\PathLiteralDirectorySingleParameter.cs" />
+    <Compile Include="Parameter\PathLiteralFileSingleParameter.cs" />
     <Compile Include="Parameter\PathLiteralLaxParameter.cs" />
     <Compile Include="Parameter\PathLiteralParameter.cs" />
+    <Compile Include="Parameter\PathLiteralSingleParameter.cs" />
     <Compile Include="Parameter\PathNewFileParameter.cs" />
+    <Compile Include="Parameter\PathNewFileSingleParameter.cs" />
     <Compile Include="Parameter\PublicCertificateParameter.cs" />
     <Compile Include="Parameter\SelectAliasParameter.cs" />
     <Compile Include="Parameter\SelectParameter.cs" />

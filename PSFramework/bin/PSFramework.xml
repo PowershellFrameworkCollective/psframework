@@ -4,6 +4,21 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Commands.AssertPSFInternalCommandCommand">
+            <summary>
+            Amazingly useful command, that verifies that the command being executed was called from another command in the same module.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Commands.AssertPSFInternalCommandCommand.PSCmdlet">
+            <summary>
+            The $PSCmdlet variable of the calling function. This allows us to throw the error from the calling command and hide our cmdlet to the end user.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.AssertPSFInternalCommandCommand.ProcessRecord">
+            <summary>
+            The main implementation, doing the various checks needed to ensure it is only called internally.
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.InvokePSFCallbackCommand">
             <summary>
             Command executing callbacks in functions
@@ -143,6 +158,17 @@
             Execute end step
             </summary>
         </member>
+        <member name="T:PSFramework.Commands.UpdatePSFTeppCompletionCommand">
+            <summary>
+            Imports provided values to parameters configured for an auto-training completer.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Commands.UpdatePSFTeppCompletionCommand.ProcessRecord">
+            <summary>
+            Execute the main (and only) step: Copying over values provided to the calling command as parameter into the completion cache.
+            Only applies to parameters configured for auto-training tab completers.
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.ConvertToPSFHashtableCommand">
             <summary>
             Implements the ConvertTo-PSFHashtable command
@@ -172,6 +198,11 @@
             <summary>
             Specifically designed for use in a command when passing through parameters with default values.
             Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.InheritParameters">
+            <summary>
+            Inherit from all parameters of the calling command, including all non-bound parameters.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Remap">
@@ -303,6 +334,11 @@
             The message level at which to generate non-error messages written by this cmdlet
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand.NonTerminating">
+            <summary>
+            Make the final error generated a nonterminating error
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._Caller">
             <summary>
             Information on the calling command, including name, module, file and line.
@@ -390,7 +426,7 @@
             <param name="Name">The name of the feature to check.</param>
             <returns>Whether the flag is enabled</returns>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteMessage(System.String,PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable,System.Exception)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -403,8 +439,9 @@
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
             <param name="Data">Add additional metadata to the message written</param>
+            <param name="Error">Exception to include in the message</param>
         </member>
-        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable)">
+        <member name="M:PSFramework.Commands.PSFCmdlet.WriteLocalizedMessage(System.String,System.Object[],PSFramework.Message.MessageLevel,System.String,System.String,System.String,System.Int32,System.String[],System.Object,System.Collections.Hashtable,System.Exception)">
             <summary>
             Write a message using the PSFramework. Executed as scriptblock, so the current runspace must not be occupied elseways
             </summary>
@@ -418,6 +455,7 @@
             <param name="Tag">Tags to attach to this message</param>
             <param name="Target">A target object to specify</param>
             <param name="Data">Add additional metadata to the message written</param>
+            <param name="Error">Exception to include in the message</param>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.StopCommand(System.String,System.Exception,System.Object,System.String,System.String,System.String,System.Int32,System.String[],System.Boolean)">
             <summary>
@@ -452,6 +490,12 @@
             <summary>
             Whether the command has been set to terminate by StopCommand. Use when supporting EnableException
             </summary>
+        </member>
+        <member name="M:PSFramework.Commands.PSFCmdlet.DoContinue(System.String)">
+            <summary>
+            Throw a continue exception, equivalent to calling continue in script
+            </summary>
+            <param name="Label"></param>
         </member>
         <member name="M:PSFramework.Commands.PSFCmdlet.InvokeCallback(System.Object,System.Boolean)">
             <summary>
@@ -619,6 +663,13 @@
             <summary>
             Implements the end action of the command
             </summary>
+        </member>
+        <member name="M:PSFramework.Commands.SelectPSFObjectCommand.ConvertResult(System.Object)">
+            <summary>
+            Converts a select-object result based on extra elements to add
+            </summary>
+            <param name="Item">The item to convert / extend</param>
+            <returns>A fully converted object</returns>
         </member>
         <member name="T:PSFramework.Commands.SetPSFConfigCommand">
             <summary>
@@ -950,6 +1001,12 @@
             <summary>
             This parameters disables user-friendly warnings and enables the throwing of exceptions.
             This is less user friendly, but allows catching exceptions in calling scripts.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.NewErrorRecord">
+            <summary>
+            Create a new error record, using the current message, then write it.
+            This parameter is only respected if EnableException is set to true.
             </summary>
         </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.Breakpoint">
@@ -1520,6 +1577,457 @@
             <summary>
             The value is something indeterminate, but possibly complex
             </summary>
+        </member>
+        <member name="T:PSFramework.Data.Converters.ArrayConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.ArrayConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.AssemblyConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.AssemblyConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.BoolConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.BoolConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.CustomConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.AssignedType">
+            <summary>
+            The type the custom converter is assigned to
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.Code">
+            <summary>
+            The code calculating the new PSD1-String
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.Properties">
+            <summary>
+            Any additional properties to assign to this.
+            These properties are made available to the code via the $this variable
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.DefaultResult">
+            <summary>
+            The result to return as a default.
+            This is mostly used in combination with "OnErrorDefault"
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Converters.CustomConverter.OnErrorDefault">
+            <summary>
+            Whether in case of an error it should just return a default string, rather than failing the entire conversion.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.CustomConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="M:PSFramework.Data.Converters.CustomConverter.#ctor(System.Type,PSFramework.Utility.PsfScriptBlock)">
+            <summary>
+            Creates a new custom converter
+            </summary>
+            <param name="AssignedType">The type that should be converted</param>
+            <param name="Code">The code doing the conversion</param>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DateTimeConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DateTimeConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DBNullConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DBNullConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.DoubleConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.DoubleConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.FileSystemInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.FileSystemInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.GuidConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.GuidConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.HashtableConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.HashtableConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.IntConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.IntConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSDriveInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSDriveInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSObjectConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSObjectConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.PSProviderInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.PSProviderInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.ScriptblockConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.ScriptblockConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.SwitchConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.SwitchConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TextConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TextConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TimeSpanConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TimeSpanConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.TypeInfoConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.TypeInfoConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Converters.VersionConverter">
+            <summary>
+            Converts data structures into PSD1 Strings
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Converters.VersionConverter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Converts to psd1 string
+            </summary>
+            <param name="Value">The object to convert</param>
+            <param name="Depth">The indentation level</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.DataHost">
+            <summary>
+            Global Helper Tools for dealing with Data
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.DataHost.Converters">
+            <summary>
+            The registered list of PSD1 converters
+            </summary>
+        </member>
+        <member name="P:PSFramework.Data.DataHost.DefaultConverter">
+            <summary>
+            The fallback converter to use when all else fails
+            </summary>
+        </member>
+        <member name="P:PSFramework.Data.DataHost.DictionaryConverter">
+            <summary>
+            The converter to use for dictionaries, such as Hashtables
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.DataHost.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Convert an object to the string to insert into a psd1 document.
+            </summary>
+            <param name="Value">The value to convert</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <param name="Depth">The current indentation depth. Can be ignored for plain value returns, if you do not need to return multiple lines.</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="M:PSFramework.Data.DataHost.ResetConverters">
+            <summary>
+            Resets the PSD1 Converters to their default state
+            </summary>
+        </member>
+        <member name="T:PSFramework.Data.IPsd1Converter">
+            <summary>
+            Ruleset for types implementing PSD1 Conversion
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.IPsd1Converter.Convert(System.Object,System.Object[],System.Int32,PSFramework.Data.Psd1Converter)">
+            <summary>
+            Convert an object to the string to insert into a psd1 document.
+            </summary>
+            <param name="Value">The value to convert</param>
+            <param name="Parents">The parent objects. Used in complex data types to prevent infinite recursion.</param>
+            <param name="Depth">The current indentation depth. Can be ignored for plain value returns, if you do not need to return multiple lines.</param>
+            <param name="Converter">The conversion runtime object, including its settings.</param>
+            <returns>The converted PSD1 representation of the value provided</returns>
+        </member>
+        <member name="T:PSFramework.Data.Psd1Converter">
+            <summary>
+            The PSD1 conversion runtime object.
+            Use this to transport any settings conversion plugins require.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.Cmdlet">
+            <summary>
+            The reference to the PowerShell command running this conversion.
+            Can be used to directly interact with the current runtime, send messages or throw errors.
+            May be null.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.MaxDepth">
+            <summary>
+            How deeply nested are we willing to delve into sub-properties?
+            By default, this is only respected for PSObjects or Dictionaries.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.Config">
+            <summary>
+            Extra configuration settings.
+            This will be ignored by the default, builtin converters, but external ones may use this to transport and implement settings.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Data.Psd1Converter.EnableVerbose">
+            <summary>
+            Enable verbose messages.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.Convert(System.Object)">
+            <summary>
+            Convert some object to PSD1
+            </summary>
+            <param name="Value">The object to convert to PSD1</param>
+            <returns>A PSD1-string</returns>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.Convert(System.Object,System.Object[],System.Int32)">
+            <summary>
+            Convert some object to PSD1
+            </summary>
+            <param name="Value">The object to convert to PSD1</param>
+            <param name="Depth">How deeply indented do we start?</param>
+            <param name="Parents">What parent objects came before us? Helps prevent infinite recursion.</param>
+            <returns>A PSD1-string</returns>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.WriteVerbose(System.String)">
+            <summary>
+            Send a message (maybe)
+            </summary>
+            <param name="Message"></param>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.EscapeQuotes(System.String)">
+            <summary>
+            Escapes a string's single quotes of all flavors.
+            </summary>
+            <param name="Text">The text to escape</param>
+            <returns>A properly escaped string</returns>
+        </member>
+        <member name="M:PSFramework.Data.Psd1Converter.EscapeQuotes(System.Object)">
+            <summary>
+            Escapes a string's single quotes of all flavors.
+            Ensures content is converted to text using PowerShell rules first.
+            </summary>
+            <param name="Value">The text to escape</param>
+            <returns>A properly escaped string</returns>
         </member>
         <member name="T:PSFramework.Filter.Condition">
             <summary>
@@ -3269,6 +3777,45 @@
             Generation 2 logging provider, where each provider is handled as a dynamically created module, properly isolating resource from each other.
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.TxtBuilder">
+            <summary>
+            Helper class to properly format logging messages for the TXT-Variant of the logfile provider
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.TxtBuilder.Text">
+            <summary>
+            The text pattern provided by the user, describing the way the logfile is supposed to look.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.TxtBuilder.Properties">
+            <summary>
+            The properties that exist within the text pattern. Used to optimize the content replacement process.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.#ctor">
+            <summary>
+            Create an empty text-builder
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.#ctor(System.String)">
+            <summary>
+            Create a text-builder preconfigured with a text to build
+            </summary>
+            <param name="Text">The text to build. Use "%PropertyName%" to offer placeholders that later values get inserted into.</param>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.Load(System.String)">
+            <summary>
+            Load a new text to build.
+            </summary>
+            <param name="Text">The text to build. Use "%PropertyName%" to offer placeholders that later values get inserted into.</param>
+        </member>
+        <member name="M:PSFramework.Logging.TxtBuilder.Convert(System.Management.Automation.PSObject)">
+            <summary>
+            Take a message object and build it into a string, ready for logging
+            </summary>
+            <param name="Message">The message object to build.</param>
+            <returns>The finished message, ready for the logfile.</returns>
+        </member>
         <member name="T:PSFramework.Message.CallStack">
             <summary>
             Container for a callstack, to create a non-volatile copy of the relevant information
@@ -4013,6 +4560,11 @@
             Include message timestamps in verbose message output
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.EnableMessageTarget">
+            <summary>
+            Include the message target (if present) in verbose message output
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.EnableMessageLevel">
             <summary>
             Include the level of a message in verbose message output
@@ -4036,6 +4588,11 @@
         <member name="F:PSFramework.Message.MessageHost.NoColor">
             <summary>
             Whether the console messages should be written with only one color, rather than respecting color tags
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.TimeFormat">
+            <summary>
+            The format used in messages written on screen
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.PrefixValueError">
@@ -4860,6 +5417,159 @@
             <param name="Category">The category of the error, determining the exception type</param>
             <returns>An exception</returns>
         </member>
+        <member name="T:PSFramework.Meta.Scope">
+            <summary>
+            Wrapper exposing a PowerShell scope and all its content.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Type">
+            <summary>
+            What kind of scope it is.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.#ctor">
+            <summary>
+            Creates an empty scope object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.#ctor(System.Object)">
+            <summary>
+            Creates a scope object, wrapping around a previously reflected PS scope object.
+            </summary>
+            <param name="RawScope">The raw scope object, as obtained from the PowerShell engine via reflection.</param>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Global">
+            <summary>
+            Get a representation of the global scope.
+            </summary>
+            <returns>a representation of the global scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Module">
+            <summary>
+            Get a representation of the module scope.
+            </summary>
+            <returns>a representation of the module scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Script">
+            <summary>
+            Get a representation of the script scope.
+            </summary>
+            <returns>a representation of the script scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.Current">
+            <summary>
+            Get a representation of the current scope.
+            </summary>
+            <returns>a representation of the current scope</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableVariables">
+            <summary>
+            Enable access to variable content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableVariables">
+            <summary>
+            Disable access to variable content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Variables">
+            <summary>
+            The variables contained in the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.HasVariable(System.String)">
+            <summary>
+            Checks whether a specific variable exists in the scope
+            </summary>
+            <param name="Name">Name of the variable to scan for</param>
+            <returns>Whether the variable exists</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.GetVariableValue(System.String)">
+            <summary>
+            Retrieve the value of a variable in the scope.
+            Returns null if scope or variable do not exist.
+            </summary>
+            <param name="Name">Name of the variable to retrieve.</param>
+            <returns>The value of the variable.</returns>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.SetVariable(System.String,System.Object)">
+            <summary>
+            Change the value of a variable, in effect overwriting it.
+            </summary>
+            <param name="Name">The name of the variable to apply</param>
+            <param name="Value">The value to assign to the variable</param>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableAliases">
+            <summary>
+            Enable access to alias content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableAliases">
+            <summary>
+            Disable access to alias content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Aliases">
+            <summary>
+            The aliases of the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableFunctions">
+            <summary>
+            Enable access to function content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableFunctions">
+            <summary>
+            Disable access to function content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Functions">
+            <summary>
+            The functions defined within the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableCmdlets">
+            <summary>
+            Enable access to cmdlet content of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableCmdlets">
+            <summary>
+            Disable access to cmdlet content of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Cmdlets">
+            <summary>
+            The Cmdlets contained within the scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.EnableDrives">
+            <summary>
+            Enable access to PSDrivecontent of the scope.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.DisableDrives">
+            <summary>
+            Disable access to PSDrivecontent of the scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Drives">
+            <summary>
+            The PSDrives contained within the scope
+            </summary>
+        </member>
+        <member name="P:PSFramework.Meta.Scope.Parent">
+            <summary>
+            The Parent Scope of the current scope
+            </summary>
+        </member>
+        <member name="M:PSFramework.Meta.Scope.VerifyType">
+            <summary>
+            Update the assigned Type.
+            Intended when generating a scope based on another scope.
+            </summary>
+        </member>
         <member name="T:PSFramework.Object.ObjectHost">
             <summary>
             Provides centralized utilities for interacting with PowerShell objects.
@@ -4873,11 +5583,28 @@
             <param name="Members">The set of properties to add</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNotePropertyBulk(System.Management.Automation.PSObject[],System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Add a set of noteproperties to all specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Members">The set of properties to add</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.AddNoteProperty(System.Management.Automation.PSObject,System.String,System.Object,System.Boolean)">
             <summary>
             Adds a single noteproperty to the specified PowerShell object
             </summary>
             <param name="Item">The object to extend</param>
+            <param name="Name">The name of the property to add</param>
+            <param name="Value">The value to assign to the new property</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddNotePropertyBulk(System.Management.Automation.PSObject[],System.String,System.Object,System.Boolean)">
+            <summary>
+            Adds a single noteproperty to a lot of specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
             <param name="Name">The name of the property to add</param>
             <param name="Value">The value to assign to the new property</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
@@ -4892,6 +5619,16 @@
             <param name="Set">(optional) The code used when assigning input to the property.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptPropertyBulk(System.Management.Automation.PSObject[],System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-calculated property to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Name">The name of the script-property to add</param>
+            <param name="Get">The code used to read the value</param>
+            <param name="Set">(optional) The code used when assigning input to the property.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.RemoveMember(System.Management.Automation.PSObject,System.String)">
             <summary>
             Removes a member from the specified PowerShell object
@@ -4899,11 +5636,27 @@
             <param name="Item">The object to remove a member from</param>
             <param name="Name">The name of the member to remove.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.RemoveMemberBulk(System.Management.Automation.PSObject[],System.String)">
+            <summary>
+            Removes a member from the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to remove a member from</param>
+            <param name="Name">The name of the member to remove.</param>
+        </member>
         <member name="M:PSFramework.Object.ObjectHost.AddScriptMethod(System.Management.Automation.PSObject,System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
             <summary>
             Adds a script-based method to the specified PowerShell object
             </summary>
             <param name="Item">The object to extend</param>
+            <param name="Name">The name of the method to add.</param>
+            <param name="Code">The code implementing the logic when the method is called.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethodBulk(System.Management.Automation.PSObject[],System.String,System.Management.Automation.ScriptBlock,System.Boolean)">
+            <summary>
+            Adds a script-based method to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
             <param name="Name">The name of the method to add.</param>
             <param name="Code">The code implementing the logic when the method is called.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
@@ -4916,6 +5669,14 @@
             <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
             <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
         </member>
+        <member name="M:PSFramework.Object.ObjectHost.AddScriptMethodBulk(System.Management.Automation.PSObject[],System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Adds several script methods to the specified PowerShell objects
+            </summary>
+            <param name="Items">The objects to extend</param>
+            <param name="Members">The methods to add. Provide a hashtable mapping method name to scriptblock with the logic implementing the method.</param>
+            <param name="PreValidated">Whether validation has already been performed and need not be done. Setting this to false will add performance overhead.</param>
+        </member>
         <member name="T:PSFramework.Object.PsfHashtable">
             <summary>
             Extend default hashtables to include a default value
@@ -4924,6 +5685,16 @@
         <member name="F:PSFramework.Object.PsfHashtable.defaultValue">
             <summary>
             The default value when retrieving values for keys that do not exist
+            </summary>
+        </member>
+        <member name="F:PSFramework.Object.PsfHashtable.passThru">
+            <summary>
+            Whether in case of unexpected key, the key should be returned, rather than a default value.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Object.PsfHashtable.calculator">
+            <summary>
+            Scriptblock used to calculate result when providing a key that is not applied to the hashtable.
             </summary>
         </member>
         <member name="M:PSFramework.Object.PsfHashtable.#ctor">
@@ -4942,6 +5713,22 @@
             Set the default value provided, when reading for a key that does not yet exist.
             </summary>
             <param name="Value">The default value when accessing this PsfHashtable's values</param>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.EnablePassthru">
+            <summary>
+            Enables the PassThru behavior, where an unexpected key gets returned as the default action
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.DisablePassThru">
+            <summary>
+            Disables the PassThru behavior, where an unexpected key would get returned as the default action
+            </summary>
+        </member>
+        <member name="M:PSFramework.Object.PsfHashtable.SetCalculator(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Sets the scriptblock used to calculate the results for keys, that are not registered with the hashtable
+            </summary>
+            <param name="Calculator">The logic doing the calculating. Provide null to disable.</param>
         </member>
         <member name="M:PSFramework.Object.PsfHashtable.Clone">
             <summary>
@@ -5304,6 +6091,112 @@
             Convert anything else
             </summary>
             <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathDirectorySingleParameter">
+            <summary>
+            Parameterclass that accepts a single directory
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathDirectorySingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathDirectorySingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSingleParameter">
+            <summary>
+            Parameterclass accepting/resolving to a single, fully-resolved path to a file.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathFileSingle.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
         </member>
         <member name="T:PSFramework.Parameter.PathFileSystemLaxParameter">
             <summary>
@@ -5782,6 +6675,228 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file or folder
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathFileSystemSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathFileSystemSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathFileSystemSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameter.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathFileSystemSingleParameterBase">
+            <summary>
+            Base class for parameter classes mapping to a single filesystem item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.PathFileSystemSingleParameterBase.Path">
+            <summary>
+            The path resolved
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.ToString">
+            <summary>
+            Default text representation of the PathFileSingle type.
+            </summary>
+            <returns>Its path.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.Apply(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolve the path provided and ensure it exists and is of the proper type!
+            </summary>
+            <param name="Path">The path to resolve</param>
+            <param name="MayBeFile">Whether it may be a file</param>
+            <param name="MayBeDirectory">Whether it may be a directory</param>
+            <exception cref="T:System.ArgumentException">When the path provided cannot be resolved at all.</exception>
+            <exception cref="T:System.IO.InvalidDataException">When the path provided resolves to multiple items.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">When the path should resolve to a file, but is not a file.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">When the path should resolve to a directory, but is not a directory.</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.ApplyLiteral(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Verify the specified path exists, process relative paths, but do not apply wildcards.
+            </summary>
+            <param name="Path">The path to process</param>
+            <param name="MayBeFile">Whether the path may point to a file</param>
+            <param name="MayBeDirectory">Whether the path may point to a directory</param>
+            <exception cref="T:System.Management.Automation.ItemNotFoundException">Thrown if the item does not exist at all</exception>
+            <exception cref="T:System.IO.FileNotFoundException">When the path should resolve to a file, but is not a file.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">When the path should resolve to a directory, but is not a directory.</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.PathFileSystemSingleParameterBase.op_Implicit(PSFramework.Parameter.PathFileSystemSingleParameterBase)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralDirectorySingleParameter">
+            <summary>
+            Parameter class that maps to a single directory.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathLiteralDirectorySingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathLiteralDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralDirectorySingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralDirectorySingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathLiteralFileSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file without processing wildcards
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathLiteralFileSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathLiteralFileSingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralFileSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralFileSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
         <member name="T:PSFramework.Parameter.PathLiteralLaxParameter">
             <summary>
             Input converter performing path evaluation without wildcard interpretation, not throwing errors on bad input
@@ -5908,6 +7023,77 @@
             </summary>
             <param name="Input"></param>
         </member>
+        <member name="T:PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Parameter Class that maps to a single file or directory, without resolving wildcards.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Processes a single DirectoryInfo item as a single directory.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single directory or file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.DirectoryInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to DirectoryInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(System.IO.DirectoryInfo)~PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Implicitly convert DirectoryInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathLiteralSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathLiteralSingleParameter.op_Implicit(PSFramework.Parameter.PathLiteralSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
         <member name="T:PSFramework.Parameter.PathNewFileParameter">
             <summary>
             Parameter class, converting input into the path to a file, where either the file or at least its parent folder already exist.
@@ -5956,6 +7142,59 @@
             Convert anything else
             </summary>
             <param name="Input"></param>
+        </member>
+        <member name="T:PSFramework.Parameter.PathNewFileSingleParameter">
+            <summary>
+            ParameterClass to map to a single file that needs not exist, but whose parent directory must.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.String)">
+            <summary>
+            Processes a single string as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.IO.FileInfo)">
+            <summary>
+            Processes a single FileInfo item as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.Uri)">
+            <summary>
+            Processes a single Uri as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.#ctor(System.Object)">
+            <summary>
+            Processes a single object as a single file.
+            </summary>
+            <param name="Path">The path to process</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.String">
+            <summary>
+            Implicitly convert to string.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.IO.FileInfo">
+            <summary>
+            Implicitly convert to FileInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(System.IO.FileInfo)~PSFramework.Parameter.PathNewFileSingleParameter">
+            <summary>
+            Implicitly convert FileInfo to PathDirectorySingleParameter.
+            </summary>
+            <param name="Info">The path to convert</param>
+        </member>
+        <member name="M:PSFramework.Parameter.PathNewFileSingleParameter.op_Implicit(PSFramework.Parameter.PathNewFileSingleParameter)~System.IO.FileSystemInfo">
+            <summary>
+            Implicitly convert to FileSystemInfo.
+            </summary>
+            <param name="Path">The path to convert</param>
         </member>
         <member name="T:PSFramework.Parameter.PublicCertificateParameter">
             <summary>
@@ -6041,7 +7280,7 @@
         </member>
         <member name="T:PSFramework.Parameter.SelectParameter">
             <summary>
-            Class that automatically parses input chosen for the -Property parameter of Select-PSUObject
+            Class that automatically parses input chosen for the -Property parameter of Select-PSFObject
             </summary>
         </member>
         <member name="F:PSFramework.Parameter.SelectParameter.Value">
@@ -7594,6 +8833,11 @@
             Allows integrating PSFramework tab expansion by attribute, rather than command.
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.CompletionName">
+            <summary>
+            The name of the completion
+            </summary>
+        </member>
         <member name="M:PSFramework.TabExpansion.PsfArgumentCompleterAttribute.#ctor(System.String)">
             <summary>
             Create an argument completer offering but the name of the registered completion
@@ -7683,6 +8927,26 @@
             Whether to execute the scriptblock in the global scope
             </summary>
         </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.MatchAnywhere">
+            <summary>
+            If true: Match input against any part of the options, not just the beginning
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.AlwaysQuote">
+            <summary>
+            If true: Wrap all results into quotes, not just those with whitespace
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.FuzzyMatch">
+            <summary>
+            If true: Apply FuzzyMatching to the legal completions, not just direct word matching.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.DontSort">
+            <summary>
+            If true: Completion results will not be sorted by name.
+            </summary>
+        </member>
         <member name="P:PSFramework.TabExpansion.ScriptContainer.ShouldExecute">
             <summary>
             Returns whether a new refresh of tab completion should be executed.
@@ -7693,6 +8957,48 @@
             Returns the correct results, either by executing the scriptblock or consulting the cache
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.GetPattern(System.String)">
+            <summary>
+            Returns the matching pattern applied against the list of completion values.
+            </summary>
+            <param name="WordToComplete">What the user typed so far</param>
+            <returns>The resolved pattern to match with</returns>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.Trained">
+            <summary>
+            The trained values for the current completion scriptblock.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.AutoTraining">
+            <summary>
+            Whether this completion should automatically be trained with values provided to parameters
+            </summary>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.AddTraining(System.String)">
+            <summary>
+            Add a completion option to the list of trained completions.
+            </summary>
+            <param name="Text">The value to offer for completion</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.AddTraining(System.Collections.Hashtable)">
+            <summary>
+            Add a completion option to the list of trained completions.
+            </summary>
+            <param name="Data">A hashtable with the completion data to add. Must at least contain a "Text" node.</param>
+            <exception cref="T:System.ArgumentException">An invalid hashtable, not containing a key named "Text" will cause an argument exception</exception>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.RemoveTraining(System.String)">
+            <summary>
+            Remove a previously provided completion value.
+            </summary>
+            <param name="Text">The text value to no longer complete.</param>
+        </member>
+        <member name="M:PSFramework.TabExpansion.ScriptContainer.RemoveTraining(System.Collections.Hashtable)">
+            <summary>
+            Remove a previously provided completion value.
+            </summary>
+            <param name="Data">Hashtable containing the completion to no longer offer.</param>
         </member>
         <member name="T:PSFramework.TabExpansion.TabExpansionHost">
             <summary>
@@ -7707,6 +9013,21 @@
         <member name="P:PSFramework.TabExpansion.TabExpansionHost.Cache">
             <summary>
             The cache used by scripts utilizing TabExpansionPlusPlus for PSFramework
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.MatchAnywhere">
+            <summary>
+            Whether PSFramework completion should by default match type text to anywhere in the included/valid options' text, not just from the beginning.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.AlwaysQuote">
+            <summary>
+            Whether PSFramework completion should always wrap quotes around the completion text, even if there is no whitespace.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.FuzzyMatch">
+            <summary>
+            Whether PSFramework completion should use fuzzy-matching when matching completion values with the already typed text.
             </summary>
         </member>
         <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean)">
@@ -9917,6 +11238,22 @@
             <param name="CompressedString">The compressed string to expand</param>
             <returns>Returns an expanded string.</returns>
         </member>
+        <member name="M:PSFramework.Utility.UtilityHost.JoinPath(System.String,System.String)">
+            <summary>
+            Joins two path segments together. Will correct path separators, will trace back ".." path segments. Will ignore the Base, if the Child is an absolute Uri.
+            </summary>
+            <param name="Base">The base path to which to add the child</param>
+            <param name="Child">The child path segement to add to the base</param>
+            <returns>The fully joined path</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.RemoveAt``1(``0[],System.Int32[])">
+            <summary>
+            Tool to remove items from an array at a specific location
+            </summary>
+            <param name="Array">The array to remove items from</param>
+            <param name="Indexes">The indexes of the items to remove</param>
+            <returns>A new array with all items of the source array, minus the ones at the specified indexes.</returns>
+        </member>
         <member name="M:PSFramework.Utility.UtilityHost.GetExecutionContextFromTLS">
             <summary>
             Returns the execution context for the current runspace based on the current thread.
@@ -10025,6 +11362,15 @@
             <param name="Name">The name of the method to invoke</param>
             <param name="Arguments">The arguments to pass to the method</param>
             <returns>The result of the method invoked</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.GetReflectedObject(System.Management.Automation.PSObject,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new PSCustomObject based on the base object wrapped by the input.
+            </summary>
+            <param name="Item">The item to refelct upon.</param>
+            <param name="IncludePublic">Whether to include public properties / fields</param>
+            <param name="IncludePrivate">Whether to include private properties / fields</param>
+            <returns>A new object containing only properties and fields of the base input. Anything else (including noteproperties of the input) will be ignored.</returns>
         </member>
         <member name="M:PSFramework.Utility.UtilityHost.InvokeConstructor(System.Type,System.Object[],System.Reflection.BindingFlags)">
             <summary>

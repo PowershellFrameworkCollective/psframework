@@ -207,36 +207,11 @@ namespace PSFramework.Commands
                 _Pipeline.Process(InputObject);
             else
             {
-                PSObject item = PSObject.AsPSObject(_Pipeline.Process(InputObject).GetValue(0));
-
-                if (KeepInputObject.ToBool())
-                {
-                    PSObject tempItem = item;
-                    item = InputObject;
-                    foreach (PSPropertyInfo info in tempItem.Properties.Where(o => !item.Properties.Select(n => n.Name).Contains(o.Name)))
-                        item.Properties.Add(info);
-                }
-
-                if (Alias != null)
-                    foreach (SelectAliasParameter alias in Alias)
-                        foreach (PSAliasProperty aliasItem in alias.Aliases)
-                            item.Members.Add(aliasItem);
-                if (ScriptMethod != null)
-                    foreach (SelectScriptMethodParameter method in ScriptMethod)
-                        foreach (PSScriptMethod methodItem in method.Methods)
-                            item.Members.Add(methodItem);
-                if (ScriptProperty != null)
-                    foreach (SelectScriptPropertyParameter property in ScriptProperty)
-                        foreach (PSScriptProperty propertyItem in property.Value)
-                            item.Members.Add(propertyItem);
-
-                if (ShowProperty.Length > 0)
-                    item.Members.Add(new PSMemberSet("PSStandardMembers", _DisplayPropertySet));
-                else if (ShowExcludeProperty.Length > 0)
-                    item.Members.Add(new PSMemberSet("PSStandardMembers", new PSMemberInfo[] { new PSPropertySet("DefaultDisplayPropertySet", item.Properties.Select(o => o.Name).Where(o => !ShowExcludeProperty.Contains(o))) }));
-                if (!String.IsNullOrEmpty(TypeName))
-                    item.TypeNames.Insert(0, TypeName);
-                WriteObject(item);
+                Array items = _Pipeline.Process(InputObject);
+                if (items.Length == 0)
+                    return;
+                foreach (object item in items)
+                    WriteObject(ConvertResult(item));
             }
         }
 
@@ -245,8 +220,55 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void EndProcessing()
         {
-            _Pipeline.End();
+            Array items = _Pipeline.End();
+
+            if (items.Length == 0)
+                return;
+            foreach (object item in items)
+                WriteObject(ConvertResult(item));
         }
         #endregion Command Implementation
+
+        #region Internal Helpers
+        /// <summary>
+        /// Converts a select-object result based on extra elements to add
+        /// </summary>
+        /// <param name="Item">The item to convert / extend</param>
+        /// <returns>A fully converted object</returns>
+        private PSObject ConvertResult(object Item)
+        {
+            PSObject item = PSObject.AsPSObject(Item);
+
+            if (KeepInputObject.ToBool())
+            {
+                PSObject tempItem = item;
+                item = InputObject;
+                foreach (PSPropertyInfo info in tempItem.Properties.Where(o => !item.Properties.Select(n => n.Name).Contains(o.Name)))
+                    item.Properties.Add(info);
+            }
+
+            if (Alias != null)
+                foreach (SelectAliasParameter alias in Alias)
+                    foreach (PSAliasProperty aliasItem in alias.Aliases)
+                        item.Members.Add(aliasItem);
+            if (ScriptMethod != null)
+                foreach (SelectScriptMethodParameter method in ScriptMethod)
+                    foreach (PSScriptMethod methodItem in method.Methods)
+                        item.Members.Add(methodItem);
+            if (ScriptProperty != null)
+                foreach (SelectScriptPropertyParameter property in ScriptProperty)
+                    foreach (PSScriptProperty propertyItem in property.Value)
+                        item.Members.Add(propertyItem);
+
+            if (ShowProperty.Length > 0)
+                item.Members.Add(new PSMemberSet("PSStandardMembers", _DisplayPropertySet));
+            else if (ShowExcludeProperty.Length > 0)
+                item.Members.Add(new PSMemberSet("PSStandardMembers", new PSMemberInfo[] { new PSPropertySet("DefaultDisplayPropertySet", item.Properties.Select(o => o.Name).Where(o => !ShowExcludeProperty.Contains(o))) }));
+            if (!String.IsNullOrEmpty(TypeName))
+                item.TypeNames.Insert(0, TypeName);
+
+            return item;
+        }
+        #endregion Internal Helpers
     }
 }

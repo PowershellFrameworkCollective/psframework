@@ -39,6 +39,22 @@
 		.PARAMETER Global
 			Whether the scriptblock should be executed in the global context.
 			This parameter is needed to reliably execute in background runspaces, but means no direct access to module content.
+
+		.PARAMETER MatchAnywhere
+			Match input against any part of the completion text, not just the beginning.
+
+		.PARAMETER FuzzyMatch
+			Apply FuzzyMatching to the legal completion text, not just direct word matching.
+
+		.PARAMETER AlwaysQuote
+			All completion results will be wrapped in quotes, not just the ones with a whitespace.
+
+		.PARAMETER DontSort
+			Completion results are no longer sorted alphabetically.
+
+		.PARAMETER AutoTraining
+			Automatically train the tab completion by caching user inputs.
+			Requires using Update-PSFTeppCompletion inside of the respective command, to automatically pick up new values.
 	
 		.EXAMPLE
 			Register-PSFTeppScriptblock -Name "psalcohol-liquids" -ScriptBlock { "beer", "mead", "wine", "vodka", "whiskey", "rum" }
@@ -75,11 +91,32 @@
 		$CacheDuration = 0,
 		
 		[switch]
-		$Global
+		$Global,
+
+		[switch]
+		$MatchAnywhere,
+
+		[switch]
+		$FuzzyMatch,
+
+		[switch]
+		$AlwaysQuote,
+
+		[switch]
+		$DontSort,
+
+		[switch]
+		$AutoTraining
 	)
 	
 	process
 	{
 		[PSFramework.TabExpansion.TabExpansionHost]::RegisterCompletion($Name, $ScriptBlock, $Mode, $CacheDuration, $Global)
+		$scriptContainer = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name]
+		if ($PSBoundParameters.Keys -contains 'MatchAnywhere') { $scriptContainer.MatchAnywhere = $MatchAnywhere }
+		if ($PSBoundParameters.Keys -contains 'FuzzyMatch') { $scriptContainer.MatchAnywhere = $FuzzyMatch }
+		if ($PSBoundParameters.Keys -contains 'AlwaysQuote') { $scriptContainer.MatchAnywhere = $AlwaysQuote }
+		if ($PSBoundParameters.Keys -contains 'DontSort') { $scriptContainer.MatchAnywhere = $DontSort }
+		if ($PSBoundParameters.Keys -contains 'AutoTraining') { $scriptContainer.AutoTraining = $AutoTraining }
 	}
 }

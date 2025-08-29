@@ -49,7 +49,7 @@ namespace PSFramework.Utility
                     Collection<PSObject> result = Conversions[Name].InvokeGlobal(inputData);
                     if (result.Count() == 0 || result[0] == null)
                         throw new InvalidOperationException($"Conversion Script {Name} failed to return anything! Input: {inputData}");
-                    if (result[0].BaseObject.GetType() != TargetType)
+                    if (result[0].BaseObject.GetType() != TargetType && !TargetType.IsAssignableFrom(result[0].BaseObject.GetType()))
                         throw new InvalidOperationException($"Conversion Script {Name} converted {inputData} to {result[0].BaseObject.GetType().FullName}, rather than {TargetType.FullName}");
                     return result[0];
                 }

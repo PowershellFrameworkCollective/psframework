@@ -1,4 +1,5 @@
 ﻿using PSFramework.Message;
+using PSFramework.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -147,7 +148,15 @@ namespace PSFramework.Commands
 		/// This is less user friendly, but allows catching exceptions in calling scripts.
         /// </summary>
         [Parameter()]
+        [TypeTransformation(typeof(Boolean))]
         public bool EnableException;
+
+        /// <summary>
+        /// Create a new error record, using the current message, then write it.
+        /// This parameter is only respected if EnableException is set to true.
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter NewErrorRecord;
 
         /// <summary>
         /// Enables breakpoints on the current message. By default, setting '-Debug' will NOT cause an interrupt on the current position.
@@ -525,7 +534,7 @@ namespace PSFramework.Commands
                     InvokeCommand.InvokeScript(@"$VerbosePreference = 'Continue'");
                     //SessionState.PSVariable.Set("VerbosePreference", ActionPreference.Continue);
 
-                    WriteVerbose(_MessageStreams);
+                WriteVerbose(_MessageStreams);
                 channels = channels | LogEntryType.Verbose;
             }
 
@@ -567,10 +576,22 @@ namespace PSFramework.Commands
                 }
 
             #region Error handling p2
-            if (ErrorRecord != null)
-                if (!_fromStopFunction && EnableException)
+            if (!_fromStopFunction && EnableException)
+            {
+                if (NewErrorRecord)
+                {
+                    ErrorRecord record = new ErrorRecord(
+                        new Exception(_errorQualifiedMessage),
+                        "ErrorMessage",
+                        ErrorCategory.NotSpecified,
+                        Target
+                    );
+                    PSCmdlet.WriteError(record);
+                }
+                else if (ErrorRecord != null)
                     foreach (ErrorRecord record in ErrorRecord)
                         PSCmdlet.WriteError(record);
+            }
             #endregion Error handling p2
         }
         #endregion Cmdlet Implementation
@@ -782,7 +803,10 @@ namespace PSFramework.Commands
                 levelDisplay = $"[<c='sub'>{Level}</c>]";
             string timeStamp = "";
             if (MessageHost.EnableMessageTimestamp)
-                timeStamp = $"[<c='sub'>{_timestamp.ToString("HH:mm:ss")}</c>]";
+                timeStamp = $"[<c='sub'>{_timestamp.ToString(MessageHost.TimeFormat)}</c>]";
+            string target = "";
+            if (MessageHost.EnableMessageTarget && Target != null)
+                target = $"[<c='sub'>{Target.ToString()}</c>]";
             string breadCrumbs = "";
             if (MessageHost.EnableMessageBreadcrumbs)
                 breadCrumbs = _BreadCrumbsStringColored;
@@ -790,7 +814,7 @@ namespace PSFramework.Commands
             if (MessageHost.EnableMessageDisplayCommand && !MessageHost.EnableMessageBreadcrumbs)
                 functionText = $"[<c='sub'>{FunctionName}</c>]";
 
-            string header = String.Join("", timeStamp, functionText, levelDisplay, breadCrumbs);
+            string header = String.Join("", timeStamp, functionText, levelDisplay, target, breadCrumbs);
 
             if (MessageHost.EnableMessageBreadcrumbs)
                 _messageColor = String.Join("", header, _errorQualifiedMessage);

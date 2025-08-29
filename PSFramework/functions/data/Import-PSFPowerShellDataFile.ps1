@@ -86,8 +86,10 @@
 				$jsonTypes = @(
 					'System.String'
 					'System.Int32'
+					'System.Int64'
 					'System.Double'
 					'System.Bool'
+					'System.DateTime'
 				)
 			}
 			process {
@@ -96,12 +98,12 @@
 					if ($null -eq $pair.Value) { continue }
 					if ($pair.Value.GetType().FullName -in $jsonTypes) { continue }
 					if ($pair.Value -is [object[]]) {
-						$pair.Value = foreach ($value in $pair.Value) {
+						$pair.Value = @(foreach ($value in $pair.Value) {
 							if ($null -eq $value) { $null; continue }
 							if ($value.GetType().FullName -in $jsonTypes) { $value; continue }
 							if ($value -is [object[]]) { $value; continue } # Accept not resolving double-nested arrays for simplicity
 							ConvertTo-Hashtable -InputObject $value
-						}
+						})
 						continue
 					}
 					$pair.Value = ConvertTo-Hashtable -InputObject $pair.Value
