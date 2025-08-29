@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Management.Automation;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PSFramework.Parameter
+{
+    /// <summary>
+    /// Parameter Class that maps to a single file or folder
+    /// </summary>
+    public class PathFileSystemSingleParameter : PathFileSystemSingleParameterBase
+    {
+        #region Constructors
+        /// <summary>
+        /// Processes a single string as a single directory or file.
+        /// </summary>
+        /// <param name="Path">The path to process</param>
+        public PathFileSystemSingleParameter(string Path)
+        {
+            InputObject = Path;
+            Apply(Path, true, true);
+        }
+
+        /// <summary>
+        /// Processes a single DirectoryInfo item as a single directory.
+        /// </summary>
+        /// <param name="Path">The path to process</param>
+        public PathFileSystemSingleParameter(DirectoryInfo Path) : this(Path.FullName) { InputObject = Path; }
+
+        /// <summary>
+        /// Processes a single FileInfo item as a single file.
+        /// </summary>
+        /// <param name="Path">The path to process</param>
+        public PathFileSystemSingleParameter(FileInfo Path) : this(Path.FullName) { InputObject = Path; }
+
+        /// <summary>
+        /// Processes a single Uri as a single directory or file.
+        /// </summary>
+        /// <param name="Path">The path to process</param>
+        public PathFileSystemSingleParameter(Uri Path) : this(Path.OriginalString) { InputObject = Path; }
+
+        /// <summary>
+        /// Processes a single object as a single directory or file.
+        /// </summary>
+        /// <param name="Path">The path to process</param>
+        public PathFileSystemSingleParameter(object Path)
+        {
+            InputObject = Path;
+            string actualpath;
+            try { actualpath = LanguagePrimitives.ConvertTo<string>(PathFileSystemParameterBase.GetObject(Path)); }
+            catch (Exception e) { throw new ArgumentException($"Failed to process {Path}! Error converting to string: {e.Message}", e); }
+
+            Apply(actualpath, true, true);
+        }
+        #endregion Constructors
+
+        #region Operators
+        /// <summary>
+        /// Implicitly convert to string.
+        /// </summary>
+        /// <param name="Path">The path to convert</param>
+        public static implicit operator string(PathFileSystemSingleParameter Path)
+        {
+            return Path.Path;
+        }
+
+        /// <summary>
+        /// Implicitly convert to DirectoryInfo.
+        /// </summary>
+        /// <param name="Path">The path to convert</param>
+        public static implicit operator DirectoryInfo(PathFileSystemSingleParameter Path)
+        {
+            return new DirectoryInfo(Path.Path);
+        }
+
+        /// <summary>
+        /// Implicitly convert to FileInfo.
+        /// </summary>
+        /// <param name="Path">The path to convert</param>
+        public static implicit operator FileInfo(PathFileSystemSingleParameter Path)
+        {
+            return new FileInfo(Path.Path);
+        }
+
+        /// <summary>
+        /// Implicitly convert DirectoryInfo to PathFileSystemSingleParameter.
+        /// </summary>
+        /// <param name="Info">The path to convert</param>
+        public static implicit operator PathFileSystemSingleParameter(DirectoryInfo Info)
+        {
+            return new PathFileSystemSingleParameter(Info);
+        }
+
+        /// <summary>
+        /// Implicitly convert FileInfo to PathFileSystemSingleParameter.
+        /// </summary>
+        /// <param name="Info">The path to convert</param>
+        public static implicit operator PathFileSystemSingleParameter(FileInfo Info)
+        {
+            return new PathFileSystemSingleParameter(Info);
+        }
+
+        /// <summary>
+        /// Implicitly convert to FileSystemInfo.
+        /// </summary>
+        /// <param name="Path">The path to convert</param>
+        public static implicit operator FileSystemInfo(PathFileSystemSingleParameter Path)
+        {
+            if (File.Exists(Path.Path))
+                return new FileInfo(Path.Path);
+            return new DirectoryInfo(Path.Path);
+        }
+        #endregion Operators
+    }
+}

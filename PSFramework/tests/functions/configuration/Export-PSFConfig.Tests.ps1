@@ -17,7 +17,7 @@
 		(Get-Command Export-PSFConfig).ParameterSets.Name | Should -Be 'FullName', 'Module', 'Config', 'ModuleName'
 		foreach ($key in (Get-Command Export-PSFConfig).Parameters.Keys)
 		{
-			$key | Should -BeIn 'FullName', 'Module', 'Name', 'Config', 'ModuleName', 'ModuleVersion', 'Scope', 'OutPath', 'SkipUnchanged', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+			$key | Should -BeIn 'FullName', 'Module', 'Name', 'Config', 'ModuleName', 'ModuleVersion', 'Scope', 'OutPath', 'SkipUnchanged', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
 		}
 	}
 	

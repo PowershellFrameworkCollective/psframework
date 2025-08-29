@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.12.346'
+	ModuleVersion = '1.13.406'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -38,12 +38,14 @@
 		'Add-PSFFilterCondition'
 		'Add-PSFLoggingProviderRunspace'
 		'Add-PSFRunspaceWorker'
+		'Add-PSFTeppCompletion'
 		'Clear-PSFMessage'
 		'Clear-PSFresultCache'
 		'Compare-PSFArray'
 		'ConvertFrom-PSFArray'
 		'ConvertFrom-PSFClixml'
 		'ConvertTo-PSFClixml'
+		'ConvertTo-PSFPsd1'
 		'Disable-PSFConsoleInterrupt'
 		'Disable-PSFLoggingProvider'
 		'Disable-PSFTaskEngineTask'
@@ -51,12 +53,15 @@
 		'Enable-PSFTaskEngineTask'
 		'Export-PSFClixml'
 		'Export-PSFConfig'
+		'Export-PSFJson'
 		'Export-PSFModuleClass'
+		'Export-PSFPowerShellDataFile'
 		'Get-PSFCallback'
 		'Get-PSFConfig'
 		'Get-PSFConfigValue'
 		'Get-PSFDynamicContentObject'
 		'Get-PSFFeature'
+		'Get-PSFFileContent'
 		'Get-PSFFilterCondition'
 		'Get-PSFFilterConditionSet'
 		'Get-PSFLicense'
@@ -77,11 +82,13 @@
 		'Get-PSFTaskEngineCache'
 		'Get-PSFTaskEngineTask'
 		'Get-PSFTempItem'
+		'Get-PSFTeppCompletion'
 		'Get-PSFTypeSerializationData'
 		'Get-PSFUserChoice'
 		'Import-PSFClixml'
 		'Import-PSFCmdlet'
 		'Import-PSFConfig'
+		'Import-PSFJson'
 		'Import-PSFLocalizedString'
 		'Import-PSFLoggingProvider'
 		'Import-PSFPowerShellDataFile'
@@ -115,6 +122,7 @@
 		'Register-PSFMessageEvent'
 		'Register-PSFMessageTransform'
 		'Register-PSFParameterClassMapping'
+		'Register-PSFPsd1Converter'
 		'Register-PSFRunspace'
 		'Register-PSFSessionObjectType'
 		'Register-PSFSupportDataProvider'
@@ -131,6 +139,7 @@
 		'Remove-PSFMessageLevelModifier'
 		'Remove-PSFRunspaceWorkflow'
 		'Remove-PSFTempItem'
+		'Remove-PSFTeppCompletion'
 		'Reset-PSFConfig'
 		'Resolve-PSFDefaultParameterValue'
 		'Resolve-PSFItem'
@@ -139,6 +148,7 @@
 		'Select-PSFPropertyValue'
 		'Set-PSFDynamicContentObject'
 		'Set-PSFFeature'
+		'Set-PSFFileContent'
 		'Set-PSFLoggingProvider'
 		'Set-PSFPath'
 		'Set-PSFResultCache'
@@ -173,6 +183,7 @@
 	
 	# Cmdlets to export from this module
 	CmdletsToExport	       = @(
+		'Assert-PSFInternalCommand'
 		'ConvertTo-PSFHashtable'
 		'Invoke-PSFCallback'
 		'Invoke-PSFProtectedCommand'
@@ -181,6 +192,7 @@
 		'Set-PSFConfig'
 		'Set-PSFObjectOrder'
 		'Test-PSFShouldProcess'
+		'Update-PSFTeppCompletion'
 		'Write-PSFMessage'
 	)
 	

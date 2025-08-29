@@ -1,0 +1,18 @@
+﻿on: [pull_request]
+
+jobs:
+  validate:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Prerequisites
+      run: .\build\psf-prerequisites.ps1
+      shell: powershell
+    - name: Install Prerequisites
+      run: .\build\vsts-help.ps1
+      shell: powershell
+    - name: Validate
+      run: .\build\vsts-validate.ps1
+      shell: powershell

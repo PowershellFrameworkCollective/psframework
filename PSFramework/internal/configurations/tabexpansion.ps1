@@ -1,0 +1,4 @@
+﻿# Settings around the Tab Expansion Experience
+Set-PSFConfig -Module PSFramework -Name 'TabExpansion.FuzzyMatch' -Value $false -Initialize -Handler { [PSFramework.TabExpansion.TabExpansionHost]::FuzzyMatch = $args[0] } -Validation 'bool' -Description 'Whether to match tab completions with Fuzzy-Matching by default.'
+Set-PSFConfig -Module PSFramework -Name 'TabExpansion.AlwaysQuote' -Value $false -Initialize -Handler { [PSFramework.TabExpansion.TabExpansionHost]::AlwaysQuote = $args[0] } -Validation 'bool' -Description 'Wrap all completion results into quotes, whitespace or not.'
+Set-PSFConfig -Module PSFramework -Name 'TabExpansion.MatchAnywhere' -Value $false -Initialize -Handler { [PSFramework.TabExpansion.TabExpansionHost]::MatchAnywhere = $args[0] } -Validation 'bool' -Description 'Whether to match tab completions with Fuzzy-Matching by default.'

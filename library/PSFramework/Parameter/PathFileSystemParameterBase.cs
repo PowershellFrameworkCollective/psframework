@@ -132,7 +132,7 @@ namespace PSFramework.Parameter
             return paths;
         }
 
-        internal object GetObject(object Input)
+        internal static object GetObject(object Input)
         {
             if (_PropertyMapping.Count == 0)
                 return Input;
@@ -190,7 +190,7 @@ namespace PSFramework.Parameter
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Join(", ", this);
+            return String.Join(", ", this.ToArray());
         }
     }
 }

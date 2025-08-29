@@ -7,6 +7,7 @@ $commonParam = @{
 	Module = $ExecutionContext.SessionState.Module
 }
 
+Import-PSFCmdlet @commonParam -Name Assert-PSFInternalCommand -Type ([PSFramework.Commands.AssertPSFInternalCommandCommand])
 Import-PSFCmdlet @commonParam -Name ConvertTo-PSFHashtable -Type ([PSFramework.Commands.ConvertToPSFHashtableCommand])
 Import-PSFCmdlet @commonParam -Name Invoke-PSFCallback -Type ([PSFramework.Commands.InvokePSFCallbackCommand])
 Import-PSFCmdlet @commonParam -Name Invoke-PSFProtectedCommand -Type ([PSFramework.Commands.InvokePSFProtectedCommand])
@@ -16,5 +17,6 @@ Import-PSFCmdlet @commonParam -Name Set-PSFObjectOrder -Type ([PSFramework.Comma
 Import-PSFCmdlet @commonParam -Name Set-PSFConfig -Type ([PSFramework.Commands.SetPSFConfigCommand])
 Import-PSFCmdlet @commonParam -Name Test-PSFShouldProcess -Type ([PSFramework.Commands.TestPSFShouldProcessCommand])
 Import-PSFCmdlet @commonParam -Name Write-PSFMessage -Type ([PSFramework.Commands.WritePSFMessageCommand])
+Import-PSFCmdlet @commonParam -Name Update-PSFTeppCompletion -Type ([PSFramework.Commands.UpdatePSFTeppCompletionCommand])
 
 Set-Alias -Name Sort-PSFObject -Value Set-PSFObjectOrder -Force -ErrorAction SilentlyContinue

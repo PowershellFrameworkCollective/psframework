@@ -14,7 +14,7 @@ Converts an object into a hashtable.
 
 ```
 ConvertTo-PSFHashtable [-Include <String[]>] [-Exclude <String[]>] [-CaseSensitive] [-IncludeEmpty] [-Inherit]
- [-Remap <Hashtable>] [-InputObject <PSObject[]>] [-ReferenceCommand <String>]
+ [-InheritParameters] [-Remap <Hashtable>] [-InputObject <PSObject[]>] [-ReferenceCommand <String>]
  [-ReferenceParameterSetName <String>] [-AsPsfHashtable] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
@@ -213,6 +213,23 @@ Provide a hashtable mapping the original property name (key) to the intended nam
 
 ```yaml
 Type: Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InheritParameters
+Automatically include all values from the parameters of the calling command or script.
+This will include all parameters that were explicitly bound or have default parameter values, unless they have been excluded or are not part of a spceified -ReferenceCommand.
+Combine with -IncludeEmpty to also include parameters with neither default value nor being bound.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 

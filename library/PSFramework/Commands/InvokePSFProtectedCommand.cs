@@ -2,6 +2,7 @@
 using PSFramework.Utility;
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -122,6 +123,12 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public Message.MessageLevel Level = Message.MessageLevel.SomewhatVerbose;
+
+        /// <summary>
+        /// Make the final error generated a nonterminating error
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter NonTerminating;
         #endregion Parameters
 
         #region Private Fields
@@ -289,6 +296,29 @@ return
         private void Terminate(Exception error)
         {
             ErrorEventAction(error);
+            if (NonTerminating.ToBool())
+            {
+                WriteMessage(_ErrorMessage, Message.MessageLevel.Error, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target, null, error);
+                if (EnableException)
+                {
+                    if (error as RuntimeException != null)
+                        PSCmdlet.WriteError(((RuntimeException)error).ErrorRecord);
+                    else
+                        PSCmdlet.WriteError(
+                            new ErrorRecord(
+                                error,
+                                "ItFailed",
+                                ErrorCategory.NotSpecified,
+                                Target
+                            )
+                        );
+                }
+                    
+                if (Continue)
+                    DoContinue(ContinueLabel);
+                return;
+            }
+
             ScriptBlock errorBlock = ScriptBlock.Create(_ErrorScript);
             object[] arguments = new object[] { _ErrorMessage, error, Target, Continue, ContinueLabel, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, PSCmdlet, EnableException };
             PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);

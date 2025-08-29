@@ -40,6 +40,7 @@ namespace PSFramework.PSFCore
             _Initialized = true;
 
             Runspace.RunspaceHost.StartRbvTimer();
+            Data.DataHost.Initialize();
             // Initialization logic goes here
         }
         private static bool _Initialized = false;

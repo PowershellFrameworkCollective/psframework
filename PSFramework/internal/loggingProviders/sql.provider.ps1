@@ -58,7 +58,12 @@
 		)
 		
 		process {
-			$queryParameters = @($script:converter.Process($ObjectToProcess))[0]
+			$queryParameters = @{ }
+            foreach ($header in $script:sql_headers) {
+                if ($header -is [string]) { $queryParameters[$header] = $($ObjectToProcess.$header) }
+                elseif ($header.Name) { $queryParameters[$header.Name] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
+                else { $queryParameters[$header.Label] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
+            }
 			$insertQuery = Get-Query -Parameters $queryParameters
 			
 			try {
@@ -260,14 +265,6 @@ $start_event = {
 		default { $_ }
 	}
 	
-	if ($script:converter) {
-		$null = $script:converter.End()
-		$script:converter = $null
-	}
-	# Cache the conversion logic once as a steppable pipeline to avoid having to do it
-	$script:converter = { Microsoft.PowerShell.Utility\Select-Object $script:sql_headers | PSFramework\ConvertTo-PSFHashtable }.GetSteppablePipeline()
-	$script:converter.Begin($true)
-	
 	$script:insertQuery = ''
 }
 
@@ -280,10 +277,7 @@ $message_event = {
 }
 
 $end_event = {
-	if ($script:converter) {
-		$null = $script:converter.End()
-		$script:converter = $null
-	}
+	
 }
 
 # Action that is performed when stopping the logging script.
@@ -299,6 +293,7 @@ $configuration_Settings = {
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Table' -Value "LoggingTable" -Initialize -Validation 'string' -Description "SQL server database table."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value "" -Initialize -Description "SQL server hosting logs."
 	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Schema' -Value "dbo" -Initialize -Description "SQL server schema."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Description "SQL server schema."
 }
 
 # Registered parameters for the logging provider.

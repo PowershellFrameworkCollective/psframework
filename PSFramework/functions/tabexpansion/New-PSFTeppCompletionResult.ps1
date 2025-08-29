@@ -19,6 +19,9 @@
         .PARAMETER CompletionResultType
             The type of object that is being completed.
             By default it generates one of type paramter value.
+
+		.PARAMETER AlwaysQuote
+			Always place quotes around results, whether the text has a whitespace or not.
         
         .PARAMETER NoQuotes
             Whether to put the result in quotes or not.
@@ -45,6 +48,9 @@
 		
 		[System.Management.Automation.CompletionResultType]
 		$CompletionResultType = [System.Management.Automation.CompletionResultType]::ParameterValue,
+
+		[switch]
+		$AlwaysQuote,
 		
 		[switch]
 		$NoQuotes
@@ -61,7 +67,10 @@
 		# not be included, via the -NoQuotes parameter,
 		# then skip adding quotes.
 		
-		if ($CompletionResultType -eq [System.Management.Automation.CompletionResultType]::ParameterValue -and -not $NoQuotes)
+		if ($AlwaysQuote -and $CompletionText -notmatch '^".+"$' -and $CompletionText -notmatch "^'.+'$") {
+			$CompletionText = "'$($CompletionText -replace "'","''")'"
+		}
+		elseif ($CompletionResultType -eq [System.Management.Automation.CompletionResultType]::ParameterValue -and -not $NoQuotes)
 		{
 			# Add single quotes for the caller in case they are needed.
 			# We use the parser to robustly determine how it will treat
