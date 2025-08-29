@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.13.406 (2025-08-29)
 
 - New: Assert-PSFInternalCommand - Verifies, that the command calling it in turn was only called from another command within the same module. (#685)
 - New: Add-PSFTeppCompletion - Adds a completion result to a tab completion script.
@@ -51,6 +51,7 @@
 - Upd: Logging Provider logfile - Added option `TXTPattern`: The pattern of any given line in the TXT-based logfile. Use %PROPERTYNAME% as placeholder, e.g. "%Message%". Same properties as with the headers configuration - you need to specify both settings, if your pattern includes non-default properties such as "Data". (#654)
 - Fix: Logging Provider logfile - Renaming header breaks timestamp format (#672)
 - Fix: Logging Provider logfile - Using the `JsonString` parameter breaks header order (#667)
+- Fix: Logging Provider SQL - Fails to log the `Data` field correctly (#680)
 - Fix: Configuration - fails to restore the persisted form of an empty hashtable (#650)
 - Fix: Pathing issue - Programdata resolution fails when environment variable is not available (#671)
 - Fix: ScriptTransformation Attribute - conversion results were not considered valid, when not of the demanded type, but one inheriting from the demanded type. (#646)
