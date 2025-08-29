@@ -79,6 +79,7 @@
 
 		Reads the bytes from the specified certificate file.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Text')]
 	param (
 		[Parameter(Position = 0, ValueFromPipeline = $true)]

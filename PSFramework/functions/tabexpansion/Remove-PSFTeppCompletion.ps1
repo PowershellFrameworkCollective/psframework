@@ -21,6 +21,7 @@
 
 		Removes the two listed drinks from the list of legal completions.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[PsfArgumentCompleter('PSFramework-tepp-scriptblockname')]

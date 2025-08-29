@@ -55,6 +55,7 @@
 		Writes the raw certificate information as a .cer file to disk.
 		This will result in a perfectly valid public certificate.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]

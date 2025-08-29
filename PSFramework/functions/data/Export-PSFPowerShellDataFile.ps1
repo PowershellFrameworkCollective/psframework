@@ -38,6 +38,7 @@
 
 		Takes all files and folders and converts the data into psd1-style data structures, then write that to "files.psd1" in the current path..
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
@@ -68,7 +69,7 @@
 		$converter.Config = $Configuration
 		$converter.Cmdlet = $PSCmdlet
 
-		$writer = { Set-PSFFileContent -Path $filePath -Encoding $Encoding }.GetSteppablePipeline()
+		$writer = { Set-PSFFileContent -Path $Path -Encoding $Encoding }.GetSteppablePipeline()
 		$writer.Begin($true)
 	}
 	process {

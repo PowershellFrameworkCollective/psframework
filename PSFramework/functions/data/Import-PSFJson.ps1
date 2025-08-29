@@ -56,6 +56,7 @@
 	begin {
 		#region Functions
 		function ConvertTo-Hashtable {
+			[OutputType([hashtable])]
 			[CmdletBinding()]
 			param (
 				[Parameter(ValueFromPipeline = $true)]
@@ -92,6 +93,7 @@
 			}
 		}
 		function Convert-JsonData {
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 			[CmdletBinding()]
 			param (
 				[Parameter(ValueFromPipeline = $true)]
@@ -151,6 +153,7 @@
 			}
 		}
 		function ConvertFrom-JsonArray {
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "")]
 			[CmdletBinding()]
 			param (
 				$Data
