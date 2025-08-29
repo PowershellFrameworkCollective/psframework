@@ -13,8 +13,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Unregister-PSFConfig).ParameterSets.Name | Should -Be 'Pipeline', 'Module'
-		$properties = 'ConfigurationItem', 'PersistedItem', 'FullName', 'Module', 'Name', 'Scope', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
-		Compare-Object $properties ((Get-Command Unregister-PSFConfig).Parameters.Keys | Remove-PSFNull -Enumerate) | Should -BeNullOrEmpty
+		Get-Command Unregister-PSFConfig | Should -HaveParameters 'ConfigurationItem', 'PersistedItem', 'FullName', 'Module', 'Name', 'Scope'
 	}
 	
 	function New-Location

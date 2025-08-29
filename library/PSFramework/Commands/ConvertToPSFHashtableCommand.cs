@@ -170,8 +170,16 @@ namespace PSFramework.Commands
                     }
 
                 else
+                {
                     foreach (string name in inputItem.Properties.Select(o => o.Name))
-                        result[name] = inputItem.Properties[name].Value;
+                    {
+                        try { result[name] = inputItem.Properties[name].Value; }
+                        catch (Exception e){
+                            PSFCoreHost.WriteDebug($"ConvertTo-PSFHashTable: Failed to access property {name}: {e.Message}", e);
+                            result[name] = null;
+                        }
+                    }
+                }
 
                 if (Exclude.Length > 0)
                     foreach (string key in Exclude.Where(o => result.ContainsKey(o)))

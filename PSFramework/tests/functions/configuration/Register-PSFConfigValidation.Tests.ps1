@@ -13,8 +13,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Register-PSFConfigValidation).ParameterSets.Name | Should -Be '__AllParameterSets'
-		$properties = 'Name', 'ScriptBlock', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
-		Compare-Object $properties ((Get-Command Register-PSFConfigValidation).Parameters.Keys | Remove-PSFNull -Enumerate) | Should -BeNullOrEmpty
+		Get-Command Register-PSFConfigValidation | Should -HaveParameters  'Name', 'ScriptBlock'
 	}
 	
 	Context "Ensuring validation can be created, assigned and used" {

@@ -23,7 +23,9 @@ Write-Host "Starting Tests"
 Write-Host "Importing Module"
 
 $global:testroot = $PSScriptRoot
-$global:__pester_data = @{ }
+$global:__pester_data = @{
+	CommonParameters = 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
+}
 
 if (-not $NoImport) {
 	Remove-Module PSFramework -ErrorAction Ignore

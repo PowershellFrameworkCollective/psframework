@@ -13,8 +13,7 @@
 	# Catch any signature changes to force revisiting the command
 	It "Should have the designed for parameters & sets" {
 		(Get-Command Register-PSFConfig).ParameterSets.Name | Should -Be 'Default', 'Name'
-		$properties = 'Config', 'FullName', 'Module', 'Name', 'Scope', 'EnableException', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'ProgressAction'
-		Compare-Object $properties ((Get-Command Register-PSFConfig).Parameters.Keys | Remove-PSFNull -Enumerate) | Should -BeNullOrEmpty
+		Get-Command Register-PSFConfig | Should -HaveParameters 'Config', 'FullName', 'Module', 'Name', 'Scope', 'EnableException'
 	}
 	
 	Context "Validating registry persistence" {
