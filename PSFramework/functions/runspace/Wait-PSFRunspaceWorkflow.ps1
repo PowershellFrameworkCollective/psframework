@@ -1,4 +1,73 @@
 function Wait-PSFRunspaceWorkflow {
+	<#
+	.SYNOPSIS
+		Wait for a Runspace Workflow to complete.
+	
+	.DESCRIPTION
+		Wait for a Runspace Workflow to complete.
+	
+	.PARAMETER Queue
+		The name of the queue to measure completion by.
+		Usually the last output queue in the chain of steps.
+
+	.PARAMETER WorkerName
+		The name of the worker to measure completion by.
+		Usually the last step in the chain of steps.
+	
+	.PARAMETER Closed
+		The workflow is considered completed, when the queue or worker selected is closed.
+	
+	.PARAMETER Count
+		The workflow is considered completed, when the queue selected has received the specified number of results.
+		This looks at the total amount ever provided, not current number queued.
+	
+	.PARAMETER ReferenceQueue
+		The workflow is considered completed, when the queue selected has received the same number of items as the reference queue.
+	
+	.PARAMETER ReferenceMultiplier
+		When comparing the result queue with a reference queue, multiply the number of items in the reference queue by this value.
+		Use when the number of output items, based from the original input, scales by a constant multiplier.
+		Defaults to 1.
+
+	.PARAMETER QueueTimeout
+		Wait based on how long ago the last item was added to the specified queue.
+	
+	.PARAMETER PassThru
+		Pass through the workflow object waiting for.
+		Useful to stop it once waiting has completed.
+
+	.PARAMETER Timeout
+		Maximum wait time. Throws an error if exceeded.
+		Defaults to 1 day.
+	
+	.PARAMETER Name
+		Name of the workflow to wait for.
+	
+	.PARAMETER InputObject
+		A runspace workflow object to wait for.
+        
+	.PARAMETER ShowProgress
+        To show a progressbas while waiting for runspace completion
+	
+	.EXAMPLE
+		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -Count 1000
+		
+		Wait until 1000 items have been queued to "Done" in total.
+
+	.EXAMPLE
+		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -PassThru | Stop-PSFRunspaceWorkflow
+
+		Wait until the "Done" queue has been closed, then stop the workflow.
+
+	.EXAMPLE
+		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -ReferenceQueue Input
+
+		Wait until the "Done" queue has processed as many items as there were written to the "Input" queue.
+	
+	.LINK
+		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
+	#>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
     [CmdletBinding(DefaultParameterSetName = 'Closed')]
     param (
