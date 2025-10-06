@@ -2,10 +2,10 @@ function Wait-PSFRunspaceWorkflow {
 	<#
 	.SYNOPSIS
 		Wait for a Runspace Workflow to complete.
-	
+
 	.DESCRIPTION
 		Wait for a Runspace Workflow to complete.
-	
+
 	.PARAMETER Queue
 		The name of the queue to measure completion by.
 		Usually the last output queue in the chain of steps.
@@ -13,17 +13,17 @@ function Wait-PSFRunspaceWorkflow {
 	.PARAMETER WorkerName
 		The name of the worker to measure completion by.
 		Usually the last step in the chain of steps.
-	
+
 	.PARAMETER Closed
 		The workflow is considered completed, when the queue or worker selected is closed.
-	
+
 	.PARAMETER Count
 		The workflow is considered completed, when the queue selected has received the specified number of results.
 		This looks at the total amount ever provided, not current number queued.
-	
+
 	.PARAMETER ReferenceQueue
 		The workflow is considered completed, when the queue selected has received the same number of items as the reference queue.
-	
+
 	.PARAMETER ReferenceMultiplier
 		When comparing the result queue with a reference queue, multiply the number of items in the reference queue by this value.
 		Use when the number of output items, based from the original input, scales by a constant multiplier.
@@ -31,7 +31,7 @@ function Wait-PSFRunspaceWorkflow {
 
 	.PARAMETER QueueTimeout
 		Wait based on how long ago the last item was added to the specified queue.
-	
+
 	.PARAMETER PassThru
 		Pass through the workflow object waiting for.
 		Useful to stop it once waiting has completed.
@@ -39,19 +39,19 @@ function Wait-PSFRunspaceWorkflow {
 	.PARAMETER Timeout
 		Maximum wait time. Throws an error if exceeded.
 		Defaults to 1 day.
-	
+
 	.PARAMETER Name
 		Name of the workflow to wait for.
-	
+
 	.PARAMETER InputObject
 		A runspace workflow object to wait for.
-        
+
 	.PARAMETER ShowProgress
         To show a progressbas while waiting for runspace completion
-	
+
 	.EXAMPLE
 		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -Count 1000
-		
+
 		Wait until 1000 items have been queued to "Done" in total.
 
 	.EXAMPLE
@@ -63,7 +63,7 @@ function Wait-PSFRunspaceWorkflow {
 		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -ReferenceQueue Input
 
 		Wait until the "Done" queue has processed as many items as there were written to the "Input" queue.
-	
+
 	.LINK
 		https://psframework.org/documentation/documents/psframework/runspace-workflows.html
 	#>
@@ -140,13 +140,13 @@ function Wait-PSFRunspaceWorkflow {
 
             if ($ShowProgress) {
                 $wfId = $progressId; $progressId += 1
-                Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Elapsed: 0s" -PercentComplete 0
+                Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Elapsed: 0s" -PercentComplete -1
 
                 $workerIds = @{}
                 foreach ($w in $resolvedWorkflow.Workers.Keys) {
                     $runnerId = $progressId; $itemsId = $progressId + 1; $progressId += 2
                     $workerIds[$w] = @{ RunnerId = $runnerId; ItemsId = $itemsId }
-                    Write-Progress -Id $runnerId -ParentId $wfId -Activity "Runner: $w" -Status "Initializing..." -PercentComplete 0
+                    Write-Progress -Id $runnerId -ParentId $wfId -Activity "Runner: $w" -Status "Initializing..." -PercentComplete -1
                     Write-Progress -Id $itemsId  -ParentId $runnerId -Activity "Nb of items" -Status "Initializing..." -PercentComplete -1
                 }
             }
@@ -160,9 +160,7 @@ function Wait-PSFRunspaceWorkflow {
                         if ($ShowProgress) {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
-                            $overallTarget = [math]::Max(1, $overallCurrent + 1)
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / $overallTarget)
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Closed | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Closed | Current:$overallCurrent | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -182,8 +180,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / $overallTarget)
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 # Items status (only print non-empty fields)
                                 $parts = @("Completed:$current")
@@ -205,9 +202,7 @@ function Wait-PSFRunspaceWorkflow {
                         if ($ShowProgress) {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $queueObject.TotalItemCount
-                            $overallTarget = [math]::Max(1, $overallCurrent + 1)
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / $overallTarget)
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerClosed | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerClosed | Current:$overallCurrent | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -226,8 +221,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / $overallTarget)
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
@@ -248,8 +242,7 @@ function Wait-PSFRunspaceWorkflow {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
                             $overallTarget = $Count
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / [math]::Max(1, $overallTarget))
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Count | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Count | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -268,8 +261,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / [math]::Max(1, $overallTarget))
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
@@ -290,8 +282,7 @@ function Wait-PSFRunspaceWorkflow {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $resolvedWorkflow.Workers.$WorkerName.CountInputCompleted
                             $overallTarget = $Count
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / [math]::Max(1, $overallTarget))
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerCount | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerCount | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -310,8 +301,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / [math]::Max(1, $overallTarget))
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
@@ -332,8 +322,7 @@ function Wait-PSFRunspaceWorkflow {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
                             $overallTarget = ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / [math]::Max(1, $overallTarget))
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Reference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Reference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -352,8 +341,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / [math]::Max(1, $overallTarget))
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
@@ -374,8 +362,7 @@ function Wait-PSFRunspaceWorkflow {
                             $elapsed = ([int]((Get-Date) - $start).TotalSeconds)
                             $overallCurrent = $resolvedWorkflow.Workers.$WorkerName.CountInputCompleted
                             $overallTarget = ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / [math]::Max(1, $overallTarget))
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerReference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerReference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -394,8 +381,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / [math]::Max(1, $overallTarget))
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
@@ -417,8 +403,7 @@ function Wait-PSFRunspaceWorkflow {
                             $sinceLast = (Get-Date) - $resolvedWorkflow.Queues.$Queue.LastUpdate
                             $overallCurrent = $sinceLast.TotalSeconds
                             $overallTarget = $QueueTimeout.Value.TotalSeconds
-                            $wfPct = [int][math]::Floor((100.0 * $overallCurrent) / [math]::Max(1, $overallTarget))
-                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:QueueTimeout | $([int]$overallCurrent)s/$([int]$overallTarget)s | Elapsed:${elapsed}s" -PercentComplete $wfPct
+                            Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:QueueTimeout | $([int]$overallCurrent)s/$([int]$overallTarget)s | Elapsed:${elapsed}s" -PercentComplete -1
 
                             foreach ($wk in $resolvedWorkflow.Workers.Keys) {
                                 $rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
@@ -437,8 +422,7 @@ function Wait-PSFRunspaceWorkflow {
                                 $outClosed = if ($outQ) { $outQ.Closed }         else { $false }
                                 $current = $wObj.CountInputCompleted
 
-                                $runnerPct = [int][math]::Floor((100.0 * $current) / [math]::Max(1, $overallTarget))
-                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$([int]$overallTarget) | Elapsed:${elapsed}s" -PercentComplete $runnerPct
+                                Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$([int]$overallTarget) | Elapsed:${elapsed}s" -PercentComplete -1
 
                                 $parts = @("Completed:$current")
                                 if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
