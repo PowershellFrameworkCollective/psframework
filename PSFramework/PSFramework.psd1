@@ -95,6 +95,7 @@
 		'Install-PSFLoggingProvider'
 		'Invoke-PSFCommand'
 		'Invoke-PSFFilter'
+		'Invoke-PSFRunspace'
 		'Join-PSFPath'
 		'New-PSFFilter'
 		'New-PSFFilterCondition'

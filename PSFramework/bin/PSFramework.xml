@@ -354,11 +354,6 @@
             Error message to post when execution fails
             </summary>
         </member>
-        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._ErrorScript">
-            <summary>
-            script used to write horrible errors on screen
-            </summary>
-        </member>
         <member name="M:PSFramework.Commands.InvokePSFProtectedCommand.BeginProcessing">
             <summary>
             Prepare runtime information, such as calling command or cmdlet object
@@ -8573,6 +8568,49 @@
             Purge all RBVs of datasets from all expired runspaces
             </summary>
         </member>
+        <member name="T:PSFramework.Runspace.RunspaceResult">
+            <summary>
+            The result of a runspace task
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.InputObject">
+            <summary>
+            The object that triggered the task
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.Output">
+            <summary>
+            All output
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.Information">
+            <summary>
+            All Information Messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.Verbose">
+            <summary>
+            All verbose messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.Warnings">
+            <summary>
+            All warning messages
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceResult.Errors">
+            <summary>
+            All error records
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceResult.#ctor(System.Object,System.Management.Automation.PSDataCollection{System.Management.Automation.PSObject},System.Management.Automation.PSDataStreams)">
+            <summary>
+            Creates a result object, representing the completed result of the runspace task.
+            </summary>
+            <param name="InputObject">The original argument for the task</param>
+            <param name="Output">The output result of the task</param>
+            <param name="Streams">The streams the task sent</param>
+        </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
             <summary>
             Contains the state a managed, unique runspace can be in.
@@ -8592,6 +8630,188 @@
             <summary>
             The runspace has followed its order to stop and is currently disabled
             </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceTask">
+            <summary>
+            An individual task executed in the runspace pool of its hosting RunspaceWrapper
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceTask.InputObject">
+            <summary>
+            The item to process in this task
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceTask.IsCompleted">
+            <summary>
+            Whether the task has completed successfully
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.#ctor(PSFramework.Runspace.RunspaceWrapper,System.Object)">
+            <summary>
+            Create a new runspace task. If the host has already stared execution, it is immediately queued for execution.
+            </summary>
+            <param name="Host">The hosting RunspaceWrapper</param>
+            <param name="InputObject">The item to process in this task</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.TryCollect(System.Management.Automation.Cmdlet,System.Boolean)">
+            <summary>
+            If the task is complete, collect results and direct the streams. Do nothing if not complete yet.
+            Delists itself from the hosting RunspaceWrapper, if completed.
+            </summary>
+            <param name="Command">The command runtime to whose streams to write the results</param>
+            <param name="NoStreams">Do not write to additional streams</param>
+            <returns>Whether it successfully collected the results</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.CollectResult">
+            <summary>
+            Wait until the task completes, then get the full result with all stream information
+            </summary>
+            <returns>A result object, containing output and streams</returns>
+            <exception cref="T:System.InvalidOperationException">Don't try to collect results before starting the task</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.Collect">
+            <summary>
+            Wait until the task completes, then get the output
+            </summary>
+            <returns>All output results of the task</returns>
+            <exception cref="T:System.InvalidOperationException">Don't try to collect results before starting the task</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.Collect(System.Management.Automation.Cmdlet,System.Boolean)">
+            <summary>
+            Wait until the task completes, then collect results and direct the streams.
+            </summary>
+            <param name="Command">The command runtime to whose streams to write the results</param>
+            <param name="NoStreams">hether to NOT write to the different streams.</param>
+            <exception cref="T:System.InvalidOperationException">Don't try to collect results before starting the task</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.Start">
+            <summary>
+            Start this task, queueing the code as a runspace in the runspace pool for execution
+            </summary>
+            <exception cref="T:System.InvalidOperationException">If the runspacepool of the hosting RunspaceWrapper has not been opened yet, we cannot start yet</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.Kill">
+            <summary>
+            Cancel and destroy this task.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceTask.Dispose">
+            <summary>
+            Clean up this object
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceWrapper">
+            <summary>
+            Runspace managing class used by Invoke-PSFRunspace.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Code">
+            <summary>
+            The code to run in parallel
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.ThrottleLimit">
+            <summary>
+            How many runspace tasks to execute in parallel
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.InitialSessionState">
+            <summary>
+            What each runspace task will have available
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Tasks">
+            <summary>
+            List of tasks to execute
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Variables">
+            <summary>
+            Variables available to all tasks
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceWrapper.IsRunning">
+            <summary>
+            Whether the RunspaceWrapper is currently open for tasks
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddVariable(System.String,System.Object)">
+            <summary>
+            Add a variable to the initial sessionstate
+            </summary>
+            <param name="Name">name of the variable</param>
+            <param name="Value">Value of the variable</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddVariable(System.Collections.Hashtable)">
+            <summary>
+            Add multiple variables to the initial sessionstate
+            </summary>
+            <param name="VariableHash">Name/value map of variables to inclue</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.Start">
+            <summary>
+            Start the entire wrapper, creating a runspace pool and preparing for execution
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.Stop">
+            <summary>
+            Close the runspace pool, terminate everything and clean up.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.Dispose">
+            <summary>
+            Make sure everything is cleaned out after the job is done
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddTask(System.Object)">
+            <summary>
+            Add a task that should be executed
+            </summary>
+            <param name="InputObject">The argument for which the task should be executed</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddTaskBulk(System.Collections.IEnumerable)">
+            <summary>
+            Add a list of tasks that all should be executed
+            </summary>
+            <param name="InputObjects">The arugments for each of which the task should be executed</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.Collect(System.Management.Automation.Cmdlet,System.Boolean)">
+            <summary>
+            Wait for all task results and receive results directly into the streams of the calling command
+            </summary>
+            <param name="Command">The command runtime whose streams to write to</param>
+            <param name="NoStreams">Whether additional streams should be hidden and only output shown</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.CollectCurrent(System.Management.Automation.Cmdlet,System.Boolean)">
+            <summary>
+            Collect all tasks that already completed, and directly write the results to the streams of the calling command
+            </summary>
+            <param name="Command">The command runtime whose streams to write to</param>
+            <param name="NoStreams">Whether additional streams should be hidden and only output shown</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.CollectResult">
+            <summary>
+            Wait for all task results and return result report objects, including information on all streams of the runspace
+            </summary>
+            <returns>List of completion reports, including all output, warnings, errors, informational messages, etc.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.CollectCurrentResult">
+            <summary>
+            Retrieve result report objects for each task already completed, including information on all streams of the runspace
+            </summary>
+            <returns>List of completion reports, including all output, warnings, errors, informational messages, etc.</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.Collect">
+            <summary>
+            Wait for all task results and return the output.
+            </summary>
+            <returns>The resulting output of all tasks</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.CollectCurrent">
+            <summary>
+            Receive the output of all currently completed tasks
+            </summary>
+            <returns>The output of all currently completed tasks</returns>
         </member>
         <member name="T:PSFramework.Serialization.ClixmlDataStyle">
             <summary>
@@ -8927,6 +9147,16 @@
             Whether to execute the scriptblock in the global scope
             </summary>
         </member>
+        <member name="F:PSFramework.TabExpansion.ScriptContainer.DoNotFilter">
+            <summary>
+            When enabled, do not filter based on user input.
+            </summary>
+        </member>
+        <member name="P:PSFramework.TabExpansion.ScriptContainer.MaxResults">
+            <summary>
+            Maximum number of results to show when tab-completing.
+            </summary>
+        </member>
         <member name="P:PSFramework.TabExpansion.ScriptContainer.MatchAnywhere">
             <summary>
             If true: Match input against any part of the options, not just the beginning
@@ -9028,6 +9258,11 @@
         <member name="F:PSFramework.TabExpansion.TabExpansionHost.FuzzyMatch">
             <summary>
             Whether PSFramework completion should use fuzzy-matching when matching completion values with the already typed text.
+            </summary>
+        </member>
+        <member name="F:PSFramework.TabExpansion.TabExpansionHost.MaxResults">
+            <summary>
+            The maximum number of results shown to the user, before truncating data sets.
             </summary>
         </member>
         <member name="M:PSFramework.TabExpansion.TabExpansionHost.RegisterCompletion(System.String,System.Management.Automation.ScriptBlock,PSFramework.TabExpansion.TeppScriptMode,PSFramework.Parameter.TimeSpanParameter,System.Boolean)">
