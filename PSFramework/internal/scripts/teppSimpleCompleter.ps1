@@ -145,16 +145,22 @@
 	}
 	$alwaysQuote = $scriptContainer.AlwaysQuote
 	$sortParam = @{ Property = 'ListItemText' }
-	if ($scriptContainer.DontSort) { $sortParam = @{ Property = { 1 }}}
+	if ($scriptContainer.DontSort) { $sortParam = @{ Property = { 1 } } }
 	
 	if (-not $scriptContainer.ShouldExecute) {
 		if ($scriptContainer.Trained.Count -gt 0) {
 			$allItems = @($scriptContainer.LastCompletion) + ($scriptContainer.Trained | ConvertTo-TeppCompletionEntry)
 		}
 		else { $allItems = $scriptContainer.LastCompletion }
-		foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
+		$allResults = foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
 			New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip -ListItemText $item.ListItemText -AlwaysQuote:$alwaysQuote
 		}
+
+		if ($scriptContainer.MaxResults -gt 0 -and @($allResults).Count -gt $scriptContainer.MaxResults) {
+			@($allResults)[0..($scriptContainer.MaxResults - 1)]
+			New-Object System.Management.Automation.CompletionResult("", "... showing the first $($scriptContainer.MaxResults) / $(@($allResults).Count) results", "ParameterValue", 'Type more until fewer viable results are returned')
+		}
+		else { $allResults }
 		return
 	}
 
@@ -172,9 +178,14 @@
 	else { $allItems = $items }
 	
 
-	foreach ($item in ($allItems | Where-Object Text -match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
+	$allResults = foreach ($item in ($allItems | Where-Object Text -Match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
 		New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip -ListItemText $item.ListItemText -AlwaysQuote:$alwaysQuote
 	}
+	if ($scriptContainer.MaxResults -gt 0 -and @($allResults).Count -gt $scriptContainer.MaxResults) {
+		@($allResults)[0..($scriptContainer.MaxResults - 1)]
+		New-Object System.Management.Automation.CompletionResult(" ", "... showing the first $($scriptContainer.MaxResults) / $(@($allResults).Count) results", "ParameterValue", 'Type more until fewer viable results are returned')
+	}
+	else { $allResults }
 
 	$scriptContainer.LastDuration = (Get-Date) - $start
 	if ($items) {

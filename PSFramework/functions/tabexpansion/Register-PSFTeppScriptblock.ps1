@@ -40,6 +40,10 @@
 			Whether the scriptblock should be executed in the global context.
 			This parameter is needed to reliably execute in background runspaces, but means no direct access to module content.
 
+		.PARAMETER MaxResults
+			The maximum number of results shown to the user.
+			If more completions would be viable, only the first X are shown, as well as a message informaing about the truncation.
+
 		.PARAMETER MatchAnywhere
 			Match input against any part of the completion text, not just the beginning.
 
@@ -51,6 +55,10 @@
 
 		.PARAMETER DontSort
 			Completion results are no longer sorted alphabetically.
+
+		.PARAMETER DontFilter
+			Do not automatically filter by the words the user typed.
+			This allows for the scriptblock to provide its own, more complex filtering.
 
 		.PARAMETER AutoTraining
 			Automatically train the tab completion by caching user inputs.
@@ -89,6 +97,9 @@
 		
 		[PSFramework.Parameter.TimeSpanParameter]
 		$CacheDuration = 0,
+
+		[int]
+		$MaxResults,
 		
 		[switch]
 		$Global,
@@ -106,6 +117,9 @@
 		$DontSort,
 
 		[switch]
+		$DontFilter,
+
+		[switch]
 		$AutoTraining
 	)
 	
@@ -114,9 +128,11 @@
 		[PSFramework.TabExpansion.TabExpansionHost]::RegisterCompletion($Name, $ScriptBlock, $Mode, $CacheDuration, $Global)
 		$scriptContainer = [PSFramework.TabExpansion.TabExpansionHost]::Scripts[$Name]
 		if ($PSBoundParameters.Keys -contains 'MatchAnywhere') { $scriptContainer.MatchAnywhere = $MatchAnywhere }
+		if ($PSBoundParameters.Keys -contains 'MaxResults') { $scriptContainer.MaxResults = $MaxResults }
 		if ($PSBoundParameters.Keys -contains 'FuzzyMatch') { $scriptContainer.MatchAnywhere = $FuzzyMatch }
 		if ($PSBoundParameters.Keys -contains 'AlwaysQuote') { $scriptContainer.MatchAnywhere = $AlwaysQuote }
-		if ($PSBoundParameters.Keys -contains 'DontSort') { $scriptContainer.MatchAnywhere = $DontSort }
+		if ($PSBoundParameters.Keys -contains 'DontSort') { $scriptContainer.DontSort = $DontSort }
+		if ($PSBoundParameters.Keys -contains 'DontFilter') { $scriptContainer.DoNotFilter = $DontFilter }
 		if ($PSBoundParameters.Keys -contains 'AutoTraining') { $scriptContainer.AutoTraining = $AutoTraining }
 	}
 }
