@@ -1,5 +1,5 @@
 ﻿function Read-PsfConfigEnvironment {
-<#
+	<#
 	.SYNOPSIS
 		Reads configuration settings from environment variables.
 	
@@ -56,7 +56,7 @@
 					try {
 						[pscustomobject]@{
 							FullName = $Name.SubString(($Prefix.Length + 1))
-							Value = [PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($Value)
+							Value    = [PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($Value)
 						}
 					}
 					catch {
@@ -82,14 +82,26 @@
 					if ([double]::TryParse($Value, 'Any', [System.Globalization.NumberFormatInfo]::InvariantInfo, [ref]$tempVal)) {
 						return [PSCustomObject]@{ FullName = $fullName; Value = $tempVal }
 					}
-					$tempVal = $null
-					if ([datetime]::TryParse($Value, [System.Globalization.DateTimeFormatInfo]::InvariantInfo, 'AssumeUniversal', [ref]$tempVal)) {
+					$tempVal = Get-Date
+					if ([datetime]::TryParse($Value, [System.Globalization.DateTimeFormatInfo]::InvariantInfo, [System.Globalization.DateTimeStyles]::AssumeUniversal, [ref]$tempVal)) {
 						return [PSCustomObject]@{ FullName = $fullName; Value = $tempVal }
 					}
-					if ($Value -match "^.|*") {
-						return [PSCustomObject]@{ FullName = $fullName; Value = $Value.SubString(2).Split($Value.Substring(0, 1)) }
+					if ($Value -match "^.\|.+") {
+						$values = $Value.SubString(2).Split($Value.Substring(0, 1))
+						$valueObjects = foreach ($value in $values) { ConvertFrom-EnvironmentSetting -Name "PSF_Whatever" -Value $value -Simple $true -Prefix 'PSF' }
+						return [PSCustomObject]@{ FullName = $fullName; Value = $valueObjects.Value }
 					}
-					return [PSCustomObject]@{ FullName = $fullName; Value = $Value }
+					if ($Value -match '^\S+:') {
+						try {
+							[pscustomobject]@{
+								FullName = $fullName
+								Value    = [PSFramework.Configuration.ConfigurationHost]::ConvertFromPersistedValue($Value)
+							}
+							return
+						}
+						catch { <# If it's a legal export, that's fine, but don't count on it #> }
+					}
+					return [PSCustomObject]@{ FullName = $fullName; Value = $valueObjects.Value }
 				}
 				#endregion Simple Mode
 			}
