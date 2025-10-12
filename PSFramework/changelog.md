@@ -1,5 +1,10 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Upd: Wait-PSFRunspaceWorkflow - adding ProgressBar with `-ShowProgress` (#698 | @fslef)
+- Fix: ConvertTo-PSFPsd1 - Error: The property 'Depth' cannot be found on this object (#695)
+
 ## 1.13.406 (2025-08-29)
 
 - New: Assert-PSFInternalCommand - Verifies, that the command calling it in turn was only called from another command within the same module. (#685)
