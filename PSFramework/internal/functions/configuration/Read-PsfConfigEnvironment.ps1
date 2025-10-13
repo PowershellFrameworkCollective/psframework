@@ -33,6 +33,7 @@
 	
 	begin {
 		function ConvertFrom-EnvironmentSetting {
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 			[CmdletBinding()]
 			param (
 				[Parameter(ValueFromPipelineByPropertyName = $true)]

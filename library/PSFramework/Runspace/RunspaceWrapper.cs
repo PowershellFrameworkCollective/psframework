@@ -41,12 +41,12 @@ namespace PSFramework.Runspace
         /// <summary>
         /// Number of Tasks still pending
         /// </summary>
-        public int CountPending => Tasks.Count;
+        public int CountPending => Tasks.Where(t => !t.IsCompleted).Count();
 
         /// <summary>
         /// Number of Tasks completed
         /// </summary>
-        public int CountCompleted => CountTotal - Tasks.Count;
+        public int CountCompleted => CountTotal - CountPending;
 
         /// <summary>
         /// What each runspace task will have available
