@@ -40,7 +40,8 @@
 	)
 	begin {
 		$runspaceWrapper = [PSFramework.Runspace.RunspaceWrapper]::new()
-
+		$runspaceWrapper.ThrottleLimit = $ThrottleLimit
+		
 		#region Provide Context
 		if ($InitialSessionState) { $runspaceWrapper.initialsessionstate = $InitialSessionState }
 		
@@ -72,8 +73,19 @@
 		}
 		#endregion Provide Context
 
-		$runspaceWrapper.Code = $ScriptBlock
-		$runspaceWrapper.ThrottleLimit = $ThrottleLimit
+		#region Handle Code
+		$actualCode = $ScriptBlock
+
+		if ($actualCode.Ast.Extent.Text -match '\$using:') {
+			$convertedCodeData = ConvertFrom-PsfUsingStatement -ScriptBlock $actualCode
+			$actualCode = $convertedCodeData.Code
+			foreach ($variableName in $convertedCodeData.Variables) {
+				$runspaceWrapper.AddVariable($variableName, $PSCmdlet.SessionState.PSVariable.Get($variableName).Value)
+			}
+		}
+
+		$runspaceWrapper.Code = $actualCode
+		#endregion Handle Code
 		$runspaceWrapper.Start()
 	}
 	process {
