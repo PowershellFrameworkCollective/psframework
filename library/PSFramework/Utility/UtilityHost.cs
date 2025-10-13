@@ -474,7 +474,7 @@ namespace PSFramework.Utility
 
             FieldInfo property = Instance.GetType().GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
             if (property == null)
-                throw new ArgumentException(LocalizationHost.Read(String.Format("PSFramework.Assembly.UtilityHost.PrivateFieldNotFound", Name)), "Name");
+                throw new ArgumentException(LocalizationHost.Read("PSFramework.Assembly.UtilityHost.PrivateFieldNotFound", new string[] { Name }), "Name");
             return property.GetValue(Instance);
         }
 
