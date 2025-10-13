@@ -50,6 +50,7 @@ param ($____PSF_Code, $____PSF_Item)
         {
             this.Host = Host;
             this.InputObject = InputObject;
+            Host.CountTotal++;
 
             if (Host.IsRunning)
                 Start();

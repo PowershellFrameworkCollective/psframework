@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.PowerShell.Commands;
+using PSFramework.PSFCore;
+using PSFramework.Utility;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,11 @@ namespace PSFramework.Runspace
     public class RunspaceWrapper : IDisposable
     {
         /// <summary>
+        /// Nme of the workload
+        /// </summary>
+        public string Name = "<undefined>";
+
+        /// <summary>
         /// The code to run in parallel
         /// </summary>
         public ScriptBlock Code;
@@ -24,6 +32,21 @@ namespace PSFramework.Runspace
         /// How many runspace tasks to execute in parallel
         /// </summary>
         public int ThrottleLimit = 5;
+
+        /// <summary>
+        /// Total number of tasks in this wrapper
+        /// </summary>
+        public int CountTotal { get; internal set; }
+
+        /// <summary>
+        /// Number of Tasks still pending
+        /// </summary>
+        public int CountPending => Tasks.Count;
+
+        /// <summary>
+        /// Number of Tasks completed
+        /// </summary>
+        public int CountCompleted => CountTotal - Tasks.Count;
 
         /// <summary>
         /// What each runspace task will have available
@@ -39,6 +62,16 @@ namespace PSFramework.Runspace
         /// Variables available to all tasks
         /// </summary>
         public Dictionary<string, SessionStateVariableEntry> Variables = new Dictionary<string, SessionStateVariableEntry>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Functions available to all tasks
+        /// </summary>
+        public Dictionary<string, SessionStateFunctionEntry> Functions = new Dictionary<string, SessionStateFunctionEntry>(StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Modules available to all tasks
+        /// </summary>
+        public List<ModuleSpecification> Modules = new List<ModuleSpecification>();
 
         /// <summary>
         /// Whether the RunspaceWrapper is currently open for tasks
@@ -66,6 +99,47 @@ namespace PSFramework.Runspace
             foreach (object key in VariableHash)
                 Variables[key.ToString()] = new SessionStateVariableEntry(key.ToString(), VariableHash[key], "");
         }
+        
+        /// <summary>
+        /// Add a module by name or path
+        /// </summary>
+        /// <param name="Module">Name or path to the module</param>
+        public void AddModule(string Module)
+        {
+            Modules.Add(new ModuleSpecification(Module));
+        }
+        /// <summary>
+        /// Add a module by its module info object
+        /// </summary>
+        /// <param name="Module">The module info object</param>
+        public void AddModule(PSModuleInfo Module)
+        {
+            Modules.Add(new ModuleSpecification(Module.ModuleBase));
+        }
+        
+        /// <summary>
+        /// Define a function available to all tasks
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Definition"></param>
+        /// <exception cref="PSSecurityException"></exception>
+        public void AddFunction(string Name, ScriptBlock Definition)
+        {
+            if (PSFCoreHost.ConstrainedConsole && (new PsfScriptBlock(Definition)).LanguageMode != PSLanguageMode.FullLanguage)
+                throw new PSSecurityException("Console is running in a secure context, function cannot be untrusted!");
+            Functions[Name] = new SessionStateFunctionEntry(Name, Definition.ToString());
+        }
+        /// <summary>
+        /// Define a function available to all tasks
+        /// </summary>
+        /// <param name="Function">Function info object to copy over</param>
+        /// <exception cref="PSSecurityException"></exception>
+        public void AddFunction(FunctionInfo Function)
+        {
+            if (PSFCoreHost.ConstrainedConsole)
+                throw new PSSecurityException("Console is running in a secure context, defining a function via FunctionInfo object is not supported!");
+            Functions[Function.Name] = new SessionStateFunctionEntry(Function.Name, Function.Definition);
+        }
         #endregion Content
 
         #region Execution
@@ -74,8 +148,14 @@ namespace PSFramework.Runspace
         /// </summary>
         public void Start()
         {
+            // Prepare Sessionstate
             foreach (SessionStateVariableEntry value in Variables.Values)
                 InitialSessionState.Variables.Add(value);
+            if (Modules.Count > 0)
+                InitialSessionState.ImportPSModule(Modules);
+            foreach (SessionStateFunctionEntry value in Functions.Values)
+                InitialSessionState.Commands.Add(value);
+
             Pool = RunspaceFactory.CreateRunspacePool(InitialSessionState);
             Pool.SetMinRunspaces(1);
             Pool.SetMaxRunspaces(ThrottleLimit);

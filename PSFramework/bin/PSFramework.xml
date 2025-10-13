@@ -8705,6 +8705,11 @@
             Runspace managing class used by Invoke-PSFRunspace.
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Name">
+            <summary>
+            Nme of the workload
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RunspaceWrapper.Code">
             <summary>
             The code to run in parallel
@@ -8713,6 +8718,21 @@
         <member name="F:PSFramework.Runspace.RunspaceWrapper.ThrottleLimit">
             <summary>
             How many runspace tasks to execute in parallel
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceWrapper.CountTotal">
+            <summary>
+            Total number of tasks in this wrapper
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceWrapper.CountPending">
+            <summary>
+            Number of Tasks still pending
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceWrapper.CountCompleted">
+            <summary>
+            Number of Tasks completed
             </summary>
         </member>
         <member name="F:PSFramework.Runspace.RunspaceWrapper.InitialSessionState">
@@ -8728,6 +8748,16 @@
         <member name="F:PSFramework.Runspace.RunspaceWrapper.Variables">
             <summary>
             Variables available to all tasks
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Functions">
+            <summary>
+            Functions available to all tasks
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceWrapper.Modules">
+            <summary>
+            Modules available to all tasks
             </summary>
         </member>
         <member name="P:PSFramework.Runspace.RunspaceWrapper.IsRunning">
@@ -8747,6 +8777,33 @@
             Add multiple variables to the initial sessionstate
             </summary>
             <param name="VariableHash">Name/value map of variables to inclue</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddModule(System.String)">
+            <summary>
+            Add a module by name or path
+            </summary>
+            <param name="Module">Name or path to the module</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddModule(System.Management.Automation.PSModuleInfo)">
+            <summary>
+            Add a module by its module info object
+            </summary>
+            <param name="Module">The module info object</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddFunction(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Define a function available to all tasks
+            </summary>
+            <param name="Name"></param>
+            <param name="Definition"></param>
+            <exception cref="T:System.Management.Automation.PSSecurityException"></exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceWrapper.AddFunction(System.Management.Automation.FunctionInfo)">
+            <summary>
+            Define a function available to all tasks
+            </summary>
+            <param name="Function">Function info object to copy over</param>
+            <exception cref="T:System.Management.Automation.PSSecurityException"></exception>
         </member>
         <member name="M:PSFramework.Runspace.RunspaceWrapper.Start">
             <summary>
