@@ -52,7 +52,7 @@ $null = New-PSFFilterConditionSet -Module PSFramework -Name Environment -Version
 	#region Elevation
 	New-PSFFilterCondition @paramCon -Name Elevated -ScriptBlock {
 		if ($PSVersionTable.PSVersion.Major -ge 6 -and $global:IsLinux) { return $true }
-		if ($PSVersionTable.PSVersion.Major -ge 6 -and $global:IsLinux) { return $true }
+		if ($PSVersionTable.PSVersion.Major -ge 6 -and $global:IsMacOS) { return $true }
 		
 		$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 		$principal = New-Object Security.Principal.WindowsPrincipal $identity

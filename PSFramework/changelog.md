@@ -1,9 +1,15 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.13.414 (2025-10-14)
 
 - Upd: Wait-PSFRunspaceWorkflow - adding ProgressBar with `-ShowProgress` (#698 | @fslef)
+- Upd: Register-PSFArgumentCompleter - adding parameter `-DontFilter`, disabling automatic filtering by user input and enabling complex custom filtering inside of the completer (#696)
+- Upd: Register-PSFArgumentCompleter - adding parameter `-MaxResults`, truncating large result-sets for a more userfriendly display (#694)
+- Fix: Invoke-PSFProtectedCommand - $paramStopPSFFunction Leaks To Global Scope (#697)
+- Fix: Register-PSFArgumentCompleter - ignores `-DontSort`
+- Fix: Configuration import - simple persistence from Environment fails for arrays (#692)
 - Fix: ConvertTo-PSFPsd1 - Error: The property 'Depth' cannot be found on this object (#695)
+- Fix: Filter "Environment" - "Elevated" miss-detects MacOS (#693)
 
 ## 1.13.406 (2025-08-29)
 

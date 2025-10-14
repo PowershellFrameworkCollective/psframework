@@ -47,7 +47,7 @@
 		A runspace workflow object to wait for.
 
 	.PARAMETER ShowProgress
-        To show a progressbas while waiting for runspace completion
+        To show a progressbar while waiting for runspace completion
 
 	.EXAMPLE
 		PS C:\> $workflow | Wait-PSFRunspaceWorkflow -Queue Done -Count 1000
@@ -111,7 +111,6 @@
 		[switch]
 		$PassThru,
 
-		# NEW
 		[switch]
 		$ShowProgress,
 
@@ -127,6 +126,80 @@
 		[PSFramework.Runspace.RSWorkflow[]]
 		$InputObject
 	)
+	begin {
+		#region Utility Functions
+		function Write-WorkflowProgress {
+			[CmdletBinding()]
+			param (
+				[string]
+				$Mode,
+
+				[DateTime]
+				$Start,
+
+				$Workflow,
+
+				[int]
+				$CurrentCount,
+
+				[string]
+				$QueueName,
+
+				$QueueObject,
+
+				[string]
+				$WorkerName,
+
+				[int]
+				$WorkflowProgressID,
+
+				[hashtable]
+				$WorkerIDs,
+
+				[int]
+				$TargetCount
+			)
+
+			$elapsed = ([int]((Get-Date) - $Start).TotalSeconds)
+			$overallCurrent = 0
+			if ($QueueName) { $overallCurrent = $Workflow.Queues.$QueueName.TotalItemCount }
+			if ($WorkerName) { $overallCurrent = $Workflow.Workers.$WorkerName.CountInputCompleted }
+			if ($QueueObject) { $overallCurrent = $QueueObject.TotalItemCount }
+			if ($PSBoundParameters.Keys -contains 'CurrentCount') { $overallCurrent = $CurrentCount }
+
+			$targetString = ''
+			if ($TargetCount) { $targetString = "/$TargetCount" }
+
+			Write-Progress -Id $WorkflowProgressID -Activity "Workflow: $($Workflow.Name)" -Status "Mode:$Mode | Current:$overallCurrent$($targetString) | Elapsed:$($elapsed)s" -PercentComplete -1
+
+			foreach ($workerObjName in $Workflow.Workers.Keys) {
+				$workerObj = $Workflow.Workers.$workerObjName
+
+				$inQueueName = if ($workerObj.PSObject.Properties.Name -contains 'InQueue') { $workerObj.InQueue } else { $null }
+				$outQueueName = $workerObj.OutQueue
+
+				$inQeue = $null
+				if ($inQueueName) { $inQeue = $Workflow.Queues.($inQueueName) }
+				$outQueue = $null
+				if ($outQueueName) { $outQueue = $Workflow.Queues.($outQueueName) }
+
+				$inTotal = if ($inQeue) { $inQeue.TotalItemCount } else { 0 }
+				$outTotal = if ($outQueue) { $outQueue.TotalItemCount } else { 0 }
+				$outClosed = if ($outQueue) { $outQueue.Closed } else { $false }
+				$current = $workerObj.CountInputCompleted
+
+				Write-Progress -Id $WorkerIDs[$workerObjName].RunnerId -ParentId $WorkflowProgressID -Activity "Runner: $workerObjName" -Status "Progress: $current$($targetString) | Elapsed:$($elapsed)s" -PercentComplete -1
+
+				# Items status (only print non-empty fields)
+				$parts = @("Completed:$current")
+				if ($inQueueName) { $parts += "InQ:$inQueueName total:$inTotal" }
+				if ($outQueueName) { $parts += "OutQ:$outQueueName total:$outTotal closed:$outClosed" }
+				$itemStatus = ($parts -join ' | ')
+				Write-Progress -Id $WorkerIDs[$workerObjName].ItemsId -ParentId $WorkerIDs[$workerObjName].RunnerId -Activity "# of items" -Status $itemStatus -PercentComplete -1
+			}
+		}
+		#endregion Utility Functions
+	}
 	process {
 		$resolvedWorkflows = Resolve-PsfRunspaceWorkflow -Name $Name -InputObject $InputObject -Cmdlet $PSCmdlet
 		$limit = (Get-Date).AddDays(1)
@@ -139,14 +212,20 @@
 			$start = Get-Date
 
 			if ($ShowProgress) {
-				$wfId = $progressId; $progressId += 1
-				Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Elapsed: 0s" -PercentComplete -1
+				$workflowProgressID = $progressId
+				$progressId += 1
+				Write-Progress -Id $workflowProgressID -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Elapsed: 0s" -PercentComplete -1
 
 				$workerIds = @{}
-				foreach ($w in $resolvedWorkflow.Workers.Keys) {
-					$runnerId = $progressId; $itemsId = $progressId + 1; $progressId += 2
-					$workerIds[$w] = @{ RunnerId = $runnerId; ItemsId = $itemsId }
-					Write-Progress -Id $runnerId -ParentId $wfId -Activity "Runner: $w" -Status "Initializing..." -PercentComplete -1
+				foreach ($workerObjName in $resolvedWorkflow.Workers.Keys) {
+					$runnerId = $progressId
+					$itemsId = $progressId + 1
+					$progressId += 2
+					$workerIds[$workerObjName] = @{
+						RunnerId = $runnerId
+						ItemsId = $itemsId
+					}
+					Write-Progress -Id $runnerId -ParentId $workflowProgressID -Activity "Runner: $workerObjName" -Status "Initializing..." -PercentComplete -1
 					Write-Progress -Id $itemsId -ParentId $runnerId -Activity "Nb of items" -Status "Initializing..." -PercentComplete -1
 				}
 			}
@@ -158,37 +237,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Closed | Current:$overallCurrent | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								# FIX: resolve queues by name via dynamic property access to avoid null totals
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current | Elapsed:${elapsed}s" -PercentComplete -1
-
-								# Items status (only print non-empty fields)
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -QueueName $Queue -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -200,35 +249,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $queueObject.TotalItemCount
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerClosed | Current:$overallCurrent | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -QueueObject $queueObject -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -239,36 +260,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
-							$overallTarget = $Count
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Count | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -QueueName $Queue -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds -TargetCount $Count
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -279,36 +271,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $resolvedWorkflow.Workers.$WorkerName.CountInputCompleted
-							$overallTarget = $Count
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerCount | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -WorkerName $WorkerName -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds -TargetCount $Count
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -319,36 +282,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $resolvedWorkflow.Queues.$Queue.TotalItemCount
-							$overallTarget = ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:Reference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -QueueName $Queue -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds -TargetCount ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -359,36 +293,7 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
-							$overallCurrent = $resolvedWorkflow.Workers.$WorkerName.CountInputCompleted
-							$overallTarget = ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:WorkerReference | $overallCurrent/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$overallTarget | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -WorkerName $WorkerName -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds -TargetCount ($resolvedWorkflow.Queues.$ReferenceQueue.TotalItemCount * $ReferenceMultiplier)
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -399,37 +304,8 @@
 							Stop-PSFFunction -String 'Wait-PSFRunspaceWorkflow.Error.Timeout' -StringValues $limit, $resolvedWorkflow.Name -Target $resolvedWorkflow -EnableException $true -Cmdlet $PSCmdlet -Category OperationTimeout
 						}
 						if ($ShowProgress) {
-							$elapsed = ([int]((Get-Date) - $start).TotalSeconds)
 							$sinceLast = (Get-Date) - $resolvedWorkflow.Queues.$Queue.LastUpdate
-							$overallCurrent = $sinceLast.TotalSeconds
-							$overallTarget = $QueueTimeout.Value.TotalSeconds
-							Write-Progress -Id $wfId -Activity "Workflow: $($resolvedWorkflow.Name)" -Status "Mode:QueueTimeout | $([int]$overallCurrent)s/$([int]$overallTarget)s | Elapsed:${elapsed}s" -PercentComplete -1
-
-							foreach ($wk in $resolvedWorkflow.Workers.Keys) {
-								$rid = $workerIds[$wk].RunnerId; $iid = $workerIds[$wk].ItemsId
-								$wObj = $resolvedWorkflow.Workers.$wk
-
-								$inQName = if ($wObj.PSObject.Properties.Name -contains 'InQueue') { $wObj.InQueue } else { $null }
-								$outQName = $wObj.OutQueue
-
-								$inQ = $null
-								if ($inQName) { $inQ = $resolvedWorkflow.Queues.($inQName) }
-								$outQ = $null
-								if ($outQName) { $outQ = $resolvedWorkflow.Queues.($outQName) }
-
-								$inTotal = if ($inQ) { $inQ.TotalItemCount }  else { 0 }
-								$outTotal = if ($outQ) { $outQ.TotalItemCount } else { 0 }
-								$outClosed = if ($outQ) { $outQ.Closed }         else { $false }
-								$current = $wObj.CountInputCompleted
-
-								Write-Progress -Id $rid -ParentId $wfId -Activity "Runner: $wk" -Status "Progress: $current/$([int]$overallTarget) | Elapsed:${elapsed}s" -PercentComplete -1
-
-								$parts = @("Completed:$current")
-								if ($inQName) { $parts += "InQ:$inQName total:$inTotal" }
-								if ($outQName) { $parts += "OutQ:$outQName total:$outTotal closed:$outClosed" }
-								$itemStatus = ($parts -join ' | ')
-								Write-Progress -Id $iid -ParentId $rid -Activity "Nb of items" -Status $itemStatus -PercentComplete -1
-							}
+							Write-WorkflowProgress -Mode $PSCmdlet.ParameterSetName -Start $start -Workflow $resolvedWorkflow -CurrentCount $sinceLast.TotalSeconds -WorkflowProgressID $workflowProgressID -WorkerIDs $workerIds -TargetCount $QueueTimeout.Value.TotalSeconds
 						}
 						Start-Sleep -Milliseconds 200
 					}
@@ -437,11 +313,11 @@
 			}
 
 			if ($ShowProgress) {
-				foreach ($wk in $workerIds.Keys) {
-					Write-Progress -Id $workerIds[$wk].ItemsId -Activity "Nb of items" -Completed
-					Write-Progress -Id $workerIds[$wk].RunnerId -Activity "Runner" -Completed
+				foreach ($workerObjName in $workerIds.Keys) {
+					Write-Progress -Id $workerIds[$workerObjName].ItemsId -Activity "# of items" -Completed
+					Write-Progress -Id $workerIds[$workerObjName].RunnerId -Activity "Runner" -Completed
 				}
-				Write-Progress -Id $wfId -Activity "Workflow" -Completed
+				Write-Progress -Id $WorkflowProgressID -Activity "Workflow" -Completed
 			}
 
 			if ($PassThru) { $resolvedWorkflow }
