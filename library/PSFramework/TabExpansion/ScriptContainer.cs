@@ -67,6 +67,26 @@ namespace PSFramework.TabExpansion
         public bool Global;
 
         /// <summary>
+        /// When enabled, do not filter based on user input.
+        /// </summary>
+        public bool DoNotFilter;
+
+        private int _MaxResults;
+        /// <summary>
+        /// Maximum number of results to show when tab-completing.
+        /// </summary>
+        public int MaxResults
+        {
+            get
+            {
+                if (_MaxResults > 0)
+                    return _MaxResults;
+                return TabExpansionHost.MaxResults;
+            }
+            set { _MaxResults = value; }
+        }
+
+        /// <summary>
         /// If true: Match input against any part of the options, not just the beginning
         /// </summary>
         public bool MatchAnywhere
@@ -197,6 +217,9 @@ namespace PSFramework.TabExpansion
         /// <returns>The resolved pattern to match with</returns>
         public string GetPattern(string WordToComplete)
         {
+            if (DoNotFilter)
+                return ".*";
+
             StringBuilder stringBuilder = new StringBuilder();
             if (!MatchAnywhere && !FuzzyMatch)
                 stringBuilder.Append("^['\"]{0,1}");

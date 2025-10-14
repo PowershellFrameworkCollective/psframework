@@ -54,7 +54,7 @@ namespace PSFramework.Data.Converters
                 catch { }
 
                 
-                if (property.Name == "Root" || property.Name == "Parent" || property.Name == "Directory")
+                if (property.Name == "Root" || property.Name == "Parent" || property.Name == "Directory" || property.Name == "BaseName")
                     propValue = $"{propValue}";
 
                 sb.AppendLine($"{newIndent}{CodeGeneration.EscapeSingleQuotedStringContent(LanguagePrimitives.ConvertTo<string>(property.Name))} = {DataHost.Convert(propValue, newParents, Depth + 1, Converter)}");

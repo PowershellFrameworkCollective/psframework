@@ -47,7 +47,7 @@
 	)
 	begin {
 		$converter = [PSFramework.Data.Psd1Converter]::new()
-		$converter.Depth = $Depth
+		$converter.MaxDepth = $Depth
 		$converter.EnableVerbose = $EnableVerbose
 		$converter.Config = $Configuration
 		$converter.Cmdlet = $PSCmdlet

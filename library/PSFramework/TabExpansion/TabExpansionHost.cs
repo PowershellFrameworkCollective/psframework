@@ -55,6 +55,11 @@ namespace PSFramework.TabExpansion
         /// Whether PSFramework completion should use fuzzy-matching when matching completion values with the already typed text.
         /// </summary>
         public static bool FuzzyMatch;
+
+        /// <summary>
+        /// The maximum number of results shown to the user, before truncating data sets.
+        /// </summary>
+        public static int MaxResults;
         #endregion Settings
 
         #region Public logic access

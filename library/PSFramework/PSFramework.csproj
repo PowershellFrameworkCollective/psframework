@@ -218,7 +218,10 @@
     <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
+    <Compile Include="Runspace\RunspaceResult.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
+    <Compile Include="Runspace\RunspaceTask.cs" />
+    <Compile Include="Runspace\RunspaceWrapper.cs" />
     <Compile Include="Serialization\ClixmlDataStyle.cs" />
     <Compile Include="Serialization\ClixmlSerializer.cs" />
     <Compile Include="Serialization\SerializationTypeConverter.cs" />
