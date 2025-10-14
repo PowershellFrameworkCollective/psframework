@@ -46,6 +46,9 @@ if ($Build) {
 
 # Prepare publish folder
 Write-Host "Creating and populating publishing directory"
+if (Test-Path -Path (Join-Path -Path $WorkingDirectory -ChildPath 'publish')) {
+	Remove-Item -Path (Join-Path -Path $WorkingDirectory -ChildPath 'publish') -Recurse -Force
+}
 $publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory -Force
 Copy-Item -Path "$($WorkingDirectory)\PSFramework" -Destination $publishDir.FullName -Recurse -Force
 
