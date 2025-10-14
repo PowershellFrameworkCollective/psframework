@@ -1,6 +1,6 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.13.414 (2025-10-14)
 
 - Upd: Wait-PSFRunspaceWorkflow - adding ProgressBar with `-ShowProgress` (#698 | @fslef)
 - Upd: Register-PSFArgumentCompleter - adding parameter `-DontFilter`, disabling automatic filtering by user input and enabling complex custom filtering inside of the completer (#696)
