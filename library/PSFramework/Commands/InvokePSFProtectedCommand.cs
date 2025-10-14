@@ -160,7 +160,18 @@ namespace PSFramework.Commands
                 return Localization.LocalizationHost.Read("PSFramework", "FlowControl.Invoke-PSFProtectedCommand.Failed", new object[] { _Message });
             }
         }
-#endregion Private Fields
+
+        /// <summary>
+        /// script used to write horrible errors on screen
+        /// </summary>
+        private string _ErrorScript = @"
+param (
+	$__PSFramework__Parameters
+)
+Stop-PSFFunction @__PSFramework__Parameters
+return
+";
+        #endregion Private Fields
 
         #region Cmdlet Implementation
         /// <summary>
@@ -243,7 +254,7 @@ namespace PSFramework.Commands
                 Thread.Sleep(nextWait);
                 nextWait = (int)((double)nextWait * RetryWaitEscalation);
             }
-            
+
         }
         #endregion Cmdlet Implementation
 
@@ -267,30 +278,30 @@ namespace PSFramework.Commands
                             )
                         );
                 }
-                    
+
                 if (Continue)
                     DoContinue(ContinueLabel);
                 return;
             }
 
-            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
-            {
-                ps.AddCommand("PSFramework\\Stop-PSFFunction")
-                    .AddParameter("Message", _ErrorMessage)
-                    .AddParameter("Exception", error)
-                    .AddParameter("Target", Target)
-                    .AddParameter("Continue", Continue)
-                    .AddParameter("FunctionName", _Caller.CallerFunction)
-                    .AddParameter("ModuleName", _Caller.CallerModule)
-                    .AddParameter("File", _Caller.CallerFile)
-                    .AddParameter("Line", _Caller.CallerLine)
-                    .AddParameter("Cmdlet", PSCmdlet)
-                    .AddParameter("EnableException", EnableException);
-                if (!String.IsNullOrEmpty(ContinueLabel))
-                    ps.AddParameter("ContinueLabel", ContinueLabel);
+            Hashtable parameters = new Hashtable(StringComparer.OrdinalIgnoreCase);
+            parameters["Message"] = _ErrorMessage;
+            parameters["Exception"] = error;
+            parameters["Target"] = Target;
+            parameters["Continue"] = Continue;
+            if (!String.IsNullOrEmpty(ContinueLabel))
+                parameters["ContinueLabel"] = ContinueLabel;
+            parameters["FunctionName"] = _Caller.CallerFunction;
+            parameters["ModuleName"] = _Caller.CallerModule;
+            parameters["File"] = _Caller.CallerFile;
+            parameters["Line"] = _Caller.CallerLine;
+            parameters["Cmdlet"] = PSCmdlet;
+            parameters["EnableException"] = EnableException;
+            parameters["StepsUpward"] = 1;
 
-                ps.Invoke();
-            }
+            ScriptBlock errorBlock = ScriptBlock.Create(_ErrorScript);
+            object[] arguments = new object[] { parameters };
+            PSCmdlet.InvokeCommand.InvokeScript(false, errorBlock, null, arguments);
         }
 
         private void ErrorEventAction(Exception error)
@@ -301,7 +312,8 @@ namespace PSFramework.Commands
             object errorRecord = error;
             if (error is RuntimeException)
                 errorRecord = ((RuntimeException)error).ErrorRecord;
-            try {
+            try
+            {
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target);
                 table["Result"] = PSCmdlet.InvokeCommand.InvokeScript(false, ErrorEvent, null, errorRecord);
                 WriteMessage(Localization.LocalizationHost.Read("PSFramework.FlowControl.Invoke-PSFProtectedCommand.ErrorEvent.Success", new object[] { _Message, Target }), Level, _Caller.CallerFunction, _Caller.CallerModule, _Caller.CallerFile, _Caller.CallerLine, Tag, Target, table);

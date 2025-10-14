@@ -354,6 +354,11 @@
             Error message to post when execution fails
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.InvokePSFProtectedCommand._ErrorScript">
+            <summary>
+            script used to write horrible errors on screen
+            </summary>
+        </member>
         <member name="M:PSFramework.Commands.InvokePSFProtectedCommand.BeginProcessing">
             <summary>
             Prepare runtime information, such as calling command or cmdlet object
