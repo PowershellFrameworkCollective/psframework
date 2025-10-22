@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -54,7 +55,13 @@ namespace PSFramework.Runspace
             if (Streams.Warning.Count > 0)
                 Warnings.AddRange(Streams.Warning);
             if (Streams.Error.Count > 0)
-                Errors.AddRange(Streams.Error);
+            {
+                foreach (ErrorRecord record in Streams.Error)
+                {
+                    try { Errors.Add(((RuntimeException)record.Exception.InnerException).ErrorRecord); }
+                    catch { Errors.Add(record); }
+                }
+            }
 #if PS4
 #else
             if (Streams.Information.Count > 0)

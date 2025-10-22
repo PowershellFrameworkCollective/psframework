@@ -96,7 +96,7 @@ namespace PSFramework.Runspace
         /// <param name="VariableHash">Name/value map of variables to inclue</param>
         public void AddVariable(Hashtable VariableHash)
         {
-            foreach (object key in VariableHash)
+            foreach (object key in VariableHash.Keys)
                 Variables[key.ToString()] = new SessionStateVariableEntry(key.ToString(), VariableHash[key], "");
         }
         

@@ -88,7 +88,10 @@ param ($____PSF_Code, $____PSF_Item)
             try
             {
                 foreach (ErrorRecord error in Runtime.Streams.Error)
-                    Command.WriteError(error);
+                {
+                    try { Command.WriteError(((RuntimeException)error.Exception.InnerException).ErrorRecord); }
+                    catch { Command.WriteError(error); }
+                }
             }
             finally
             {
@@ -166,7 +169,10 @@ param ($____PSF_Code, $____PSF_Item)
             try
             {
                 foreach (ErrorRecord error in Runtime.Streams.Error)
-                    Command.WriteError(error);
+                {
+                    try { Command.WriteError(((RuntimeException)error.Exception.InnerException).ErrorRecord); }
+                    catch { Command.WriteError(error); }
+                }
             }
             finally
             {
