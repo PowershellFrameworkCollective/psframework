@@ -2,8 +2,8 @@
 
 ## 1.13.416 (2025-10-22)
 
-+ Fix: Invoke-PSFRunspace - errors incorrectly show PSFramework error, rather than actual errors.
-+ Fix: Invoke-PSFRunspace - variables are not created correctly in the background runspace
+- Fix: Invoke-PSFRunspace - errors incorrectly show PSFramework error, rather than actual errors.
+- Fix: Invoke-PSFRunspace - variables are not created correctly in the background runspace
 
 ## 1.13.414 (2025-10-14)
 
