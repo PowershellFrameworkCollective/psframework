@@ -16,7 +16,7 @@ jobs:
     - name: Install Prerequisites
       run: .\build\psf-prerequisites.ps1
       shell: powershell
-    - name: Install Prerequisites
+    - name: Compile Help
       run: .\build\vsts-help.ps1
       shell: powershell
     - name: Validate
