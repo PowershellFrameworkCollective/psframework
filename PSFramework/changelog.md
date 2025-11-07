@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## ???
+
+- Fix: New-PSFSupportPackage - debug dumps in task mode were not correctly rotated.
+
 ## 1.13.416 (2025-10-22)
 
 - Fix: Invoke-PSFRunspace - errors incorrectly show PSFramework error, rather than actual errors.
