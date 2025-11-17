@@ -92,7 +92,7 @@
 		$TaskName,
 
 		[int]
-		$TaskRetentionCount = (Get-PSFConfigValue -FullName 'Utility.SupportPackage.TaskDumpLimit'),
+		$TaskRetentionCount = (Get-PSFConfigValue -FullName 'PSFramework.Utility.SupportPackage.TaskDumpLimit'),
 
 		[switch]
 		$Force,
@@ -348,7 +348,7 @@
 	}
 	end {
 		if ($PSCmdlet.ParameterSetName -eq 'Task') {
-			Get-ChildItem -Path $outputPath -Force -Filter *.cliDat |
+			Get-ChildItem -Path $outputPath -Force -Filter *.zip |
 				Microsoft.PowerShell.Utility\Sort-Object LastWriteTime -Descending |
 					Microsoft.PowerShell.Utility\Select-Object -Skip $TaskRetentionCount |
 						Remove-Item -Force

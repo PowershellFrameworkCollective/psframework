@@ -218,6 +218,7 @@
     <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />
     <Compile Include="Runspace\RunspaceHost.cs" />
+    <Compile Include="Runspace\RunspaceLock.cs" />
     <Compile Include="Runspace\RunspaceResult.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
     <Compile Include="Runspace\RunspaceTask.cs" />

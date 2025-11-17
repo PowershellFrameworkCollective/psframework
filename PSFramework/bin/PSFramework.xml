@@ -8573,6 +8573,98 @@
             Purge all RBVs of datasets from all expired runspaces
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost.Locks">
+            <summary>
+            List of runspace locks available across the process
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.GetRunspaceLock(System.String)">
+            <summary>
+            Retrieve a named runspace lock, creating it first if necessary.
+            </summary>
+            <param name="Name">Name of the lock to create.</param>
+            <returns>The lock object</returns>
+        </member>
+        <member name="T:PSFramework.Runspace.RunspaceLock">
+            <summary>
+            Offers a cross-runspace locking mechanism to PowerShell
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceLock.Name">
+            <summary>
+            The name of the lock.
+            Mostly academic, used to keep track of locks across the process.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceLock._Owner">
+            <summary>
+            Who the current owner is.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceLock._LockedTime">
+            <summary>
+            When the lock was last taken.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceLock.Owner">
+            <summary>
+            The current effective owning runspace.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceLock.CurrentID">
+            <summary>
+            The current runspace from the perspective of the caller.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceLock.MaxLockTime">
+            <summary>
+            The maximum time the lock can be held. Infinite if 0 or less.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceLock.Lock">
+            <summary>
+            The actual lock used to marshal access.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.#ctor">
+            <summary>
+            Creates an empty runspace lock.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.#ctor(System.String)">
+            <summary>
+            Creates a named runspace lock.
+            Names are used for multiple runspaces to access the same lock, if retrieved through the system.
+            </summary>
+            <param name="Name">The name to assign to the lock.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.#ctor(System.String,System.Int32)">
+            <summary>
+            Creates a named runspace lock with a maximum lock time.
+            </summary>
+            <param name="Name">The name for the runspace lock.</param>
+            <param name="MaxLockTime">The maximum time (in ms) that the lock can be held.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.Open">
+            <summary>
+            Attempt to reserve the lock with a 30 seconds timeout.
+            If the timeout expires, an error will be thrown.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.Open(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Attempte to reserve the lock with a specified timeout.
+            If the timeout expires, an error will be thrown.
+            </summary>
+            <param name="Timeout">The timeout until we give up achieving the lock</param>
+            <exception cref="T:System.TimeoutException">If we have to wait longer than we are willing to wait. Might happen, if some other runspace takes too long to release the lock.</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceLock.Close">
+            <summary>
+            Release the current runspace's control over this lock.
+            No action, if the current runspace does not control the lock.
+            </summary>
+        </member>
         <member name="T:PSFramework.Runspace.RunspaceResult">
             <summary>
             The result of a runspace task
