@@ -1,7 +1,8 @@
 ﻿# CHANGELOG
 
-## ???
+## 1.13.418 (2025-11-17)
 
+- New: Get-PSFRunspaceLock - Create or retrieve a lock object for runspace use.
 - Fix: New-PSFSupportPackage - debug dumps in task mode were not correctly rotated.
 
 ## 1.13.416 (2025-10-22)

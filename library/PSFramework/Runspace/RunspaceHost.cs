@@ -35,6 +35,7 @@ namespace PSFramework.Runspace
         /// </summary>
         public static ConcurrentDictionary<string, RunspaceContainer> Runspaces = new ConcurrentDictionary<string, RunspaceContainer>(StringComparer.InvariantCultureIgnoreCase);
 
+        #region Runspace Bound Values
         /// <summary>
         /// List of all runspace bound values in use
         /// </summary>
@@ -84,5 +85,29 @@ namespace PSFramework.Runspace
             foreach (RunspaceBoundValue value in _RunspaceBoundValues)
                 value.PurgeExpired();
         }
+        #endregion Runspace Bound Values
+
+        #region Locks
+        /// <summary>
+        /// List of runspace locks available across the process
+        /// </summary>
+        private static ConcurrentDictionary<string, RunspaceLock> Locks = new ConcurrentDictionary<string, RunspaceLock>(StringComparer.InvariantCultureIgnoreCase);
+
+        private static object _Lock = 42;
+        /// <summary>
+        /// Retrieve a named runspace lock, creating it first if necessary.
+        /// </summary>
+        /// <param name="Name">Name of the lock to create.</param>
+        /// <returns>The lock object</returns>
+        public static RunspaceLock GetRunspaceLock(string Name)
+        {
+            lock (_Lock)
+            {
+                if (null == Locks[Name])
+                    Locks[Name] = new RunspaceLock(Name);
+            }
+            return Locks[Name];
+        }
+        #endregion Locks
     }
 }
