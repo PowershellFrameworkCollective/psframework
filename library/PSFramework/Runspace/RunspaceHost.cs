@@ -103,7 +103,7 @@ namespace PSFramework.Runspace
         {
             lock (_Lock)
             {
-                if (null == Locks[Name])
+                if (!Locks.ContainsKey(Name))
                     Locks[Name] = new RunspaceLock(Name);
             }
             return Locks[Name];
