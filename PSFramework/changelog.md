@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.13.419 (2025-11-24)
+
+- Fix: Get-PSFRunspaceLock - Fails to create new runspace lock.
+
 ## 1.13.418 (2025-11-17)
 
 - New: Get-PSFRunspaceLock - Create or retrieve a lock object for runspace use.
