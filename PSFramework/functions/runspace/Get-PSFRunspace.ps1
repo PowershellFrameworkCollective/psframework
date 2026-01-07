@@ -29,6 +29,6 @@
 	
 	process
 	{
-		[PSFramework.Runspace.RunspaceHost]::Runspaces.Values | Where-Object Name -Like $Name
+		([PSFramework.Runspace.RunspaceHost]::Runspaces.Values) | Where-Object Name -Like $Name
 	}
 }

@@ -83,6 +83,11 @@ namespace PSFramework.TaskEngine
         public ScriptBlock ScriptBlock;
 
         /// <summary>
+        /// Arguments to provide to the task code
+        /// </summary>
+        public object ArgumentList;
+
+        /// <summary>
         /// Whether the task is due and should be executed
         /// </summary>
         public bool IsDue

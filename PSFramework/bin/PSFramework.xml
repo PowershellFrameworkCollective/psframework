@@ -4590,6 +4590,11 @@
             Whether the console messages should be written with only one color, rather than respecting color tags
             </summary>
         </member>
+        <member name="F:PSFramework.Message.MessageHost.OldColor">
+            <summary>
+            Whether the console messages should be written with multiple Write-Hosts, rather than one using ANSI sequences
+            </summary>
+        </member>
         <member name="F:PSFramework.Message.MessageHost.TimeFormat">
             <summary>
             The format used in messages written on screen
@@ -8478,6 +8483,11 @@
             Class that contains the logic necessary to manage a unique runspace
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.Generation">
+            <summary>
+            The Generation of the Managed Runspace, determining the featureset used by it.
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RunspaceContainer.Name">
             <summary>
             The name of the runspace.
@@ -8488,15 +8498,62 @@
             The Guid of the running Runspace
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.Script">
+            <summary>
+            The Code that will be used when running the runspace.
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RunspaceContainer.SetScript(System.Management.Automation.ScriptBlock)">
             <summary>
             Sets the script to execute in the runspace. Will NOT take immediate effect. Only after restarting the runspace will it be used.
             </summary>
             <param name="Script">The scriptblock to execute</param>
         </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Creates a new Gen 1 runspace container with the basic information needed
+            </summary>
+            <param name="Name">The name of the Runspace</param>
+            <param name="Script">The code using the runspace logic</param>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.Begin">
+            <summary>
+            The initialization code of the runspace, executed in the global scope.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.Process">
+            <summary>
+            The execution code of the runspace, will be called repeatedly over the time of the runspace.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceContainer.End">
+            <summary>
+            The finalization code of the runspace, will be called once when closing out the runspace.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.#ctor(System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Creates a new Gen 2 runspace container with the basic information needed
+            </summary>
+            <param name="Name">The name of the Runspace</param>
+            <param name="Begin">The initialization code of the runspace, executed in the global scope.</param>
+            <param name="Process">The execution code of the runspace, will be called repeatedly over the time of the runspace.</param>
+            <param name="End">The finalization code of the runspace, will be called once when closing out the runspace.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceContainer.GetRuntime">
+            <summary>
+            Initialize a runtime reference for the current managed runspace
+            </summary>
+            <returns>A Runtime reference, including the code for all three phases of a Gen 2 Managed Runspace</returns>
+        </member>
         <member name="P:PSFramework.Runspace.RunspaceContainer.State">
             <summary>
             The state the runspace currently is in.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceContainer.Errors">
+            <summary>
+            The last 50 errors that happened in the runspace
             </summary>
         </member>
         <member name="M:PSFramework.Runspace.RunspaceContainer.Start">
@@ -8525,21 +8582,14 @@
             Signals the registered runspace has stopped execution
             </summary>
         </member>
-        <member name="M:PSFramework.Runspace.RunspaceContainer.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+        <member name="M:PSFramework.Runspace.RunspaceContainer.SignalFailed">
             <summary>
-            Creates a new runspace container with the basic information needed
+            Signals the registered runspace has failed badly and error logs should be checked.
             </summary>
-            <param name="Name">The name of the Runspace</param>
-            <param name="Script">The code using the runspace logic</param>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceHost">
             <summary>
             Provides hosting for all registered runspaces
-            </summary>
-        </member>
-        <member name="F:PSFramework.Runspace.RunspaceHost.StopTimeoutSeconds">
-            <summary>
-            The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
             </summary>
         </member>
         <member name="P:PSFramework.Runspace.RunspaceHost.RbvCleanupInterval">
@@ -8547,9 +8597,37 @@
             The interval (in milliseonds) in which Runspace-Bound Values will be leaned up
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost.StopTimeoutSeconds">
+            <summary>
+            The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RunspaceHost.Runspaces">
             <summary>
             The dictionary containing the definitive list of unique Runspace
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.SetManagedRunspace(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Define the managed runspace or update its code as a Gen 1 Runspace
+            </summary>
+            <param name="Name">The name of the managed runspace</param>
+            <param name="Code">The code implementing the managed runspace</param>
+            <returns>Whether the runspace was created new (true) or merely updated (false)</returns>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.SetManagedRunspace(System.String,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Define the managed runspace or update its code as a Gen 2 Runspace
+            </summary>
+            <param name="Name">The name of the managed runspace</param>
+            <param name="Begin">The Begin stage of the managed runspace</param>
+            <param name="Process">The Process stage of the managed runspace</param>
+            <param name="End">The End stage of the managed runspace</param>
+            <returns>Whether the runspace was created new (true) or merely updated (false)</returns>
+        </member>
+        <member name="P:PSFramework.Runspace.RunspaceHost.ManagedRunspaceCodeGen2">
+            <summary>
+            The Code to use for Gen 2 Managed Runspaces
             </summary>
         </member>
         <member name="P:PSFramework.Runspace.RunspaceHost._RunspaceBoundValues">
@@ -8708,6 +8786,47 @@
             <param name="Output">The output result of the task</param>
             <param name="Streams">The streams the task sent</param>
         </member>
+        <member name="T:PSFramework.Runspace.RunspaceRuntime">
+            <summary>
+            Wrapper around the execution stages of a Generation 2 Managed Runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceRuntime.Begin">
+            <summary>
+            Begin phase of the Managed Runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceRuntime.Process">
+            <summary>
+            Process phase of the Managed Runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceRuntime.End">
+            <summary>
+            End phase of the Managed Runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceRuntime.Errors">
+            <summary>
+            Access to the error queue of the managed runspace
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceRuntime.Workload">
+            <summary>
+            The actual runspace container with the original task.
+            MAY BE MODIFIED after launch, should not be used for critical lifestate data.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceRuntime.#ctor(System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,System.Management.Automation.ScriptBlock,PSFramework.Utility.LimitedConcurrentQueue{System.Management.Automation.ErrorRecord},PSFramework.Runspace.RunspaceContainer)">
+            <summary>
+            Create a new Managed Runspace Runtime wrapper
+            </summary>
+            <param name="Begin">Begin phase of the Managed Runspace</param>
+            <param name="Process">Process phase of the Managed Runspace</param>
+            <param name="End">End phase of the Managed Runspace</param>
+            <param name="Errors">Access to the error queue of the managed runspace</param>
+            <param name="Workload">The actual runspace container with the original task.</param>
+        </member>
         <member name="T:PSFramework.Runspace.PsfRunspaceState">
             <summary>
             Contains the state a managed, unique runspace can be in.
@@ -8726,6 +8845,11 @@
         <member name="F:PSFramework.Runspace.PsfRunspaceState.Stopped">
             <summary>
             The runspace has followed its order to stop and is currently disabled
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.PsfRunspaceState.Failed">
+            <summary>
+            The runspace crashed and burned. It is also stopped without fracefully closing out, check the Errors property.
             </summary>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceTask">
@@ -9636,6 +9760,11 @@
         <member name="F:PSFramework.TaskEngine.PsfTask.ScriptBlock">
             <summary>
             The task code to execute
+            </summary>
+        </member>
+        <member name="F:PSFramework.TaskEngine.PsfTask.ArgumentList">
+            <summary>
+            Arguments to provide to the task code
             </summary>
         </member>
         <member name="P:PSFramework.TaskEngine.PsfTask.IsDue">

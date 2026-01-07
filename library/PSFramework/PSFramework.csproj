@@ -220,6 +220,7 @@
     <Compile Include="Runspace\RunspaceHost.cs" />
     <Compile Include="Runspace\RunspaceLock.cs" />
     <Compile Include="Runspace\RunspaceResult.cs" />
+    <Compile Include="Runspace\RunspaceRuntime.cs" />
     <Compile Include="Runspace\RunspaceState.cs" />
     <Compile Include="Runspace\RunspaceTask.cs" />
     <Compile Include="Runspace\RunspaceWrapper.cs" />

@@ -1,36 +1,31 @@
 ﻿$scriptBlock = {
 	$script:___ScriptName = 'psframework.taskengine'
 	
-	try
-	{
+	try {
 		#region Main Execution
-		while ($true)
-		{
+		while ($true) {
 			# This portion is critical to gracefully closing the script
-			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -notlike "Running")
-			{
+			if ([PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].State -notlike "Running") {
 				break
 			}
 			
 			$task = $null
 			$tasksDone = @()
-			while ($task = [PSFramework.TaskEngine.TaskHost]::GetNextTask($tasksDone))
-			{
+			while ($task = [PSFramework.TaskEngine.TaskHost]::GetNextTask($tasksDone)) {
 				$task.State = 'Running'
-				try
-				{
+				try {
 					[PSFramework.Utility.UtilityHost]::ImportScriptBlock($task.ScriptBlock)
-					$task.ScriptBlock.Invoke()
+					if ($null -ne $task.ArgumentList) { $task.ScriptBlock.Invoke($task.ArgumentList) }
+					else { $task.ScriptBlock.Invoke() }
 					$task.State = 'Pending'
 				}
-				catch
-				{
+				catch {
 					$task.State = 'Error'
 					$task.LastError = $_
 					Write-PSFMessage -EnableException $false -Level Warning -Message "[Maintenance] Task '$($task.Name)' failed to execute" -ErrorRecord $_ -FunctionName "task:TaskEngine" -Target $task -ModuleName PSFramework
 				}
 				$task.LastExecution = Get-Date
-				if (-not $task.Pending -and ($task.Status -eq "Pending")) { $task.Status = 'Completed' }
+				if (-not $task.Pending -and ($task.State -eq "Pending")) { $task.State = 'Completed' }
 				$tasksDone += $task.Name
 			}
 			
@@ -41,9 +36,10 @@
 		}
 		#endregion Main Execution
 	}
-	catch {  }
-	finally
-	{
+	catch {
+		Write-PSFMessage -Level Warning -Message "[Maintenance] Unhandled Error executing Task Engine" -ErrorRecord $_
+	}
+	finally {
 		[PSFramework.Runspace.RunspaceHost]::Runspaces[$___ScriptName].SignalStopped()
 	}
 }

@@ -1,5 +1,14 @@
 ﻿# CHANGELOG
 
+## 1.13.425 (2026-01-07)
+
+- New: COnfiguration `PSFramework.Message.Style.OldColor` - reverts update to message printing, disabling use of ANSI codes for colors
+- Upd: Register-PSFRunspace - Significantly reworked Managed Runspaces for greater ease of use.
+- Upd: Register-PSFTaskEngineTask - Added `-ArgumentList` parameter to enable including data with Task
+- Fix: Write-PSFMessage - Messages to host get jumbled when logging from parallel tasks (#707)
+- Fix: Register-PSFRunspace - Closed Constrained Language Mode escape
+- Fix: Register-PSFRunspace - Closed edge-case concurrency issue that was extremely unlikely to ever matter.
+
 ## 1.13.419 (2025-11-24)
 
 - Fix: Get-PSFRunspaceLock - Fails to create new runspace lock.

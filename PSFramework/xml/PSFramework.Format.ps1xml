@@ -714,6 +714,45 @@
             </TableControl>
         </View>
 
+        <!-- PSFramework.Runspace.RunspaceContainer -->
+        <View>
+            <Name>PSFramework.Runspace.RunspaceContainer</Name>
+            <ViewSelectedBy>
+                <TypeName>PSFramework.Runspace.RunspaceContainer</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Gen</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <ScriptBlock>
+ $_.Generation 
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>RunspaceGuid</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>State</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+
         <!-- PSFramework.Runspace.RunspaceResult -->
         <View>
             <Name>PSFramework.Runspace.RunspaceResult</Name>
