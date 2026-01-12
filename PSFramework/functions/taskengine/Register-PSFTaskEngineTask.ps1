@@ -41,6 +41,9 @@
 		.PARAMETER Priority
 			How important is this task?
 			If multiple tasks are due at the same maintenance cycle, the more critical one will be processed first.
+
+		.PARAMETER ArgumentList
+			Arguments to provide when executing the task.
 	
 		.PARAMETER ResetTask
 			If the task already exists, it will be reset by setting this parameter (this switch is ignored when creating new tasks).
@@ -90,6 +93,10 @@
 		
 		[PSFramework.TaskEngine.Priority]
 		$Priority = "Medium",
+
+		[AllowNull()]
+		[object]
+		$ArgumentList,
 		
 		[switch]
 		$ResetTask,
@@ -115,6 +122,7 @@
 			}
 			if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
 			if (Test-PSFParameterBinding -ParameterName Priority) { $task.Priority = $Priority }
+			if (Test-PSFParameterBinding -ParameterName ArgumentList) { $task.ArgumentList = $ArgumentList }
 			
 			if ($ResetTask)
 			{
@@ -135,6 +143,7 @@
 			if (Test-PSFParameterBinding -ParameterName Once) { $task.Once = $true }
 			if (Test-PSFParameterBinding -ParameterName Interval) { $task.Interval = $Interval }
 			if (Test-PSFParameterBinding -ParameterName Delay) { $task.Delay = $Delay }
+			if (Test-PSFParameterBinding -ParameterName ArgumentList) { $task.ArgumentList = $ArgumentList }
 			$task.Priority = $Priority
 			$task.Registered = Get-Date
 			[PSFramework.TaskEngine.TaskHost]::Tasks[$Name] = $task

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Management.Automation;
 using System.Timers;
 
 namespace PSFramework.Runspace
@@ -10,11 +11,6 @@ namespace PSFramework.Runspace
     /// </summary>
     public static class RunspaceHost
     {
-        /// <summary>
-        /// The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
-        /// </summary>
-        public static int StopTimeoutSeconds = 30;
-
         /// <summary>
         /// The interval (in milliseonds) in which Runspace-Bound Values will be leaned up
         /// </summary>
@@ -30,10 +26,86 @@ namespace PSFramework.Runspace
         }
         private static int _RbvCleanupInterval = 900000;
 
+        #region Managed Runspaces
+        /// <summary>
+        /// The number of seconds before a Stop command is interrupted and instead the runspace is gracelessly shut down.
+        /// </summary>
+        public static int StopTimeoutSeconds = 30;
+
         /// <summary>
         /// The dictionary containing the definitive list of unique Runspace
         /// </summary>
         public static ConcurrentDictionary<string, RunspaceContainer> Runspaces = new ConcurrentDictionary<string, RunspaceContainer>(StringComparer.InvariantCultureIgnoreCase);
+
+        private static object _MRLock = 42;
+        /// <summary>
+        /// Define the managed runspace or update its code as a Gen 1 Runspace
+        /// </summary>
+        /// <param name="Name">The name of the managed runspace</param>
+        /// <param name="Code">The code implementing the managed runspace</param>
+        /// <returns>Whether the runspace was created new (true) or merely updated (false)</returns>
+        public static bool SetManagedRunspace(string Name, ScriptBlock Code)
+        {
+            bool isNew = false;
+            lock (_MRLock)
+            {
+                isNew = !Runspaces.ContainsKey(Name);
+
+                if (isNew)
+                    Runspaces[Name] = new RunspaceContainer(Name, Code);
+                else
+                {
+                    Runspaces[Name].SetScript(Code);
+                    Runspaces[Name].Generation = 1;
+                }
+            }
+            return isNew;
+        }
+
+        /// <summary>
+        /// Define the managed runspace or update its code as a Gen 2 Runspace
+        /// </summary>
+        /// <param name="Name">The name of the managed runspace</param>
+        /// <param name="Begin">The Begin stage of the managed runspace</param>
+        /// <param name="Process">The Process stage of the managed runspace</param>
+        /// <param name="End">The End stage of the managed runspace</param>
+        /// <returns>Whether the runspace was created new (true) or merely updated (false)</returns>
+        public static bool SetManagedRunspace(string Name, ScriptBlock Begin, ScriptBlock Process, ScriptBlock End)
+        {
+            bool isNew = false;
+            lock (_MRLock)
+            {
+                isNew = !Runspaces.ContainsKey(Name);
+
+                if (isNew)
+                    Runspaces[Name] = new RunspaceContainer(Name, Begin, Process, End);
+                else
+                {
+                    Runspaces[Name].SetScript(ManagedRunspaceCodeGen2);
+                    Runspaces[Name].Begin = Begin;
+                    Runspaces[Name].Process = Process;
+                    Runspaces[Name].End = End;
+                    Runspaces[Name].Generation = 2;
+                }
+            }
+            return isNew;
+        }
+
+        /// <summary>
+        /// The Code to use for Gen 2 Managed Runspaces
+        /// </summary>
+        public static ScriptBlock ManagedRunspaceCodeGen2
+        {
+            get => _ManagedRunspaceCodeGen2;
+            set
+            {
+                if (_ManagedRunspaceCodeGen2 != null)
+                    return;
+                _ManagedRunspaceCodeGen2 = value;
+            }
+        }
+        private static ScriptBlock _ManagedRunspaceCodeGen2;
+        #endregion Managed Runspaces
 
         #region Runspace Bound Values
         /// <summary>
