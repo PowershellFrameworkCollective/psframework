@@ -14,7 +14,7 @@
 		Gen 2: -Begin/-Process/-End | Simple execution that is easy to use, but surrenders some control over the process.
 		
 		The full documentation can be found online: https://psframework.org
-		By default, using the Generation 2 implementation is recommended, the third shows how to use it.		
+		By default, using the Generation 2 implementation is recommended, the third shows how to use it.
 	
 		Updating:
 		If this function is called multiple times, targeting the same name, it will update the scriptblock.
