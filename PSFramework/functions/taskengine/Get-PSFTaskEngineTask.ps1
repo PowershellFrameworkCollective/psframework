@@ -30,6 +30,6 @@
 	
 	process
 	{
-		[PSFramework.TaskEngine.TaskHost]::Tasks.Values | Where-Object Name -Like $Name
+		$([PSFramework.TaskEngine.TaskHost]::Tasks.Values | Where-Object Name -Like $Name)
 	}
 }

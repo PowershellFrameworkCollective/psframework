@@ -112,6 +112,11 @@ namespace PSFramework.Message
         public static bool NoColor = false;
 
         /// <summary>
+        /// Whether the console messages should be written with multiple Write-Hosts, rather than one using ANSI sequences
+        /// </summary>
+        public static bool OldColor = false;
+
+        /// <summary>
         /// The format used in messages written on screen
         /// </summary>
         public static string TimeFormat = "HH:mm:ss";

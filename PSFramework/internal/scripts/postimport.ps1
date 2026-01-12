@@ -26,6 +26,9 @@ foreach ($file in (Get-ChildItem -Path "$($moduleRoot)\internal\configurations\*
 # Import configuration settings from registry
 "$($moduleRoot)\internal\scripts\loadConfigurationPersisted.ps1"
 
+# Launch the Managed Runspace System
+"$($moduleRoot)\internal\scripts\runspaceManagedGen2.ps1"
+
 # Load each logging provider
 foreach ($file in (Get-ChildItem -Path "$($moduleRoot)\internal\loggingProviders\*.ps1"))
 {

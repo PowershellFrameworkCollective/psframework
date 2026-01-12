@@ -1,6 +1,5 @@
-﻿function Write-PSFHostColor
-{
-<#
+﻿function Write-PSFHostColor {
+	<#
 	.SYNOPSIS
 		Function that recognizes html-style tags to insert color into printed text.
 	
@@ -64,7 +63,7 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
 	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Write-PSFHostColor')]
-	Param (
+	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
 		$String,
@@ -78,49 +77,76 @@
 		[PSFramework.Message.MessageLevel]
 		$Level
 	)
-	begin
-	{
+	begin {
 		$em = [PSFramework.Message.MessageHost]::InfoColorEmphasis
 		$sub = [PSFramework.Message.MessageHost]::InfoColorSubtle
 		
 		$max_info = [PSFramework.Message.MessageHost]::MaximumInformation
 		$min_info = [PSFramework.Message.MessageHost]::MinimumInformation
+
+		$useAnsi = -not [PSFramework.Message.MessageHost]::OldColor -and $host.UI.SupportsVirtualTerminal
+
+		if ($useAnsi) {
+			$colorMap = @{
+				Black       = 30
+				DarkRed     = 31
+				DarkGreen   = 32
+				DarkYellow  = 33
+				DarkBlue    = 34
+				DarkMagenta = 35
+				DarkCyan    = 36
+				Gray        = 37
+				DarkGray    = 90
+				Red         = 91
+				Green       = 92
+				Yellow      = 93
+				Blue        = 94
+				Magenta     = 95
+				Cyan        = 96
+				White       = 97
+			}
+			$escape = [char]27 + '['
+			$defaultCode = $colorMap["$DefaultColor"]
+		}
 	}
-	process
-	{
-		if ($Level)
-		{
+	process {
+		if ($Level) {
 			if (($max_info -lt $Level) -or ($min_info -gt $Level)) { return }
 		}
 		
-		foreach ($line in $String)
-		{
-			foreach ($row in $line.Split("`n")) #.Split([environment]::NewLine))
-			{
-				if ($row -notlike '*<c=["'']*["'']>*</c>*') { Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine }
-				else
-				{
-					$row = $row -replace '<c=["'']em["'']>', "<c='$em'>" -replace '<c=["'']sub["'']>', "<c='$sub'>"
-					$match = ($row | Select-String '<c=["''](.*?)["'']>(.*?)</c>' -AllMatches).Matches
-					$index = 0
-					$count = 0
+		foreach ($line in $String) {
+			foreach ($row in $line.Split("`n")) {
+				#.Split([environment]::NewLine))
+				if ($row -notlike '*<c=["'']*["'']>*</c>*') {
+					Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
+					continue
+				}
+				
+				$row = $row -replace '<c=["'']em["'']>', "<c='$em'>" -replace '<c=["'']sub["'']>', "<c='$sub'>"
+				$match = ($row | Select-String '<c=["''](.*?)["'']>(.*?)</c>' -AllMatches).Matches
+				if ($useAnsi) {
+					foreach ($entry in $match) {
+						$row = $row -replace $entry.Groups[0].Value, "$($escape)$($colorMap[$entry.Groups[1].Value])m$($entry.Groups[2].Value)$($escape)$($defaultCode)m"
+					}
+					Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor
+					continue
+				}
+
+				$index = 0
+				$count = 0
 					
-					while ($count -le $match.Count)
-					{
-						if ($count -lt $Match.Count)
-						{
-							Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index, ($match[$count].Index - $Index)) -ForegroundColor $DefaultColor -NoNewline
-							try { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $match[$count].Groups[1].Value -NoNewline -ErrorAction Stop }
-							catch { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $DefaultColor -NoNewline -ErrorAction Stop }
+				while ($count -le $match.Count) {
+					if ($count -lt $Match.Count) {
+						Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index, ($match[$count].Index - $Index)) -ForegroundColor $DefaultColor -NoNewline
+						try { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $match[$count].Groups[1].Value -NoNewline -ErrorAction Stop }
+						catch { Microsoft.PowerShell.Utility\Write-Host -Object $match[$count].Groups[2].Value -ForegroundColor $DefaultColor -NoNewline -ErrorAction Stop }
 							
-							$index = $match[$count].Index + $match[$count].Length
-							$count++
-						}
-						else
-						{
-							Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index) -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
-							$count++
-						}
+						$index = $match[$count].Index + $match[$count].Length
+						$count++
+					}
+					else {
+						Microsoft.PowerShell.Utility\Write-Host -Object $row.SubString($index) -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
+						$count++
 					}
 				}
 			}

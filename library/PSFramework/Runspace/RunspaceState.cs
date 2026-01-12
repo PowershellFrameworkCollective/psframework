@@ -19,5 +19,10 @@
         /// The runspace has followed its order to stop and is currently disabled
         /// </summary>
         Stopped = 3,
+
+        /// <summary>
+        /// The runspace crashed and burned. It is also stopped without fracefully closing out, check the Errors property.
+        /// </summary>
+        Failed = 4
     }
 }
