@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.13.426 (2026-01-13)
+
+- Fix: Write-PSFHostColor - Ignores the `-NoNewLine` parameter
+
 ## 1.13.425 (2026-01-07)
 
 - New: Configuration `PSFramework.Message.Style.OldColor` - reverts update to message printing, disabling use of ANSI codes for colors

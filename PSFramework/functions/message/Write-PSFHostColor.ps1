@@ -128,7 +128,7 @@
 					foreach ($entry in $match) {
 						$row = $row -replace $entry.Groups[0].Value, "$($escape)$($colorMap[$entry.Groups[1].Value])m$($entry.Groups[2].Value)$($escape)$($defaultCode)m"
 					}
-					Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor
+					Microsoft.PowerShell.Utility\Write-Host -Object $row -ForegroundColor $DefaultColor -NoNewline:$NoNewLine
 					continue
 				}
 
