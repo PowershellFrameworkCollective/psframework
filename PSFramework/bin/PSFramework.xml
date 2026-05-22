@@ -4,6 +4,243 @@
         <name>PSFramework</name>
     </assembly>
     <members>
+        <member name="T:PSFramework.Caching.CacheBase">
+            <summary>
+            Base class for different kinds of cache handlers
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.#ctor">
+            <summary>
+            Creates an empty cache that is not case sensitive
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CacheBase.Lifetime">
+            <summary>
+            The maximum age a dataset may have before being purged.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.MaxItems">
+            <summary>
+            Maximum number of items to store in the cache
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.TryDispose">
+            <summary>
+            Whether expired / surplus data entries should be disposed if implementing IDisposable
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CacheBase.Values">
+            <summary>
+            List of all cached values
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CacheBase.Keys">
+            <summary>
+            List of all cached keys
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.ContainsKey(System.Object)">
+            <summary>
+            Verifies whether the key exists in the cache.
+            Expired entries are not considered.
+            </summary>
+            <param name="key">The key to check</param>
+            <returns>Whether the key is in the cache</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.Contains(System.Object)">
+            <summary>
+            Verifies whether the key exists in the cache.
+            Expired entries are not considered.
+            </summary>
+            <param name="key">The key to check</param>
+            <returns>Whether the key is in the cache</returns>
+        </member>
+        <member name="P:PSFramework.Caching.CacheBase.Count">
+            <summary>
+            The number of non-expired items in the cache
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CacheBase.ActualCount">
+            <summary>
+            Count of items including expired items
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.Clone">
+            <summary>
+            Create a hashtable containing all cache entries
+            </summary>
+            <returns>A non-case-sensitive hashtable containing all cache entries</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetEnumerator">
+            <summary>
+            Dynamically enumerate over the still valid values
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.Dispose">
+            <summary>
+            Cleanup.
+            Should be overridden based on the particular implementation of the cache.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.Drain">
+            <summary>
+            Remove the oldest items in the cache until the MaxItems count has been reached
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase._OrderLock">
+            <summary>
+            Order changes need to happen in correct order
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.Oldest">
+            <summary>
+            The oldest entry in the cache
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.Newest">
+            <summary>
+            The latest entry in the cache
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.Dbg_GetAllCD">
+            <summary>
+            DEBUG: Returns all entries
+            </summary>
+            <returns>All Cache Entries</returns>
+        </member>
+        <member name="T:PSFramework.Caching.CacheMemoryConcurrent">
+            <summary>
+            A type of cache intended for concurrent access, but solely within memory.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.#ctor">
+            <summary>
+            Creates a default threadsafe memory-only cache.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.#ctor(System.Int64,System.TimeSpan)">
+            <summary>
+            Creates a configured threadsafe memory-only cache.
+            </summary>
+            <param name="MaxItems">The maximum number of items the cache may contain</param>
+            <param name="Lifetime">The maximum age a cached item may reach</param>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.Clone">
+            <summary>
+            Create a hashtable containing all cache entries
+            </summary>
+            <returns>A non-case-sensitive hashtable containing all cache entries</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.Add(System.Object,System.Object)">
+            <summary>
+            Add an entry to the cache
+            </summary>
+            <param name="key">The key of the entry</param>
+            <param name="value">The value of the entry</param>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.Remove(System.Object)">
+            <summary>
+            Remove an entry from the cache
+            </summary>
+            <param name="key">The key of the entry to remove</param>
+        </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.RemoveInt(System.Object)">
+            <summary>
+            Internal tool to remove an entry from the cache
+            </summary>
+            <param name="Key">The key of the entry to remove</param>
+        </member>
+        <member name="P:PSFramework.Caching.CacheMemoryConcurrent.Item(System.Object)">
+            <summary>
+            Read or write an entry in the cache
+            </summary>
+            <param name="key">The key of the entry</param>
+            <returns>The value matching the key</returns>
+        </member>
+        <member name="T:PSFramework.Caching.CachedData">
+            <summary>
+            A cache entry
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.#ctor(PSFramework.Caching.CacheBase,System.Object,System.Object)">
+            <summary>
+            Create a new cache entry
+            </summary>
+            <param name="Parent">The cache the item belongs to</param>
+            <param name="Key">The key the data is stored under</param>
+            <param name="Value">The value being cached</param>
+            <exception cref="T:System.ArgumentNullException">If either Parent or Key are left null, errors happen.</exception>
+        </member>
+        <member name="P:PSFramework.Caching.CachedData.Value">
+            <summary>
+            The value being cached
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CachedData.Timestamp">
+            <summary>
+            When was the last time the value was updated
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CachedData.Key">
+            <summary>
+            The key the data is stored under
+            </summary>
+        </member>
+        <member name="P:PSFramework.Caching.CachedData.IsExpired">
+            <summary>
+            Is the value expired?
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.Dispose">
+            <summary>
+            Kill the value
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.DisposeIfExpired">
+            <summary>
+            Kill the value if still expired
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.ToString">
+            <summary>
+            Text display of the value
+            </summary>
+            <returns>THe valoue contained</returns>
+        </member>
+        <member name="F:PSFramework.Caching.CachedData.Next">
+            <summary>
+            The item that comes after
+            </summary>
+        </member>
+        <member name="F:PSFramework.Caching.CachedData.Previous">
+            <summary>
+            The item that comes next
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.MoveToLatest">
+            <summary>
+            Make the current entry the latest entry in the Cache
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.MoveNew">
+            <summary>
+            Adds the current entry as the latest entry
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.MoveUnlist">
+            <summary>
+            Removes item from the chain of order.
+            Should only be called after removing it from the cache itself.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CachedData.MoveUnlistNoLock">
+            <summary>
+            Removes item from the chain of order.
+            Does not perform locking, so it is not be threadsafe.
+            Should only be called after removing it from the cache itself.
+            </summary>
+        </member>
         <member name="T:PSFramework.Commands.AssertPSFInternalCommandCommand">
             <summary>
             Amazingly useful command, that verifies that the command being executed was called from another command in the same module.
