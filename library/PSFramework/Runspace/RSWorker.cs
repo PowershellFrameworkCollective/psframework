@@ -1,4 +1,5 @@
-﻿using PSFramework.Utility;
+﻿using PSFramework.Parameter;
+using PSFramework.Utility;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -33,6 +34,34 @@ namespace PSFramework.Runspace
         private static PsfScriptBlock _WorkerCode;
 
         /// <summary>
+        /// The base code used to launch the header-code in a V2 Agent
+        /// </summary>
+        public static PsfScriptBlock WorkerBeginCode
+        {
+            get { return _WorkerBeginCode; }
+            set
+            {
+                if (_WorkerBeginCode == null)
+                    _WorkerBeginCode = value;
+            }
+        }
+        private static PsfScriptBlock _WorkerBeginCode;
+
+        /// <summary>
+        /// The base code used to launch the process-code in a V2 Agent
+        /// </summary>
+        public static PsfScriptBlock WorkerProcessCode
+        {
+            get { return _WorkerProcessCode; }
+            set
+            {
+                if (_WorkerProcessCode == null)
+                    _WorkerProcessCode = value;
+            }
+        }
+        private static PsfScriptBlock _WorkerProcessCode;
+
+        /// <summary>
         /// Name of the Worker. Mostly documentary in nature.
         /// </summary>
         public readonly string Name;
@@ -63,6 +92,26 @@ namespace PSFramework.Runspace
         /// </summary>
         public PsfScriptBlock End;
         private PsfScriptBlock _End;
+
+        /// <summary>
+        /// If a work item failed, retry if conditions are met
+        /// </summary>
+        public PsfScriptBlock RetryCondition;
+
+        /// <summary>
+        /// How many times will we retry a failed item
+        /// </summary>
+        public int RetryCount;
+
+        /// <summary>
+        /// What kind of timeout do we apply?
+        /// </summary>
+        public RSTimeout TimeoutType = RSTimeout.None;
+
+        /// <summary>
+        /// The timeout applied to a single work item
+        /// </summary>
+        public TimeSpanParameter Timeout;
 
         /// <summary>
         /// Maximum count of worker threads / runspaces
@@ -249,6 +298,44 @@ namespace PSFramework.Runspace
         }
 
         /// <summary>
+        /// Calculate the initial session state to use for a worker.
+        /// Does NOT include the per-runspace variables!
+        /// </summary>
+        /// <returns>A prepared initial sessionstate for use in a runspace worker agent.</returns>
+        public InitialSessionState GetSessionState()
+        {
+            InitialSessionState localState = SessionState;
+            if (null == localState)
+                localState = workflow.SessionState;
+            if (null == localState)
+                localState = InitialSessionState.CreateDefault();
+
+            if (workflow.Modules.Count > 0)
+                localState.ImportPSModule(workflow.Modules.ToArray());
+            if (Modules.Count > 0)
+                localState.ImportPSModule(Modules.ToArray());
+            localState.ImportPSModulesFromPath(PSFCore.PSFCoreHost.ModuleRoot);
+
+            if (workflow.Functions.Count > 0)
+                foreach (string name in workflow.Functions.Keys)
+                    localState.Commands.Add(new SessionStateFunctionEntry(name, workflow.Functions[name].ToString()));
+            if (Functions.Count > 0)
+                foreach (string name in Functions.Keys)
+                    localState.Commands.Add(new SessionStateFunctionEntry(name, Functions[name].ToString()));
+
+            if (workflow.Variables.Count > 0)
+                foreach (string name in workflow.Variables.Keys)
+                    localState.Variables.Add(new SessionStateVariableEntry(name, workflow.Variables[name], null));
+            if (Variables.Count > 0)
+                foreach (string name in Variables.Keys)
+                    localState.Variables.Add(new SessionStateVariableEntry(name, Variables[name], null));
+            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Workflow", workflow, "PSF Runspace Workflow, used to manage the data transfer between workers and the state handling of the workload.", ScopedItemOptions.Constant));
+            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Worker", this, "PSF Worker. Represents itself in the active runspaces.", ScopedItemOptions.Constant));
+
+            return localState;
+        }
+
+        /// <summary>
         /// Starts the worker, creating the number of runspaces configured after preparing the execution state.
         /// </summary>
         /// <exception cref="InvalidOperationException">Bad language modes or not having configured a workflow is a bad thing.</exception>
@@ -257,6 +344,10 @@ namespace PSFramework.Runspace
         {
             if (WorkerCode.LanguageMode != PSLanguageMode.FullLanguage)
                 throw new InvalidOperationException("Refusing to launch worker: The registered worker code is not trusted!");
+            if (WorkerBeginCode.LanguageMode != PSLanguageMode.FullLanguage)
+                throw new InvalidOperationException("Refusing to launch worker: The registered Begin worker code is not trusted!");
+            if (WorkerBeginCode.LanguageMode != PSLanguageMode.FullLanguage)
+                throw new InvalidOperationException("Refusing to launch worker: The registered Process worker code is not trusted!");
 
             if (null == workflow)
                 throw new InvalidOperationException("Runspace Workflow cannot be null!");

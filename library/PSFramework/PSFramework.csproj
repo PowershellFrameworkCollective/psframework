@@ -61,6 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheBase.cs" />
+    <Compile Include="Caching\CacheMemoryConcurrent.cs" />
+    <Compile Include="Caching\CachedData.cs" />
     <Compile Include="Commands\AssertPSFInternalCommandCommand.cs" />
     <Compile Include="Commands\InvokePSFCallbackCommand.cs" />
     <Compile Include="Commands\SortPSFObjectCommand.cs" />
@@ -206,6 +209,8 @@
     <Compile Include="PSFCore\PsfInternalAttribute.cs" />
     <Compile Include="Extension\ScriptBlockExt.cs" />
     <Compile Include="ResultCache\ResultCache.cs" />
+    <Compile Include="Runspace\RSAgent.cs" />
+    <Compile Include="Runspace\RSTimeout.cs" />
     <Compile Include="Runspace\RSWorkflow.cs" />
     <Compile Include="Runspace\RSPowerShellWrapper.cs" />
     <Compile Include="Runspace\RSQueue.cs" />
@@ -214,6 +219,7 @@
     <Compile Include="Runspace\RSWorker.cs" />
     <Compile Include="Runspace\RSWorkerError.cs" />
     <Compile Include="Runspace\RSWorkflowRunespaceReport.cs" />
+    <Compile Include="Runspace\RSWorkItem.cs" />
     <Compile Include="Runspace\RunspaceBoundValue.cs" />
     <Compile Include="Runspace\RunspaceBoundValueGeneric.cs" />
     <Compile Include="Runspace\RunspaceContainer.cs" />

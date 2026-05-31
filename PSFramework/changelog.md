@@ -1,5 +1,20 @@
 ﻿# CHANGELOG
 
+## 1.14.438 (2026-05-31)
+
+- New: New-PSFCache - creates a configurable in-memory cache.
+- New: Config validation urihttp - Validates http uris (#719)
+- Ipd: Disable-PSFLoggingProvider - now accepts input from pipeline from Get-PSFLoggingProviderInstance
+- Upd: PSFDateTime - Now tracking what time the object was created at (`InstantiationTime`)
+- Upd: PSFDateTime - Now tracking the resolved relative time provided (`Delta`)
+- Upd: PSFDateTime - new method `Reverse()` to reverse relative time between positive and negative.
+- Upd: PSFDateTime - new method `Past()` to make sure relative-provided time points to the past
+- Upd: PSFDateTime - new method `Future()` to make sure relative-provided time points to the future
+- Fix: Write-PSFHostColor - Fails when trying to colorize special regex characters (#721)
+- Fix: Error loading PSFramework concurrently
+- Fix: Config Validation uriabsolute - accepts hostless stump (#719)
+- Fix: Disable-PSFConsoleInterrupt - fails in contexts that do not have a console window handle such as remoting. (#724, @Mr-Kappelmann)
+
 ## 1.13.426 (2026-01-13)
 
 - Fix: Write-PSFHostColor - Ignores the `-NoNewLine` parameter

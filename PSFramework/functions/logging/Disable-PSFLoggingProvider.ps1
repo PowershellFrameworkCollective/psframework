@@ -16,6 +16,9 @@
 	.PARAMETER InstanceName
 		Name of the instance of the logging provider to disable.
 		Defaults to: Default
+
+	.PARAMETER InstanceObject
+		A full Logging Provider Instance object, as return by Get-PSFLoggingProviderInstance
 	
 	.PARAMETER NoFinalizeWait
 		Do not wait for the logging to conclude or the final events shutting down the provider instance to finish.
@@ -43,34 +46,59 @@
 
 		Disables the "mytask" instance of the logfile provider, then waits until all applicable logs are processed
 		but not for the logfile to be released (which will happen soon after, in most cases).
+
+	.EXAMPLE
+		PS C:\> Get-PSFLoggingProviderInstance | Disable-PSFLoggingProvider
+
+		Disables all active logging provider instacnes
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = 'ByName')]
 	param (
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByName')]
 		[PsfArgumentCompleter('PSFramework-logging-provider')]
 		[ValidateNotNullOrEmpty()]
 		[Alias('Provider', 'ProviderName')]
 		[string]
 		$Name,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[PsfArgumentCompleter('PSFramework-logging-instance-name2')]
 		[string]
 		$InstanceName = 'Default',
+
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByObject')]
+		[PSFramework.Logging.ProviderInstance[]]
+		$InstanceObject,
 
 		[switch]
 		$NoFinalizeWait
 	)
 
-	process {
+	begin {
+		$inInstances = [System.Collections.ArrayList]@()
 		$limit = Get-Date
-		$instances = Get-PSFLoggingProviderInstance -ProviderName $Name -Name $InstanceName
+	}
+	process {
+		if ($Name) {
+			$instances = Get-PSFLoggingProviderInstance -ProviderName $Name -Name $InstanceName
+			
+			foreach ($instance in $instances) {
+				$instance.NotAfter = $limit
+			}
+			
+			foreach ($instance in $instances) {
+				$instance.Drain((-not $NoFinalizeWait))
+			}
+		}
 
-		foreach ($instance in $instances) {
+		foreach ($instance in $InstanceObject) {
 			$instance.NotAfter = $limit
+			$null = $inInstances.Add($instance)
 		}
-
-		foreach ($instance in $instances) {
-			$instance.Drain((-not $NoFinalizeWait))
-		}
+	}
+	end {
+		foreach ($instance in $inInstances) {
+				$instance.Drain((-not $NoFinalizeWait))
+			}
 	}
 }

@@ -72,7 +72,7 @@
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Value')]
 		[AllowNull()]
-		$Value = $null,
+		$Value,
 		
 		[Parameter(Mandatory = $true, ParameterSetName = 'Queue')]
 		[switch]

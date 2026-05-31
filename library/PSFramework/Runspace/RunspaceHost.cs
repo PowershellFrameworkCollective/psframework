@@ -181,5 +181,23 @@ namespace PSFramework.Runspace
             return Locks[Name];
         }
         #endregion Locks
+
+        #region Runspace Workflows
+        /// <summary>
+        /// List of all Runspace Workflow Agents. Used to signal activity from messages.
+        /// </summary>
+        internal static ConcurrentDictionary<Guid, RSAgent> RSAgents = new ConcurrentDictionary<Guid, RSAgent>();
+
+        /// <summary>
+        /// Signal that the current runspace is still active.
+        /// </summary>
+        public static void SignalActive()
+        {
+            RSAgent agent;
+            bool success = RSAgents.TryGetValue(System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, out agent);
+            if (success)
+                agent.SignalActive();
+        }
+        #endregion Runspace Workflows
     }
 }

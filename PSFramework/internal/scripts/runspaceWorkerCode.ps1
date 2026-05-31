@@ -84,3 +84,12 @@
 
 	$__PSF_Worker.SignalEnd()
 }
+
+[PSFramework.Runspace.RSWorker]::WorkerBeginCode = {
+	param ($Code)
+	& $Code
+}
+[PSFramework.Runspace.RSWorker]::WorkerProcessCode = {
+	param ($Code, $Data)
+	$Code.InvokeGlobal($Data)
+}

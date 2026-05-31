@@ -11,8 +11,9 @@
 		
 		Re-enables the use of CTRL+C to interrupt the console.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding()]
 	param ()
 
-	[Console]::TreatControlCAsInput = $false
+	try { [Console]::TreatControlCAsInput = $false } catch {}
 }

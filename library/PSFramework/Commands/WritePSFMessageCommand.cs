@@ -411,6 +411,9 @@ namespace PSFramework.Commands
         /// </summary>
         protected override void ProcessRecord()
         {
+            // Runspace Workflow activity signal
+            Runspace.RunspaceHost.SignalActive();
+
             #region Perform Transforms
             if ((!_fromStopFunction) && (Target != null))
                 Target = ResolveTarget(Target);

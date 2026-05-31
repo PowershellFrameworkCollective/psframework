@@ -15,8 +15,9 @@
 		
 		Prevents the use of CTRL+C from interrupting the console.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding()]
 	param ()
 
-	[Console]::TreatControlCAsInput = $true
+	try { [Console]::TreatControlCAsInput = $true } catch {}
 }
