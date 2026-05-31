@@ -14,5 +14,5 @@
 	[CmdletBinding()]
 	param ()
 
-	[Console]::TreatControlCAsInput = $false
+	try { [Console]::TreatControlCAsInput = $false } catch {}
 }
