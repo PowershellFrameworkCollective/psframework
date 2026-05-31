@@ -1,4 +1,4 @@
-﻿Register-PSFConfigValidation -Name "uriabsolute" -ScriptBlock {
+﻿Register-PSFConfigValidation -Name "urihttp" -ScriptBlock {
 	param (
 		$Value
 	)
@@ -12,9 +12,9 @@
 	$stringValue = $Value -as [string]
 	[uri]$uri = $stringValue
 	
-	if (-not $uri.IsAbsoluteUri -or -not $uri.Host)
+	if ($uri.Scheme -notin 'http','https' -or -not $uri.Host)
 	{
-		$Result.Message = "Not an absolute Uri: $Value"
+		$Result.Message = "Not an HTTP Uri: $Value"
 		$Result.Success = $False
 		return $Result
 	}

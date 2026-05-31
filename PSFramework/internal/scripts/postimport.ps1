@@ -84,5 +84,8 @@ foreach ($file in (Get-ChildItem -Path "$($moduleRoot)\internal\filter\*.ps1")) 
 # Load the Runspace Worker
 "$($moduleRoot)\internal\scripts\runspaceWorkerCode.ps1"
 
+# Load the Cache Collector Code
+"$($moduleRoot)\internal\scripts\cacheCollectorCode.ps1"
+
 # Finally register the license
 "$($moduleRoot)\internal\scripts\license.ps1"

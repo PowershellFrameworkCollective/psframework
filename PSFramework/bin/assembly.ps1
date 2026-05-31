@@ -11,7 +11,10 @@ catch {
     throw
 }
 try {
+	$lock = [PSFramework.Runspace.RunspaceHost]::GetRunspaceLock('PSFramework.Types')
+	$lock.Open()
     Update-TypeData -AppendPath "$script:ModuleRoot\xml\PSFramework.Types.ps1xml" -ErrorAction Stop
+	$lock.Close()
 }
 catch {
     Write-Warning "Failed to load PSFramework type extensions! Unable to import module."
