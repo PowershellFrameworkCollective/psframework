@@ -90,7 +90,7 @@ namespace PSFramework.Caching
             {
                 if (null == _Parent)
                     return true;
-                if (_Parent.Lifetime == null || _Parent.Lifetime.TotalSeconds < 1)
+                if (_Parent.Lifetime == null || _Parent.Lifetime.Value.TotalSeconds < 1)
                     return false;
                 return Timestamp.Add(_Parent.Lifetime) < DateTime.Now;
             }

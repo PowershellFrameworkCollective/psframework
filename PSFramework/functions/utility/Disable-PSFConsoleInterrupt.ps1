@@ -15,6 +15,7 @@
 		
 		Prevents the use of CTRL+C from interrupting the console.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[CmdletBinding()]
 	param ()
 

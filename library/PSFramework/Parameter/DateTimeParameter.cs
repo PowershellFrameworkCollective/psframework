@@ -22,12 +22,71 @@ namespace PSFramework.Parameter
         #endregion Fields of contract
 
         /// <summary>
+        /// The time the object was created.
+        /// </summary>
+        public DateTime InstantiationTime;
+
+        /// <summary>
+        /// For relative time notations, what was the delta
+        /// </summary>
+        public TimeSpan Delta;
+
+        /// <summary>
         /// The string value of the datetime object contained within.
         /// </summary>
         /// <returns>The string value of the datetime object contained within.</returns>
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        /// <summary>
+        /// The string value of the datetime object contained within, formated as required.
+        /// </summary>
+        /// <param name="Format">The style in which the datetime should be formatted.</param>
+        /// <returns>The string value of the datetime object contained within, formated as required.</returns>
+        public string ToString(string Format)
+        {
+            return Value.ToString(Format);
+        }
+
+        /// <summary>
+        /// Reverse the result for relative time notation provided.
+        /// For example, if the the object was created with "30m" it would change the value from 30 minutes after object instantion to 30 minutes before.
+        /// </summary>
+        /// <param name="Throw">Whether to throw an error when the original input was not relative.</param>
+        /// <exception cref="System.IO.InvalidDataException">When the original input was not a relative time notation.</exception>
+        public void Reverse(bool Throw)
+        {
+            if (Value == InstantiationTime)
+                return;
+            if (Delta.TotalMilliseconds == 0)
+            {
+                if (Throw)
+                    throw new System.IO.InvalidDataException("Original Timestamp was not relative, cannot reverse!");
+                return;
+            }
+
+            Delta = Delta.Negate();
+            Value = InstantiationTime.Add(Delta);
+        }
+
+        /// <summary>
+        /// If relative time was provided, make sure it points into the past from object instantiation.
+        /// </summary>
+        public void Past()
+        {
+            if (Delta.TotalMilliseconds > 0)
+                Reverse(false);
+        }
+
+        /// <summary>
+        /// If relative time was provided, make sure it points into the future from object instantiation.
+        /// </summary>
+        public void Future()
+        {
+            if (Delta.TotalMilliseconds < 0)
+                Reverse(false);
         }
 
         #region Operators
@@ -59,6 +118,7 @@ namespace PSFramework.Parameter
         /// <param name="Value">The timespan object to accept</param>
         public DateTimeParameter(DateTime Value)
         {
+            InstantiationTime = DateTime.Now;
             this.Value = Value;
             InputObject = Value;
         }
@@ -69,8 +129,10 @@ namespace PSFramework.Parameter
         /// <param name="Seconds">The seconds to differ from the current time.</param>
         public DateTimeParameter(int Seconds)
         {
+            InstantiationTime = DateTime.Now;
             InputObject = Seconds;
-            Value = DateTime.Now.AddSeconds(Seconds);
+            Value = InstantiationTime.AddSeconds(Seconds);
+            Delta = new TimeSpan(0, 0, Seconds);
         }
 
         /// <summary>
@@ -79,7 +141,8 @@ namespace PSFramework.Parameter
         /// <param name="Value">The string to interpret</param>
         public DateTimeParameter(string Value)
         {
-            this.Value = ParseDateTime(Value);
+            InstantiationTime = DateTime.Now;
+            this.Value = ParseDateTime(Value, this);
             InputObject = Value;
         }
 
@@ -91,6 +154,8 @@ namespace PSFramework.Parameter
         {
             if (InputObject == null)
                 throw new ArgumentException("Input must not be null");
+
+            InstantiationTime = DateTime.Now;
 
             PSObject input = new PSObject(InputObject);
             this.InputObject = InputObject;
@@ -150,8 +215,9 @@ namespace PSFramework.Parameter
         /// Parses an input string as timespan
         /// </summary>
         /// <param name="Value">The string to interpret</param>
+        /// <param name="Parameter">The Parameter-class to use for reference</param>
         /// <returns>The interpreted timespan value</returns>
-        internal static DateTime ParseDateTime(string Value)
+        internal static DateTime ParseDateTime(string Value, DateTimeParameter Parameter)
         {
             if (String.IsNullOrWhiteSpace(Value))
                 throw new ArgumentNullException("Cannot parse empty string!");
@@ -188,9 +254,15 @@ namespace PSFramework.Parameter
 
             DateTime result;
             if (!positive)
-                result = DateTime.Now.Add(timeResult.Negate());
+            {
+                Parameter.Delta = timeResult.Negate();
+                result = Parameter.InstantiationTime.Add(timeResult.Negate());
+            }
             else
-                result = DateTime.Now.Add(timeResult);
+            {
+                Parameter.Delta = timeResult;
+                result = Parameter.InstantiationTime.Add(timeResult);
+            }
 
             if (date)
                 return result.Date;

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using PSFramework.Parameter;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +31,7 @@ namespace PSFramework.Caching
         /// </summary>
         /// <param name="MaxItems">The maximum number of items the cache may contain</param>
         /// <param name="Lifetime">The maximum age a cached item may reach</param>
-        public CacheMemoryConcurrent(long MaxItems, TimeSpan Lifetime)
+        public CacheMemoryConcurrent(long MaxItems, TimeSpanParameter Lifetime)
             :base()
         {
             this.MaxItems = MaxItems;
@@ -102,7 +104,26 @@ namespace PSFramework.Caching
             {
                 object temp = base[key];
                 if (temp == null)
-                    return null;
+                {
+                    if (Collector == null)
+                        return null;
+                    try
+                    {
+                        CollectorCode.InvokeEx(false, key, key, this, false, true, Collector);
+                        temp = base[key];
+                        if (temp == null)
+                            return null;
+                        return ((CachedData)temp).Value;
+                    }
+                    catch (RuntimeException rex)
+                    {
+                        throw rex.ErrorRecord.Exception;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
                 return ((CachedData)temp).Value;
             }
             //set => base[key] = value;

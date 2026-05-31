@@ -9,6 +9,11 @@
             Base class for different kinds of cache handlers
             </summary>
         </member>
+        <member name="P:PSFramework.Caching.CacheBase.CollectorCode">
+            <summary>
+            The code used to process the actual collector-code if provided in a cache.
+            </summary>
+        </member>
         <member name="M:PSFramework.Caching.CacheBase.#ctor">
             <summary>
             Creates an empty cache that is not case sensitive
@@ -19,15 +24,95 @@
             The maximum age a dataset may have before being purged.
             </summary>
         </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetLifetime">
+            <summary>
+            Returns the defined lifetime of cached items.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <returns>The Lifetime</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.SetLifetime(PSFramework.Parameter.TimeSpanParameter)">
+            <summary>
+            Set the lifetime of cached items.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <param name="Lifetime">How long items will remain in the cache</param>
+        </member>
         <member name="F:PSFramework.Caching.CacheBase.MaxItems">
             <summary>
             Maximum number of items to store in the cache
             </summary>
         </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetMaxItems">
+            <summary>
+            Returns the maximum number of items in the cache.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <returns>The maximum number of items in the cache.</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.SetMaxItems(System.Int64)">
+            <summary>
+            Defines the maximum number of items allowed in the cache.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <param name="MaxItems">The maximum number of items allowed in the cache. 0 or less disables the limit.</param>
+        </member>
         <member name="F:PSFramework.Caching.CacheBase.TryDispose">
             <summary>
             Whether expired / surplus data entries should be disposed if implementing IDisposable
             </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetTryDispose">
+            <summary>
+            Returns whether expired items get explicitly disposed.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <returns>Whether expired items get explicitly disposed.</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.SetTryDispose(System.Boolean)">
+            <summary>
+            Define whether expired items get explicitly disposed.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <param name="TryDispose">whether expired items get explicitly disposed</param>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.Collector">
+            <summary>
+            Code to collect unknown entries
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetCollector">
+            <summary>
+            Returns the collection code used to gather unknown entries.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <returns>the collection code used to gather unknown entries.</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.SetCollector(PSFramework.Utility.PsfScriptBlock)">
+            <summary>
+            Defines the collection code used to gather unknown entries.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <param name="Collector">the collection code used to gather unknown entries.</param>
+        </member>
+        <member name="F:PSFramework.Caching.CacheBase.CacheNull">
+            <summary>
+            Whether null-returns of the collector should be cached.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.GetCacheNull">
+            <summary>
+            Returns whether null-returns of the collector should be cached.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <returns>whether null-returns of the collector should be cached.</returns>
+        </member>
+        <member name="M:PSFramework.Caching.CacheBase.SetCacheNull(System.Boolean)">
+            <summary>
+            Defines whether null-returns of the collector should be cached.
+            Necessary because of the hashtable handling in PowerShell preventing access to properties.
+            </summary>
+            <param name="CacheNull">whether null-returns of the collector should be cached.</param>
         </member>
         <member name="P:PSFramework.Caching.CacheBase.Values">
             <summary>
@@ -103,12 +188,6 @@
             The latest entry in the cache
             </summary>
         </member>
-        <member name="M:PSFramework.Caching.CacheBase.Dbg_GetAllCD">
-            <summary>
-            DEBUG: Returns all entries
-            </summary>
-            <returns>All Cache Entries</returns>
-        </member>
         <member name="T:PSFramework.Caching.CacheMemoryConcurrent">
             <summary>
             A type of cache intended for concurrent access, but solely within memory.
@@ -119,7 +198,7 @@
             Creates a default threadsafe memory-only cache.
             </summary>
         </member>
-        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.#ctor(System.Int64,System.TimeSpan)">
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.#ctor(System.Int64,PSFramework.Parameter.TimeSpanParameter)">
             <summary>
             Creates a configured threadsafe memory-only cache.
             </summary>
@@ -6168,11 +6247,46 @@
             The resolved datetime value
             </summary>
         </member>
+        <member name="F:PSFramework.Parameter.DateTimeParameter.InstantiationTime">
+            <summary>
+            The time the object was created.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Parameter.DateTimeParameter.Delta">
+            <summary>
+            For relative time notations, what was the delta
+            </summary>
+        </member>
         <member name="M:PSFramework.Parameter.DateTimeParameter.ToString">
             <summary>
             The string value of the datetime object contained within.
             </summary>
             <returns>The string value of the datetime object contained within.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.ToString(System.String)">
+            <summary>
+            The string value of the datetime object contained within, formated as required.
+            </summary>
+            <param name="Format">The style in which the datetime should be formatted.</param>
+            <returns>The string value of the datetime object contained within, formated as required.</returns>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.Reverse(System.Boolean)">
+            <summary>
+            Reverse the result for relative time notation provided.
+            For example, if the the object was created with "30m" it would change the value from 30 minutes after object instantion to 30 minutes before.
+            </summary>
+            <param name="Throw">Whether to throw an error when the original input was not relative.</param>
+            <exception cref="T:System.IO.InvalidDataException">When the original input was not a relative time notation.</exception>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.Past">
+            <summary>
+            If relative time was provided, make sure it points into the past from object instantiation.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Parameter.DateTimeParameter.Future">
+            <summary>
+            If relative time was provided, make sure it points into the future from object instantiation.
+            </summary>
         </member>
         <member name="M:PSFramework.Parameter.DateTimeParameter.op_Implicit(PSFramework.Parameter.DateTimeParameter)~System.DateTime">
             <summary>
@@ -6210,11 +6324,12 @@
             </summary>
             <param name="InputObject">The object to interpret</param>
         </member>
-        <member name="M:PSFramework.Parameter.DateTimeParameter.ParseDateTime(System.String)">
+        <member name="M:PSFramework.Parameter.DateTimeParameter.ParseDateTime(System.String,PSFramework.Parameter.DateTimeParameter)">
             <summary>
             Parses an input string as timespan
             </summary>
             <param name="Value">The string to interpret</param>
+            <param name="Parameter">The Parameter-class to use for reference</param>
             <returns>The interpreted timespan value</returns>
         </member>
         <member name="T:PSFramework.Parameter.EncodingParameter">
@@ -7914,6 +8029,118 @@
             Clears all cache properties to null
             </summary>
         </member>
+        <member name="T:PSFramework.Runspace.RSAgent">
+            <summary>
+            An individual runspace workflow agent - one runspace owned by a Worker.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSAgent.ID">
+            <summary>
+            The ID of the current Agent
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSAgent.Parent">
+            <summary>
+            The Worker this Agent belongs to
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSAgent.LastActivity">
+            <summary>
+            When was the agent last active?
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.#ctor(PSFramework.Runspace.RSWorker,System.Int32)">
+            <summary>
+            Create a new agent from a worker
+            </summary>
+            <param name="Parent">The parent worker the agent is part of</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.SignalActive">
+            <summary>
+            Signal that the agent is active
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Initialize">
+            <summary>
+            Prepare and Launch the runspace
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Begin">
+            <summary>
+            Execute the begin phase.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Process(PSFramework.Runspace.RSWorkItem)">
+            <summary>
+            Process a workitem
+            </summary>
+            <param name="Item">The workitem to process</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.End">
+            <summary>
+            Execute the end phase
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Execute">
+            <summary>
+            The main task that executes the phases
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Dispose">
+            <summary>
+            Cleanup everything
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Invoke(PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkItem)">
+            <summary>
+            Executes a runspace workitem
+            </summary>
+            <param name="Code">The code to execute</param>
+            <param name="Item">The workitem to process</param>
+            <returns>The resulting objects to send to the output queue</returns>
+            <exception cref="T:System.TimeoutException">If execution takes longer than the timeout.</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Wait">
+            <summary>
+            Wait until timeout (if any)
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.SetRunspaceName">
+            <summary>
+            Applies the name to the runspace managed by this agent.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.SetRunspaceNameInternal">
+            <summary>
+            This entire function will fail on PS4 or older
+            </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSTimeout">
+            <summary>
+            What kind of timeout a Runspace Workflow Work Item uses
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSTimeout.None">
+            <summary>
+            No timeout at all.
+            Will keep running until completed or failed
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSTimeout.Start">
+            <summary>
+            The timeout is counted from the start of the work item.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSTimeout.Idle">
+            <summary>
+            The timeout is counted from the moment of last activity
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSTimeout.Undefined">
+            <summary>
+            No timeout configured at this level
+            </summary>
+        </member>
         <member name="T:PSFramework.Runspace.RSWorkflow">
             <summary>
             Runspace Workflow. Central piece tying together runspace execution and data exchange.
@@ -8299,6 +8526,16 @@
             The base code used to operate workers. Provided during module import
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RSWorker.WorkerBeginCode">
+            <summary>
+            The base code used to launch the header-code in a V2 Agent
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSWorker.WorkerProcessCode">
+            <summary>
+            The base code used to launch the process-code in a V2 Agent
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RSWorker.Name">
             <summary>
             Name of the Worker. Mostly documentary in nature.
@@ -8327,6 +8564,26 @@
         <member name="F:PSFramework.Runspace.RSWorker.End">
             <summary>
             Code that is executed when at last the worker is closed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.RetryCondition">
+            <summary>
+            If a work item failed, retry if conditions are met
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.RetryCount">
+            <summary>
+            How many times will we retry a failed item
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.TimeoutType">
+            <summary>
+            What kind of timeout do we apply?
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorker.Timeout">
+            <summary>
+            The timeout applied to a single work item
             </summary>
         </member>
         <member name="P:PSFramework.Runspace.RSWorker.Count">
@@ -8470,6 +8727,13 @@
             <param name="ScriptBlock">The code that actually consumes the input</param>
             <param name="Workflow">The workflow object running the entire workflow.</param>
             <param name="Count">The number of runspaces this worker will maintain.</param>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.GetSessionState">
+            <summary>
+            Calculate the initial session state to use for a worker.
+            Does NOT include the per-runspace variables!
+            </summary>
+            <returns>A prepared initial sessionstate for use in a runspace worker agent.</returns>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.Start">
             <summary>
@@ -8899,6 +9163,16 @@
             </summary>
             <param name="Name">Name of the lock to create.</param>
             <returns>The lock object</returns>
+        </member>
+        <member name="F:PSFramework.Runspace.RunspaceHost.RSAgents">
+            <summary>
+            List of all Runspace Workflow Agents. Used to signal activity from messages.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RunspaceHost.SignalActive">
+            <summary>
+            Signal that the current runspace is still active.
+            </summary>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceLock">
             <summary>

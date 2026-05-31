@@ -1,4 +1,5 @@
 ﻿using PSFramework.PSFCore;
+using PSFramework.Parameter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Timers;
+using PSFramework.Utility;
 
 namespace PSFramework.Caching
 {
@@ -14,6 +16,23 @@ namespace PSFramework.Caching
     /// </summary>
     public abstract class CacheBase : Hashtable, IDisposable
     {
+        /// <summary>
+        /// The code used to process the actual collector-code if provided in a cache.
+        /// </summary>
+        public static PsfScriptBlock CollectorCode
+        {
+            get
+            {
+                return _CollectorCode;
+            }
+            set
+            {
+                if (_CollectorCode == null)
+                    _CollectorCode = value;
+            }
+        }
+        private static PsfScriptBlock _CollectorCode;
+
         /// <summary>
         /// Creates an empty cache that is not case sensitive
         /// </summary>
@@ -26,14 +45,14 @@ namespace PSFramework.Caching
         /// <summary>
         /// The maximum age a dataset may have before being purged.
         /// </summary>
-        public TimeSpan Lifetime
+        public TimeSpanParameter Lifetime
         {
             get => _Lifetime;
             set
             {
                 if (value == null)
                     StopCleanup();
-                else if (value.TotalSeconds < 1)
+                else if (value.Value.TotalSeconds < 1)
                     StopCleanup();
                 else
                     StartCleanup();
@@ -43,14 +62,115 @@ namespace PSFramework.Caching
         private TimeSpan _Lifetime;
 
         /// <summary>
+        /// Returns the defined lifetime of cached items.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <returns>The Lifetime</returns>
+        public TimeSpan GetLifetime()
+        {
+            return Lifetime.Value;
+        }
+        /// <summary>
+        /// Set the lifetime of cached items.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <param name="Lifetime">How long items will remain in the cache</param>
+        public void SetLifetime(TimeSpanParameter Lifetime)
+        {
+            this.Lifetime = Lifetime;
+        }
+
+        /// <summary>
         /// Maximum number of items to store in the cache
         /// </summary>
         public long MaxItems;
+        /// <summary>
+        /// Returns the maximum number of items in the cache.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <returns>The maximum number of items in the cache.</returns>
+        public long GetMaxItems()
+        {
+            return MaxItems;
+        }
+        /// <summary>
+        /// Defines the maximum number of items allowed in the cache.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <param name="MaxItems">The maximum number of items allowed in the cache. 0 or less disables the limit.</param>
+        public void SetMaxItems(long MaxItems)
+        {
+            this.MaxItems = MaxItems;
+        }
 
         /// <summary>
         /// Whether expired / surplus data entries should be disposed if implementing IDisposable
         /// </summary>
         public bool TryDispose;
+        /// <summary>
+        /// Returns whether expired items get explicitly disposed.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <returns>Whether expired items get explicitly disposed.</returns>
+        public bool GetTryDispose()
+        {
+            return TryDispose;
+        }
+        /// <summary>
+        /// Define whether expired items get explicitly disposed.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <param name="TryDispose">whether expired items get explicitly disposed</param>
+        public void SetTryDispose(bool TryDispose)
+        {
+            this.TryDispose = TryDispose;
+        }
+
+        /// <summary>
+        /// Code to collect unknown entries
+        /// </summary>
+        public PsfScriptBlock Collector;
+        /// <summary>
+        /// Returns the collection code used to gather unknown entries.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <returns>the collection code used to gather unknown entries.</returns>
+        public PsfScriptBlock GetCollector()
+        {
+            return Collector;
+        }
+        /// <summary>
+        /// Defines the collection code used to gather unknown entries.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <param name="Collector">the collection code used to gather unknown entries.</param>
+        public void SetCollector(PsfScriptBlock Collector)
+        {
+            this.Collector = Collector;
+        }
+
+        /// <summary>
+        /// Whether null-returns of the collector should be cached.
+        /// </summary>
+        public bool CacheNull;
+        /// <summary>
+        /// Returns whether null-returns of the collector should be cached.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <returns>whether null-returns of the collector should be cached.</returns>
+        public bool GetCacheNull()
+        {
+            return CacheNull;
+        }
+        /// <summary>
+        /// Defines whether null-returns of the collector should be cached.
+        /// Necessary because of the hashtable handling in PowerShell preventing access to properties.
+        /// </summary>
+        /// <param name="CacheNull">whether null-returns of the collector should be cached.</param>
+        public void SetCacheNull(bool CacheNull)
+        {
+            this.CacheNull = CacheNull;
+        }
 
 
         /// <summary>
