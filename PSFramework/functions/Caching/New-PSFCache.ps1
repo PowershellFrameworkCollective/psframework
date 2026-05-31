@@ -39,6 +39,8 @@
 
 		Creates a cache that will retain the last 50000 items, looking up Active Directory groups when asked for an entry it doesn't know yet.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
+	[OutputType([PSFramework.Caching.CacheMemoryConcurrent])]
 	[CmdletBinding()]
 	param (
 		[long]
