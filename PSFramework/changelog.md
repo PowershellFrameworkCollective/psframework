@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## 1.14.441 (2026-06-03)
+
+- Fix: New-PSFCache - timer only removes one expired item at a time
+- Fix: TabExpansion - Trained results do not show with cached completion
+- Fix: TabExpansion - Trained results do not duplicate equal cached results
+
 ## 1.14.438 (2026-05-31)
 
 - New: New-PSFCache - creates a configurable in-memory cache.
