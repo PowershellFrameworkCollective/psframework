@@ -149,10 +149,10 @@
 	
 	if (-not $scriptContainer.ShouldExecute) {
 		if ($scriptContainer.Trained.Count -gt 0) {
-			$allItems = @($scriptContainer.LastCompletion) + ($scriptContainer.Trained | ConvertTo-TeppCompletionEntry)
+			$allItems = @($scriptContainer.LastCompletion) + ($scriptContainer.Trained | ConvertTo-TeppCompletionEntry | Where-Object { $_.Text -notin $scriptContainer.LastCompletion.Text })
 		}
 		else { $allItems = $scriptContainer.LastCompletion }
-		$allResults = foreach ($item in ($scriptContainer.LastCompletion | Where-Object Text -Match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
+		$allResults = foreach ($item in ($allItems | Where-Object Text -Match $scriptContainer.GetPattern($wordToComplete) | Sort-Object @sortParam)) {
 			New-PSFTeppCompletionResult -CompletionText $item.Text -ToolTip $item.ToolTip -ListItemText $item.ListItemText -AlwaysQuote:$alwaysQuote
 		}
 
