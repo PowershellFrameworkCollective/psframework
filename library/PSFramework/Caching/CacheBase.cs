@@ -299,7 +299,10 @@ namespace PSFramework.Caching
         {
             try
             {
-                foreach (CachedData entry in base.Values)
+                CachedData[] tempData = new CachedData[base.Values.Count];
+                base.Values.CopyTo(tempData, 0);
+                
+                foreach (CachedData entry in tempData)
                     if (entry.IsExpired)
                         entry.DisposeIfExpired();
             }
