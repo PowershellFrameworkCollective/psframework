@@ -18,7 +18,7 @@ Write-PSFMessage [-Level <MessageLevel>] -Message <String> [-StringValues <Objec
  [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
  [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-NewErrorRecord] [-Breakpoint]
- [-PSCmdlet <PSCmdlet>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-PSCmdlet <PSCmdlet>] [-ErrorStack] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### String
@@ -27,7 +27,7 @@ Write-PSFMessage [-Level <MessageLevel>] -String <String> [-StringValues <Object
  [-Data <Hashtable>] [-FunctionName <String>] [-ModuleName <String>] [-File <String>] [-Line <Int32>]
  [-ErrorRecord <ErrorRecord[]>] [-Exception <Exception>] [-Once <String>] [-OverrideExceptionMessage]
  [-Target <Object>] [-NoNewLine] [-EnableException <Boolean>] [-NewErrorRecord] [-Breakpoint]
- [-PSCmdlet <PSCmdlet>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-PSCmdlet <PSCmdlet>] [-ErrorStack] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -486,6 +486,21 @@ Accept wildcard characters: False
 Type: ActionPreference
 Parameter Sets: (All)
 Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ErrorStack
+The log message should have the script-stacktrace of the error record if specified.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
 
 Required: False
 Position: Named
