@@ -250,6 +250,7 @@
     <Compile Include="Temp\TempItemGeneric.cs" />
     <Compile Include="Temp\TempItemProvider.cs" />
     <Compile Include="Temp\TempItemType.cs" />
+    <Compile Include="Utility\DynamicContentCache.cs" />
     <Compile Include="Utility\DynamicContentDictionary.cs" />
     <Compile Include="Utility\DynamicContentList.cs" />
     <Compile Include="Utility\DynamicContentObject.cs" />

@@ -1,5 +1,16 @@
 ﻿# CHANGELOG
 
+## 1.14.449 (2026-06-12)
+
+- New: Configuration PSFramework.Message.LogErrorStack - When calling Write-PSFMessage and also specifying an ErrorRecord, should the ErrorRecord location of the error be used, rather than from where Write-PSFMessage was called?
+- New: Reset-PSFRsAgentInactivity - Signals the current Runspace Workflow Worker Agent is active.
+- Upd: Write-PSFMessage - added parameter `-ErrorStack` - logs the stacktrace of the error record provided, rather than its own call.
+- Upd: Add-PSFRunspaceWorker - added new generation of runspace workers, with a c#-based orchestration infrastructure,
+- Upd: Add-PSFRunspaceWorker - added option to retry failed input (including an optional condition logic on when to retry)
+- Upd: Add-PSFRunspaceWorker - added option to include per-item timeout (total time or idle time)
+- Upd: Set-PSFDynamicContentObject - add `-Cache` parameter, generating a DCO implementing a PSFramework cache (same as returned by New-PSFCache)
+- Fix: New-PSFCache - the cache object does not correctly remove objects
+
 ## 1.14.441 (2026-06-03)
 
 - Fix: New-PSFCache - timer only removes one expired item at a time

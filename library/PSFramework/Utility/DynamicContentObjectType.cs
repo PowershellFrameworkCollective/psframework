@@ -28,6 +28,11 @@
         /// <summary>
         /// A dictionary was requested
         /// </summary>
-        Dictionary
+        Dictionary,
+
+        /// <summary>
+        /// A cache was requested
+        /// </summary>
+        Cache
     }
 }

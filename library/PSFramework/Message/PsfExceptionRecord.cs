@@ -45,6 +45,11 @@ namespace PSFramework.Message
         public string Message;
 
         /// <summary>
+        /// The location where the error happened and how we got there.
+        /// </summary>
+        public string ScriptStackTrace;
+
+        /// <summary>
         /// Displays the name of the exception, the make scanning exceptions easier.
         /// </summary>
         public string ExceptionType

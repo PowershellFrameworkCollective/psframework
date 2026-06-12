@@ -2,6 +2,111 @@
 <helpItems schema="maml" xmlns="http://msh">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>Assert-PSFInternalCommand</command:name>
+      <command:verb>Assert</command:verb>
+      <command:noun>PSFInternalCommand</command:noun>
+      <maml:description>
+        <maml:para>Verifies, that the command calling it in turn was only called from another command within the same module.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Verifies, that the command calling it in turn was only called from another command within the same module.</maml:para>
+      <maml:para>Modules can have their internal commands accessed directly from outside of their own module. For example, by loading the psm1 file - or their own ps1 file, if they are shipped separately - it becomes possible, to circumvent the verified interface of the publicly exposed command. In a secure code management scenario, where validated modules are allowlisted, this might allow attackers to execute commands flagged as trusted, that should not be exposed directly.</maml:para>
+      <maml:para>With this command, we can prevent this issue, but potentially make development harder. It is recommended to place this command only as part of the build step - for example by putting it into the code commented out, then remove the comment during build, before publishing the module.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Assert-PSFInternalCommand</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PSCmdlet</maml:name>
+          <maml:description>
+            <maml:para>The $PSCmdlet variable of the calling command. This ensures that any exceptions are thrown in the context of the calling command, making this Cmdlet functionally invisible.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCmdlet</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+          <maml:name>ProgressAction</maml:name>
+          <maml:description>
+            <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+          <dev:type>
+            <maml:name>ActionPreference</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PSCmdlet</maml:name>
+        <maml:description>
+          <maml:para>The $PSCmdlet variable of the calling command. This ensures that any exceptions are thrown in the context of the calling command, making this Cmdlet functionally invisible.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSCmdlet</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCmdlet</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+        <maml:name>ProgressAction</maml:name>
+        <maml:description>
+          <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+        <dev:type>
+          <maml:name>ActionPreference</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Object</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Assert-PSFInternalCommand -PSCmdlet $PSCmdlet</dev:code>
+        <dev:remarks>
+          <maml:para>Ensures the current command calling Assert-PSFInternalCommand was only called from another command in the same module.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>ConvertTo-PSFHashtable</command:name>
       <command:verb>ConvertTo</command:verb>
       <command:noun>PSFHashtable</command:noun>
@@ -148,6 +253,17 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>InheritParameters</maml:name>
+          <maml:description>
+            <maml:para>Automatically include all values from the parameters of the calling command or script. This will include all parameters that were explicitly bound or have default parameter values, unless they have been excluded or are not part of a spceified -ReferenceCommand. Combine with -IncludeEmpty to also include parameters with neither default value nor being bound.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -282,6 +398,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>InheritParameters</maml:name>
+        <maml:description>
+          <maml:para>Automatically include all values from the parameters of the calling command or script. This will include all parameters that were explicitly bound or have default parameter values, unless they have been excluded or are not part of a spceified -ReferenceCommand. Combine with -IncludeEmpty to also include parameters with neither default value nor being bound.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -732,6 +860,17 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NonTerminating</maml:name>
+          <maml:description>
+            <maml:para>Make the final error generated a nonterminating error, if the wrapped command fails. By default, exceptions generated will be terminating instead.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Invoke-PSFProtectedCommand</maml:name>
@@ -962,6 +1101,17 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NonTerminating</maml:name>
+          <maml:description>
+            <maml:para>Make the final error generated a nonterminating error, if the wrapped command fails. By default, exceptions generated will be terminating instead.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -1208,6 +1358,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NonTerminating</maml:name>
+        <maml:description>
+          <maml:para>Make the final error generated a nonterminating error, if the wrapped command fails. By default, exceptions generated will be terminating instead.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -3963,6 +4125,87 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>Update-PSFTeppCompletion</command:name>
+      <command:verb>Update</command:verb>
+      <command:noun>PSFTeppCompletion</command:noun>
+      <maml:description>
+        <maml:para>Imports provided values to parameters configured for an auto-training argument completer.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>When registering an Argument Completer using "Register-PSFTeppScriptblock", it is possible to configure it for automatic training ("-AutoTraining"). Doing so will not do anything ... by itself. When you apply the argument completer to a parameter, it is now essential to do so via attribute and not via "Register-PSFTeppArgumentCompleter", as the automatic training depends on the attribute.</maml:para>
+      <maml:para>Finally, within your command, simply call this Cmdlet - it will automatically match bound parameters against parameter attributes and add all applicable values to the completion cache, allowing the completion to offer the new values henceforth.</maml:para>
+      <maml:para>For finer control of adding explicit values to a specific completer's offered values, use "Add-PSFTeppCompletion" instead.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Update-PSFTeppCompletion</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+          <maml:name>ProgressAction</maml:name>
+          <maml:description>
+            <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+          <dev:type>
+            <maml:name>ActionPreference</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+        <maml:name>ProgressAction</maml:name>
+        <maml:description>
+          <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+        <dev:type>
+          <maml:name>ActionPreference</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Object</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Update-PSFTeppCompletion</dev:code>
+        <dev:remarks>
+          <maml:para>Imports provided values to parameters configured for an auto-training argument completer.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>Write-PSFMessage</command:name>
       <command:verb>Write</command:verb>
       <command:noun>PSFMessage</command:noun>
@@ -4213,6 +4456,28 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ErrorStack</maml:name>
+          <maml:description>
+            <maml:para>The log message should have the script-stacktrace of the error record if specified.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NewErrorRecord</maml:name>
+          <maml:description>
+            <maml:para>Create a new error record, using the current message, then write it. This parameter is only respected if EnableException is set to true.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Write-PSFMessage</maml:name>
@@ -4445,6 +4710,28 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ErrorStack</maml:name>
+          <maml:description>
+            <maml:para>The log message should have the script-stacktrace of the error record if specified.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NewErrorRecord</maml:name>
+          <maml:description>
+            <maml:para>Create a new error record, using the current message, then write it. This parameter is only respected if EnableException is set to true.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -4693,6 +4980,30 @@ $obj | Select-PSFObject Name, "ID from list WHERE Type = Name"</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ErrorStack</maml:name>
+        <maml:description>
+          <maml:para>The log message should have the script-stacktrace of the error record if specified.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NewErrorRecord</maml:name>
+        <maml:description>
+          <maml:para>Create a new error record, using the current message, then write it. This parameter is only respected if EnableException is set to true.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />

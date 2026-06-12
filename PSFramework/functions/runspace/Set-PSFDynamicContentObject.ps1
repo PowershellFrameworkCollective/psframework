@@ -39,6 +39,11 @@
 		Set the object to be a threadsafe dictionary.
 		Safe to use in multiple runspaces in parallel.
 		Will not apply changes if the current value is already such an object.
+
+	.PARAMETER Cache
+		Set the object to be a threadsafe cache.
+		Safe to use in multiple runspaces in parallel.
+		Will not apply changes if the current value is already such an object.
 	
 	.PARAMETER PassThru
 		Has the command returning the object just set.
@@ -90,6 +95,10 @@
 		[switch]
 		$Dictionary,
 		
+		[Parameter(Mandatory = $true, ParameterSetName = 'Cache')]
+		[switch]
+		$Cache,
+		
 		[switch]
 		$PassThru,
 		
@@ -105,6 +114,7 @@
 			elseif ($Stack) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Stack') }
 			elseif ($List) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'List') }
 			elseif ($Dictionary) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Dictionary') }
+			elseif ($Cache) { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Cache') }
 			else { [PSFramework.Utility.DynamicContentObject]::Set($item, $Value, 'Common') }
 			
 			if ($PassThru) { [PSFramework.Utility.DynamicContentObject]::Get($item) }
@@ -117,6 +127,7 @@
 			if ($Stack) { $item.ConcurrentStack($Reset) }
 			if ($List) { $item.ConcurrentList($Reset) }
 			if ($Dictionary) { $item.ConcurrentDictionary($Reset) }
+			if ($Cache) { $item.ConcurrentCache($Reset) }
 			
 			if ($PassThru) { $item }
 		}

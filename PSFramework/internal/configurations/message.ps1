@@ -1,4 +1,5 @@
 ﻿
+Set-PSFConfig -Module PSFramework -Name 'Message.LogErrorStack' -Value $false -Initialize -Validation "bool" -Handler { [PSFramework.Message.MessageHost]::LogErrorStack = $_ } -Description "When calling Write-PSFMessage and also specifying an ErrorRecord, should the ErrorRecord location of the error be used, rather than from where Write-PSFMessage was called?"
 Set-PSFConfig -Module PSFramework -Name 'Message.Info.Minimum' -Value 1 -Initialize -Validation "integer0to9" -Handler { [PSFramework.Message.MessageHost]::MinimumInformation = $_ } -Description "The minimum required message level for messages that will be shown to the user."
 Set-PSFConfig -Module PSFramework -Name 'Message.Info.Maximum' -Value 3 -Initialize -Validation "integer0to9" -Handler { [PSFramework.Message.MessageHost]::MaximumInformation = $_ } -Description "The maximum message level to still display to the user directly."
 Set-PSFConfig -Module PSFramework -Name 'Message.Verbose.Minimum' -Value 4 -Initialize -Validation "integer0to9" -Handler { [PSFramework.Message.MessageHost]::MinimumVerbose = $_ } -Description "The minimum required message level where verbose information is written."

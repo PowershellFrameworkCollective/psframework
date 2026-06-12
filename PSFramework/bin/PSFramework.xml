@@ -140,6 +140,13 @@
             <param name="key">The key to check</param>
             <returns>Whether the key is in the cache</returns>
         </member>
+        <member name="M:PSFramework.Caching.CacheBase.ContainsKeyInt(System.Object)">
+            <summary>
+            Verifies whether the key exists in the base hashtable.
+            </summary>
+            <param name="key">The key to check</param>
+            <returns>Whether the key is in the cache</returns>
+        </member>
         <member name="P:PSFramework.Caching.CacheBase.Count">
             <summary>
             The number of non-expired items in the cache
@@ -1333,6 +1340,11 @@
         <member name="F:PSFramework.Commands.WritePSFMessageCommand.PSCmdlet">
             <summary>
             The cmdlet object to use for writing errors.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.WritePSFMessageCommand.ErrorStack">
+            <summary>
+            The log message should have the script-stacktrace of the error record if specified
             </summary>
         </member>
         <member name="F:PSFramework.Commands.WritePSFMessageCommand._timestamp">
@@ -4188,6 +4200,12 @@
             </summary>
             <param name="CallStack">The live powershell callstack</param>
         </member>
+        <member name="M:PSFramework.Message.CallStack.#ctor(System.String)">
+            <summary>
+            Initialize a callstack from a ScriptCallStack as provided by an ErrorRecord
+            </summary>
+            <param name="ScriptStackTrace">The ScriptCallStack provided by an ErrorRecord</param>
+        </member>
         <member name="T:PSFramework.Message.CallStackEntry">
             <summary>
             A single entry within the callstack
@@ -4544,7 +4562,7 @@
             <param name="ComputerName">The computer the error was written on</param>
             <returns>The error entry, so it may be included in the message generated</returns>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.Object,System.Boolean)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -4564,9 +4582,10 @@
             <param name="CallStack">The callstack at the moment the message was written.</param>
             <param name="Username">The name of the user under which the code being executed</param>
             <param name="ErrorRecord">An associated error record</param>
+            <param name="ErrorStack">Whether to use the error record for logging the callstack</param>
             <returns>The entry that is being written</returns>
         </member>
-        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[],System.Object)">
+        <member name="M:PSFramework.Message.LogHost.WriteLogEntry(System.String,PSFramework.Message.LogEntryType,System.DateTime,System.String,System.String,System.Collections.Generic.List{System.String},System.Collections.Hashtable,PSFramework.Message.MessageLevel,System.Guid,System.String,System.String,System.Int32,System.Collections.Generic.IEnumerable{System.Management.Automation.CallStackFrame},System.String,PSFramework.Message.PsfExceptionRecord,System.String,System.Object[],System.Object,System.Boolean)">
             <summary>
             Write a new entry to the log
             </summary>
@@ -4588,6 +4607,7 @@
             <param name="String">The string key to use for retrieving localized strings</param>
             <param name="StringValue">The values to format into the localized string</param>
             <param name="ErrorRecord">An associated error record</param>
+            <param name="ErrorStack">Whether to use the error record for logging the callstack</param>
             <returns>The entry that is being written</returns>
         </member>
         <member name="T:PSFramework.Message.MessageColorCondition">
@@ -4939,6 +4959,11 @@
         <member name="F:PSFramework.Message.MessageHost.PrefixValueSignificant">
             <summary>
             Define the message prefix value for the important level
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.LogErrorStack">
+            <summary>
+            Global feature flag, to have log messages written with an ErrorRecord object use the ScriptStackTrace of the record, rather than its own.
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.TransformErrorQueueSize">
@@ -5321,6 +5346,11 @@
         <member name="F:PSFramework.Message.PsfExceptionRecord.Message">
             <summary>
             The message the poor user was shown.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.PsfExceptionRecord.ScriptStackTrace">
+            <summary>
+            The location where the error happened and how we got there.
             </summary>
         </member>
         <member name="P:PSFramework.Message.PsfExceptionRecord.ExceptionType">
@@ -8049,11 +8079,22 @@
             When was the agent last active?
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSAgent.CurrentItem">
+            <summary>
+            What we are currently working on.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Runspace.RSAgent.RunspaceID">
+            <summary>
+            ID of the runspace operated by this Agent
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSAgent.#ctor(PSFramework.Runspace.RSWorker,System.Int32)">
             <summary>
             Create a new agent from a worker
             </summary>
-            <param name="Parent">The parent worker the agent is part of</param>
+            <param name="Parent">The parent worker the agent is part of.</param>
+            <param name="ID">The ID of this specific agent.</param>
         </member>
         <member name="M:PSFramework.Runspace.RSAgent.SignalActive">
             <summary>
@@ -8091,6 +8132,16 @@
             Cleanup everything
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RSAgent.ShouldRetry(PSFramework.Utility.PsfScriptBlock,System.Exception,System.Int32,System.Int32)">
+            <summary>
+            Whether a failed operation should be repeated.
+            </summary>
+            <param name="Condition">The scriptblock determining whether a retry should be done.</param>
+            <param name="Error">What went wrong with the last execution.</param>
+            <param name="Attempts">How many attempts have already been made.</param>
+            <param name="MaxRetries">The maximum number of retries we are willing to attempt.</param>
+            <returns>Whether another attempt should be performed</returns>
+        </member>
         <member name="M:PSFramework.Runspace.RSAgent.Invoke(PSFramework.Utility.PsfScriptBlock,PSFramework.Runspace.RSWorkItem)">
             <summary>
             Executes a runspace workitem
@@ -8105,6 +8156,16 @@
             Wait until timeout (if any)
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Start">
+            <summary>
+            Launch the Runspace Agent
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.Stop">
+            <summary>
+            End this agent.
+            </summary>
+        </member>
         <member name="M:PSFramework.Runspace.RSAgent.SetRunspaceName">
             <summary>
             Applies the name to the runspace managed by this agent.
@@ -8114,6 +8175,12 @@
             <summary>
             This entire function will fail on PS4 or older
             </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSAgent.ToString">
+            <summary>
+            The text representation of this worker
+            </summary>
+            <returns>Some text</returns>
         </member>
         <member name="T:PSFramework.Runspace.RSTimeout">
             <summary>
@@ -8536,6 +8603,11 @@
             The base code used to launch the process-code in a V2 Agent
             </summary>
         </member>
+        <member name="P:PSFramework.Runspace.RSWorker.WorkerRetryCode">
+            <summary>
+            The base code used to launch the retry scriptblock in a V2 Agent
+            </summary>
+        </member>
         <member name="F:PSFramework.Runspace.RSWorker.Name">
             <summary>
             Name of the Worker. Mostly documentary in nature.
@@ -8712,6 +8784,13 @@
             The workflow owning the worker
             </summary>
         </member>
+        <member name="F:PSFramework.Runspace.RSWorker.WorkerVersion">
+            <summary>
+            The worker runtime version.
+            1 operates in full-script.
+            2 is orchestrated in C# and implements timeouts / activity
+            </summary>
+        </member>
         <member name="P:PSFramework.Runspace.RSWorker.Runspaces">
             <summary>
             The runspaces belonging to the worker
@@ -8741,6 +8820,16 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">Bad language modes or not having configured a workflow is a bad thing.</exception>
             <exception cref="T:System.ArgumentException">A Count less than 1 is implausible.</exception>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.LaunchV1">
+            <summary>
+            Launch the agent runspaces for a Gen 1 Runspace Worker.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorker.LaunchV2">
+            <summary>
+            Launch the agent tasks for a Gen 2 Runspace Worker
+            </summary>
         </member>
         <member name="M:PSFramework.Runspace.RSWorker.Stop">
             <summary>
@@ -8795,6 +8884,14 @@
             <param name="Error">The error that happened</param>
             <param name="Target">The target that was being processed as the error happened</param>
         </member>
+        <member name="M:PSFramework.Runspace.RSWorker.AddError(System.Management.Automation.ErrorRecord,System.Object,System.Guid)">
+            <summary>
+            Add an error with a target to the errors queue
+            </summary>
+            <param name="Error">The error that happened</param>
+            <param name="Target">The target that was being processed as the error happened</param>
+            <param name="RunspaceID">ID of the runspace that generated the error</param>
+        </member>
         <member name="T:PSFramework.Runspace.RSWorkerError">
             <summary>
             Something went wrong.
@@ -8840,6 +8937,15 @@
             <param name="Error">The error that happened</param>
             <param name="TargetObject">The current item where processing failed</param>
         </member>
+        <member name="M:PSFramework.Runspace.RSWorkerError.#ctor(PSFramework.Runspace.RSWorker,System.Management.Automation.ErrorRecord,System.Object,System.Guid)">
+            <summary>
+            Create a new error object for tracking purposes.
+            </summary>
+            <param name="Worker">The worker that failed</param>
+            <param name="Error">The error that happened</param>
+            <param name="TargetObject">The current item where processing failed</param>
+            <param name="RunspaceID">The ID of the runspace that encountered the problem</param>
+        </member>
         <member name="M:PSFramework.Runspace.RSWorkerError.ToString">
             <summary>
             Text representation of what went wrong
@@ -8880,6 +8986,42 @@
             <summary>
             PowerShell runspace executing the actual code of the worker
             </summary>
+        </member>
+        <member name="T:PSFramework.Runspace.RSWorkItem">
+            <summary>
+            An object to process by the runspace workflow
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkItem.Item">
+            <summary>
+            The entry to process
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkItem.TimeoutType">
+            <summary>
+            How to handle timeout during processing.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkItem.Timeout">
+            <summary>
+            The timeout to apply
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkItem.RetryCount">
+            <summary>
+            How many times to attempt processing this object in case of error
+            </summary>
+        </member>
+        <member name="F:PSFramework.Runspace.RSWorkItem.RetryCondition">
+            <summary>
+            Condition under which the item should be attempted again
+            </summary>
+        </member>
+        <member name="M:PSFramework.Runspace.RSWorkItem.#ctor(System.Object)">
+            <summary>
+            Creates a new runspace workflow work item
+            </summary>
+            <param name="Item">The object to process</param>
         </member>
         <member name="T:PSFramework.Runspace.RunspaceBoundValue">
             <summary>
@@ -10674,6 +10816,28 @@
             A generic item type
             </summary>
         </member>
+        <member name="T:PSFramework.Utility.DynamicContentCache">
+            <summary>
+            A dynamic content object that implements a dictionary
+            </summary>
+        </member>
+        <member name="P:PSFramework.Utility.DynamicContentCache.Value">
+            <summary>
+            The value of the dynamic content object
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentCache.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a dynamic content object concurrent dictionary 
+            </summary>
+            <param name="Name">The name of the setting</param>
+            <param name="Value">The initial value of the object</param>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentCache.Reset">
+            <summary>
+            Resets the stack by reestablishing an empty dictionary.
+            </summary>
+        </member>
         <member name="T:PSFramework.Utility.DynamicContentDictionary">
             <summary>
             A dynamic content object that implements a dictionary
@@ -10798,7 +10962,12 @@
         </member>
         <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentDictionary(System.Boolean)">
             <summary>
-            TUrns the value into a concurrent dictionary with case-insensitive string keys
+            Turns the value into a concurrent dictionary with case-insensitive string keys
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.DynamicContentObject.ConcurrentCache(System.Boolean)">
+            <summary>
+            Turns the value into a concurrent in-memory cache.
             </summary>
         </member>
         <member name="M:PSFramework.Utility.DynamicContentObject.ToString">
@@ -10842,6 +11011,11 @@
         <member name="F:PSFramework.Utility.DynamicContentObjectType.Dictionary">
             <summary>
             A dictionary was requested
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.DynamicContentObjectType.Cache">
+            <summary>
+            A cache was requested
             </summary>
         </member>
         <member name="T:PSFramework.Utility.DynamicContentQueue">
