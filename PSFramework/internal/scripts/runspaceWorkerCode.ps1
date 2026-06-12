@@ -57,6 +57,9 @@
 			Start-Sleep -Milliseconds 250
 			continue
 		}
+		if ($inputData -is [PSFramework.Runspace.RSWorkItem]) {
+			$inputData = $inputData.Item
+		}
 
 		try {
 			$results = $__PSF_ScriptBlock.InvokeGlobal($inputData)
@@ -87,9 +90,32 @@
 
 [PSFramework.Runspace.RSWorker]::WorkerBeginCode = {
 	param ($Code)
-	& $Code
+	$ErrorActionPreference = 'Stop'
+	try { $Code.InvokeGlobal() }
+	catch { throw $_ }
 }
 [PSFramework.Runspace.RSWorker]::WorkerProcessCode = {
 	param ($Code, $Data)
-	$Code.InvokeGlobal($Data)
+	$ErrorActionPreference = 'Stop'
+	try {
+		$results = $Code.InvokeGlobal($Data)
+	}
+	catch { throw $_ }
+	foreach ($result in $results) {
+		if ($__PSF_Worker.NoOutput) { break }
+		$__PSF_Workflow.Queues.$($__PSF_Worker.OutQueue).Enqueue($result)
+		$__PSF_Worker.IncrementOutput()
+	}
+}
+[PSFramework.Runspace.RSWorker]::WorkerRetryCode = {
+	param ($Code, $ErrorRecord, $Item)
+	$Code.InvokeEx(
+		$false, # Do not dotsource
+		$ErrorRecord, # $_
+		$null, # $input
+		$Item.Item, # $this
+		$true, # Do import into a context (the local one by default)
+		$true, # Do use the global context for the import, not the local one
+		$null # $args
+	)
 }

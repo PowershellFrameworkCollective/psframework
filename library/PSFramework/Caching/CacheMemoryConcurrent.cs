@@ -75,11 +75,11 @@ namespace PSFramework.Caching
         {
             lock (_WriteLock)
             {
-                if (!base.ContainsKey(key))
+                if (!base.ContainsKeyInt(key))
                     return;
                 
                 ((CachedData)base[key]).Dispose();
-                base.Remove(key);
+                base.RemoveInt(key);
             }
         }
 

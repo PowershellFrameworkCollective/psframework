@@ -204,6 +204,17 @@ namespace PSFramework.Caching
         {
             return ContainsKey(key);
         }
+
+        /// <summary>
+        /// Verifies whether the key exists in the base hashtable.
+        /// </summary>
+        /// <param name="key">The key to check</param>
+        /// <returns>Whether the key is in the cache</returns>
+        internal bool ContainsKeyInt(object key)
+        {
+            return base.ContainsKey(key);
+        }
+
         /// <summary>
         /// The number of non-expired items in the cache
         /// </summary>

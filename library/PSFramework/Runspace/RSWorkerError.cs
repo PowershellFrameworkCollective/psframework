@@ -43,11 +43,9 @@ namespace PSFramework.Runspace
         /// <param name="Worker">The worker that failed</param>
         /// <param name="Error">The error that happened</param>
         public RSWorkerError(RSWorker Worker, ErrorRecord Error)
+            :this(Worker, Error, null, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId)
         {
-            this.Worker = Worker;
-            this.Error = Error;
-            Timestamp = DateTime.Now;
-            Runspace = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId;
+            
         }
 
 		/// <summary>
@@ -57,11 +55,24 @@ namespace PSFramework.Runspace
         /// <param name="Error">The error that happened</param>
 		/// <param name="TargetObject">The current item where processing failed</param>
         public RSWorkerError(RSWorker Worker, ErrorRecord Error, object TargetObject)
+            :this(Worker, Error, TargetObject, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId)
         {
+        }
+
+        /// <summary>
+        /// Create a new error object for tracking purposes.
+        /// </summary>
+        /// <param name="Worker">The worker that failed</param>
+        /// <param name="Error">The error that happened</param>
+		/// <param name="TargetObject">The current item where processing failed</param>
+        /// <param name="RunspaceID">The ID of the runspace that encountered the problem</param>
+        public RSWorkerError(RSWorker Worker, ErrorRecord Error, object TargetObject, Guid RunspaceID)
+        {
+            this.TargetObject = TargetObject;
             this.Worker = Worker;
             this.Error = Error;
             Timestamp = DateTime.Now;
-            Runspace = System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId;
+            Runspace = RunspaceID;
         }
 
         /// <summary>

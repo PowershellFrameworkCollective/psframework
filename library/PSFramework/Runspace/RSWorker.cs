@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -60,6 +61,20 @@ namespace PSFramework.Runspace
             }
         }
         private static PsfScriptBlock _WorkerProcessCode;
+
+        /// <summary>
+        /// The base code used to launch the retry scriptblock in a V2 Agent
+        /// </summary>
+        public static PsfScriptBlock WorkerRetryCode
+        {
+            get { return _WorkerRetryCode; }
+            set
+            {
+                if (_WorkerRetryCode == null)
+                    _WorkerRetryCode = value;
+            }
+        }
+        private static PsfScriptBlock _WorkerRetryCode;
 
         /// <summary>
         /// Name of the Worker. Mostly documentary in nature.
@@ -259,6 +274,13 @@ namespace PSFramework.Runspace
         public RSWorkflow Workflow => workflow;
 
         /// <summary>
+        /// The worker runtime version.
+        /// 1 operates in full-script.
+        /// 2 is orchestrated in C# and implements timeouts / activity
+        /// </summary>
+        public int WorkerVersion = 1;
+
+        /// <summary>
         /// The runspaces belonging to the worker
         /// </summary>
         public List<RSWorkflowRunespaceReport> Runspaces
@@ -270,6 +292,9 @@ namespace PSFramework.Runspace
                 foreach (RSPowerShellWrapper wrapper in runtimes)
                     if (wrapper.Pipe != null && wrapper.Pipe.Runspace != null)
                         result.Add(new RSWorkflowRunespaceReport(workflow, this, wrapper.Pipe.Runspace));
+                foreach (RSAgent agent in agents)
+                    if (agent._Runspace != null)
+                        result.Add(new RSWorkflowRunespaceReport(workflow, this, agent._Runspace));
 
                 return result;
             }
@@ -277,6 +302,7 @@ namespace PSFramework.Runspace
 
         private RSWorkflow workflow;
         private List<RSPowerShellWrapper> runtimes = new List<RSPowerShellWrapper>();
+        private List<RSAgent> agents = new List<RSAgent>();
 
         /// <summary>
         /// Create a new runspace worker
@@ -346,8 +372,10 @@ namespace PSFramework.Runspace
                 throw new InvalidOperationException("Refusing to launch worker: The registered worker code is not trusted!");
             if (WorkerBeginCode.LanguageMode != PSLanguageMode.FullLanguage)
                 throw new InvalidOperationException("Refusing to launch worker: The registered Begin worker code is not trusted!");
-            if (WorkerBeginCode.LanguageMode != PSLanguageMode.FullLanguage)
+            if (WorkerProcessCode.LanguageMode != PSLanguageMode.FullLanguage)
                 throw new InvalidOperationException("Refusing to launch worker: The registered Process worker code is not trusted!");
+            if (WorkerRetryCode.LanguageMode != PSLanguageMode.FullLanguage)
+                throw new InvalidOperationException("Refusing to launch worker: The registered Retry worker code is not trusted!");
 
             if (null == workflow)
                 throw new InvalidOperationException("Runspace Workflow cannot be null!");
@@ -360,51 +388,57 @@ namespace PSFramework.Runspace
 
             AssertFunctionSafety();
 
+            State = RSState.Starting;
+
+            #region Launch Runspaces
+            switch (WorkerVersion)
+            {
+                case 1:
+                    LaunchV1();
+                    break;
+                case 2:
+                    LaunchV2();
+                    break;
+                default:
+                    LaunchV1();
+                    break;
+            }
+            #endregion Launch Runspaces
+
+            State = RSState.Running;
+        }
+
+        /// <summary>
+        /// Launch the agent runspaces for a Gen 1 Runspace Worker.
+        /// </summary>
+        internal void LaunchV1()
+        {
             #region Prepare the Initial Session State
             _Begin = Begin;
             _End = End;
 
-            InitialSessionState localState = SessionState;
-            if (null == localState)
-                localState = workflow.SessionState;
-            if (null == localState)
-                localState = InitialSessionState.CreateDefault();
-
-            if (workflow.Modules.Count > 0)
-                localState.ImportPSModule(workflow.Modules.ToArray());
-            if (Modules.Count > 0)
-                localState.ImportPSModule(Modules.ToArray());
-            localState.ImportPSModulesFromPath(PSFCore.PSFCoreHost.ModuleRoot);
-
-            if (workflow.Functions.Count > 0)
-                foreach (string name in workflow.Functions.Keys)
-                    localState.Commands.Add(new SessionStateFunctionEntry(name, workflow.Functions[name].ToString()));
-            if (Functions.Count > 0)
-                foreach (string name in Functions.Keys)
-                    localState.Commands.Add(new SessionStateFunctionEntry(name, Functions[name].ToString()));
-
-            if (workflow.Variables.Count > 0)
-                foreach (string name in workflow.Variables.Keys)
-                    localState.Variables.Add(new SessionStateVariableEntry(name, workflow.Variables[name], null));
-            if (Variables.Count > 0)
-                foreach (string name in Variables.Keys)
-                    localState.Variables.Add(new SessionStateVariableEntry(name, Variables[name], null));
-            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Workflow", workflow, "PSF Runspace Workflow, used to manage the data transfer between workers and the state handling of the workload.", ScopedItemOptions.Constant));
-            localState.Variables.Add(new SessionStateVariableEntry("__PSF_Worker", this, "PSF Worker. Represents itself in the active runspaces.", ScopedItemOptions.Constant));
+            InitialSessionState localState = GetSessionState();
             #endregion Prepare the Initial Session State
 
-            State = RSState.Starting;
-
-            #region Launch Runspaces
             for (int i = 0; i < Count; i++)
             {
                 PowerShell powershell = PowerShell.Create(localState);
                 powershell.AddScript(WorkerCode.ToString()).AddArgument(i);
                 runtimes.Add(new RSPowerShellWrapper(powershell, powershell.BeginInvoke()));
             }
-            #endregion Launch Runspaces
+        }
 
-            State = RSState.Running;
+        /// <summary>
+        /// Launch the agent tasks for a Gen 2 Runspace Worker
+        /// </summary>
+        internal void LaunchV2()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                RSAgent newAgent = new RSAgent(this, i);
+                newAgent.Start();
+                agents.Add(newAgent);
+            }
         }
 
         /// <summary>
@@ -421,6 +455,8 @@ namespace PSFramework.Runspace
                 runtime.Pipe.Runspace.Dispose();
                 runtime.Pipe.Dispose();
             }
+            foreach (RSAgent agent in agents)
+                agent.Stop();
             State = RSState.Stopped;
 
             runtimes = new List<RSPowerShellWrapper>();
@@ -538,7 +574,26 @@ namespace PSFramework.Runspace
 		/// <param name="Target">The target that was being processed as the error happened</param>
 		public void AddError(ErrorRecord Error, object Target)
 		{
-			Errors.Enqueue(new RSWorkerError(this, Error, Target));
+            ErrorRecord record = Error;
+            if (record.Exception is MethodInvocationException && Regex.IsMatch(record.Exception.Message, "^Exception calling \"InvokeGlobal\" with \"1\" argument\\(s\\)") && record.Exception.InnerException != null && record.Exception.InnerException is RuntimeException)
+                record = ((RuntimeException)record.Exception.InnerException).ErrorRecord;
+            Errors.Enqueue(new RSWorkerError(this, record, Target));
+            _LastError = Error;
 		}
+
+        /// <summary>
+		/// Add an error with a target to the errors queue
+		/// </summary>
+		/// <param name="Error">The error that happened</param>
+		/// <param name="Target">The target that was being processed as the error happened</param>
+        /// <param name="RunspaceID">ID of the runspace that generated the error</param>
+		public void AddError(ErrorRecord Error, object Target, Guid RunspaceID)
+        {
+            ErrorRecord record = Error;
+            if (record.Exception is MethodInvocationException && Regex.IsMatch(record.Exception.Message, "^Exception calling \"InvokeGlobal\" with \"1\" argument\\(s\\)") && record.Exception.InnerException != null && record.Exception.InnerException is RuntimeException)
+                record = ((RuntimeException)record.Exception.InnerException).ErrorRecord;
+            Errors.Enqueue(new RSWorkerError(this, record, Target, RunspaceID));
+            _LastError = Error;
+        }
     }
 }
