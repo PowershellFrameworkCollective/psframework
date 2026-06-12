@@ -144,6 +144,7 @@
 		'Remove-PSFTempItem'
 		'Remove-PSFTeppCompletion'
 		'Reset-PSFConfig'
+		'Reset-PSFRsAgentInactivity'
 		'Resolve-PSFDefaultParameterValue'
 		'Resolve-PSFItem'
 		'Resolve-PSFPath'

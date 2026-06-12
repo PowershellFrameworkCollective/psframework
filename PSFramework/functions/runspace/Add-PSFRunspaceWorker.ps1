@@ -13,6 +13,16 @@
 
 		In the wider flow of a Runspace Workflow, one Worker's Output Queue is alse another Worker's Input Queue.
 		Thus we create a chain of workers from original input to finished output, each step individually with as many runspaces as needed.
+
+		Note: Worker Versions
+		There are different runtime versions for the Runspace Workers.
+		They affect features available, performance, and - possibly - bugs.
+		Older (lower) versions are more tested, but some features are only available with later versions.
+		If you encounter an issue with any of the later versions, that works on an older one, please file a bug report and provide as much information as possible.
+
+		Versions and their features:
+		1: Baseline
+		2: Added RetryCount, RetryCondition, Timeout, TimeoutType parameters, as well as support for overriding settings per-item with New-PSFRsWorkItem
 	
 	.PARAMETER Name
 		Name of the worker.
@@ -104,6 +114,33 @@
 	.PARAMETER SessionState
 		A fully prepared session state object to use when creating the worker runspaces.
 		Be aware that if your session state does not contain basic language tools, the background runspace will likely fail.
+
+	.PARAMETER Timeout
+		How long each individual item may run before timing out.
+		Note: This parameter forces a V2 worker or later (see description).
+
+	.PARAMETER TimeoutType
+		What kind of timeout processing we perform.
+		- Start: Time from the start of the current item.
+		- Idle: Time since last activity
+		Last Activity is measured by the last Write-PSFMessage or Reset-PSFRsAgentInactivity call.
+		Note: This parameter forces a V2 worker or later (see description).
+
+	.PARAMETER RetryCount
+		How many times to try again if processing an object fails.
+		Note: This parameter forces a V2 worker or later (see description).
+
+	.PARAMETER RetryCondition
+		If an object fails and retries are configured, only retries are attempted for cases where this condition is true.
+		This scriptblock has access to two variables:
+		- $_: The Error that happened
+		- $this: The object currently being processed
+		It is executed in the context of the runspace where the issue happend (so modules and commands are available, but the direct scope of the execution code is not.)
+		Note: This parameter forces a V2 worker or later (see description).
+
+	.PARAMETER WorkerVersion
+		What version of worker to create.
+		Later versions offer more features, older versions more stability.
 	
 	.PARAMETER WorkflowName
 		Name of the Runspace Workflow this worker belongs to.
@@ -191,6 +228,22 @@
 		[initialsessionstate]
 		$SessionState,
 
+		[PSFTimeSpanParameter]
+		$Timeout,
+
+		[PSFramework.Runspace.RSTimeout]
+		$TimeoutType = 'Start',
+
+		[int]
+		$RetryCount,
+
+		[PsfScriptBlock]
+		$RetryCondition,
+
+		[ValidateSet(1,2)]
+		[int]
+		$WorkerVersion,
+
 		[Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[PsfArgumentCompleter('PSFramework-runspace-workflow-name')]
 		[string[]]
@@ -202,6 +255,26 @@
 	)
 
 	begin {
+		$versionMap = @{
+			2 = @('Timeout', 'RetryCount', 'RetryCondition')
+		}
+		$useVersion = 1
+		
+		foreach ($version in $versionMap.Keys | Sort-Object) {
+			foreach ($parameterName in $versionMap[$version]) {
+				if ($PSBoundParameters.ContainsKey($parameterName)) {
+					$useVersion = $version
+				}
+			}
+		}
+
+		if ($WorkerVersion) {
+			if ($WorkerVersion -lt $useVersion) {
+				Stop-PSFFunction -String 'Add-PSFRunspaceWorker.Error.VersionTooLow' -StringValues $WorkerVersion, $useVersion -EnableException $true -Cmdlet $PSCmdlet -Category InvalidArgument
+			}
+			$useVersion = $WorkerVersion
+		}
+
 		$functionsResolved = @{ }
 
 		if (-not $Functions) { return }
@@ -227,12 +300,19 @@
 
 		foreach ($resolvedWorkflow in $resolvedWorkflows) {
 			$worker = $resolvedWorkflow.AddWorker($Name, $InQueue, $OutQueue, $ScriptBlock, $Count)
+			$worker.WorkerVersion = $useVersion
 
 			if ($Begin) { $worker.Begin = $Begin }
 			if ($End) { $worker.End = $End }
 			if ($MaxItems) { $worker.MaxItems = $MaxItems }
 			if ($CloseOutQueue) { $worker.CloseOutQueue = $true }
 			if ($QueuesToClose) { $worker.QueuesToClose = $QueuesToClose }
+			if ($Timeout) {
+				$worker.Timeout = $Timeout
+				$worker.TimeoutType = $TimeoutType
+			}
+			if ($RetryCount) { $worker.RetryCount = $RetryCount }
+			if ($RetryCondition) { $worker.RetryCondition = $RetryCondition }
 
 			if ($SessionState) { $worker.SessionState = $SessionState }
 			foreach ($module in $Modules) { $worker.Modules.Add($module) }

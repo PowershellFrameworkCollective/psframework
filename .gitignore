@@ -20,3 +20,6 @@ TestResults/*
 
 # ignore the publishing Directory
 publish/*
+
+# Ignore local test files (should be migrated to pester tests anyway)
+localTests/*

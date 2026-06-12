@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 
 namespace PSFramework.Message
@@ -190,9 +191,12 @@ namespace PSFramework.Message
         public static PsfExceptionRecord WriteErrorEntry(ErrorRecord[] Record, string FunctionName, string ModuleName, List<string> Tags, DateTime Timestamp, string Message, Guid Runspace, string ComputerName)
         {
             PsfExceptionRecord tempRecord = new PsfExceptionRecord(Runspace, ComputerName, Timestamp, FunctionName, ModuleName, Tags, Message);
-            foreach (ErrorRecord rec in Record)
+            if (Record != null && Record.Length > 0)
             {
-                tempRecord.Exceptions.Add(new PsfException(rec, FunctionName, Timestamp, Message, Runspace, ComputerName));
+                foreach (ErrorRecord rec in Record)
+                    tempRecord.Exceptions.Add(new PsfException(rec, FunctionName, Timestamp, Message, Runspace, ComputerName));
+
+                tempRecord.ScriptStackTrace = Record[0].ScriptStackTrace;
             }
 
             if (ErrorLogFileEnabled) { OutQueueError.Enqueue(tempRecord); }
@@ -225,10 +229,11 @@ namespace PSFramework.Message
         /// <param name="CallStack">The callstack at the moment the message was written.</param>
         /// <param name="Username">The name of the user under which the code being executed</param>
         /// <param name="ErrorRecord">An associated error record</param>
+        /// <param name="ErrorStack">Whether to use the error record for logging the callstack</param>
         /// <returns>The entry that is being written</returns>
-        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, object TargetObject = null)
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, object TargetObject = null, bool ErrorStack = false)
         {
-            return WriteLogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, File, Line, CallStack, Username, ErrorRecord, "", null, TargetObject);
+            return WriteLogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, File, Line, CallStack, Username, ErrorRecord, "", null, TargetObject, ErrorStack);
         }
 
         /// <summary>
@@ -252,10 +257,16 @@ namespace PSFramework.Message
         /// <param name="String">The string key to use for retrieving localized strings</param>
         /// <param name="StringValue">The values to format into the localized string</param>
         /// <param name="ErrorRecord">An associated error record</param>
+        /// <param name="ErrorStack">Whether to use the error record for logging the callstack</param>
         /// <returns>The entry that is being written</returns>
-        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue, object TargetObject = null)
+        public static LogEntry WriteLogEntry(string Message, LogEntryType Type, DateTime Timestamp, string FunctionName, string ModuleName, List<string> Tags, Hashtable Data, MessageLevel Level, Guid Runspace, string ComputerName, string File, int Line, IEnumerable<CallStackFrame> CallStack, string Username, PsfExceptionRecord ErrorRecord, string String, object[] StringValue, object TargetObject = null, bool ErrorStack = false)
         {
-            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, TargetObject, File, Line, new PSFramework.Message.CallStack(CallStack), Username, ErrorRecord, String, StringValue);
+            CallStack stack;
+            if (ErrorRecord != null && (ErrorStack || MessageHost.LogErrorStack))
+                stack = new CallStack(ErrorRecord.ScriptStackTrace);
+            else
+                stack = new CallStack(CallStack);
+            LogEntry temp = new LogEntry(Message, Type, Timestamp, FunctionName, ModuleName, Tags, Data, Level, Runspace, ComputerName, TargetObject, File, Line, stack, Username, ErrorRecord, String, StringValue);
             if (MessageLogFileEnabled) { OutQueueLog.Enqueue(temp); }
             if (MessageLogEnabled) { LogEntries.Enqueue(temp); }
 

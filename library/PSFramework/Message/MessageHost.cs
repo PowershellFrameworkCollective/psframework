@@ -145,8 +145,11 @@ namespace PSFramework.Message
         /// Define the message prefix value for the important level
         /// </summary>
         public static string PrefixValueSignificant = "##[section]";
-            
 
+        /// <summary>
+        /// Global feature flag, to have log messages written with an ErrorRecord object use the ScriptStackTrace of the record, rather than its own.
+        /// </summary>
+        public static bool LogErrorStack = false;
         #endregion Defines
 
         #region Transformations

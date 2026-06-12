@@ -169,6 +169,12 @@ namespace PSFramework.Commands
         /// </summary>
         [Parameter()]
         public PSCmdlet PSCmdlet;
+
+        /// <summary>
+        /// The log message should have the script-stacktrace of the error record if specified
+        /// </summary>
+        [Parameter()]
+        public SwitchParameter ErrorStack;
         #endregion Parameters
 
         #region Private fields
@@ -568,7 +574,7 @@ namespace PSFramework.Commands
             #endregion Message handling
 
             #region Logging
-            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Data, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target);
+            LogEntry entry = LogHost.WriteLogEntry(_MessageSystem, channels, _timestamp, FunctionName, ModuleName, _Tags, Data, Level, System.Management.Automation.Runspaces.Runspace.DefaultRunspace.InstanceId, Environment.MachineName, File, Line, _callStack, String.Format("{0}\\{1}",Environment.UserDomainName, Environment.UserName), errorRecord, String, StringValues, Target, ErrorStack.ToBool());
             #endregion Logging
 
             foreach (MessageEventSubscription subscription in MessageHost.Events.Values)

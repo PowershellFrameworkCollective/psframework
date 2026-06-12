@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 
 namespace PSFramework.Message
 {
@@ -92,6 +93,22 @@ namespace PSFramework.Message
         {
             foreach (CallStackFrame frame in CallStack)
                 Entries.Add(new CallStackEntry(frame.FunctionName, frame.ScriptName, frame.ScriptLineNumber, frame.InvocationInfo));
+        }
+
+        /// <summary>
+        /// Initialize a callstack from a ScriptCallStack as provided by an ErrorRecord
+        /// </summary>
+        /// <param name="ScriptStackTrace">The ScriptCallStack provided by an ErrorRecord</param>
+        public CallStack(string ScriptStackTrace)
+        {
+            foreach (string line in ScriptStackTrace.Split('\n'))
+            {
+                string command = Regex.Replace(line, "^at (.+?),.+$", "$1", RegexOptions.IgnoreCase);
+                string file = Regex.Replace(line, "^at .+?,(.+): line .+$", "$1", RegexOptions.IgnoreCase);
+                string lineNr = Regex.Replace(line, "^.+?(\\d+)$", "$1");
+
+                Entries.Add(new CallStackEntry(command, file, Int32.Parse(lineNr), null));
+            }
         }
     }
 }

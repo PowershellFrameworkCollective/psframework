@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Caching;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,30 +33,37 @@ namespace PSFramework.Utility
         /// <param name="Type">The type of dynamic content object to create (if creatable)</param>
         public static void Set(string Name, object Value, DynamicContentObjectType Type = DynamicContentObjectType.Common)
         {
-            if (Values.ContainsKey(Name))
-                Values[Name].Value = Value;
-            else
+            lock (_SetLock)
             {
-                switch (Type)
+                if (Values.ContainsKey(Name))
+                    Values[Name].Value = Value;
+                else
                 {
-                    case DynamicContentObjectType.Dictionary:
-                        Values[Name] = new DynamicContentDictionary(Name, Value);
-                        break;
-                    case DynamicContentObjectType.List:
-                        Values[Name] = new DynamicContentList(Name, Value);
-                        break;
-                    case DynamicContentObjectType.Queue:
-                        Values[Name] = new DynamicContentQueue(Name, Value);
-                        break;
-                    case DynamicContentObjectType.Stack:
-                        Values[Name] = new DynamicContentStack(Name, Value);
-                        break;
-                    default:
-                        Values[Name] = new DynamicContentObject(Name, Value);
-                        break;
+                    switch (Type)
+                    {
+                        case DynamicContentObjectType.Dictionary:
+                            Values[Name] = new DynamicContentDictionary(Name, Value);
+                            break;
+                        case DynamicContentObjectType.List:
+                            Values[Name] = new DynamicContentList(Name, Value);
+                            break;
+                        case DynamicContentObjectType.Queue:
+                            Values[Name] = new DynamicContentQueue(Name, Value);
+                            break;
+                        case DynamicContentObjectType.Stack:
+                            Values[Name] = new DynamicContentStack(Name, Value);
+                            break;
+                        case DynamicContentObjectType.Cache:
+                            Values[Name] = new DynamicContentCache(Name, Value);
+                            break;
+                        default:
+                            Values[Name] = new DynamicContentObject(Name, Value);
+                            break;
+                    }
                 }
             }
         }
+        private static object _SetLock = 42;
 
         /// <summary>
         /// Returns the Dynamic Content Object under the specified name
@@ -116,7 +124,7 @@ namespace PSFramework.Utility
         }
 
         /// <summary>
-        /// TUrns the value into a concurrent dictionary with case-insensitive string keys
+        /// Turns the value into a concurrent dictionary with case-insensitive string keys
         /// </summary>
         public void ConcurrentDictionary(bool Reset = false)
         {
@@ -124,6 +132,17 @@ namespace PSFramework.Utility
                 Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
             else if (!UtilityHost.IsLike(Value.GetType().FullName, "System.Collections.Concurrent.ConcurrentDictionary*"))
                 Value = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Turns the value into a concurrent in-memory cache.
+        /// </summary>
+        public void ConcurrentCache(bool Reset = false)
+        {
+            if (Value == null || Reset)
+                Value = new CacheMemoryConcurrent();
+            else if (!(Value is CacheMemoryConcurrent))
+                Value = new CacheMemoryConcurrent();
         }
 
         /// <summary>

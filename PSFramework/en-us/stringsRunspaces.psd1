@@ -1,6 +1,7 @@
 ﻿@{
 	'Add-PSFRunspaceWorker.Error.UntrustedFunctionCode'      = 'Failed to load function {0}: The provided function code is not trusted (in Constrained language Mode) and cannot be imported. Ensure the code building the scriptblock is trusted to create a non-constrained scriptblock.' # $pair.Key
 	'Add-PSFRunspaceWorker.Error.UntrustedTextFunction'      = 'Failed to load function {0}: String-based code is not trusted in a secured console. Provide its code as a scriptblock, rather than a string to enable code trust verification.' # $pair.Key
+	'Add-PSFRunspaceWorker.Error.VersionTooLow'              = 'Invalid Runspace Worker Version specified! Version specified: {0} | Minimum Version required for the selected parameters: {1}' # $WorkerVersion, $useVersion
 
 	'Invoke-PSFRunspace.Error.ModuleImport'                  = 'Failed to include module: "{0}"' # $module
 	'Invoke-PSFRunspace.Error.UntrustedTextFunction'         = 'Failed to import function "{0}". Providing function-code as text is not supported in a hardened PowerShell process. Provide the function-code instead as a scriptblock.' # $pair.Key
