@@ -1,5 +1,9 @@
 ﻿# CHANGELOG
 
+## 1.14.450 (2026-06-19)
+
+- Fix: Get-PSFMessage - may fail in a runspace situation
+
 ## 1.14.449 (2026-06-12)
 
 - New: Configuration PSFramework.Message.LogErrorStack - When calling Write-PSFMessage and also specifying an ErrorRecord, should the ErrorRecord location of the error be used, rather than from where Write-PSFMessage was called?

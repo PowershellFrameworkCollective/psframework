@@ -151,9 +151,7 @@ namespace PSFramework.Message
         /// <returns>All errors thrown by functions using the message or flowcontrol system</returns>
         public static PsfExceptionRecord[] GetErrors()
         {
-            PsfExceptionRecord[] temp = new PsfExceptionRecord[ErrorRecords.Count];
-            ErrorRecords.CopyTo(temp, 0);
-            return temp;
+            return ErrorRecords.ToArray();
         }
 
         /// <summary>
@@ -162,9 +160,7 @@ namespace PSFramework.Message
         /// <returns>All messages logged this session.</returns>
         public static LogEntry[] GetLog()
         {
-            LogEntry[] temp = new LogEntry[LogEntries.Count];
-            LogEntries.CopyTo(temp, 0);
-            return temp;
+            return LogEntries.ToArray();
         }
 
         /// <summary>
