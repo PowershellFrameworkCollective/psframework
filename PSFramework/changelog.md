@@ -1,5 +1,12 @@
 ﻿# CHANGELOG
 
+## 1.14.454 (2026-07-01)
+
+- New: Type PSFramework.Utility.HumanizedTimeSpan - a human-friendly duration display alternative.
+- Fix: PSFCache - The ContainsKey method will always return $false
+- Fix: Write-PSFMessage - Error when using `-ErrorStack` parameter: "The input string '%CALLSTACK LINE%' was not in a correct format."
+- Fix: Import-PSFJson - fails to process boolean values correctly
+
 ## 1.14.450 (2026-06-19)
 
 - Fix: Get-PSFMessage - may fail in a runspace situation

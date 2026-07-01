@@ -192,7 +192,7 @@ namespace PSFramework.Caching
         {
             if (!base.ContainsKey(key))
                 return false;
-            return ((CachedData)base[key]).IsExpired;
+            return !((CachedData)base[key]).IsExpired;
         }
         /// <summary>
         /// Verifies whether the key exists in the cache.
