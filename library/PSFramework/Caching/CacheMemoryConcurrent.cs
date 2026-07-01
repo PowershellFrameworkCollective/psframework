@@ -94,6 +94,22 @@ namespace PSFramework.Caching
         }
 
         /// <summary>
+        /// Verifies whether the key exists in the cache.
+        /// Expired entries are not considered.
+        /// </summary>
+        /// <param name="key">The key to check</param>
+        /// <returns>Whether the key is in the cache</returns>
+        public override bool ContainsKey(object key)
+        {
+            // The new ContainsKey operation comes in two steps
+            // Thread-Safety requires a lock so nobody kills the entry inbetween the check and the expiration test
+            lock (_WriteLock)
+            {
+                return base.ContainsKey(key);
+            }
+        }
+
+        /// <summary>
         /// Read or write an entry in the cache
         /// </summary>
         /// <param name="key">The key of the entry</param>

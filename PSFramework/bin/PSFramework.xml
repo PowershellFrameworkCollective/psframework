@@ -237,6 +237,14 @@
             </summary>
             <param name="Key">The key of the entry to remove</param>
         </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.ContainsKey(System.Object)">
+            <summary>
+            Verifies whether the key exists in the cache.
+            Expired entries are not considered.
+            </summary>
+            <param name="key">The key to check</param>
+            <returns>Whether the key is in the cache</returns>
+        </member>
         <member name="P:PSFramework.Caching.CacheMemoryConcurrent.Item(System.Object)">
             <summary>
             Read or write an entry in the cache
@@ -11529,6 +11537,58 @@
             Implicitly convert ScriptBlock to PsfScriptblock
             </summary>
             <param name="Script">The ScriptBlock to convert</param>
+        </member>
+        <member name="T:PSFramework.Utility.HumanizedTimeSpan">
+            <summary>
+            Wraps a timespan and presents it in a human-friendly readable way.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Utility.HumanizedTimeSpan.Digits">
+            <summary>
+            How many digits after the dot are used for representing time
+            </summary>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a HumanizedTimeSpan from a TimeSpan object (not the hardest challenge)
+            </summary>
+            <param name="Value">The timespan object to accept</param>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.#ctor(System.Int32)">
+            <summary>
+            Creates a HumanizedTimeSpan from integer, assuming it to mean seconds
+            </summary>
+            <param name="Seconds">The seconds to run</param>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.#ctor(System.String)">
+            <summary>
+            Creates a HumanizedTimeSpan from a string object
+            </summary>
+            <param name="Value">The string to interpret</param>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.#ctor(System.Object)">
+            <summary>
+            Creates a HumanizedTimeSpan from any kind of object it has been taught to understand
+            </summary>
+            <param name="InputObject">The object to interpret</param>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.ToString">
+            <summary>
+            Creates extra-nice timespan formats
+            </summary>
+            <returns>Humanly readable timespans</returns>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.op_Implicit(PSFramework.Utility.HumanizedTimeSpan)~System.TimeSpan">
+            <summary>
+            Implicitly converts a DbaTimeSpan object into a TimeSpan object
+            </summary>
+            <param name="Base">The original object to revert</param>
+        </member>
+        <member name="M:PSFramework.Utility.HumanizedTimeSpan.op_Implicit(System.TimeSpan)~PSFramework.Utility.HumanizedTimeSpan">
+            <summary>
+            Implicitly converts a TimeSpan object into a DbaTimeSpan object
+            </summary>
+            <param name="Base">The original object to wrap</param>
         </member>
         <member name="T:PSFramework.Utility.RegexHelper">
             <summary>

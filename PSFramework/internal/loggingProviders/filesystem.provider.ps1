@@ -105,9 +105,9 @@ $start_event = {
 	}
 	else { $filesystem_root = Get-Item -Path $filesystem_path }
 	
-	try { [int]$filesystem_num_Error = (Get-ChildItem -Path $filesystem_path.FullName -Filter "$($env:ComputerName)_$($pid)_error_*.xml" | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty Name | Select-String -Pattern "(\d+)" -AllMatches).Matches[1].Value }
+	try { [int]$filesystem_num_Error = (Get-ChildItem -Path $filesystem_root.FullName -Filter "$($env:ComputerName)_$($pid)_error_*.xml" | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty Name | Select-String -Pattern "(\d+)" -AllMatches).Matches[-1].Value }
 	catch { }
-	try { [int]$filesystem_num_Message = (Get-ChildItem -Path $filesystem_path.FullName -Filter "$($env:ComputerName)_$($pid)_message_*.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty Name | Select-String -Pattern "(\d+)" -AllMatches).Matches[1].Value }
+	try { [int]$filesystem_num_Message = (Get-ChildItem -Path $filesystem_root.FullName -Filter "$($env:ComputerName)_$($pid)_message_*.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty Name | Select-String -Pattern "(\d+)" -AllMatches).Matches[-1].Value }
 	catch { }
 	if (-not ($filesystem_num_Error)) { $filesystem_num_Error = 0 }
 	if (-not ($filesystem_num_Message)) { $filesystem_num_Message = 0 }
