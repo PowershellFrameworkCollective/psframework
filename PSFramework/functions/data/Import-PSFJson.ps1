@@ -70,6 +70,7 @@
 					'System.Int64'
 					'System.Double'
 					'System.Bool'
+					'System.Boolean'
 					'System.DateTime'
 				)
 			}
@@ -162,8 +163,10 @@
 			$jsonTypes = @(
 				'System.String'
 				'System.Int32'
+				'System.Int64'
 				'System.Double'
 				'System.Bool'
+				'System.Boolean'
 				'System.DateTime'
 			)
 

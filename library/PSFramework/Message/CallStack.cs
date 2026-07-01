@@ -103,11 +103,12 @@ namespace PSFramework.Message
         {
             foreach (string line in ScriptStackTrace.Split('\n'))
             {
-                string command = Regex.Replace(line, "^at (.+?),.+$", "$1", RegexOptions.IgnoreCase);
-                string file = Regex.Replace(line, "^at .+?,(.+): line .+$", "$1", RegexOptions.IgnoreCase);
-                string lineNr = Regex.Replace(line, "^.+?(\\d+)$", "$1");
+                string command = Regex.Replace(line.Trim(), "^at (.+?),.+$", "$1", RegexOptions.IgnoreCase);
+                string file = Regex.Replace(line.Trim(), "^at .+?,(.+): line .+$", "$1", RegexOptions.IgnoreCase);
+                string lineNr = Regex.Replace(line.Trim(), "^.+?(\\d+)$", "$1");
 
-                Entries.Add(new CallStackEntry(command, file, Int32.Parse(lineNr), null));
+                try { Entries.Add(new CallStackEntry(command, file, Int32.Parse(lineNr), null)); }
+                catch { Entries.Add(new CallStackEntry(command, file, -1, null)); }
             }
         }
     }

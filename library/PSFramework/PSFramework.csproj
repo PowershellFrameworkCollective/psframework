@@ -263,6 +263,7 @@
     <Compile Include="Utility\PsfException.cs" />
     <Compile Include="Object\PsfHashtable.cs" />
     <Compile Include="Utility\PsfScriptBlock.cs" />
+    <Compile Include="Utility\HumanizedTimeSpan.cs" />
     <Compile Include="Utility\RegexHelper.cs" />
     <Compile Include="Utility\ScriptBlockItem.cs" />
     <Compile Include="Utility\ScriptTransformationAttribute.cs" />

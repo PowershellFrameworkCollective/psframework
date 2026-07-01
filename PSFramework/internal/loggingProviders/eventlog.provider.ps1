@@ -99,8 +99,8 @@
 		$source = Get-ConfigValue -Name Source
 		
 		$script:loggingID = [System.Guid]::NewGuid()
-		$startingMessage = "Starting new logging provider! | Process ID: $PID | Instance Name: $($script:Instance.Name) | Logging ID: $loggingID"
-		$data = $startingMessage, $PID, $script:Instance.Name, $loggingID
+		$startingMessage = "Starting new logging provider! | Process ID: $PID | Instance Name: $($script:Instance.Name) | Logging ID: $($script:loggingID)"
+		$data = $startingMessage, $PID, $script:Instance.Name, $script:loggingID
 		try {
 			Write-LogEntry -LogName $logName -Source $source -Type Information -Category (Get-ConfigValue -Name Category) -EventId 999 -Data $data
 			$script:logName = $logName
