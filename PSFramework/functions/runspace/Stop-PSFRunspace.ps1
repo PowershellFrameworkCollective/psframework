@@ -39,7 +39,7 @@
 	.NOTES
 		Additional information about the function.
 #>
-	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Stop-PSFRunspace')]
+	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Stop-PSFRunspace')]
 	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]

@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## 1.14.457 (2026-07-02)
+
+- New: ConfigValidation rstimeout - Validates input as a legal setting for the Runspace Workflow Worker's timeout
+- Upd: Set-PSFLoggingProvider - accepts input via config set
+- Upd: Disable-PSFLoggingProvider - accepts input via config set
+
 ## 1.14.454 (2026-07-01)
 
 - New: Type PSFramework.Utility.HumanizedTimeSpan - a human-friendly duration display alternative.

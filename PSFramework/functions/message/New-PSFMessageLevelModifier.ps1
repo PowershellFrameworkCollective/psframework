@@ -61,7 +61,7 @@
 			This is useful when prioritizing your own module during development.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFMessageLevelModifier')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/New-PSFMessageLevelModifier')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[string]

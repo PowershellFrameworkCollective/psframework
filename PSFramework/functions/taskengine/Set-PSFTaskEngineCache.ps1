@@ -48,7 +48,7 @@
 		Registers a cache that lists all domain controllers in the current domain, keeping the data valid for 8 hours before refreshing it.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFTaskEngineCache')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Set-PSFTaskEngineCache')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]

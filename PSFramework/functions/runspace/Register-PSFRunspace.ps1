@@ -71,7 +71,7 @@
 		Creates a background runspace that can never exist more than once in the current process.
 		It will clean all items under $env:TEMP that start with "MyModule-" every 30 seconds (plus 250ms, which are added by the system).
 #>
-	[CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = 'Gen2', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFRunspace')]
+	[CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = 'Gen2', HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFRunspace')]
 	param
 	(
 		[Parameter(Mandatory = $true)]

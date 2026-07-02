@@ -21,7 +21,7 @@
 	
 		Returns the runspace registered under the name 'mymodule.maintenance'
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFRunspace')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFRunspace')]
 	Param (
 		[string]
 		$Name = "*"

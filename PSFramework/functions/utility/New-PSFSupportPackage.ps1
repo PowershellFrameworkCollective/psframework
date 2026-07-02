@@ -80,7 +80,7 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/New-PSFSupportPackage', DefaultParameterSetName = 'Path')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/New-PSFSupportPackage', DefaultParameterSetName = 'Path')]
 	param (
 		[Parameter(ParameterSetName = 'Path')]
 		[string]

@@ -23,7 +23,7 @@
     
             Registers the parameter 'Example' of the command 'Get-Test' to receive the tab completion registered to 'MyModule.Example'
     #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTeppArgumentCompleter')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFTeppArgumentCompleter')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string[]]

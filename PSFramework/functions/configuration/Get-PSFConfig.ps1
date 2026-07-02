@@ -43,7 +43,7 @@
     #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[OutputType([PSFramework.Configuration.Config])]
-	[CmdletBinding(DefaultParameterSetName = "FullName", HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfig')]
+	[CmdletBinding(DefaultParameterSetName = "FullName", HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFConfig')]
 	Param (
 		[Parameter(ParameterSetName = "FullName", Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string]

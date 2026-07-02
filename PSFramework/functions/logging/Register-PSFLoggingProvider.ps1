@@ -145,7 +145,7 @@
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[PSFramework.PSFCore.NoJeaCommandAttribute()]
-	[CmdletBinding(DefaultParameterSetName = 'Version1', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFLoggingProvider')]
+	[CmdletBinding(DefaultParameterSetName = 'Version1', HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFLoggingProvider')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[string]

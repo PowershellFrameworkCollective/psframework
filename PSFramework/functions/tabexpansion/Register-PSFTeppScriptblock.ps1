@@ -82,7 +82,7 @@
 			Stores a simple scriptblock that will return a list of strings under the name "mymodule-scripts".
 			The system will wrap all the stuff around this that is necessary to provide Tab Expansion and filter out output that doesn't fit the user input so far.
     #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTeppScriptblock')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFTeppScriptblock')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[System.Management.Automation.ScriptBlock]

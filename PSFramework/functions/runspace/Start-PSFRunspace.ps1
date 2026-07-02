@@ -33,7 +33,7 @@
 		
 		Starts the runspace registered under the name 'mymodule.maintenance'
 #>
-	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Start-PSFRunspace')]
+	[CmdletBinding(SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Start-PSFRunspace')]
 	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]
