@@ -62,7 +62,7 @@
 		Will print a long multiline text in its entirety while still respecting the colorcodes
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Write-PSFHostColor')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Write-PSFHostColor')]
 	param (
 		[Parameter(ValueFromPipeline = $true)]
 		[string[]]

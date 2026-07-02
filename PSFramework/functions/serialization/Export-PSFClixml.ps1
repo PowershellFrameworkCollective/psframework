@@ -44,7 +44,7 @@
 		
 		Exports a list of all items in the current path as a default clixml readable by Import-Clixml
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Export-PSFClixml')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Export-PSFClixml')]
 	param (
 		[PsfValidateScript('PSFramework.Validate.FSPath.FileOrParent', ErrorString = 'PSFramework.Validate.FSPath.FileOrParent')]
 		[Parameter(Mandatory = $true, Position = 0)]

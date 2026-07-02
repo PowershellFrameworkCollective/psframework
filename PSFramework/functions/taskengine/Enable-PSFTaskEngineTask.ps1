@@ -21,7 +21,7 @@
 	
 			Enables the task named 'mymodule.maintenance'
 	#>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Enable-PSFTaskEngineTask')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Enable-PSFTaskEngineTask')]
 	param (
 		[string[]]
 		$Name,

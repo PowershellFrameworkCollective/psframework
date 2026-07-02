@@ -51,7 +51,7 @@
 		Runs the $scriptblock against all computers in AD with a name that starts with "srv-db".
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Invoke-PSFCommand')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Invoke-PSFCommand')]
 	param (
 		[PSFComputer[]]
 		[Alias('Session')]

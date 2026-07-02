@@ -130,7 +130,7 @@
 		In both cases, the error record added to $error will have the content of $foo added, the better to figure out what went wrong.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding(DefaultParameterSetName = 'Message', HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Stop-PSFFunction')]
+	[CmdletBinding(DefaultParameterSetName = 'Message', HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Stop-PSFFunction')]
 	param (
 		[Parameter(Mandatory = $true, ParameterSetName = 'Message')]
 		[string]

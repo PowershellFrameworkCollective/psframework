@@ -23,7 +23,7 @@
 	
 		Returns all message level filters that start with "mymodule."
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFMessageLevelModifier')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFMessageLevelModifier')]
 	Param (
 		[string]
 		$Name = "*"

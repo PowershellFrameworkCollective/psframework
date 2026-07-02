@@ -23,7 +23,7 @@
 			Does not require the cache to actually contain a value, but must exist.
 	#>
 	[OutputType([System.Boolean])]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFTaskEngineCache')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Test-PSFTaskEngineCache')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]

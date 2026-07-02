@@ -58,7 +58,7 @@
 		$workflow = New-PSFRunspaceWorkflow -Name 'ExampleWorkflow'
 		$worker = $workflow | Add-PSFRunspaceWorker -Name Processing -InQueue Input -OutQueue Done -Count 1 -ScriptBlock {
 			Write-PSFMessage "Start"
-			Start-Sleep -Seconds $_
+			Start-Sleep -Milliseconds ($_ * 1000 + 500)
 			Write-PSFMessage "Done"
 			$_
 		} -CloseOutQueue -Timeout '3s' -TimeoutType 'Start'

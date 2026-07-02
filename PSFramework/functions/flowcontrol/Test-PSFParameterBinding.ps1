@@ -45,7 +45,7 @@
 	
 			Returns whether any of the specified parameters was not bound
     #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Test-PSFParameterBinding')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Test-PSFParameterBinding')]
 	Param (
 		[Parameter(Mandatory = $true, Position = 0)]
 		[string[]]

@@ -44,7 +44,7 @@
 		Then it will write the message "Example Message", which is automatically written to Level "Important" (which by default will be written to host).
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Write-PSFMessageProxy')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Write-PSFMessageProxy')]
 	param (
 		[Parameter(Position = 0)]
 		[Alias('Object', 'MessageData')]
