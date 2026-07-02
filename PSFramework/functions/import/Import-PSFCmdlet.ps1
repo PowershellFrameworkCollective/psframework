@@ -35,7 +35,7 @@
 		Original Author: Chris Dent
 		Link: https://www.indented.co.uk/cmdlets-without-a-dll/
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Import-PSFCmdlet')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Import-PSFCmdlet')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[String]

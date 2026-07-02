@@ -65,7 +65,7 @@
 			Returns all log entries within the last 5 executions that contained the tag "fail"
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFMessage')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFMessage')]
 	param (
 		[string]
 		$FunctionName = "*",

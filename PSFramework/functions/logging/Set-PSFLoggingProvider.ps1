@@ -13,6 +13,12 @@
 	
 	.PARAMETER Name
 		The name of the provider to configure
+
+	.PARAMETER Config
+		One or more configuration objects to apply.
+		Each entry must provide the provider Name and may include any other supported settings,
+		such as Enabled, InstanceName, filtering rules, or provider-specific dynamic parameters.
+		When Enabled is omitted, it defaults to $true.
 	
 	.PARAMETER InstanceName
 		A description of the InstanceName parameter.
@@ -102,60 +108,88 @@
 		PS C:\> Set-PSFLoggingProvider -Name filesystem -ExcludeModules "PSFramework"
 		
 		Prevents all messages from the PSFramework module to be logged to the file system
+
+	.EXAMPLE
+		PS C:\> $config = @(
+		>>     @{ Name = 'logfile'; MaxLevel = 3; FilePath = 'C:\Logs\MyScript\Task-%date%.csv' }
+		>>     @{ Name = 'eventlog'; ExcludeModules = 'PSFramework'; MaxLevel = 5; LogName = 'Contoso'; Source = 'MyTask' }
+		>> )
+		PS C:\> Set-PSFLoggingProvider -Config $config -Wait
+		
+		Applies mixed provider configurations (logfile + eventlog) in sequence using configuration objects.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Set-PSFLoggingProvider')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Set-PSFLoggingProvider')]
 	param (
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByName')]
 		[ValidateNotNullOrEmpty()]
 		[Alias('Provider', 'ProviderName')]
 		[string]
 		$Name,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByConfig')]
+		[object[]]
+		$Config,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string]
 		$InstanceName,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[bool]
 		$Enabled,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$IncludeModules,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$ExcludeModules,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$IncludeFunctions,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$ExcludeFunctions,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[guid[]]
 		$IncludeRunspaces,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[guid[]]
 		$ExcludeRunspaces,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$IncludeTags,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[string[]]
 		$ExcludeTags,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[ValidateRange(1,9)]
 		[int]
 		$MinLevel,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[ValidateRange(1, 9)]
 		[int]
 		$MaxLevel,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[switch]
 		$RequiresInclude,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[switch]
 		$ExcludeWarning,
 		
+		[Parameter(ParameterSetName = 'ByName')]
 		[switch]
 		$ExcludeError,
 		
@@ -194,6 +228,9 @@
 	
 	begin
 	{
+		# Skip to Process for define by configuration
+		if (-not $Name) { return }
+
 		if (-not ([PSFramework.Logging.ProviderHost]::Providers.ContainsKey($Name)))
 		{
 			Stop-PSFFunction -String 'Set-PSFLoggingProvider.Provider.NotFound' -StringValues $Name -EnableException $EnableException -Category InvalidArgument -Target $Name
@@ -218,6 +255,24 @@
 	process
 	{
 		if (Test-PSFFunctionInterrupt) { return }
+
+		#region Case: Define by Configuration
+		if (-not $Name) {
+			$last = @($Config | Where-Object { $_ })[-1]
+			foreach ($entry in $Config) {
+				if ($null -eq $entry) { continue }
+				$params = $entry | ConvertTo-PSFHashtable
+				if (-not $params.Name) {
+					Stop-PSFFunction -String 'Set-PSFLoggingProvider.Error.ConfigNoName' -StringValues $params -EnableException $EnableException -Category InvalidArgument -Target $entry
+				}
+				if ($params.Keys -notcontains 'Enabled') { $params.Enabled = $true }
+				if ($Wait -and $entry -eq $last) { $params.Wait = $true }
+				if ($EnableException) { $params.EnableException = $EnableException }
+				Set-PSFLoggingProvider @params
+			}
+			return
+		}
+		#endregion Case: Define by Configuration
 		
 		$provider.ConfigurationScript.InvokeGlobal($PSBoundParameters)
 		

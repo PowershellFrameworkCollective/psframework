@@ -21,7 +21,7 @@
 	
 		Imports the objects serialized to object.xml in the current folder.
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Import-PSFClixml')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Import-PSFClixml')]
 	param (
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[Alias('FullName')]

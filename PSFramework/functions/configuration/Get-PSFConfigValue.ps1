@@ -31,7 +31,7 @@
 			Returns the configured value for 'Default.CoffeeMilk'. If no such value is configured, it returns '0' instead.
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectComparisonWithNull", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFConfigValue')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFConfigValue')]
 	param (
 		[Alias('Name')]
 		[Parameter(Mandatory = $true, Position = 0)]

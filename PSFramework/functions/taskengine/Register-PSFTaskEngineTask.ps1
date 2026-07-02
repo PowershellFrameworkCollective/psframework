@@ -66,7 +66,7 @@
 			- Sets it to wait for 1 minute after registration before starting the first execution
 			- Sets it to priority "Critical", ensuring it takes precedence over most other tasks.
 	#>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFTaskEngineTask')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFTaskEngineTask')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[string]

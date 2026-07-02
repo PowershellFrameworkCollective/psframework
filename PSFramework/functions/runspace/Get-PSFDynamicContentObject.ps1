@@ -26,7 +26,7 @@
 		Returns the Dynamic Content Object named "test"
 #>
 	[OutputType([PSFramework.Utility.DynamicContentObject])]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFDynamicContentObject')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFDynamicContentObject')]
 	Param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
 		[string[]]

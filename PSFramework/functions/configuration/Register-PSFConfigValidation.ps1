@@ -26,7 +26,7 @@
 	
 			Registers the scriptblock stored in $scriptblock as validation with the name IntPositive
 	#>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFConfigValidation')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFConfigValidation')]
 	Param (
 		[Parameter(Mandatory = $true)]
 		[string]

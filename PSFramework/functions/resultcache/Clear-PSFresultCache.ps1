@@ -18,7 +18,7 @@
 	
 			Clears the result cache, freeing up any used memory.
 	#>
-	[CmdletBinding(ConfirmImpact = 'Low', SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Clear-PSFresultCache')]
+	[CmdletBinding(ConfirmImpact = 'Low', SupportsShouldProcess = $true, HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Clear-PSFresultCache')]
 	param (
 		
 	)

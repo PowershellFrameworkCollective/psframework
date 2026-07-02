@@ -46,7 +46,7 @@
 		Generates an XML text that can be used to register via Update-TypeData.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFTypeSerializationData')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFTypeSerializationData')]
 	Param (
 		[Parameter(ValueFromPipeline = $true)]
 		[object[]]

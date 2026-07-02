@@ -19,6 +19,11 @@
 
 	.PARAMETER InstanceObject
 		A full Logging Provider Instance object, as return by Get-PSFLoggingProviderInstance
+
+	.PARAMETER Config
+		One or more configuration objects to disable.
+		Each entry must provide the provider Name and may include a specific InstanceName.
+		All other settings are ignored.
 	
 	.PARAMETER NoFinalizeWait
 		Do not wait for the logging to conclude or the final events shutting down the provider instance to finish.
@@ -50,7 +55,13 @@
 	.EXAMPLE
 		PS C:\> Get-PSFLoggingProviderInstance | Disable-PSFLoggingProvider
 
-		Disables all active logging provider instacnes
+		Disables all active logging provider instances
+
+	.EXAMPLE
+		PS C:\> Disable-PSFLoggingProvider -Config $config.Logging
+
+		Disables all logging provider instances defined in $config.Logging
+		This allows convenient logging configuration from a config file - it takes the same config data Set-PSFLoggingProvider accepts.
 	#>
 	[CmdletBinding(DefaultParameterSetName = 'ByName')]
 	param (
@@ -70,6 +81,10 @@
 		[PSFramework.Logging.ProviderInstance[]]
 		$InstanceObject,
 
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByConfig')]
+		[object[]]
+		$Config,
+
 		[switch]
 		$NoFinalizeWait
 	)
@@ -86,19 +101,36 @@
 				$instance.NotAfter = $limit
 			}
 			
-			foreach ($instance in $instances) {
-				$instance.Drain((-not $NoFinalizeWait))
-			}
+			$null = $inInstances.Add($instance)
 		}
 
 		foreach ($instance in $InstanceObject) {
 			$instance.NotAfter = $limit
 			$null = $inInstances.Add($instance)
 		}
+
+		foreach ($entry in $Config) {
+			if ($null -eq $entry) { continue }
+			$param = $entry | ConvertTo-PSFHashtable -Include Name, InstanceName -Remap ([ordered]@{ Name = 'ProviderName'; InstanceName = 'Name' })
+			if (-not $param.Name) { $param.Name = 'Default' }
+
+			$instances = Get-PSFLoggingProviderInstance @param
+			
+			foreach ($instance in $instances) {
+				$instance.NotAfter = $limit
+			}
+			
+			$null = $inInstances.Add($instance)
+		}
 	}
 	end {
+		# Prevent duplicate draining
+		$drained = [System.Collections.ArrayList]@()
+		
 		foreach ($instance in $inInstances) {
-				$instance.Drain((-not $NoFinalizeWait))
-			}
+			if ($instance -in $drained) { continue }
+			$instance.Drain((-not $NoFinalizeWait))
+			$null = $drained.Add($instance)
+		}
 	}
 }

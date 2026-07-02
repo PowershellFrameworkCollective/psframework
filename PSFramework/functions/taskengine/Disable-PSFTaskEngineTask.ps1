@@ -18,7 +18,7 @@
 		
 		Disables the task named 'mymodule.maintenance'
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Disable-PSFTaskEngineTask')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Disable-PSFTaskEngineTask')]
 	param (
 		[string[]]
 		$Name,

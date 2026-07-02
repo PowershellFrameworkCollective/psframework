@@ -33,7 +33,7 @@
 		- having it accept the type 'microsoft.activedirectory.management.adcomputer'
 		- having it use the 'DNSHostName' property if available, falling back to 'Name' if necessary
 #>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Register-PSFParameterClassMapping')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Register-PSFParameterClassMapping')]
 	param (
 		[Parameter(Mandatory = $true)]
 		[PSFramework.Parameter.ParameterClasses]

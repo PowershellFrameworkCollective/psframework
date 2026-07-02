@@ -32,7 +32,7 @@
 		Returns a list of all registered licenses for products that have commercial licenses and are libraries.
 #>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
-	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Get-PSFLicense')]
+	[CmdletBinding(PositionalBinding = $false, HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFLicense')]
 	[OutputType([PSFramework.License.License])]
 	param (
 		[Parameter(Position = 0)]

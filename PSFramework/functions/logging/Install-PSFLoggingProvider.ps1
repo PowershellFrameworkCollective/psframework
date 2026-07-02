@@ -33,7 +33,7 @@
 	
 			Installs a logging provider named 'eventlog'
 	#>
-	[CmdletBinding(HelpUri = 'https://psframework.org/documentation/commands/PSFramework/Install-PSFLoggingProvider')]
+	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Install-PSFLoggingProvider')]
 	param (
 		[Alias('Provider', 'ProviderName')]
 		[string]
