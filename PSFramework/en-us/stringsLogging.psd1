@@ -1,20 +1,21 @@
 ﻿@{
-	'Add-PSFLoggingProviderRunspace.Instance.NotFound'	   = 'Unable to find logging provider instance {1} of provider {0}' # $ProviderName, $InstanceName
+	'Add-PSFLoggingProviderRunspace.Instance.NotFound'     = 'Unable to find logging provider instance {1} of provider {0}' # $ProviderName, $InstanceName
 	
-	'Import-PSFLoggingProvider.Import.Error'			   = "Error loading json data from {0}" # $effectivePath
-	'Import-PSFLoggingProvider.Datum.Error'			       = "Error processing logging provider entry" # 
+	'Import-PSFLoggingProvider.Import.Error'               = "Error loading json data from {0}" # $effectivePath
+	'Import-PSFLoggingProvider.Datum.Error'                = "Error processing logging provider entry" # 
 	
-	'Install-PSFLoggingProvider.Provider.NotFound'		   = "Provider {0} not found!" # $Name
-	'Install-PSFLoggingProvider.Installation.Error'	       = "Failed to install provider '{0}'" # $Name
+	'Install-PSFLoggingProvider.Provider.NotFound'         = "Provider {0} not found!" # $Name
+	'Install-PSFLoggingProvider.Installation.Error'        = "Failed to install provider '{0}'" # $Name
 	
 	'Register-PSFLoggingProvider.RegistrationEvent.Failed' = "Failed to register logging provider '{0}' - Registration event failed." # $Name
-	'Register-PSFLoggingProvider.Installation.Failed'	   = "Failed to install logging provider '{0}'" # $Name
+	'Register-PSFLoggingProvider.Installation.Failed'      = "Failed to install logging provider '{0}'" # $Name
 	'Register-PSFLoggingProvider.NotInstalled.Termination' = "Failed to enable logging provider {0} on registration! It was not recognized as installed. Consider running 'Install-PSFLoggingProvider' to properly install the prerequisites." # $Name
 
 	'Register-PSFMessageColorTransform.Level.Invalid'      = 'Invalid level for a message color rule: {0}! The levels "Warning" and "Error" cannot be selected as warning messages cannot be colored.' # $Level
 	
-	'Set-PSFLoggingProvider.Provider.NotFound'			   = 'Provider {0} not found!' # $Name
-	'Set-PSFLoggingProvider.Provider.V1NoInstance'		   = 'The Provider {0} is a first generation logging provider and does not support instances!' # $Name
-	'Set-PSFLoggingProvider.Provider.NotInstalled'		   = 'Provider {0} not installed! Run "Install-PSFLoggingProvider" first' # $Name
-	'Set-PSFLoggingProvider.Wait.Timeout'				   = 'Timeout waiting for {0} > {1} to be created. Logs may not be written as expected!' # $Name, $InstanceName
+	'Set-PSFLoggingProvider.Error.ConfigNoName'            = 'Invalid logging configuration: No provider name ("Name") specified! | {0}' # $params
+	'Set-PSFLoggingProvider.Provider.NotFound'             = 'Provider {0} not found!' # $Name
+	'Set-PSFLoggingProvider.Provider.V1NoInstance'         = 'The Provider {0} is a first generation logging provider and does not support instances!' # $Name
+	'Set-PSFLoggingProvider.Provider.NotInstalled'         = 'Provider {0} not installed! Run "Install-PSFLoggingProvider" first' # $Name
+	'Set-PSFLoggingProvider.Wait.Timeout'                  = 'Timeout waiting for {0} > {1} to be created. Logs may not be written as expected!' # $Name, $InstanceName
 }
