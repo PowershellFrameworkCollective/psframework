@@ -82,8 +82,14 @@
 
 		#region Continual Streaming Mode
 		if ($Continual) {
-			$queue = $resolvedWorkflow.Queues.$Name
-			while ($queue.Count -gt 1 -and -not $queue.Closed) {
+			$queue = @($resolvedWorkflows)[0].Queues.$Name
+			while (
+				-not $queue.Closed -or
+				(
+					$queue.Closed -and
+					$queue.Count -gt 0
+				)
+				) {
 				$result = $null
 				$success = $queue.TryDequeue([ref]$result)
 				if (-not $success) {
@@ -99,9 +105,7 @@
 		foreach ($resolvedWorkflow in $resolvedWorkflows) {
 			if ($All) {
 				# Cache Results so downstream pipeline commands do not interfere with the clearing
-				$results = $resolvedWorkflow.Queues.$Name.ToArray()
-				if (-not $Peek) { $resolvedWorkflow.Queues.$Name.Clear() }
-				$results
+				$resolvedWorkflow.Queues.$Name.ToArray((-not $Clear))
 				continue
 			}
 			if ($Peek) { $result = $resolvedWorkflow.Queues.$Name.Peek() }

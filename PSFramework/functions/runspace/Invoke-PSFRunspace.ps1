@@ -162,7 +162,6 @@
 			}
 			if ($pair.Value -is [ScriptBlock]) {
 				$runspaceWrapper.AddFunction($pair.Key, $pair.Value)
-				$functionsResolved[$pair.Key] = $pair.Value
 				continue
 			}
 			$runspaceWrapper.AddFunction($pair.Key, [scriptblock]::Create($pair.Value))

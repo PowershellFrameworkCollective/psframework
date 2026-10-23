@@ -18,6 +18,11 @@ namespace PSFramework.Logging
         public string Name;
 
         /// <summary>
+        /// A description for the logging provider
+        /// </summary>
+        public string Description;
+
+        /// <summary>
         /// Whether the logging provider is enabled. Only when this is set to true will the logging script execute its events.
         /// </summary>
         public bool Enabled;

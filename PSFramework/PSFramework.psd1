@@ -4,7 +4,7 @@
 	RootModule = 'PSFramework.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '1.14.457'
+	ModuleVersion = '1.15.472'
 	
 	# ID used to uniquely identify this module
 	GUID = '8028b914-132b-431f-baa9-94a6952f21ff'
@@ -42,6 +42,7 @@
 		'Clear-PSFMessage'
 		'Clear-PSFresultCache'
 		'Compare-PSFArray'
+		
 		'ConvertFrom-PSFArray'
 		'ConvertFrom-PSFClixml'
 		'ConvertTo-PSFClixml'
@@ -170,8 +171,10 @@
 		'Test-PSFFeature'
 		'Test-PSFFilter'
 		'Test-PSFFunctionInterrupt'
+		'Test-PSFHashtableEquality'
 		'Test-PSFLanguageMode'
 		'Test-PSFParameterBinding'
+		'Test-PSFParameterSet'
 		'Test-PSFPowerShell'
 		'Test-PSFTaskEngineCache'
 		'Test-PSFTaskEngineTask'

@@ -1,5 +1,23 @@
 ﻿# CHANGELOG
 
+## 1.15.472 (2026-10-23)
+
+- New: Logging Provider: Azure LogAnalytics V2 - sends logs to Log Analytics via Data Collection Rule
+- New: Test-PSFParameterSet - Tests, whether the command specified would resolve to the specified parameter set with the parameters provided.
+- New: Test-PSFHashtableEquality - Compares hashtables on a per-entry (key and value) basis.
+- Upd: Logging Provider FileSystem - Significantly improved performance of builtin default debug log.
+- Upd: ConvertTo-PSFHashtable - added `-ExcludeNull` parameter, to remove keys whose value is $null
+- Upd: ConvertTo-PSFHashtable - added `-ExcludeEmptyString` parameter, to remove keys whose value is an empty string
+- Upd: ConvertTo-PSFHashtable - added `-ExcludeEmptyCollection` parameter, to remove keys whose value is an empty collection
+- Upd: Register-PSFLoggingProvider - added `-Description` parameter.
+- Upd: Logging Providers - updated the `Get-ConfigValue` command available to Logging Providers to support `-Fallback` parameter, defining a fallback value in case the provider setting is $null.
+- Fix: Compare-PSFArray - fails to accept empty arrays
+- Fix: Read-PSFRunspaceQueue - the `-Continual` parameter will wait and immediately close
+- Fix: Read-PSFRunspaceQueue - the `-Continual` parameter will not wait correctly even with the previous issue fixed
+- Fix: Read-PSFRunspaceQueue - rare concurrency issue when reading all data from a queue that might have lead to a lost item
+- Fix: Invoke-PSFRunspace - specifying a function as scriptblock leads to an error
+- Fix: Set-PSFLoggingProvider - tries to register a Logging Provider from config when it doesn't contain a Name.
+
 ## 1.14.457 (2026-07-02)
 
 - New: ConfigValidation rstimeout - Validates input as a legal setting for the Runspace Workflow Worker's timeout

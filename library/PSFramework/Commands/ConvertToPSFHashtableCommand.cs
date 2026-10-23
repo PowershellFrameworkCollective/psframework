@@ -42,6 +42,24 @@ namespace PSFramework.Commands
         public SwitchParameter IncludeEmpty;
 
         /// <summary>
+        /// Exclude keys whose value is null
+        /// </summary>
+        [Parameter()] 
+        public SwitchParameter ExcludeNull;
+
+        /// <summary>
+        /// Exclude keys whose value is an empty string
+        /// </summary>
+        [Parameter()] 
+        public SwitchParameter ExcludeEmptyString;
+
+        /// <summary>
+        /// Exclude keys whose value is an empty collection
+        /// </summary>
+        [Parameter()] 
+        public SwitchParameter ExcludeEmptyCollection;
+
+        /// <summary>
         /// Specifically designed for use in a command when passing through parameters with default values.
         /// Enabling this switch has the command inherit values from variables in the caller scope if their name has been specified in the Include parameter.
         /// </summary>
@@ -223,6 +241,27 @@ namespace PSFramework.Commands
                         object value = result[key];
                         result.Remove(key);
                         result[Remap[key]] = value;
+                    }
+                }
+                if (ExcludeNull || ExcludeEmptyString || ExcludeEmptyCollection)
+                {
+                    object[] keys = result.Keys.Cast<object>().ToArray();
+                    foreach (object key in keys) {
+                        if (ExcludeNull && result[key] == null)
+                        {
+                            result.Remove(key);
+                            continue;
+                        }
+                        if (ExcludeEmptyString && result[key] != null && result[key] is string && String.IsNullOrEmpty(result[key].ToString()))
+                        {
+                            result.Remove(key);
+                            continue;
+                        }
+                        if (ExcludeEmptyCollection && result[key] != null && result[key] is ICollection && ((ICollection)result[key]).Count == 0)
+                        {
+                            result.Remove(key);
+                            continue;
+                        }
                     }
                 }
 

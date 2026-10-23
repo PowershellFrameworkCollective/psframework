@@ -32,7 +32,7 @@
 		A relative path would be relative to the path of the json file originally retrieved.
 		If calling this command with the "-Data" parameter, relative paths are not supported.
 		The scriptfile must be valid PowerShell code, however the original extension matters not.
-		The file will be run as untrusted code, so it will fail in Constraiend Language Mode, unless you sign the provider script with a whitelisted publisher certificate.
+		The file will be run as untrusted code, so it will fail in Constrained Language Mode, unless you sign the provider script with a whitelisted publisher certificate.
 	
 		# ProviderName
 		#---------------
@@ -173,7 +173,7 @@
 			
 			try
 			{
-				if ($uri.Scheme -eq 'file') { [string]$dataReceived = Get-Content -Path $uri -ErrorAction Stop -Raw }
+				if ($uri.Scheme -eq 'file') { [string]$dataReceived = Get-PSFFileContent -Path $uri -ErrorAction Stop -ReadCount -1 }
 				else { [string]$dataReceived = Invoke-WebRequest -Uri $uri -UseBasicParsing -ErrorAction Stop }
 			}
 			catch { throw }
@@ -190,7 +190,7 @@
 			[System.IO.File]::WriteAllText($scriptPath, $dataReceived, $encoding)
 			
 			# Loading a file from within the module context runs the provider script from within that (trusted) context as well.
-			# This has various nasty consequences in Constrained language Mode
+			# This has various nasty consequences in Constrained Language Mode
 			# We avoid this by rehoming the scriptblock to the global sessionstate
 			$scriptBlock = { & $args[0] }
 			[PSFramework.Utility.UtilityHost]::ImportScriptBlock($scriptBlock, $true) # $true = Import into global, rather than local sessionstate
@@ -237,7 +237,7 @@
 		}
 		foreach ($datum in $dataReceived)
 		{
-			try { Import-ProviderData -Data $datum }
+			try { Import-ProviderData -Data $datum -ConfigPath $effectivePath }
 			catch { Stop-PSFFunction -String 'Import-PSFLoggingProvider.Datum.Error' -EnableException $EnableException -ErrorRecord $_ -Continue -Target $datum }
 		}
 	}
