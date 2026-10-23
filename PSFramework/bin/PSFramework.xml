@@ -525,6 +525,21 @@
             Enables adding empty keys for explicitly included keys that were not found on the input
             </summary>
         </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ExcludeNull">
+            <summary>
+            Exclude keys whose value is null
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ExcludeEmptyString">
+            <summary>
+            Exclude keys whose value is an empty string
+            </summary>
+        </member>
+        <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.ExcludeEmptyCollection">
+            <summary>
+            Exclude keys whose value is an empty collection
+            </summary>
+        </member>
         <member name="F:PSFramework.Commands.ConvertToPSFHashtableCommand.Inherit">
             <summary>
             Specifically designed for use in a command when passing through parameters with default values.
@@ -3524,6 +3539,41 @@
             <param name="Instance">Instance of the Logging Provider with the issue</param>
             <param name="ErrorRecord">The Issue</param>
         </member>
+        <member name="T:PSFramework.Logging.FileSystemWriter">
+            <summary>
+            Helper class used by the FileSystem logging provider to write data at max performance
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.FileSystemWriter.Path">
+            <summary>
+            The Path to where is written. Changing this recalculates converters and establishes a filestream
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.FileSystemWriter.Size">
+            <summary>
+            Size of the logfile.
+            Defaults to 0 if file not present.
+            Used to determine file-split based on size.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.FileSystemWriter.WriteLine(System.String)">
+            <summary>
+            Writes a line to the logfile
+            </summary>
+            <param name="Line">The line of text to write</param>
+        </member>
+        <member name="M:PSFramework.Logging.FileSystemWriter.WriteObject(System.Management.Automation.PSObject)">
+            <summary>
+            Writes an object to the logfile.
+            Will convert it to csv first.
+            </summary>
+            <param name="Item">The item to write</param>
+        </member>
+        <member name="M:PSFramework.Logging.FileSystemWriter.End">
+            <summary>
+            Clean up both converter and writer
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.LogFileFileType">
             <summary>
             The data format to log to in the logfile logging provider
@@ -3597,6 +3647,11 @@
         <member name="F:PSFramework.Logging.Provider.Name">
             <summary>
             Each logging provider has a name. Make sure it's unique
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.Provider.Description">
+            <summary>
+            A description for the logging provider
             </summary>
         </member>
         <member name="F:PSFramework.Logging.Provider.Enabled">
@@ -8380,6 +8435,14 @@
             Remove all content in the queue
             </summary>
         </member>
+        <member name="M:PSFramework.Runspace.RSQueue.ToArray(System.Boolean)">
+            <summary>
+            Get all contents as an Array.
+            Possibly also clearing it out afterwards.
+            </summary>
+            <param name="Clear">If true, clear after reading as one threadsafe operation.</param>
+            <returns>To content of the queued items</returns>
+        </member>
         <member name="M:PSFramework.Runspace.RSQueue.Peek">
             <summary>
             Take a look without removing anything
@@ -12682,6 +12745,37 @@
             </summary>
             <param name="Level">How many levels to go down the script callstack</param>
             <returns>Metadata describing who called</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.Compare(System.Collections.Hashtable,System.Collections.Hashtable)">
+            <summary>
+            Compare two hashtables.
+            Value comparison uses C#-based comparison logic.
+            </summary>
+            <param name="Table1">First Hashtable to compare</param>
+            <param name="Table2">Second Hashtable to compare</param>
+            <returns>Whether the two tables are equal</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.ComparePS(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Compare two hashtables.
+            Value comparison uses PowerShell-based comparison logic.
+            </summary>
+            <param name="Table1">First Hashtable to compare</param>
+            <param name="Table2">Second Hashtable to compare</param>
+            <param name="CaseSensitive">Whether the comparison is case sensitive</param>
+            <param name="Recurse">Whether to recursively compare nested hashtables</param>
+            <param name="OneDirectional">If enabled, all entries in Table1 must be present in Table2, but not necessarily all entries in Table2 in Table1</param>
+            <returns>Whether the two tables are equal</returns>
+        </member>
+        <member name="M:PSFramework.Utility.UtilityHost.TestParameterSetAny(System.Management.Automation.CommandInfo,System.String[],System.String[])">
+            <summary>
+            Checks, whether the specified parameters would resolve to one of the selected parameter sets.
+            Will return false, if the provided parameters would lead to an ambiguous parameter set, even if the specified sets would be among the still valid sets.
+            </summary>
+            <param name="Command">The command for the parameters of which the test should be performed.</param>
+            <param name="Parameters">The names of the parameters specified.</param>
+            <param name="Sets">The sets checked for. The resultant parameter set must be one of those specified.</param>
+            <returns>Whether the specified parameters would resolve to one of the selected parameter sets</returns>
         </member>
         <member name="F:PSFramework.Utility.UtilityHost.ScriptBlocks">
             <summary>

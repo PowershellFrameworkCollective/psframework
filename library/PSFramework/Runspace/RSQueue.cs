@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace PSFramework.Runspace
 {
@@ -53,9 +54,12 @@ namespace PSFramework.Runspace
             if (Closed)
                 return;
 
-            Interlocked.Increment(ref TotalItemCount);
-            base.Enqueue(Input);
-			LastUpdate = DateTime.Now;
+            lock (this)
+            {
+                Interlocked.Increment(ref TotalItemCount);
+                base.Enqueue(Input);
+			    LastUpdate = DateTime.Now;
+            }
         }
 
         /// <summary>
@@ -73,8 +77,12 @@ namespace PSFramework.Runspace
                 if (Closed)
                     return;
 
-                Interlocked.Increment(ref TotalItemCount);
-                base.Enqueue(item);
+                lock (this)
+                {
+                    Interlocked.Increment(ref TotalItemCount);
+                    base.Enqueue(item);
+                    LastUpdate = DateTime.Now;
+                }
             }
         }
 
@@ -107,6 +115,26 @@ namespace PSFramework.Runspace
             {
                 while (Count > 0)
                     Dequeue();
+            }
+        }
+
+        /// <summary>
+        /// Get all contents as an Array.
+        /// Possibly also clearing it out afterwards.
+        /// </summary>
+        /// <param name="Clear">If true, clear after reading as one threadsafe operation.</param>
+        /// <returns>To content of the queued items</returns>
+        public object[] ToArray(bool Clear)
+        {
+            if (!Clear)
+                return ToArray();
+
+            lock (this)
+            {
+                object[] content = ToArray();
+                while (Count > 0)
+                    Dequeue();
+                return content;
             }
         }
 

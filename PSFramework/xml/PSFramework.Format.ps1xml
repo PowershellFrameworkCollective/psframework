@@ -355,11 +355,6 @@
 					<TableColumnHeader/>
 					<TableColumnHeader/>
 					<TableColumnHeader/>
-					<TableColumnHeader/>
-					<TableColumnHeader/>
-					<TableColumnHeader/>
-					<TableColumnHeader/>
-					<TableColumnHeader/>
 				</TableHeaders>
 				<TableRowEntries>
 					<TableRowEntry>
@@ -374,22 +369,7 @@
 								<PropertyName>ProviderVersion</PropertyName>
 							</TableColumnItem>
 							<TableColumnItem>
-								<PropertyName>IncludeModules</PropertyName>
-							</TableColumnItem>
-							<TableColumnItem>
-								<PropertyName>ExcludeModules</PropertyName>
-							</TableColumnItem>
-							<TableColumnItem>
-								<PropertyName>IncludeTags</PropertyName>
-							</TableColumnItem>
-							<TableColumnItem>
-								<PropertyName>ExcludeTags</PropertyName>
-							</TableColumnItem>
-							<TableColumnItem>
-								<PropertyName>Initialized</PropertyName>
-							</TableColumnItem>
-							<TableColumnItem>
-								<PropertyName>InstallationOptional</PropertyName>
+								<PropertyName>Description</PropertyName>
 							</TableColumnItem>
 						</TableColumnItems>
 					</TableRowEntry>

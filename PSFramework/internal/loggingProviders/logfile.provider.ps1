@@ -68,7 +68,7 @@
 			#region Type-Based Output
 			switch ($FileType) {
 				#region Csv
-				"Csv" {
+				'Csv' {
 					if (-not $CsvDelimiter) {
 						$CsvDelimiter = ','
 					}
@@ -92,7 +92,7 @@
 				}
 				#endregion Csv
 				#region Json
-				"Json" {
+				'Json' {
 					if (-not $script:JsonSettings.JsonString) { $data = $Message | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress }
 					else { $data = $Message | ConvertFrom-Enumeration | ConvertTo-Json -Compress:$script:JsonSettings.JsonCompress }
 				
@@ -101,20 +101,20 @@
 					}
 					else {
 						if (-not $script:firstEntry -or (-not $script:JsonSettings.JsonNoEmptyFirstLine)) {
-							$script:writer.WriteLine(",")
+							$script:writer.WriteLine(',')
 						}
 						$script:writer.Write($data)
 					}
 				}
 				#endregion Json
 				#region XML
-				"XML" {
+				'XML' {
 					[xml]$xml = $message | ConvertTo-Xml -NoTypeInformation
 					$script:writer.WriteLine($xml.Objects.InnerXml)
 				}
 				#endregion XML
 				#region Html
-				"Html" {
+				'Html' {
 					[xml]$xml = $message | ConvertTo-Html -Fragment
 				
 					if ($script:firstEntry -and $IncludeHeader) {
@@ -124,14 +124,14 @@
 				}
 				#endregion Html
 				#region CMTrace
-				"CMTrace" {
+				'CMTrace' {
 					$cType = 1
 					if ($MessageItem.Level -eq 'Warning') { $cType = 2 }
 					if ($MessageItem.ErrorRecord) { $cType = 3 }
 					$fileEntry = '<no file>'
 					if ($MessageItem.File) { $fileEntry = Split-Path -Path $MessageItem.File -Leaf }
 
-					$component = "{0}:{1} > {2}" -f $fileEntry, $MessageItem.Line, $MessageItem.FunctionName
+					$component = '{0}:{1} > {2}' -f $fileEntry, $MessageItem.Line, $MessageItem.FunctionName
 					if ($script:cmTraceSettings.CMTraceOverrideComponent -and $MessageItem.Data.Component) {
 						$component = $MessageItem.Data.Component
 					}
@@ -189,7 +189,7 @@
 		#endregion Resolve Paths
 		
 		$minimumRetention = (Get-ConfigValue -Name 'LogRetentionTime') -as [PSFTimeSpan] -as [Timespan]
-		if (-not $minimumRetention) { throw "No minimum retention defined" }
+		if (-not $minimumRetention) { throw 'No minimum retention defined' }
 		if ($minimumRetention.TotalSeconds -le 0) { throw "Minimum retention must be positive! Retention: $minimumRetention" }
 		
 		# Don't logrotate more than every 5 minutes
@@ -300,7 +300,7 @@ $start_event = {
 			'Tags' {
 				@{
 					Name       = 'Tags'
-					Expression = { $_.Tags -join "," }
+					Expression = { $_.Tags -join ',' }
 				}
 			}
 			'Message' {
@@ -326,13 +326,13 @@ $start_event = {
 			}
 			'DataCompact' {
 				@{
-					Name       = "DataCompact"
+					Name       = 'DataCompact'
 					Expression = {
 						if (-not $_.Data) { return }
 						$lines = foreach ($pair in $_.Data.GetEnumerator()) {
 							'{0}={1}' -f $pair.Key, $pair.Value
 						}
-						$lines -join ", "
+						$lines -join ', '
 					}
 				}
 			}
@@ -341,7 +341,7 @@ $start_event = {
 
 				$code = switch ($value) {
 					Tags {
-						{ $_.Tags -join "," }
+						{ $_.Tags -join ',' }
 					}
 					Message {
 						{ $_.LogMessage }
@@ -364,7 +364,7 @@ $start_event = {
 							$lines = foreach ($pair in $_.Data.GetEnumerator()) {
 								'{0}={1}' -f $pair.Key, $pair.Value
 							}
-							$lines -join ", "
+							$lines -join ', '
 						}
 					}
 					default { [ScriptBlock]::Create("`$_.$value") }
@@ -467,32 +467,33 @@ $final_event = {
 #endregion Events
 
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FilePath' -Value "" -Initialize -Validation string -Description "The path to where the logfile is written. Supports some placeholders such as %Date% to allow for timestamp in the name. For full documentation on the supported wildcards, see the documentation on https://psframework.org"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Logname' -Value "" -Initialize -Validation string -Description "A special string you can use as a placeholder in the logfile path (by using '%logname%' as placeholder)"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.IncludeHeader' -Value $true -Initialize -Validation bool -Description "Whether a written csv file will include headers"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Headers' -Value @('ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username') -Initialize -Validation stringarray -Description "The properties to export, in the order to select them."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value "CSV" -Initialize -Validation psframework.logfilefiletype -Description "In what format to write the logfile. Supported styles: CSV, XML, Html, Json, TXT or CMTrace. Html, XML and Json will be written as fragments."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value "," -Initialize -Validation string -Description "The delimiter to use when writing to csv."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Description "The format used for timestamps in the logfile"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Encoding' -Value "UTF8" -Initialize -Validation string -Description "In what encoding to write the logfile."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.UTC' -Value $false -Initialize -Validation bool -Description "Whether the timestamp in the logfile should be converted to UTC"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotatePath' -Value "" -Initialize -Validation string -Description "The path where to logrotate. Specifying this setting will cause the logging provider to also rotate older logfiles"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRetentionTime' -Value "30d" -Initialize -Validation timespan -Description "The minimum age for a logfile to be considered for deletion as part of logrotation"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value "*" -Initialize -Validation string -Description "A filter to apply to all files logrotated"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateRecurse' -Value $false -Initialize -Validation bool -Description "Whether the logrotate aspect should recursively look for files to logrotate"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MutexName' -Value '' -Initialize -Validation string -Description "Name of a mutex to use. Use this to handle parallel logging into the same file from multiple processes, by picking the same name in each process."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonCompress' -Value $false -Initialize -Validation bool -Description "Will compress the json entries, condensing each entry into a single line."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FilePath' -Value '' -Initialize -Validation string -Description 'The path to where the logfile is written. Supports some placeholders such as %Date% to allow for timestamp in the name. For full documentation on the supported wildcards, see the documentation on https://psframework.org'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Logname' -Value '' -Initialize -Validation string -Description "A special string you can use as a placeholder in the logfile path (by using '%logname%' as placeholder)"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.IncludeHeader' -Value $true -Initialize -Validation bool -Description 'Whether a written csv file will include headers'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Headers' -Value @('ComputerName', 'File', 'FunctionName', 'Level', 'Line', 'Message', 'ModuleName', 'Runspace', 'Tags', 'TargetObject', 'Timestamp', 'Type', 'Username') -Initialize -Validation stringarray -Description 'The properties to export, in the order to select them.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.FileType' -Value 'CSV' -Initialize -Validation psframework.logfilefiletype -Description 'In what format to write the logfile. Supported styles: CSV, XML, Html, Json, TXT or CMTrace. Html, XML and Json will be written as fragments.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CsvDelimiter' -Value ',' -Initialize -Validation string -Description 'The delimiter to use when writing to csv.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TimeFormat' -Value "$([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.ShortDatePattern) $([System.Globalization.CultureInfo]::CurrentUICulture.DateTimeFormat.LongTimePattern)" -Initialize -Validation string -Description 'The format used for timestamps in the logfile'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.Encoding' -Value 'UTF8' -Initialize -Validation string -Description 'In what encoding to write the logfile.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.UTC' -Value $false -Initialize -Validation bool -Description 'Whether the timestamp in the logfile should be converted to UTC'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotatePath' -Value '' -Initialize -Validation string -Description 'The path where to logrotate. Specifying this setting will cause the logging provider to also rotate older logfiles'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRetentionTime' -Value '30d' -Initialize -Validation timespan -Description 'The minimum age for a logfile to be considered for deletion as part of logrotation'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateFilter' -Value '*' -Initialize -Validation string -Description 'A filter to apply to all files logrotated'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.LogRotateRecurse' -Value $false -Initialize -Validation bool -Description 'Whether the logrotate aspect should recursively look for files to logrotate'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MutexName' -Value '' -Initialize -Validation string -Description 'Name of a mutex to use. Use this to handle parallel logging into the same file from multiple processes, by picking the same name in each process.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonCompress' -Value $false -Initialize -Validation bool -Description 'Will compress the json entries, condensing each entry into a single line.'
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonString' -Value $false -Initialize -Validation bool -Description "Will convert all enumerated properties to string values when converting to json. This causes the level property to be 'Debug','Host', ... rather than 8,2,..."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoComma' -Value $false -Initialize -Validation bool -Description "Prevent adding commas between two json entries."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoEmptyFirstLine' -Value $false -Initialize -Validation bool -Description "Prevent the empty first line when commas have not been disabled."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoComma' -Value $false -Initialize -Validation bool -Description 'Prevent adding commas between two json entries.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.JsonNoEmptyFirstLine' -Value $false -Initialize -Validation bool -Description 'Prevent the empty first line when commas have not been disabled.'
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CMTraceOverrideComponent' -Value $false -Initialize -Validation bool -Description 'When Enabled, messages that include a "Data" hashtable with a "Component" entry will use that Entry for the log message Component element, rather than the auto-calculated one.'
 	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.TXTPattern' -Value '%Timestamp% [%Level%] %Message%' -Initialize -Validation string -Description 'The pattern of any given line in the TXT-based logfile. Use %PROPERTYNAME% as placeholder, e.g. "%Message%". Same properties as with the headers configuration - you need to specify both settings, if your pattern includes non-default properties such as "Data".'
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MoveOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to move logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CopyOnFinal' -Value '' -Initialize -Validation string -Description "Path to a target folder to copy logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.MoveOnFinal' -Value '' -Initialize -Validation string -Description 'Path to a target folder to move logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.LogFile.CopyOnFinal' -Value '' -Initialize -Validation string -Description 'Path to a target folder to copy logfiles to when shutting down the logging provider instance. This happens automatically when PSFramework ends or the provider instance is disabled again.'
 }
 
 $paramRegisterPSFLoggingProvider = @{
-	Name                       = "logfile"
+	Name                       = 'logfile'
+	Description                = 'The universal logfile provider, useful for any given logfile format'
 	Version2                   = $true
 	ConfigurationRoot          = 'PSFramework.Logging.LogFile'
 	InstanceProperties         = 'CsvDelimiter', 'FilePath', 'FileType', 'Headers', 'IncludeHeader', 'Logname', 'TimeFormat', 'Encoding', 'UTC', 'LogRotatePath', 'LogRetentionTime', 'LogRotateFilter', 'LogRotateRecurse', 'MutexName', 'JsonCompress', 'JsonString', 'JsonNoComma', 'JsonNoEmptyFirstLine', 'CMTraceOverrideComponent', 'TXTPattern', 'MoveOnFinal', 'CopyOnFinal'

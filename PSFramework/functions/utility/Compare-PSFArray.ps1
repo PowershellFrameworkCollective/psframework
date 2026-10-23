@@ -33,10 +33,12 @@
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, Position = 0)]
+		[AllowEmptyCollection()]
 		[object[]]
 		$ReferenceObject,
 		
 		[Parameter(Mandatory = $true, Position = 1)]
+		[AllowEmptyCollection()]
 		[object[]]
 		$DifferenceObject,
 		

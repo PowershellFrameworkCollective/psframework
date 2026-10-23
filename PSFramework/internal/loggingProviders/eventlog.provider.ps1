@@ -36,7 +36,7 @@
 			$Message.Timestamp.ToUniversalTime().ToString((Get-ConfigValue -Name TimeFormat))
 			$Message.FunctionName
 			$Message.ModuleName
-			($Message.Tags -join ",")
+			($Message.Tags -join ',')
 			$Message.Level
 			$Message.Runspace
 			$Message.TargetObject
@@ -139,7 +139,8 @@ $message_event = {
 }
 
 $paramRegisterPSFLoggingProvider = @{
-	Name                       = "eventlog"
+	Name                       = 'eventlog'
+	Description                = 'Sends messages to the Windows Eventlog on the local computer.'
 	Version2                   = $true
 	ConfigurationRoot          = 'PSFramework.Logging.EventLog'
 	InstanceProperties         = 'LogName', 'Source', 'UseFallback', 'Category', 'InfoID', 'WarningID', 'ErrorID', 'ErrorTag', 'TimeFormat', 'NumericTagAsID', 'TagToID'
