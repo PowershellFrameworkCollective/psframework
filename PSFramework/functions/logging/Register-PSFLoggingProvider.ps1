@@ -43,6 +43,10 @@
 		This reduces the complexity and improves the overall user experience while adding multi-instance capability to the service.
 		All new providers should be built as version2 providers.
 		Generation 1 legacy providers are still supported under the PSFramework Reliability Promise
+
+	.PARAMETER Description
+		A description for your logging provider.
+		Helps users understand what the provider is meant for.
 	
 	.PARAMETER Enabled
 		Setting this will enable the provider on registration.
@@ -154,6 +158,9 @@
 		[Parameter(ParameterSetName = 'Version2')]
 		[switch]
 		$Version2,
+
+		[string]
+		$Description,
 		
 		[switch]
 		$Enabled,
@@ -250,6 +257,7 @@
 		{
 			$provider = New-Object PSFramework.Logging.Provider
 			$provider.Name = $Name
+			$provider.Description = $Description
 			$provider.BeginEvent = $BeginEvent
 			$provider.StartEvent = $StartEvent
 			$provider.MessageEvent = $MessageEvent
@@ -301,6 +309,7 @@
 			
 			$provider = New-Object PSFramework.Logging.ProviderV2
 			$provider.Name = $Name
+			$provider.Description = $Description
 			$provider.ConfigurationRoot = $ConfigurationRoot.Trim('.')
 			$provider.InstanceProperties = $InstanceProperties
 			$provider.ConfigurationDefaultValues = $ConfigurationDefaultValues

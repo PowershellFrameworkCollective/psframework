@@ -45,7 +45,9 @@
 				[CmdletBinding()]
 				param (
 					[string]
-					$Name
+					$Name,
+
+					$FallBack
 				)
 				
 				$rootPath = $script:Instance.ConfigurationRoot
@@ -54,7 +56,7 @@
 					$rootPath += ".$($script:Instance.Name)"
 				}
 				
-				Get-PSFConfigValue -FullName "$rootPath.$Name"
+				Get-PSFConfigValue -FullName "$rootPath.$Name" -Fallback $FallBack
 			}
 			
 			Set-Content -Path "function:\$(${  functionNames  }.Begin)" -Value $LoggingProviderInstance.Provider.BeginEvent.ToString()

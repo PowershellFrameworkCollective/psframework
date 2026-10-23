@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -700,6 +701,137 @@ namespace PSFramework.Utility
             return Meta.CallerInfo.GetCaller(Level);
         }
         #endregion Callstack Metadata
+
+        #region Comparisons
+        /// <summary>
+        /// Compare two hashtables.
+        /// Value comparison uses C#-based comparison logic.
+        /// </summary>
+        /// <param name="Table1">First Hashtable to compare</param>
+        /// <param name="Table2">Second Hashtable to compare</param>
+        /// <returns>Whether the two tables are equal</returns>
+        public static bool Compare(Hashtable Table1, Hashtable Table2)
+        {
+            if (Table1 == null && Table2 == null) return true;
+            if (Table1 == null && Table2 != null) return false;
+            if (Table1 != null && Table2 == null) return false;
+
+            if (Table1.Count != Table2.Count) return false;
+
+            foreach (DictionaryEntry row in Table1)
+            {
+                if (!Table2.ContainsKey(row.Key)) return false;
+                if (Table2[row.Key] != row.Value) return false;
+            }
+            foreach (DictionaryEntry row in Table2)
+            {
+                if (!Table1.ContainsKey(row.Key)) return false;
+                if (Table1[row.Key] != row.Value) return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Compare two hashtables.
+        /// Value comparison uses PowerShell-based comparison logic.
+        /// </summary>
+        /// <param name="Table1">First Hashtable to compare</param>
+        /// <param name="Table2">Second Hashtable to compare</param>
+        /// <param name="CaseSensitive">Whether the comparison is case sensitive</param>
+        /// <param name="Recurse">Whether to recursively compare nested hashtables</param>
+        /// <param name="OneDirectional">If enabled, all entries in Table1 must be present in Table2, but not necessarily all entries in Table2 in Table1</param>
+        /// <returns>Whether the two tables are equal</returns>
+        public static bool ComparePS(Hashtable Table1, Hashtable Table2, bool CaseSensitive, bool Recurse, bool OneDirectional)
+        {
+            if (Table1 == null && Table2 == null) return true;
+            if (Table1 == null && Table2 != null) return false;
+            if (Table1 != null && Table2 == null) return false;
+
+            if (!OneDirectional && Table1.Count != Table2.Count) return false;
+
+            foreach (DictionaryEntry row in Table1)
+            {
+                if (!Table2.ContainsKey(row.Key)) return false;
+                if (Recurse && !LanguagePrimitives.Equals(Table2[row.Key], row.Value, !CaseSensitive))
+                {
+                    if (Table2[row.Key] is Hashtable && row.Value is Hashtable)
+                    {
+                        if (!ComparePS((Hashtable)Table2[row.Key], (Hashtable)row.Value, CaseSensitive, Recurse, OneDirectional))
+                            return false;
+                    }
+                    else
+                        return false;
+                }
+                else if (!LanguagePrimitives.Equals(Table2[row.Key], row.Value, !CaseSensitive)) return false;
+            }
+
+            if (OneDirectional)
+                return true;
+
+            foreach (DictionaryEntry row in Table2)
+            {
+                if (!Table1.ContainsKey(row.Key)) return false;
+                if (Recurse && !LanguagePrimitives.Equals(Table1[row.Key], row.Value, !CaseSensitive))
+                {
+                    if (Table1[row.Key] is Hashtable && row.Value is Hashtable)
+                    {
+                        if (!ComparePS((Hashtable)Table1[row.Key], (Hashtable)row.Value, CaseSensitive, Recurse, false))
+                            return false;
+                    }
+                    else
+                        return false;
+                }
+                else if (!LanguagePrimitives.Equals(Table1[row.Key], row.Value, !CaseSensitive)) return false;
+            }
+
+            return true;
+        }
+        #endregion Comparisons
+
+        /// <summary>
+        /// Checks, whether the specified parameters would resolve to one of the selected parameter sets.
+        /// Will return false, if the provided parameters would lead to an ambiguous parameter set, even if the specified sets would be among the still valid sets.
+        /// </summary>
+        /// <param name="Command">The command for the parameters of which the test should be performed.</param>
+        /// <param name="Parameters">The names of the parameters specified.</param>
+        /// <param name="Sets">The sets checked for. The resultant parameter set must be one of those specified.</param>
+        /// <returns>Whether the specified parameters would resolve to one of the selected parameter sets</returns>
+        public static bool TestParameterSetAny(CommandInfo Command, string[] Parameters, string[] Sets)
+        {
+            if (null == Command) return false;
+            if (null == Sets) return false;
+            if (null == Parameters)
+                Parameters = new string[0];
+
+            List<CommandParameterSetInfo> matches = new List<CommandParameterSetInfo>();
+            foreach (CommandParameterSetInfo info in Command.ParameterSets)
+            {
+                if (Parameters.Where(p => !info.Parameters.Select(o => o.Name).ToArray().Contains(p, StringComparer.OrdinalIgnoreCase)).Count() > 0)
+                    continue;
+                matches.Add(info);
+            }
+
+            CommandParameterSetInfo defaultSet = Command.ParameterSets.Where(s => s.IsDefault).FirstOrDefault();
+            string effectiveSet = defaultSet?.Name;
+
+            if (matches.Count == 1)
+                effectiveSet = matches[0].Name;
+            else if (matches.Count > 1)
+            {
+                if (null == defaultSet)
+                    return false;
+                if (!matches.Select(o => o.Name).ToArray().Contains(effectiveSet))
+                    return false;
+            }
+            else
+                return false;
+            
+            if (String.IsNullOrEmpty(effectiveSet))
+                return false;
+
+            return Sets.Contains(effectiveSet, StringComparer.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// Stored scriptblocks that can be retrieved on demand anywhere within the process

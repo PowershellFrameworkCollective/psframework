@@ -263,7 +263,7 @@
 				if ($null -eq $entry) { continue }
 				$params = $entry | ConvertTo-PSFHashtable
 				if (-not $params.Name) {
-					Stop-PSFFunction -String 'Set-PSFLoggingProvider.Error.ConfigNoName' -StringValues $params -EnableException $EnableException -Category InvalidArgument -Target $entry
+					Stop-PSFFunction -String 'Set-PSFLoggingProvider.Error.ConfigNoName' -StringValues $params -EnableException $EnableException -Category InvalidArgument -Target $entry -Continue
 				}
 				if ($params.Keys -notcontains 'Enabled') { $params.Enabled = $true }
 				if ($Wait -and $entry -eq $last) { $params.Wait = $true }

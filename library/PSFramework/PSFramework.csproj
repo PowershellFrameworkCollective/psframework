@@ -132,6 +132,7 @@
     <Compile Include="Localization\LocalString.cs" />
     <Compile Include="Localization\LocalStrings.cs" />
     <Compile Include="Logging\Error.cs" />
+    <Compile Include="Logging\FileSystemWriter.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\LoggingState.cs" />
     <Compile Include="Logging\Provider.cs" />

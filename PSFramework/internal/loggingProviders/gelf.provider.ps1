@@ -3,7 +3,7 @@
 $start_event = {
 	$script:paramSendPsgelfTcp = @{
 		'GelfServer' = Get-ConfigValue -Name 'GelfServer'
-		'Port'	     = Get-ConfigValue -Name 'Port'
+		'Port'       = Get-ConfigValue -Name 'Port'
 		'Encrypt'    = Get-ConfigValue -Name 'Encrypt'
 	}
 }
@@ -19,8 +19,7 @@ $message_Event = {
 	$gelf_params['HostName'] = $Message.ComputerName
 	$gelf_params['DateTime'] = $Message.Timestamp
 	
-	$gelf_params['Level'] = switch ($Message.Level)
-	{
+	$gelf_params['Level'] = switch ($Message.Level) {
 		'Critical' { 1 }
 		'Important' { 1 }
 		'Output' { 3 }
@@ -34,8 +33,7 @@ $message_Event = {
 		default { 7 }
 	}
 	
-	if ($Message.ErrorRecord)
-	{
+	if ($Message.ErrorRecord) {
 		$gelf_params['FullMessage'] = $Message.ErrorRecord | ConvertTo-Json
 	}
 	
@@ -45,8 +43,7 @@ $message_Event = {
 	}
 	
 	$gelf_params['AdditionalField'] = @{ }
-	foreach ($gelf_property in $gelf_properties)
-	{
+	foreach ($gelf_property in $gelf_properties) {
 		$gelf_params['AdditionalField'][$gelf_property.Name] = $gelf_property.Value
 	}
 	
@@ -65,12 +62,12 @@ $installationParameters = {
 	$validateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute('CurrentUser', 'AllUsers')
 	$attributesCollection.Add($validateSetAttribute)
 	
-	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
-	$results.Add("Scope", $runtimeParam)
+	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('Scope', [string], $attributesCollection)
+	$results.Add('Scope', $runtimeParam)
 
 	$attributesCollection2 = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter("Repository", [string], $attributesCollection2)
-	$results.Add("Repository", $runtimeParam2)
+	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter('Repository', [string], $attributesCollection2)
+	$results.Add('Repository', $runtimeParam2)
 	$results
 }
 
@@ -97,22 +94,23 @@ $isInstalled_script = {
 
 # Configuration settings to initialize
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.GelfServer' -Value "" -Initialize -Validation string -Description "The GELF server to send logs to"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Port' -Value "" -Initialize -Validation string -Description "The port number the GELF server listens on"
-	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Encrypt' -Value $true -Initialize -Validation bool -Description "Whether to use TLS encryption when communicating with the GELF server"
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.GelfServer' -Value '' -Initialize -Validation string -Description 'The GELF server to send logs to'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Port' -Value '' -Initialize -Validation string -Description 'The port number the GELF server listens on'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.GELF.Encrypt' -Value $true -Initialize -Validation bool -Description 'Whether to use TLS encryption when communicating with the GELF server'
 }
 
 $paramRegisterPSFLoggingProvider = @{
-	Name			   = "gelf"
-	Version2		   = $true
-	ConfigurationRoot  = 'PSFramework.Logging.GELF'
-	InstanceProperties = 'GelfServer', 'Port', 'Encrypt'
-	StartEvent		   = $start_event
-	MessageEvent	   = $message_Event
-	IsInstalledScript  = $isInstalled_script
-	InstallationScript = $installation_script
-	InstallationParameters = $installationParameters
-	ConfigurationSettings = $configuration_Settings
+	Name                       = 'gelf'
+	Description                = 'Log to a Graylog server'
+	Version2                   = $true
+	ConfigurationRoot          = 'PSFramework.Logging.GELF'
+	InstanceProperties         = 'GelfServer', 'Port', 'Encrypt'
+	StartEvent                 = $start_event
+	MessageEvent               = $message_Event
+	IsInstalledScript          = $isInstalled_script
+	InstallationScript         = $installation_script
+	InstallationParameters     = $installationParameters
+	ConfigurationSettings      = $configuration_Settings
 	ConfigurationDefaultValues = @{
 		Encrypt = $true
 	}

@@ -32,7 +32,7 @@
 	}
 
 	function Export-DataToSql {
-        <#
+		<#
         .SYNOPSIS
             Function to send logging data to a Sql database
 
@@ -59,11 +59,11 @@
 		
 		process {
 			$queryParameters = @{ }
-            foreach ($header in $script:sql_headers) {
-                if ($header -is [string]) { $queryParameters[$header] = $($ObjectToProcess.$header) }
-                elseif ($header.Name) { $queryParameters[$header.Name] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
-                else { $queryParameters[$header.Label] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
-            }
+			foreach ($header in $script:sql_headers) {
+				if ($header -is [string]) { $queryParameters[$header] = $($ObjectToProcess.$header) }
+				elseif ($header.Name) { $queryParameters[$header.Name] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
+				else { $queryParameters[$header.Label] = $(([PsfScriptBlock]$header.Expression).InvokeEx($false, $ObjectToProcess, $ObjectToProcess, $ObjectToProcess, $false, $false, $ObjectToProcess)) }
+			}
 			$insertQuery = Get-Query -Parameters $queryParameters
 			
 			try {
@@ -107,7 +107,7 @@ VALUES ($($propAdd -join ','))
 	}
 	
 	function New-DefaultSqlDatabaseAndTable {
-        <#
+		<#
         .SYNOPSIS
                 This function will create a default sql database object
 
@@ -142,13 +142,13 @@ VALUES ($($propAdd -join ','))
 		process {
 			try {
 				$dbaconnection = Get-DatabaseConnection
-				$database = Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -eq $SqlDatabaseName
-				if (-NOT $database) {
+				$database = Get-DbaDatabase -SqlInstance $dbaconnection | Where-Object Name -EQ $SqlDatabaseName
+				if (-not $database) {
 					$database = New-DbaDatabase -SqlInstance $dbaconnection -Name $SqlDatabaseName
 				}
-				if (-NOT ($database.Tables | Where-Object Name -eq $SqlTable)) {
+				if (-not ($database.Tables | Where-Object Name -EQ $SqlTable)) {
 					$createtable = "CREATE TABLE $SqlSchema.$SqlTable (Message VARCHAR(max), Level VARCHAR(max), TimeStamp [DATETIME], FunctionName VARCHAR(max), ModuleName VARCHAR(max), Tags VARCHAR(max), Runspace VARCHAR(36), ComputerName VARCHAR(max), Username VARCHAR(max), TargetObject VARCHAR(max), [File] VARCHAR(max), Line BIGINT, ErrorRecord VARCHAR(max), CallStack VARCHAR(max), [Data] VARCHAR(max))"
-					Invoke-dbaquery -SQLInstance $dbaconnection -Database $SqlDatabaseName -Query $createtable
+					Invoke-DbaQuery -SqlInstance $dbaconnection -Database $SqlDatabaseName -Query $createtable
 				}
 			}
 			catch {
@@ -169,12 +169,12 @@ $installationParameters = {
 	$validateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute('CurrentUser', 'AllUsers')
 	$attributesCollection.Add($validateSetAttribute)
 	
-	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter("Scope", [string], $attributesCollection)
-	$results.Add("Scope", $runtimeParam)
+	$runtimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('Scope', [string], $attributesCollection)
+	$results.Add('Scope', $runtimeParam)
 
 	$attributesCollection2 = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter("Repository", [string], $attributesCollection2)
-	$results.Add("Repository", $runtimeParam2)
+	$runtimeParam2 = New-Object System.Management.Automation.RuntimeDefinedParameter('Repository', [string], $attributesCollection2)
+	$results.Add('Repository', $runtimeParam2)
 	$results
 }
 
@@ -230,11 +230,10 @@ $start_event = {
 	if (-not $changePending) { return }
 	
 	$script:sql_headers = switch ($script:cfgHeaders) {
-		'Tags'
-		{
+		'Tags' {
 			@{
-				Name	   = 'Tags'
-				Expression = { ($_.Tags -join ",") -as [string] }
+				Name       = 'Tags'
+				Expression = { ($_.Tags -join ',') -as [string] }
 			}
 		}
 		'Message' { @{ Name = 'Message'; Expression = { $_.LogMessage } } }
@@ -243,19 +242,17 @@ $start_event = {
 		'TargetObject' { @{ Name = 'TargetObject'; Expression = { $_.TargetObject -as [string] } } }
 		'ErrorRecord' { @{ Name = 'ErrorRecord'; Expression = { $_.ErrorRecord -as [string] } } }
 		'CallStack' { @{ Name = 'CallStack'; Expression = { $_.CallStack -as [string] } } }
-		'Timestamp'
-		{
+		'Timestamp' {
 			@{
-				Name						   = 'Timestamp'
-				Expression					   = {
+				Name       = 'Timestamp'
+				Expression = {
 					$_.Timestamp.ToUniversalTime()
 				}
 			}
 		}
-		'Data'
-		{
+		'Data' {
 			@{
-				Name = 'Data'
+				Name       = 'Data'
 				Expression = {
 					if (-not $_.Data) { return 'null' }
 					$_.Data | ConvertTo-Json -Compress
@@ -288,34 +285,35 @@ $final_event = {
 
 # Configuration values for the logging provider
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Credential' -Initialize -Validation 'credential' -Description "Credentials used for connecting to the SQL server."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Database' -Value "LoggingDatabase" -Initialize -Validation 'string' -Description "SQL server database."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Table' -Value "LoggingTable" -Initialize -Validation 'string' -Description "SQL server database table."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value "" -Initialize -Description "SQL server hosting logs."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Schema' -Value "dbo" -Initialize -Description "SQL server schema."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Description "SQL server schema."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Credential' -Initialize -Validation 'credential' -Description 'Credentials used for connecting to the SQL server.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Database' -Value 'LoggingDatabase' -Initialize -Validation 'string' -Description 'SQL server database.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Table' -Value 'LoggingTable' -Initialize -Validation 'string' -Description 'SQL server database table.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.SqlServer' -Value '' -Initialize -Description 'SQL server hosting logs.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Schema' -Value 'dbo' -Initialize -Description 'SQL server schema.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.Sql.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Description 'SQL server schema.'
 }
 
 # Registered parameters for the logging provider.
 # ConfigurationDefaultValues are used for all instances of the sql log provider
 $paramRegisterPSFSqlProvider = @{
-	Name			   = "Sql"
-	Version2		   = $true
-	ConfigurationRoot  = 'PSFramework.Logging.Sql'
-	InstanceProperties = 'Database', 'Schema', 'Table', 'SqlServer', 'Credential', 'Headers'
-	MessageEvent	   = $message_Event
-	BeginEvent		   = $begin_event
-	StartEvent		   = $start_event
-	EndEvent		   = $end_event
-	FinalEvent		   = $final_event
-	IsInstalledScript  = $isInstalled_script
-	InstallationScript = $installation_script
-	ConfigurationSettings = $configuration_Settings
-	InstallationParameters = $installationParameters
-	FunctionDefinitions = $functionDefinitions
+	Name                       = 'Sql'
+	Description                = 'Use dbatools to log to a MS SQL Database. Creates & configures the table if needed.'
+	Version2                   = $true
+	ConfigurationRoot          = 'PSFramework.Logging.Sql'
+	InstanceProperties         = 'Database', 'Schema', 'Table', 'SqlServer', 'Credential', 'Headers'
+	MessageEvent               = $message_Event
+	BeginEvent                 = $begin_event
+	StartEvent                 = $start_event
+	EndEvent                   = $end_event
+	FinalEvent                 = $final_event
+	IsInstalledScript          = $isInstalled_script
+	InstallationScript         = $installation_script
+	ConfigurationSettings      = $configuration_Settings
+	InstallationParameters     = $installationParameters
+	FunctionDefinitions        = $functionDefinitions
 	ConfigurationDefaultValues = @{
-		'Database' = "LoggingDatabase"
-		'Table'    = "LoggingTable"
+		'Database' = 'LoggingDatabase'
+		'Table'    = 'LoggingTable'
 		'Schema'   = 'dbo'
 		Headers    = 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'Line', 'CallStack', 'TargetObject', 'ErrorRecord'
 	}

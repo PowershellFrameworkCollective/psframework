@@ -1,7 +1,6 @@
 ﻿$functionDefinitions = {
-	function Send-SplunkData
-	{
-<#
+	function Send-SplunkData {
+		<#
 	.SYNOPSIS
 		Writes data to a splunk http event collector.
 	
@@ -47,8 +46,7 @@
 			[string]
 			$Token
 		)
-		process
-		{
+		process {
 			# Splunk events can have a 'time' property in epoch time. If it's not set, use current system time.
 			$unixEpochStart = New-Object -TypeName DateTime -ArgumentList 1970, 1, 1, 0, 0, 0, ([DateTimeKind]::Utc)
 			$unixEpochTime = [int]($Timestamp.ToUniversalTime() - $unixEpochStart).TotalSeconds
@@ -57,7 +55,7 @@
 			$eventData = @{
 				event = $InputObject
 				host  = $HostName
-				time = $unixEpochTime
+				time  = $unixEpochTime
 			}
 			if ($index = Get-ConfigValue -Name Index) { $eventData.index = $index }
 			if ($source = Get-ConfigValue -Name Source) { $eventData.source = $source }
@@ -71,8 +69,7 @@
 		}
 	}
 	
-	function Invoke-RestMethodCustom
-	{
+	function Invoke-RestMethodCustom {
 		[CmdletBinding()]
 		param (
 			[string]
@@ -94,8 +91,7 @@
 			$IgnoreCert
 		)
 		
-		process
-		{
+		process {
 			$request = [System.Net.WebRequest]::Create($Uri)
 			foreach ($key in $Headers.Keys) { $request.Headers[$key] = $Headers[$key] }
 			$request.Method = $Method
@@ -106,8 +102,7 @@
 			$requestWriter.Write($Body)
 			$requestWriter.Close()
 			
-			try
-			{
+			try {
 				$responseStream = $request.GetResponse().GetResponseStream()
 				$reader = New-Object System.IO.StreamReader($responseStream)
 				$reader.ReadToEnd()
@@ -117,8 +112,7 @@
 		}
 	}
 	
-	function Write-SplunkMessage
-	{
+	function Write-SplunkMessage {
 		[CmdletBinding()]
 		param (
 			$Message
@@ -129,8 +123,7 @@
 		$properties = Get-ConfigValue -Name 'Properties'
 		$name = Get-ConfigValue -Name 'LogName'
 		
-		$selectProps = switch ($properties)
-		{
+		$selectProps = switch ($properties) {
 			'Message' { 'LogMessage as Message' }
 			'Timestamp' { 'Timestamp.ToUniversalTime().ToString("yyyy-MM-dd_HH:mm:ss.fff") as Timestamp' }
 			'Level' { 'Level to String' }
@@ -164,13 +157,14 @@ $configuration_Settings = {
 }
 
 $paramRegisterPSFLoggingProvider = @{
-	Name			   = "splunk"
-	Version2		   = $true
-	ConfigurationRoot  = 'PSFramework.Logging.Splunk'
-	InstanceProperties = 'Url', 'Token', 'Properties', 'LogName', 'IgnoreCert', 'Index', 'Source', 'SourceType'
-	MessageEvent	   = $message_Event
-	ConfigurationSettings = $configuration_Settings
-	FunctionDefinitions = $functionDefinitions
+	Name                       = 'splunk'
+	Description                = 'Log to a splunk instance.'
+	Version2                   = $true
+	ConfigurationRoot          = 'PSFramework.Logging.Splunk'
+	InstanceProperties         = 'Url', 'Token', 'Properties', 'LogName', 'IgnoreCert', 'Index', 'Source', 'SourceType'
+	MessageEvent               = $message_Event
+	ConfigurationSettings      = $configuration_Settings
+	FunctionDefinitions        = $functionDefinitions
 	ConfigurationDefaultValues = @{
 		Properties = 'Timestamp', 'Message', 'Level', 'Tags', 'FunctionName', 'ModuleName', 'Runspace', 'Username', 'ComputerName', 'TargetObject', 'Data'
 		LogName    = 'Undefined'

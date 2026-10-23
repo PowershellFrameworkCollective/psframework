@@ -60,10 +60,10 @@ $FunctionDefinitions = {
 			$bodyAsJson = ConvertTo-Json $loggingMessage -Compress
 			$body = [System.Text.Encoding]::UTF8.GetBytes($bodyAsJson)
 			
-			$restMethod = "POST"
-			$restContentType = "application/json"
-			$restResource = "/api/logs"
-			$date = [DateTime]::UtcNow.ToString("r")
+			$restMethod = 'POST'
+			$restContentType = 'application/json'
+			$restResource = '/api/logs'
+			$date = [DateTime]::UtcNow.ToString('r')
 			$contentLength = $body.Length
 			
 			$signatureArgs = @{
@@ -81,10 +81,10 @@ $FunctionDefinitions = {
 			
 			# RestAPI headers
 			$headers = @{
-				"Authorization"        = $signature
-				"Log-Type"             = $logType
-				"x-ms-date"            = $date
-				"time-generated-field" = "TimeStamp"
+				'Authorization'        = $signature
+				'Log-Type'             = $logType
+				'x-ms-date'            = $date
+				'time-generated-field' = 'TimeStamp'
 			}
 			
 			try {
@@ -93,23 +93,23 @@ $FunctionDefinitions = {
 				switch ($webResponse.StatusCode) {
 					'400' {
 						switch ($webResponse.StatusDescription) {
-							'InactiveCustomer' { throw "Sucessful Post to Azure Workspace" }
-							'InvalidApiVersion' { throw "The API version that you specified was not recognized by the service." }
-							'InvalidCustomerId' { throw "The workspace ID specified is invalid." }
-							'InvalidDataFormat' { throw "Invalid JSON was submitted. The response body might contain more information about how to resolve the error." }
-							'InvalidLogType' { throw "The log type specified contained special characters or numerics." }
+							'InactiveCustomer' { throw 'Sucessful Post to Azure Workspace' }
+							'InvalidApiVersion' { throw 'The API version that you specified was not recognized by the service.' }
+							'InvalidCustomerId' { throw 'The workspace ID specified is invalid.' }
+							'InvalidDataFormat' { throw 'Invalid JSON was submitted. The response body might contain more information about how to resolve the error.' }
+							'InvalidLogType' { throw 'The log type specified contained special characters or numerics.' }
 							'MissingApiVersion' { throw "The API version wasn't specified." }
 							'MissingContentType' { throw "The content type wasn't specified." }
 							'MissingLogType' { throw "The required value log type wasn't specified." }
-							'UnsupportedContentType' { throw "The content type was not set to application/json." }
+							'UnsupportedContentType' { throw 'The content type was not set to application/json.' }
 						}
 					}
 					
-					'403' { throw "The service failed to authenticate the request. Verify that the workspace ID and connection key are valid." }
-					'404' { throw "Either the URL provided is incorrect, or the request is too large." }
-					'429' { throw "The service is experiencing a high volume of data from your account. Please retry the request later." }
-					'500' { throw "The service encountered an internal error. Please retry the request." }
-					'503' { throw "The service currently is unavailable to receive requests. Please retry your request." }
+					'403' { throw 'The service failed to authenticate the request. Verify that the workspace ID and connection key are valid.' }
+					'404' { throw 'Either the URL provided is incorrect, or the request is too large.' }
+					'429' { throw 'The service is experiencing a high volume of data from your account. Please retry the request later.' }
+					'500' { throw 'The service encountered an internal error. Please retry the request.' }
+					'503' { throw 'The service currently is unavailable to receive requests. Please retry your request.' }
 				}
 			}
 			catch { throw }
@@ -171,7 +171,7 @@ $FunctionDefinitions = {
 		)
 		
 		process {
-			$xHeaders = "x-ms-date:" + $DateAndTime
+			$xHeaders = 'x-ms-date:' + $DateAndTime
 			$stringToHash = $RestMethod + "`n" + $ContentLength + "`n" + $RestContentType + "`n" + $xHeaders + "`n" + $RestResource
 			$bytesToHash = [Text.Encoding]::UTF8.GetBytes($stringToHash)
 			$keyBytes = [Convert]::FromBase64String($sharedKey)
@@ -245,17 +245,18 @@ $message_event = {
 
 # Configuration values for the logging provider
 $configuration_Settings = {
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value "" -Initialize -Validation 'secret' -Description "WorkspaceId for the Azure Workspace we are logging our data objects to."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value "" -Initialize -Validation 'secret' -Description "SharedId for the Azure Workspace we are logging our data objects to."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value "Message" -Initialize -Validation 'string' -Description "Log type we will log information to."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.TimeFormat' -Value "" -Initialize -Validation 'string' -Description "Format timestamps will be written with."
-	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Validation 'stringarray' -Description "The properties of the message to log."
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.WorkspaceId' -Value '' -Initialize -Validation 'secret' -Description 'WorkspaceId for the Azure Workspace we are logging our data objects to.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.SharedKey' -Value '' -Initialize -Validation 'secret' -Description 'SharedId for the Azure Workspace we are logging our data objects to.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.LogType' -Value 'Message' -Initialize -Validation 'string' -Description 'Log type we will log information to.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.TimeFormat' -Value '' -Initialize -Validation 'string' -Description 'Format timestamps will be written with.'
+	Set-PSFConfig -Module PSFramework -Name 'Logging.AzureLogAnalytics.Headers' -Value 'Message', 'Timestamp', 'Level', 'Tags', 'Data', 'ComputerName', 'Runspace', 'UserName', 'ModuleName', 'FunctionName', 'File', 'CallStack', 'TargetObject', 'ErrorRecord' -Initialize -Validation 'stringarray' -Description 'The properties of the message to log.'
 }
 
 # Registered parameters for the logging provider.
 # ConfigurationDefaultValues are used for all instances of the azure logging provider
 $paramRegisterPSFAzureLogAnalyticsProvider = @{
-	Name                       = "AzureLogAnalytics"
+	Name                       = 'AzureLogAnalytics'
+	Description                = '[Deprecated] Logs to Azure Log Analytics through the legacy Data Collector API'
 	Version2                   = $true
 	ConfigurationRoot          = 'PSFramework.Logging.AzureLogAnalytics'
 	InstanceProperties         = 'WorkspaceId', 'SharedKey', 'LogType', 'TimeFormat', 'Headers'
