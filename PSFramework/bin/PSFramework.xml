@@ -252,6 +252,16 @@
             <param name="key">The key of the entry</param>
             <returns>The value matching the key</returns>
         </member>
+        <member name="M:PSFramework.Caching.CacheMemoryConcurrent.TryGetValue(System.Object,System.Object@)">
+            <summary>
+            A threadsafe way to retrieve content from the cache.
+            This is the only way to do so and be able to distinguish between "Not cached" and "Cache entry exists, but is null".
+            As such this method is of limited use within PowerShell.
+            </summary>
+            <param name="Key">The key to retrieve the cached value for.</param>
+            <param name="Value">The value retrieved</param>
+            <returns>Whether retrieval was successful.</returns>
+        </member>
         <member name="T:PSFramework.Caching.CachedData">
             <summary>
             A cache entry
@@ -1531,6 +1541,11 @@
             Writes a message to screen
             </summary>
             <param name="Message">The message to write</param>
+        </member>
+        <member name="M:PSFramework.Commands.WritePSFMessageCommand.WriteWarningOrError">
+            <summary>
+            Writes a warning or error level message by the preferred color, if any.
+            </summary>
         </member>
         <member name="M:PSFramework.Commands.WritePSFMessageCommand.ResolveDefaultColor">
             <summary>
@@ -4937,6 +4952,16 @@
         <member name="F:PSFramework.Message.MessageHost.DeveloperColor">
             <summary>
             The color stuff gets written to the console in, when developer mode is enabled and the message would not have been written after all
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.WarningColor">
+            <summary>
+            The color with which to print warning messages on screen.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.MessageHost.ErrorColor">
+            <summary>
+            The color with which to print error messages on screen.
             </summary>
         </member>
         <member name="F:PSFramework.Message.MessageHost.DeveloperMode">

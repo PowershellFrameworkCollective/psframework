@@ -135,6 +135,7 @@
     <Compile Include="Logging\FileSystemWriter.cs" />
     <Compile Include="Logging\LogFileFileType.cs" />
     <Compile Include="Logging\LoggingState.cs" />
+    <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="Logging\Provider.cs" />
     <Compile Include="Logging\ProviderHost.cs" />
     <Compile Include="Logging\ProviderInstance.cs" />

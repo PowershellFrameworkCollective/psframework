@@ -482,7 +482,7 @@ namespace PSFramework.Commands
                         string onceName = String.Format("MessageOnce.{0}.{1}", FunctionName, Once);
                         if (!(Configuration.ConfigurationHost.Configurations.ContainsKey(onceName) && (bool)Configuration.ConfigurationHost.Configurations[onceName].Value))
                         {
-                            WriteWarning(_MessageStreams);
+                            WriteWarningOrError();
                             channels = channels | LogEntryType.Warning;
 
                             Configuration.Config cfg = new Configuration.Config();
@@ -497,7 +497,7 @@ namespace PSFramework.Commands
                     }
                     else
                     {
-                        WriteWarning(_MessageStreams);
+                        WriteWarningOrError();
                         channels = channels | LogEntryType.Warning;
                     }
                 }
@@ -960,6 +960,43 @@ namespace PSFramework.Commands
 
                 if (NoNewLine)
                     ps.AddParameter("NoNewLine", NoNewLine.ToBool());
+
+                ps.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Writes a warning or error level message by the preferred color, if any.
+        /// </summary>
+        private void WriteWarningOrError()
+        {
+            ConsoleColor color = ConsoleColor.Red;
+            if (Level == MessageLevel.Warning)
+            {
+                if (!MessageHost.WarningColor.HasValue)
+                {
+                    WriteWarning(_MessageStreams);
+                    return;
+                }
+                color = MessageHost.WarningColor.Value;
+            }
+            if (Level == MessageLevel.Error)
+            {
+                if (!MessageHost.ErrorColor.HasValue)
+                {
+                    WriteWarning(_MessageStreams);
+                    return;
+                }
+                color = MessageHost.ErrorColor.Value;
+            }
+
+
+            using (PowerShell ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                ps.AddCommand("Write-PSFHostColor")
+                    .AddParameter("String", _MessageHost)
+                    .AddParameter("ErrorAction", "Ignore")
+                    .AddParameter("DefaultColor", color);
 
                 ps.Invoke();
             }

@@ -1,5 +1,11 @@
 ﻿# CHANGELOG
 
+## ???
+
+- New: Config PSFramework.Message.ErrorColor - The color to use when writing error messages on screen. This prevents the use of the warning stream!
+- New: Config PSFramework.Message.WarningColor - The color to use when writing warning messages on screen. This prevents the use of the warning stream!
+- Upd: PSFCache - added a `TryGetValue` method to 100% reliably retrieve value when a $null cache might be a legal state.
+
 ## 1.15.472 (2026-10-23)
 
 - New: Logging Provider: Azure LogAnalytics V2 - sends logs to Log Analytics via Data Collection Rule

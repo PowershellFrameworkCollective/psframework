@@ -156,5 +156,34 @@ namespace PSFramework.Caching
             }
         }
         #endregion Core Overrides
+
+        /// <summary>
+        /// A threadsafe way to retrieve content from the cache.
+        /// This is the only way to do so and be able to distinguish between "Not cached" and "Cache entry exists, but is null".
+        /// As such this method is of limited use within PowerShell.
+        /// </summary>
+        /// <param name="Key">The key to retrieve the cached value for.</param>
+        /// <param name="Value">The value retrieved</param>
+        /// <returns>Whether retrieval was successful.</returns>
+        public bool TryGetValue(object Key, out object Value)
+        {
+            lock (_WriteLock)
+            {
+                if (!base.ContainsKey(Key))
+                {
+                    Value = null;
+                    return false;
+                }
+
+                // This can fail if collector code runs. TrySomething methods should not throw.
+                try { Value = this[Key]; }
+                catch
+                {
+                    Value = null;
+                    return false;
+                }
+                return true;
+            }
+        }
     }
 }

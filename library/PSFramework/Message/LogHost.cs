@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSFramework.Logging;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -275,5 +276,10 @@ namespace PSFramework.Message
             return temp;
         }
         #endregion Access Queues
+
+        #region In-Memory Logging
+        public static ConcurrentDictionary<string, MemoryLog> InMemoryLogs = new ConcurrentDictionary<string, MemoryLog>(StringComparer.OrdinalIgnoreCase);
+        public static ConcurrentDictionary<string, MemoryLog> InMemoryLogsArchive = new ConcurrentDictionary<string, MemoryLog>(StringComparer.OrdinalIgnoreCase);
+        #endregion In-Memory Logging
     }
 }
