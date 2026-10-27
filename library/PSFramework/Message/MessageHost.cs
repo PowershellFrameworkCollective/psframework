@@ -62,6 +62,16 @@ namespace PSFramework.Message
         public static ConsoleColor DeveloperColor = ConsoleColor.Gray;
 
         /// <summary>
+        /// The color with which to print warning messages on screen.
+        /// </summary>
+        public static Nullable<ConsoleColor> WarningColor;
+
+        /// <summary>
+        /// The color with which to print error messages on screen.
+        /// </summary>
+        public static Nullable<ConsoleColor> ErrorColor;
+
+        /// <summary>
         /// Enables the developer mode. In this all messages are written to the console, in order to make it easier to troubleshoot issues.
         /// </summary>
         public static bool DeveloperMode = false;

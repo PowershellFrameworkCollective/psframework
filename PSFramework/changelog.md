@@ -1,5 +1,15 @@
 ﻿# CHANGELOG
 
+## 1.15.479 (2026-10-27)
+
+- New: Logging Provider: inmemory - Writes messages to an in-memory list accessible through Get-PSFMessage.
+- New: Config PSFramework.Message.ErrorColor - The color to use when writing error messages on screen. This prevents the use of the warning stream!
+- New: Config PSFramework.Message.WarningColor - The color to use when writing warning messages on screen. This prevents the use of the warning stream!
+- Upd: PSFCache - added a `TryGetValue` method to 100% reliably retrieve value when a $null cache might be a legal state.
+- Upd: Get-PSFMessage - added `-LogName` parameter, allowing searching through the inmemory log of the new Logging Provider.
+- Upd: Get-PSFMessage - added `-AsLog` parameter, retrieving the entire log object, rather than its messages.
+- Upd: Clear-PSFMessage - add `-LogName` parameter, allowing the clearing of logs from the logs of the new Logging Provider
+
 ## 1.15.472 (2026-10-23)
 
 - New: Logging Provider: Azure LogAnalytics V2 - sends logs to Log Analytics via Data Collection Rule
