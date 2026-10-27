@@ -21,7 +21,7 @@ $global:MayContainCommand = @{
 	"Write-Verbose" = @()
 	"Write-Warning" = @('assembly.ps1')
 	"Write-Error"  = @('Import-PSFJson.ps1', 'Import-PSFPowerShellDataFile.ps1', 'Invoke-PSFCommand.ps1', 'Set-PSFFileContent.ps1', 'Stop-PSFFunction.ps1', 'azureloganalytics2.provider.ps1')
-	"Write-Output" = @('filesystem.provider.ps1', 'gelf.provider.ps1', 'Import-PSFPowerShellDataFile.ps1', 'logfile.provider.ps1', 'input.ps1', 'teppCoreCode.ps1')
+	"Write-Output" = @('Clear-PSFMessage.ps1','Get-PSFMessage.ps1','filesystem.provider.ps1', 'gelf.provider.ps1', 'Import-PSFPowerShellDataFile.ps1', 'logfile.provider.ps1', 'input.ps1', 'teppCoreCode.ps1','inmemory-logs.ps1')
 	"Write-Information" = @()
 	"Write-Debug" = @()
 }

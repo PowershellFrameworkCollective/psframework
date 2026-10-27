@@ -296,74 +296,74 @@
 		
 		#region Filter Configuration
 		$setProperty = -not $InstanceName -or $InstanceName -eq "Default"
-		if (Test-PSFParameterBinding -ParameterName "IncludeModules")
+		if (Test-PSFParameterBinding -ParameterName "IncludeModules" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.IncludeModules = $IncludeModules }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeModules" -Value $IncludeModules
+			if ($setProperty) { $provider.IncludeModules = $PSBoundParameters.IncludeModules }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeModules" -Value $PSBoundParameters.IncludeModules
 		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeModules")
+		if (Test-PSFParameterBinding -ParameterName "ExcludeModules" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.ExcludeModules = $ExcludeModules }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeModules" -Value $ExcludeModules
-		}
-		
-		if (Test-PSFParameterBinding -ParameterName "IncludeFunctions")
-		{
-			if ($setProperty) { $provider.IncludeFunctions = $IncludeFunctions }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeFunctions" -Value $IncludeFunctions
-		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeFunctions")
-		{
-			if ($setProperty) { $provider.ExcludeFunctions = $ExcludeFunctions }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeFunctions" -Value $ExcludeFunctions
+			if ($setProperty) { $provider.ExcludeModules = $PSBoundParameters.ExcludeModules }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeModules" -Value $PSBoundParameters.ExcludeModules
 		}
 		
-		if (Test-PSFParameterBinding -ParameterName "IncludeRunspaces")
+		if (Test-PSFParameterBinding -ParameterName "IncludeFunctions" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.IncludeRunspaces = $IncludeRunspaces }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeRunspaces" -Value $IncludeRunspaces
+			if ($setProperty) { $provider.IncludeFunctions = $PSBoundParameters.IncludeFunctions }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeFunctions" -Value $PSBoundParameters.IncludeFunctions
 		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeRunspaces")
+		if (Test-PSFParameterBinding -ParameterName "ExcludeFunctions" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.ExcludeRunspaces = $ExcludeRunspaces }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeRunspaces" -Value $ExcludeRunspaces
-		}
-		
-		if (Test-PSFParameterBinding -ParameterName "IncludeTags")
-		{
-			if ($setProperty) { $provider.IncludeTags = $IncludeTags }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeTags" -Value $IncludeTags
-		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeTags")
-		{
-			if ($setProperty) { $provider.ExcludeTags = $ExcludeTags }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeTags" -Value $ExcludeTags
+			if ($setProperty) { $provider.ExcludeFunctions = $PSBoundParameters.ExcludeFunctions }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeFunctions" -Value $PSBoundParameters.ExcludeFunctions
 		}
 		
-		if ($MinLevel)
+		if (Test-PSFParameterBinding -ParameterName "IncludeRunspaces" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.MinLevel = $MinLevel }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)MinLevel" -Value $MinLevel
+			if ($setProperty) { $provider.IncludeRunspaces = $PSBoundParameters.IncludeRunspaces }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeRunspaces" -Value $PSBoundParameters.IncludeRunspaces
 		}
-		if ($MaxLevel)
+		if (Test-PSFParameterBinding -ParameterName "ExcludeRunspaces" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.MaxLevel = $MaxLevel }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)MaxLevel" -Value $MaxLevel
+			if ($setProperty) { $provider.ExcludeRunspaces = $PSBoundParameters.ExcludeRunspaces }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeRunspaces" -Value $PSBoundParameters.ExcludeRunspaces
 		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeWarning")
+		
+		if (Test-PSFParameterBinding -ParameterName "IncludeTags" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.IncludeWarning = -not $ExcludeWarning }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeWarning" -Value (-not $ExcludeWarning)
+			if ($setProperty) { $provider.IncludeTags = $PSBoundParameters.IncludeTags }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeTags" -Value $PSBoundParameters.IncludeTags
 		}
-		if (Test-PSFParameterBinding -ParameterName "ExcludeError")
+		if (Test-PSFParameterBinding -ParameterName "ExcludeTags" -BoundParameters $PSBoundParameters)
 		{
-			if ($setProperty) { $provider.IncludeError = -not $ExcludeError }
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeError" -Value (-not $ExcludeError)
+			if ($setProperty) { $provider.ExcludeTags = $PSBoundParameters.ExcludeTags }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)ExcludeTags" -Value $PSBoundParameters.ExcludeTags
+		}
+		
+		if (Test-PSFParameterBinding -ParameterName 'MinLevel' -BoundParameters $PSBoundParameters)
+		{
+			if ($setProperty) { $provider.MinLevel = $PSBoundParameters.MinLevel }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)MinLevel" -Value $PSBoundParameters.MinLevel
+		}
+		if (Test-PSFParameterBinding -ParameterName 'MaxLevel' -BoundParameters $PSBoundParameters)
+		{
+			if ($setProperty) { $provider.MaxLevel = $PSBoundParameters.MaxLevel }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)MaxLevel" -Value $PSBoundParameters.MaxLevel
+		}
+		if (Test-PSFParameterBinding -ParameterName "ExcludeWarning" -BoundParameters $PSBoundParameters)
+		{
+			if ($setProperty) { $provider.IncludeWarning = -not $PSBoundParameters.ExcludeWarning }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeWarning" -Value (-not $PSBoundParameters.ExcludeWarning)
+		}
+		if (Test-PSFParameterBinding -ParameterName "ExcludeError" -BoundParameters $PSBoundParameters)
+		{
+			if ($setProperty) { $provider.IncludeError = -not $PSBoundParameters.ExcludeError }
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)IncludeError" -Value (-not $PSBoundParameters.ExcludeError)
 		}
 		
 		# V2 Only
-		if (Test-PSFParameterBinding -ParameterName "RequiresInclude"){
-			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)RequiresInclude" -Value $RequiresInclude
+		if (Test-PSFParameterBinding -ParameterName "RequiresInclude" -BoundParameters $PSBoundParameters){
+			Set-PSFConfig -FullName "LoggingProvider.$($provider.Name).$($instanceAffix)RequiresInclude" -Value $PSBoundParameters.RequiresInclude
 		}
 		#endregion Filter Configuration
 		
