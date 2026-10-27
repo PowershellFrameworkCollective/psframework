@@ -3654,6 +3654,119 @@
             The logging has been fully stopped
             </summary>
         </member>
+        <member name="T:PSFramework.Logging.MemoryLog">
+            <summary>
+            Contains the log entries retained by an in-memory log provider instance.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.Name">
+            <summary>
+            The name of the memory log
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.MaxCount">
+            <summary>
+            Maximum number of messages before the oldest entries get forgotten.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.MaxAge">
+            <summary>
+            Maximum age of log entries before they get removed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.ShouldArchive">
+            <summary>
+            Should the memory log be archived when retired?
+            Otherwise, it will be lost on retirement.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.ArchivePath">
+            <summary>
+            Path to where logs should be written when retired.
+            LogEntries will be written as binary data blob and can be read in with Import-PSFClixml.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.RetireWithRunspace">
+            <summary>
+            When the following runspace no longer exists, automatically retire this log.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.#ctor(System.String)">
+            <summary>
+            Create a new in-memory log
+            </summary>
+            <param name="Name">Name of the log to create. Retires previous logs with this name.</param>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.Started">
+            <summary>
+            When the MemoryLog was started.
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.MemoryLog.Stopped">
+            <summary>
+            When the MemoryLog was closed.
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.Archived">
+            <summary>
+            Whether the log has been archived
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog.ID">
+            <summary>
+            ID of the MemoryLog, to differentiate multiple archived logs with the same name
+            </summary>
+        </member>
+        <member name="F:PSFramework.Logging.MemoryLog._Messages">
+            <summary>
+            Messages that are logged
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.MemoryLog.Count">
+            <summary>
+            How many messages are in the log
+            </summary>
+        </member>
+        <member name="P:PSFramework.Logging.MemoryLog.Messages">
+            <summary>
+            The messages in the log
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.Add(PSFramework.Message.LogEntry)">
+            <summary>
+            Add a new log entry to the log
+            </summary>
+            <param name="Entry">The data to log</param>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.PurgeNoLock">
+            <summary>
+            Remove all invalid log entries in the Log.
+            Not threadsafe.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.Purge">
+            <summary>
+            Remove all invalid log entries in the Log.
+            Threadsafe.
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.Get">
+            <summary>
+            Retrieve all log entries.
+            </summary>
+            <returns>All logged entries.</returns>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.Clear">
+            <summary>
+            Remove all log entries from the Log
+            </summary>
+        </member>
+        <member name="M:PSFramework.Logging.MemoryLog.Retire">
+            <summary>
+            Retire the current Log.
+            This unlists it from the log tracker and executes all "on archive" settings.
+            </summary>
+        </member>
         <member name="T:PSFramework.Logging.Provider">
             <summary>
             Class containing all information/content needed for a logging provider
@@ -4687,6 +4800,16 @@
             <param name="ErrorRecord">An associated error record</param>
             <param name="ErrorStack">Whether to use the error record for logging the callstack</param>
             <returns>The entry that is being written</returns>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.InMemoryLogs">
+            <summary>
+            The currently active InMemory logs of the inmemory Logging Provider
+            </summary>
+        </member>
+        <member name="F:PSFramework.Message.LogHost.InMemoryLogsArchive">
+            <summary>
+            The list of archived InMemory logs of the inmemory Logging Provider
+            </summary>
         </member>
         <member name="T:PSFramework.Message.MessageColorCondition">
             <summary>

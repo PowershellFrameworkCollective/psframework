@@ -47,25 +47,35 @@
 			Will select the first 6 levels (Critical - SomewhatVerbose).
 		
 		.PARAMETER Errors
-			Instead of log entries, the error entries will be retrieved
+			Instead of log entries, the error entries will be retrieved.
+
+		.PARAMETER LogName
+			Instead of the message system log, access logs from an instance of the inmemory Logging Provider.
+
+		.PARAMETER AsLog
+			Return the entire log object of the instance of the inmemory Logging Provider.
 		
 		.EXAMPLE
-			Get-PSFMessage
+			PS C:\> Get-PSFMessage
 			
 			Returns all log entries currently in memory.
+
+		.EXAMPLE
+			PS C:\> Get-PSFMessage -LogName group-cleanup
 	
 		.EXAMPLE
-			Get-PSFMessage -Target "a" -Last 1 -Skip 1
+			PS C:\> Get-PSFMessage -Target "a" -Last 1 -Skip 1
 	
 			Returns all log entries that targeted the object "a" in the second last execution sent.
 	
 		.EXAMPLE
-			Get-PSFMessage -Tag "fail" -Last 5
+			PS C:\> Get-PSFMessage -Tag "fail" -Last 5
 	
 			Returns all log entries within the last 5 executions that contained the tag "fail"
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
-	[CmdletBinding(HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFMessage')]
+	[OutputType([PSFramework.Message.LogEntry])]
+	[CmdletBinding(DefaultParameterSetName = 'SelectDefault', HelpUri = 'https://psframework.org/docs/Commands/PSFramework/Get-PSFMessage')]
 	param (
 		[string]
 		$FunctionName = "*",
@@ -79,9 +89,11 @@
 		[string[]]
 		$Tag,
 		
+		[Parameter(ParameterSetName = 'SelectDefault')]
 		[int]
 		$Last,
 		
+		[Parameter(ParameterSetName = 'SelectDefault')]
 		[int]
 		$Skip = 0,
 		
@@ -91,13 +103,31 @@
 		[PSFramework.Message.MessageLevel[]]
 		$Level,
 		
+		[Parameter(Mandatory = $true, ParameterSetName = 'SelectErrors')]
 		[switch]
-		$Errors
+		$Errors,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'SelectInMemoryLog')]
+		[PsfArgumentCompleter('PSFramework.Logging.InMemoryLogName')]
+		[string]
+		$LogName,
+		
+		[Parameter(ParameterSetName = 'SelectInMemoryLog')]
+		[switch]
+		$AsLog
 	)
 	
 	process
 	{
 		if ($Errors) { $messages = [PSFramework.Message.LogHost]::GetErrors() | Where-Object { ($_.FunctionName -like $FunctionName) -and ($_.ModuleName -like $ModuleName) } }
+		elseif ($LogName) {
+			$allLogs = [PSFramework.Message.LogHost]::InMemoryLogs.Values, [PSFramework.Message.LogHost]::InMemoryLogsArchive.Values | Write-Output | Where-Object {
+				$_.ID -eq $LogName -or
+				$_.Name -like $LogName
+			}
+			if ($AsLog) { return $allLogs }
+			$messages = $($allLogs.Messages)
+		}
 		else { $messages = [PSFramework.Message.LogHost]::GetLog() | Where-Object { ($_.FunctionName -like $FunctionName) -and ($_.ModuleName -like $ModuleName) } }
 		
 		if (Test-PSFParameterBinding -ParameterName Target)

@@ -3,30 +3,32 @@
 		$LoggingProviderInstance
 	)
 	
-	try
-	{
+	try {
 		$module = New-Module -Name ([guid]::NewGuid()) -ArgumentList $LoggingProviderInstance -ScriptBlock {
 			param (
 				$LoggingProviderInstance
 			)
 			
 			$Instance = [pscustomobject]@{
-				Name = $LoggingProviderInstance.Name
-				Provider = $LoggingProviderInstance.Provider.Name
+				Name              = $LoggingProviderInstance.Name
+				Provider          = $LoggingProviderInstance.Provider.Name
 				ConfigurationRoot = $LoggingProviderInstance.Provider.ConfigurationRoot
+				InstanceCfgRoot   = $LoggingProviderInstance.Provider.ConfigurationRoot
+			}
+			if ($Instance.Name -and $Instance.Name -ne 'Default') {
+				$Instance.InstanceCfgRoot += ".$($script:Instance.Name)"
 			}
 			
 			# Validate Language Mode for security reasons
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.BeginEvent -Mode 'ConstrainedLanguage') { throw "The event BeginEvent is in constrained language mode and cannot be loaded!" }
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.StartEvent -Mode 'ConstrainedLanguage') { throw "The event StartEvent is in constrained language mode and cannot be loaded!" }
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.MessageEvent -Mode 'ConstrainedLanguage') { throw "The event MessageEvent is in constrained language mode and cannot be loaded!" }
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.ErrorEvent -Mode 'ConstrainedLanguage') { throw "The event ErrorEvent is in constrained language mode and cannot be loaded!" }
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.EndEvent -Mode 'ConstrainedLanguage') { throw "The event EndEvent is in constrained language mode and cannot be loaded!" }
-			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.FinalEvent -Mode 'ConstrainedLanguage') { throw "The event FinalEvent is in constrained language mode and cannot be loaded!" }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.BeginEvent -Mode 'ConstrainedLanguage') { throw 'The event BeginEvent is in constrained language mode and cannot be loaded!' }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.StartEvent -Mode 'ConstrainedLanguage') { throw 'The event StartEvent is in constrained language mode and cannot be loaded!' }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.MessageEvent -Mode 'ConstrainedLanguage') { throw 'The event MessageEvent is in constrained language mode and cannot be loaded!' }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.ErrorEvent -Mode 'ConstrainedLanguage') { throw 'The event ErrorEvent is in constrained language mode and cannot be loaded!' }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.EndEvent -Mode 'ConstrainedLanguage') { throw 'The event EndEvent is in constrained language mode and cannot be loaded!' }
+			if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.FinalEvent -Mode 'ConstrainedLanguage') { throw 'The event FinalEvent is in constrained language mode and cannot be loaded!' }
 			
-			if ($LoggingProviderInstance.Provider.Functions)
-			{
-				if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.Functions -Mode "ConstrainedLanguage") { throw "The functions resource scriptblock is in constrained language mode and cannot be loaded!" }
+			if ($LoggingProviderInstance.Provider.Functions) {
+				if (Test-PSFLanguageMode -ScriptBlock $LoggingProviderInstance.Provider.Functions -Mode 'ConstrainedLanguage') { throw 'The functions resource scriptblock is in constrained language mode and cannot be loaded!' }
 				# Invoke in current scope after localizing the scriptblock into the current context
 				$LoggingProviderInstance.Provider.Functions.InvokeEx($false, $true, $false)
 			}
@@ -36,12 +38,11 @@
 				Start   = [guid]::NewGuid()
 				Message = [guid]::NewGuid()
 				Error   = [guid]::NewGuid()
-				End	    = [guid]::NewGuid()
+				End     = [guid]::NewGuid()
 				Final   = [guid]::NewGuid()
 			}
 			
-			function Get-ConfigValue
-			{
+			function Get-ConfigValue {
 				[CmdletBinding()]
 				param (
 					[string]
@@ -51,8 +52,7 @@
 				)
 				
 				$rootPath = $script:Instance.ConfigurationRoot
-				if ($script:Instance.Name -and $script:Instance.Name -ne "Default")
-				{
+				if ($script:Instance.Name -and $script:Instance.Name -ne 'Default') {
 					$rootPath += ".$($script:Instance.Name)"
 				}
 				
@@ -80,13 +80,11 @@
 			Export-ModuleMember
 		} -ErrorAction Stop
 	}
-	catch
-	{
+	catch {
 		$LoggingProviderInstance.Errors.Enqueue($_)
 		$LoggingProviderInstance.Enabled = $false
 	}
-	if ($module)
-	{
+	if ($module) {
 		$LoggingProviderInstance.Module = $module
 	}
 }
