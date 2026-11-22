@@ -57,7 +57,7 @@
 	}
 	process {
 		$newPath = Join-Path -Path $tempPath -ChildPath "PSF_Temp_$(New-Guid).$($Extension)"
-		if ($FileName) { Join-Path -Path $tempPath -ChildPath $FileName }
+		if ($FileName) { $newPath = Join-Path -Path $tempPath -ChildPath $FileName }
 		try { $null = New-Item -Path $newPath -ItemType File -Force -ErrorAction Stop }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
 		
